@@ -1,0 +1,42 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion sdk.compile
+
+    defaultConfig {
+        applicationId "com.scandit.datacapture.matrixscansimplesample"
+        minSdkVersion sdk.min
+        targetSdkVersion sdk.target
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    packagingOptions {
+        pickFirst '**/*.so'
+    }
+}
+
+repositories {
+    flatDir {
+        dirs '../../library'
+    }
+}
+
+dependencies {
+    api(name:'ScanditCaptureCore', ext:'aar')
+    api(name:'ScanditBarcodeCapture', ext:'aar')
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
+
+    implementation "com.android.support:appcompat-v7:${versions.android_support}"
+    implementation "com.android.support:design:${versions.android_support}"
+
+    implementation "com.android.support.constraint:constraint-layout:${versions.constraint_layout}"
+}

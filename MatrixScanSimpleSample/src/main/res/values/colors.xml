@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#58B5C2</color>
+    <color name="colorAccentDark">#489CA7</color>
+    <color name="barcode_rejected">#4DFF3939</color>
+    <color name="barcode_rejected_border">#FFFF3939</color>
+</resources>
