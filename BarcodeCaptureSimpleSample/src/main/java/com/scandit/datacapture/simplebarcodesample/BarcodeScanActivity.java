@@ -41,7 +41,7 @@ public class BarcodeScanActivity
 
     // Enter your Scandit License key here.
     // Your Scandit License key is available via your Scandit SDK web account.
-    public static final String scanditLicenseKey = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
+    public static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
 
     private DataCaptureContext dataCaptureContext;
     private BarcodeCapture barcodeCapture;
@@ -59,23 +59,29 @@ public class BarcodeScanActivity
     }
 
     private void initializeAndStartBarcodeScanning() {
-        dataCaptureContext = DataCaptureContext.forLicenseKey(scanditLicenseKey);
+        // Create data capture context using your license key.
+        dataCaptureContext = DataCaptureContext.forLicenseKey(SCANDIT_LICENSE_KEY);
 
-        // Device's camera will serve as a frame source.
+        // Use the default camera and set it as the frame source of the context.
+        // The camera is off by default and must be turned on to start streaming frames to the data
+        // capture context for recognition.
+        // See resumeFrameSource and pauseFrameSource below.
         camera = Camera.getDefaultCamera();
         if (camera != null) {
             // Use the settings recommended by barcode capture.
-            camera.applySettings(BarcodeCapture.createRecommendedCameraSettings(), null);
-            dataCaptureContext.setFrameSource(camera, null);
+            camera.applySettings(BarcodeCapture.createRecommendedCameraSettings());
+            dataCaptureContext.setFrameSource(camera);
         }
 
-        // The scanning behavior is configured through barcode capture settings. We start with empty
-        // barcode capture settings and enable a very generous set of symbologies. In your own apps,
-        // only enable the symbologies you actually need.
+        // The barcode capturing process is configured through barcode capture settings
+        // which are then applied to the barcode capture instance that manages barcode recognition.
         BarcodeCaptureSettings barcodeCaptureSettings = new BarcodeCaptureSettings();
 
+        // The settings instance initially has all types of barcodes (symbologies) disabled.
+        // For the purpose of this sample we enable a very generous set of symbologies.
+        // In your own app ensure that you only enable the symbologies that your app requires as
+        // every additional enabled symbology has an impact on processing times.
         HashSet<Symbology> symbologies = new HashSet<>();
-
         symbologies.add(Symbology.EAN13_UPCA);
         symbologies.add(Symbology.EAN8);
         symbologies.add(Symbology.UPCE);
@@ -87,11 +93,12 @@ public class BarcodeScanActivity
 
         barcodeCaptureSettings.enableSymbologies(symbologies);
 
-        // Some 1d barcode symbologies allow you to encode variable-length data. By default, the
-        // Scandit Barcode Capture only scans barcodes in a certain length range. If your
-        // application requires scanning of one of these symbologies, and the length is falling
-        // outside the default range, you may need to adjust the "active symbol counts" for this
-        // symbology. This is shown in the following few lines of code.
+        // Some linear/1d barcode symbologies allow you to encode variable-length data.
+        // By default, the Scandit DataCapture SDK only scans barcodes in a certain length range.
+        // If your application requires scanning of one of these symbologies, and the length is
+        // falling outside the default range, you may need to adjust the "active symbol counts"
+        // for this symbology. This is shown in the following few lines of code for one of the
+        // variable-length symbologies.
         SymbologySettings symbologySettings =
                 barcodeCaptureSettings.getSymbologySettings(Symbology.CODE39);
 
@@ -100,15 +107,21 @@ public class BarcodeScanActivity
 
         symbologySettings.setActiveSymbolCounts(activeSymbolCounts);
 
+        // Create new barcode capture mode with the settings from above.
         barcodeCapture = BarcodeCapture.forContext(dataCaptureContext, barcodeCaptureSettings);
+
+        // Register self as a listener to get informed whenever a new barcode got recognized.
         barcodeCapture.addListener(this);
-        barcodeCapture.setEnabled(true);
 
-        BarcodeCaptureOverlay overlay = new BarcodeCaptureOverlay(barcodeCapture);
-        overlay.setViewfinder(new RectangularViewfinder());
-
+        // To visualize the on-going barcode capturing process on screen, setup a data capture view
+        // that renders the camera preview. The view must be connected to the data capture context.
         dataCaptureView = DataCaptureView.newInstance(this, dataCaptureContext);
-        dataCaptureView.addOverlay(overlay);
+
+        // Add a barcode capture overlay to the data capture view to render the location of captured
+        // barcodes on top of the video preview.
+        // This is optional, but recommended for better visual feedback.
+        BarcodeCaptureOverlay overlay = BarcodeCaptureOverlay.newInstance(barcodeCapture, dataCaptureView);
+        overlay.setViewfinder(new RectangularViewfinder());
 
         setContentView(dataCaptureView);
     }
@@ -126,6 +139,11 @@ public class BarcodeScanActivity
     }
 
     private void pauseFrameSource() {
+        // Switch camera off to stop streaming frames.
+        // The camera is stopped asynchronously and will take some time to completely turn off.
+        // Until it is completely stopped, it is still possible to receive further results, hence
+        // it's a good idea to first disable barcode capture as well.
+        barcodeCapture.setEnabled(false);
         camera.switchToDesiredState(FrameSourceState.OFF, null);
     }
 
@@ -150,6 +168,9 @@ public class BarcodeScanActivity
     private void resumeFrameSource() {
         dismissScannedCodesDialog();
 
+        // Switch camera on to start streaming frames.
+        // The camera is started asynchronously and will take some time to completely turn on.
+        barcodeCapture.setEnabled(true);
         camera.switchToDesiredState(FrameSourceState.ON, null);
     }
 
@@ -160,34 +181,50 @@ public class BarcodeScanActivity
         }
     }
 
-    private void displayScannedCodes(BarcodeCaptureSession session) {
-        Barcode barcode = session.getNewlyRecognizedBarcodes().get(0);
-        String symbology = SymbologyDescription.create(barcode.getSymbology()).getReadableName();
-
+    private void showResult(String result) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         dialog = builder.setCancelable(false)
-                         .setTitle("Scanned: " + barcode.getData() + " (" + symbology + ")")
-                         .setPositiveButton(android.R.string.ok,
-                                 new OnClickListener() {
-                                     @Override
-                                     public void onClick(DialogInterface dialog, int which) {
-                                         barcodeCapture.setEnabled(true);
-                                     }
-                                 })
-                         .create();
+                .setTitle(result)
+                .setPositiveButton(android.R.string.ok,
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                barcodeCapture.setEnabled(true);
+                            }
+                        })
+                .create();
         dialog.show();
     }
 
     @Override
-    public void onBarcodeScanned(@NonNull BarcodeCapture barcodeCapture,
-            @NonNull BarcodeCaptureSession session, @NonNull FrameData frameData) {
-        displayScannedCodes(session);
+    public void onBarcodeScanned(
+            @NonNull BarcodeCapture barcodeCapture,
+            @NonNull BarcodeCaptureSession session,
+            @NonNull FrameData frameData
+    ) {
+        if (session.getNewlyLocalizedBarcodes().isEmpty()) return;
 
+        Barcode barcode = session.getNewlyLocalizedBarcodes().get(0);
+
+        // Stop recognizing barcodes for as long as we are displaying the result. There won't be any new results until
+        // the capture mode is enabled again. Note that disabling the capture mode does not stop the camera, the camera
+        // continues to stream frames until it is turned off.
         barcodeCapture.setEnabled(false);
 
         // If you are not disabling barcode capture here and want to continue scanning, consider
         // setting the codeDuplicateFilter when creating the barcode capture settings to around 500
-        // or even -1 if you do not want codes be scanned more than once.
+        // or even -1 if you do not want codes to be scanned more than once.
+
+        // Get the human readable name of the symbology and assemble the result to be shown.
+        String symbology = SymbologyDescription.create(barcode.getSymbology()).getReadableName();
+        final String result = "Scanned: " + barcode.getData() + " (" + symbology + ")";
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showResult(result);
+            }
+        });
     }
 
     @Override

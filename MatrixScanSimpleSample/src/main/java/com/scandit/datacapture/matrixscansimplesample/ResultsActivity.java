@@ -54,7 +54,7 @@ public class ResultsActivity extends AppCompatActivity {
                 new DividerItemDecoration(recyclerView.getContext(), LinearLayoutManager.VERTICAL));
 
         // Receive results from previous screen and set recycler view items.
-        final ArrayList<ScanResult> scanResults = new ArrayList(
+        final ArrayList<ScanResult> scanResults = new ArrayList<>(
                 (HashSet<ScanResult>) getIntent().getSerializableExtra(ARG_SCAN_RESULTS));
         recyclerView.setAdapter(new ScanResultsAdapter(this, scanResults));
 
@@ -82,7 +82,7 @@ public class ResultsActivity extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             return new ViewHolder(
-                    LayoutInflater.from(context).inflate(R.layout.scan_result_item, null));
+                    LayoutInflater.from(context).inflate(R.layout.scan_result_item, parent, false));
         }
 
         @Override

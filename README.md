@@ -37,9 +37,9 @@ Before you can run a sample app, you need to go through a few simple steps:
       ```java
       // Enter your Scandit SDK License key here.
       // Your Scandit SDK License key is available via your Scandit SDK web account.
-      public static final String scanditLicenseKey = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
+      public static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
       ```
   
-      `scanditLicenseKey` variables are placed in each sample project Activity class.
+      `SCANDIT_LICENSE_KEY` variables are placed in each sample project Activity class.
   
   5. Run the sample in Android Studio or IntelliJ IDEA by selecting a run configuration and pressing the Run button. We recommend running our samples on a physical device as otherwise no camera is available.

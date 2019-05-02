@@ -34,7 +34,6 @@ import com.scandit.datacapture.barcode.tracking.capture.BarcodeTrackingSettings;
 import com.scandit.datacapture.barcode.tracking.data.TrackedBarcode;
 import com.scandit.datacapture.barcode.tracking.ui.overlay.BarcodeTrackingBasicOverlay;
 import com.scandit.datacapture.barcode.tracking.ui.overlay.BarcodeTrackingBasicOverlayListener;
-import com.scandit.datacapture.matrixscansimplesample.data.ScanResult;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.core.source.Camera;
@@ -43,6 +42,7 @@ import com.scandit.datacapture.core.source.FrameSourceState;
 import com.scandit.datacapture.core.source.VideoResolution;
 import com.scandit.datacapture.core.ui.DataCaptureView;
 import com.scandit.datacapture.core.ui.style.Brush;
+import com.scandit.datacapture.matrixscansimplesample.data.ScanResult;
 
 import java.util.HashSet;
 
@@ -50,7 +50,7 @@ public class MatrixScanActivity extends AppCompatActivity implements BarcodeTrac
 
     // Enter your Scandit License key here.
     // Your Scandit License key is available via your Scandit SDK web account.
-    public static final String scanditLicenseKey = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
+    public static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
 
     private static final int CAMERA_PERMISSION_REQUEST = 0;
     public static final int REQUEST_CODE_SCAN_RESULTS = 1;
@@ -87,26 +87,40 @@ public class MatrixScanActivity extends AppCompatActivity implements BarcodeTrac
     }
 
     private void initialize() {
-        dataCaptureContext = DataCaptureContext.forLicenseKey(scanditLicenseKey);
+        // Create data capture context using your license key.
+        dataCaptureContext = DataCaptureContext.forLicenseKey(SCANDIT_LICENSE_KEY);
 
-        // Device's camera will serve as a frame source.
+        // Use the default camera and set it as the frame source of the context.
+        // The camera is off by default and must be turned on to start streaming frames to the data
+        // capture context for recognition.
+        // See resumeFrameSource and pauseFrameSource below.
         camera = Camera.getDefaultCamera();
         if (camera != null) {
             // Use the settings recommended by barcode tracking.
             CameraSettings cameraSettings = BarcodeTracking.createRecommendedCameraSettings();
             // Adjust camera settings - set HD resolution.
             cameraSettings.setPreferredResolution(VideoResolution.HD);
-            camera.applySettings(cameraSettings, null);
-            dataCaptureContext.setFrameSource(camera, null);
+            camera.applySettings(cameraSettings);
+            dataCaptureContext.setFrameSource(camera);
         }
 
-        // The scanning behavior is configured through barcode tracking settings. We start with 
-        // empty settings and enable a bunch of symbologies.
-        // Note: in order to achieve the best possible performance in your own apps,
-        // only enable the symbologies you actually need.
+        // The barcode tracking process is configured through barcode tracking settings
+        // which are then applied to the barcode tracking instance that manages barcode tracking.
         BarcodeTrackingSettings barcodeTrackingSettings = new BarcodeTrackingSettings();
-        HashSet<Symbology> symbologies = new HashSet<>();
 
+        // BarcodeTracking has the ability to track more than one barcode at the same time.
+        // The next line sets up barcode tracking for an expected number of 8 codes per frame.
+        // This means that it's expected that there won't be more than around 8 barcodes visible in
+        // the image at the same time. Changing this number to higher values can have negative
+        // impact on performance, so just increasing it to high values is not recommended unless
+        // there is need to track many codes at once.
+        barcodeTrackingSettings.setExpectedNumberOfBarcodesPerFrame(8);
+
+        // The settings instance initially has all types of barcodes (symbologies) disabled.
+        // For the purpose of this sample we enable a very generous set of symbologies.
+        // In your own app ensure that you only enable the symbologies that your app requires
+        // as every additional enabled symbology has an impact on processing times.
+        HashSet<Symbology> symbologies = new HashSet<>();
         symbologies.add(Symbology.EAN13_UPCA);
         symbologies.add(Symbology.EAN8);
         symbologies.add(Symbology.UPCE);
@@ -115,18 +129,18 @@ public class MatrixScanActivity extends AppCompatActivity implements BarcodeTrac
 
         barcodeTrackingSettings.enableSymbologies(symbologies);
 
-        // Set the expected number of objects that can be recognized at one time.
-        barcodeTrackingSettings.setExpectedNumberOfBarcodesPerFrame(8);
-
         // Create barcode tracking and attach to context.
         barcodeTracking = BarcodeTracking.forContext(dataCaptureContext, barcodeTrackingSettings);
-        barcodeTracking.addListener(this);
-        barcodeTracking.setEnabled(true);
 
-        // Create a view.
+        // Register self as a listener to get informed of tracked barcodes.
+        barcodeTracking.addListener(this);
+
+        // To visualize the on-going barcode tracking process on screen, setup a data capture view
+        // that renders the camera preview. The view must be connected to the data capture context.
         DataCaptureView dataCaptureView = DataCaptureView.newInstance(this, dataCaptureContext);
 
-        // Add overlay to display recognised barcodes.
+        // Add a barcode tracking overlay to the data capture view to render the tracked barcodes on
+        // top of the video preview. This is optional, but recommended for better visual feedback.
         BarcodeTrackingBasicOverlay overlay =
                 BarcodeTrackingBasicOverlay.newInstance(barcodeTracking, dataCaptureView);
 
@@ -143,7 +157,9 @@ public class MatrixScanActivity extends AppCompatActivity implements BarcodeTrac
             @Override
             @NonNull
             public Brush brushForTrackedBarcode(
-                    @NonNull BarcodeTrackingBasicOverlay overlay, @NonNull TrackedBarcode trackedBarcode) {
+                    @NonNull BarcodeTrackingBasicOverlay overlay,
+                    @NonNull TrackedBarcode trackedBarcode
+            ) {
                 if (isValidBarcode(trackedBarcode.getBarcode())) {
                     return defaultBrush;
                 } else {
@@ -153,12 +169,14 @@ public class MatrixScanActivity extends AppCompatActivity implements BarcodeTrac
 
             @Override
             public void onTrackedBarcodeTapped(
-                    @NonNull BarcodeTrackingBasicOverlay overlay, @NonNull TrackedBarcode trackedBarcode) {
+                    @NonNull BarcodeTrackingBasicOverlay overlay,
+                    @NonNull TrackedBarcode trackedBarcode
+            ) {
                 // Handle barcode click if necessary.
             }
         });
 
-        // Add view to the container.
+        // Add the DataCaptureView to the container.
         FrameLayout container = findViewById(R.id.data_capture_view_container);
         container.addView(dataCaptureView);
     }
@@ -171,6 +189,12 @@ public class MatrixScanActivity extends AppCompatActivity implements BarcodeTrac
 
     private void pauseFrameSource() {
         paused = true;
+
+        // Switch camera off to stop streaming frames.
+        // The camera is stopped asynchronously and will take some time to completely turn off.
+        // Until it is completely stopped, it is still possible to receive further results, hence
+        // it's a good idea to first disable barcode tracking as well.
+        barcodeTracking.setEnabled(false);
         camera.switchToDesiredState(FrameSourceState.OFF, null);
     }
 
@@ -189,6 +213,10 @@ public class MatrixScanActivity extends AppCompatActivity implements BarcodeTrac
     }
 
     private void resumeFrameSource() {
+
+        // Switch camera on to start streaming frames.
+        // The camera is started asynchronously and will take some time to completely turn on.
+        barcodeTracking.setEnabled(true);
         camera.switchToDesiredState(FrameSourceState.ON, null);
     }
 
@@ -243,9 +271,14 @@ public class MatrixScanActivity extends AppCompatActivity implements BarcodeTrac
         // Nothing to do.
     }
 
+    // This function is called whenever objects are updated and it's the right place to react to
+    // the tracking results.
     @Override
     public void onSessionUpdated(
-            @NonNull BarcodeTracking mode, @NonNull BarcodeTrackingSession session, @NonNull FrameData data) {
+            @NonNull BarcodeTracking mode,
+            @NonNull BarcodeTrackingSession session,
+            @NonNull FrameData data
+    ) {
         synchronized (scanResults) {
             for (TrackedBarcode trackedBarcode : session.getAddedTrackedBarcodes()) {
                 if (isValidBarcode(trackedBarcode.getBarcode())) {
