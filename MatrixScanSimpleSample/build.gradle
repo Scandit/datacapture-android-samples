@@ -23,20 +23,14 @@ android {
     }
 }
 
-repositories {
-    flatDir {
-        dirs '../../library'
-    }
-}
-
 dependencies {
-    api(name:'ScanditCaptureCore', ext:'aar')
-    api(name:'ScanditBarcodeCapture', ext:'aar')
+    api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:barcode:${versions.scandit_sdk_version}"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
 
-    implementation "com.android.support:appcompat-v7:${versions.android_support}"
-    implementation "com.android.support:design:${versions.android_support}"
+    implementation "androidx.appcompat:appcompat:1.0.2"
+    implementation "com.google.android.material:material:1.0.0"
 
-    implementation "com.android.support.constraint:constraint-layout:${versions.constraint_layout}"
+    implementation "androidx.constraintlayout:constraintlayout:1.1.3"
 }

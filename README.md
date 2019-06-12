@@ -16,11 +16,11 @@ The simple samples allow you to get going quickly, while the advanced samples sh
 |                                               Simple Sample                                               |                                           Advanced Sample                                           |
 |:---------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------:|
 |                         ![alt text](/images/sample-ms-simple.png?raw=true "Simple Sample")                         |                                             Coming Soon                                             |
-| Very simple sample which shows how you can highlight barcodes on screen with the Scandit DataCapture SDK. | Demonstrates the use of more advanced augmented reality use cases with the Scandit DataCapture SDK. |
+| Very simple sample which shows how you can highlight barcodes on screen with the Scandit Data Capture SDK. | Demonstrates the use of more advanced augmented reality use cases with the Scandit Data Capture SDK. |
 
 # Run the Samples
 
-The best way to start working with the Scandit DataCapture SDK is to run one of our sample apps.
+The best way to start working with the Scandit Data Capture SDK is to run one of our sample apps.
 
 Before you can run a sample app, you need to go through a few simple steps:
 

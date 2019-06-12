@@ -20,11 +20,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.tracking.capture.BarcodeTracking;
@@ -99,7 +99,7 @@ public class MatrixScanActivity extends AppCompatActivity implements BarcodeTrac
             // Use the settings recommended by barcode tracking.
             CameraSettings cameraSettings = BarcodeTracking.createRecommendedCameraSettings();
             // Adjust camera settings - set HD resolution.
-            cameraSettings.setPreferredResolution(VideoResolution.HD);
+            cameraSettings.setPreferredResolution(VideoResolution.FULL_HD);
             camera.applySettings(cameraSettings);
             dataCaptureContext.setFrameSource(camera);
         }
@@ -107,14 +107,6 @@ public class MatrixScanActivity extends AppCompatActivity implements BarcodeTrac
         // The barcode tracking process is configured through barcode tracking settings
         // which are then applied to the barcode tracking instance that manages barcode tracking.
         BarcodeTrackingSettings barcodeTrackingSettings = new BarcodeTrackingSettings();
-
-        // BarcodeTracking has the ability to track more than one barcode at the same time.
-        // The next line sets up barcode tracking for an expected number of 8 codes per frame.
-        // This means that it's expected that there won't be more than around 8 barcodes visible in
-        // the image at the same time. Changing this number to higher values can have negative
-        // impact on performance, so just increasing it to high values is not recommended unless
-        // there is need to track many codes at once.
-        barcodeTrackingSettings.setExpectedNumberOfBarcodesPerFrame(8);
 
         // The settings instance initially has all types of barcodes (symbologies) disabled.
         // For the purpose of this sample we enable a very generous set of symbologies.
@@ -130,7 +122,7 @@ public class MatrixScanActivity extends AppCompatActivity implements BarcodeTrac
         barcodeTrackingSettings.enableSymbologies(symbologies);
 
         // Create barcode tracking and attach to context.
-        barcodeTracking = BarcodeTracking.forContext(dataCaptureContext, barcodeTrackingSettings);
+        barcodeTracking = BarcodeTracking.forDataCaptureContext(dataCaptureContext, barcodeTrackingSettings);
 
         // Register self as a listener to get informed of tracked barcodes.
         barcodeTracking.addListener(this);

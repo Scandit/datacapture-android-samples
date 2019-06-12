@@ -17,8 +17,8 @@ package com.scandit.datacapture.simplebarcodesample;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import com.scandit.datacapture.barcode.capture.*;
 import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.barcode.data.Symbology;
@@ -94,7 +94,7 @@ public class BarcodeScanActivity
         barcodeCaptureSettings.enableSymbologies(symbologies);
 
         // Some linear/1d barcode symbologies allow you to encode variable-length data.
-        // By default, the Scandit DataCapture SDK only scans barcodes in a certain length range.
+        // By default, the Scandit Data Capture SDK only scans barcodes in a certain length range.
         // If your application requires scanning of one of these symbologies, and the length is
         // falling outside the default range, you may need to adjust the "active symbol counts"
         // for this symbology. This is shown in the following few lines of code for one of the
@@ -108,7 +108,7 @@ public class BarcodeScanActivity
         symbologySettings.setActiveSymbolCounts(activeSymbolCounts);
 
         // Create new barcode capture mode with the settings from above.
-        barcodeCapture = BarcodeCapture.forContext(dataCaptureContext, barcodeCaptureSettings);
+        barcodeCapture = BarcodeCapture.forDataCaptureContext(dataCaptureContext, barcodeCaptureSettings);
 
         // Register self as a listener to get informed whenever a new barcode got recognized.
         barcodeCapture.addListener(this);
@@ -134,6 +134,7 @@ public class BarcodeScanActivity
 
     @Override
     protected void onDestroy() {
+        barcodeCapture.removeListener(this);
         dataCaptureContext.removeMode(barcodeCapture);
         super.onDestroy();
     }
@@ -202,9 +203,9 @@ public class BarcodeScanActivity
             @NonNull BarcodeCaptureSession session,
             @NonNull FrameData frameData
     ) {
-        if (session.getNewlyLocalizedBarcodes().isEmpty()) return;
+        if (session.getNewlyRecognizedBarcodes().isEmpty()) return;
 
-        Barcode barcode = session.getNewlyLocalizedBarcodes().get(0);
+        Barcode barcode = session.getNewlyRecognizedBarcodes().get(0);
 
         // Stop recognizing barcodes for as long as we are displaying the result. There won't be any new results until
         // the capture mode is enabled again. Note that disabling the capture mode does not stop the camera, the camera

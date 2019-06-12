@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ ~ Licensed under the Apache License, Version 2.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~ http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+ -->
+
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:descendantFocusability="blocksDescendants"
+        android:focusableInTouchMode="true">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_symbology_enabled"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:elevation="3dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:cardCornerRadius="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp">
+
+                <Switch
+                    android:id="@+id/switch_enabled"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                    android:textAppearance="?android:attr/textAppearanceListItem"
+                    android:paddingStart="24dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:paddingEnd="24dp"
+                    android:saveEnabled="false"
+                    android:text="@string/enabled"/>
+
+                <Switch
+                    android:id="@+id/switch_color_inverted"
+                    android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                    android:layout_width="match_parent"
+                    android:textAppearance="?android:attr/textAppearanceListItem"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:saveEnabled="false"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:text="@string/color_inverted"
+                    android:visibility="gone"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_range"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:elevation="3dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/card_symbology_enabled"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:cardCornerRadius="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/range"/>
+
+                <LinearLayout
+                    android:id="@+id/container_range_min"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp"
+                    android:background="?android:attr/selectableItemBackground">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="8dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:text="@string/minimum"/>
+
+                    <TextView
+                        android:id="@+id/text_range_min"
+                        android:layout_width="match_parent"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="24dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical|end"
+                        android:drawableEnd="@drawable/ic_expand"
+                        tools:text="7"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/container_range_max"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="?android:attr/selectableItemBackground">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="8dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:text="@string/maximum"/>
+
+                    <TextView
+                        android:id="@+id/text_range_max"
+                        android:layout_width="match_parent"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="24dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical|end"
+                        android:drawableEnd="@drawable/ic_expand"
+                        tools:text="7"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_extensions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:background="@android:color/white"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/card_range"
+            app:cardElevation="3dp"
+            app:cardCornerRadius="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/extensions"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_extensions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
+                    android:isScrollContainer="false"
+                    tools:listitem="@layout/two_texts_and_icon"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
