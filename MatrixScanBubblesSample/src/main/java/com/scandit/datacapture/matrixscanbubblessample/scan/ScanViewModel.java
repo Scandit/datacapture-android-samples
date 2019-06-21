@@ -35,7 +35,7 @@ import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.core.source.Camera;
 import com.scandit.datacapture.core.source.FrameSourceState;
 import com.scandit.datacapture.core.ui.style.Brush;
-import com.scandit.datacapture.matrixscanbubblessample.models.SettingsManager;
+import com.scandit.datacapture.matrixscanbubblessample.models.DataCaptureManager;
 import com.scandit.datacapture.matrixscanbubblessample.scan.bubble.data.BubbleData;
 import com.scandit.datacapture.matrixscanbubblessample.scan.bubble.data.BubbleDataProvider;
 
@@ -44,10 +44,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ScanViewModel extends ViewModel implements BarcodeTrackingListener,
         BarcodeTrackingAdvancedOverlayListener {
 
-    private final SettingsManager settingsManager = SettingsManager.CURRENT;
-    private final Camera camera = settingsManager.camera;
-    final BarcodeTracking barcodeTracking = settingsManager.barcodeTracking;
-    final Brush defaultBrush = settingsManager.defaultBrush;
+    private final DataCaptureManager dataCaptureManager = DataCaptureManager.CURRENT;
+    private final Camera camera = dataCaptureManager.camera;
+    final BarcodeTracking barcodeTracking = dataCaptureManager.barcodeTracking;
+    final Brush defaultBrush = dataCaptureManager.defaultBrush;
 
     private final BubbleDataProvider bubbleDataProvider = new BubbleDataProvider();
 
@@ -58,11 +58,11 @@ public class ScanViewModel extends ViewModel implements BarcodeTrackingListener,
 
     public ScanViewModel() {
         // Register self as a listener to get informed whenever the tracking session is updated.
-        settingsManager.barcodeTracking.addListener(this);
+        dataCaptureManager.barcodeTracking.addListener(this);
     }
 
     DataCaptureContext getDataCaptureContext() {
-        return settingsManager.dataCaptureContext;
+        return dataCaptureManager.dataCaptureContext;
     }
 
     void setListener(@Nullable ScanViewModelListener listener) {
@@ -122,11 +122,11 @@ public class ScanViewModel extends ViewModel implements BarcodeTrackingListener,
     }
 
     private void resumeScanningInternal() {
-        settingsManager.barcodeTracking.setEnabled(true);
+        dataCaptureManager.barcodeTracking.setEnabled(true);
     }
 
     private void pauseScanningInternal() {
-        settingsManager.barcodeTracking.setEnabled(false);
+        dataCaptureManager.barcodeTracking.setEnabled(false);
     }
 
     private void stopFrameSourceInternal() {

@@ -17,14 +17,13 @@ package com.scandit.datacapture.barcodecapturesettingssample.settings.barcodecap
 import androidx.annotation.StringRes;
 import com.scandit.datacapture.barcodecapturesettingssample.R;
 import com.scandit.datacapture.core.area.LocationSelection;
-import com.scandit.datacapture.core.impl.area.NoLocationSelection;
 
 public class LocationTypeNone extends LocationType {
 
     public static LocationTypeNone fromCurrentLocationSelection(LocationSelection selection) {
         return new LocationTypeNone(
                 R.string.none,
-                selection == null || selection instanceof NoLocationSelection
+                selection == null
         );
     }
 
@@ -34,6 +33,6 @@ public class LocationTypeNone extends LocationType {
 
     @Override
     public LocationSelection buildLocationSelection() {
-        return new NoLocationSelection();
+        return null;
     }
 }

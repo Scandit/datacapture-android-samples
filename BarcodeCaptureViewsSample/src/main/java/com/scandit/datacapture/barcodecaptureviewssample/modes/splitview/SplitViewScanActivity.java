@@ -91,17 +91,16 @@ public class SplitViewScanActivity extends AppCompatActivity
     }
 
     private void setupDataCaptureView() {
-
         // To visualize the on-going barcode capturing process on screen,
         // setup a data capture view that renders the camera preview.
         // The view must be connected to the data capture context.
-        DataCaptureView view = DataCaptureView.newInstance(this, viewModel.dataCaptureContext);
+        DataCaptureView view = DataCaptureView.newInstance(this, viewModel.getDataCaptureContext());
 
         // Add a barcode capture overlay to the data capture view to render the tracked
         // barcodes on top of the video preview.
         // This is optional, but recommended for better visual feedback.
         BarcodeCaptureOverlay overlay =
-                BarcodeCaptureOverlay.newInstance(viewModel.barcodeCapture, view);
+                BarcodeCaptureOverlay.newInstance(viewModel.getBarcodeCapture(), view);
         view.addOverlay(overlay);
 
         // We have to add the laser line viewfinder to the overlay.

@@ -21,10 +21,8 @@ import com.scandit.datacapture.barcode.capture.BarcodeCaptureSession;
 import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.barcode.data.SymbologyDescription;
 import com.scandit.datacapture.barcodecapturesettingssample.models.SettingsManager;
-import com.scandit.datacapture.core.common.async.Callback;
 import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.core.source.FrameSourceState;
-import com.scandit.datacapture.core.source.TorchState;
 import org.jetbrains.annotations.NotNull;
 
 public class BarcodeScanViewModel extends ViewModel implements BarcodeCaptureListener {

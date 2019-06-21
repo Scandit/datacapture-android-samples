@@ -22,7 +22,6 @@ buildscript {
     }
 }
 
-
 android {
     compileSdkVersion sdk.compile
 

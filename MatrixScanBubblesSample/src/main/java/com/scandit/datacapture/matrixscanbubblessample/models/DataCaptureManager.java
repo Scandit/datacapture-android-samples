@@ -24,9 +24,9 @@ import com.scandit.datacapture.core.source.CameraSettings;
 import com.scandit.datacapture.core.source.VideoResolution;
 import com.scandit.datacapture.core.ui.style.Brush;
 
-public final class SettingsManager {
+public final class DataCaptureManager {
 
-    public static final SettingsManager CURRENT = new SettingsManager();
+    public static final DataCaptureManager CURRENT = new DataCaptureManager();
 
     public static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
 
@@ -36,7 +36,7 @@ public final class SettingsManager {
 
     public final Brush defaultBrush = new Brush(Color.TRANSPARENT, Color.WHITE, 2f);
 
-    private SettingsManager() {
+    private DataCaptureManager() {
         // The barcode tracking process is configured through barcode tracking settings
         // which are then applied to the barcode tracking instance that manages barcode recognition and tracking.
         BarcodeTrackingSettings barcodeTrackingSettings = new BarcodeTrackingSettings();

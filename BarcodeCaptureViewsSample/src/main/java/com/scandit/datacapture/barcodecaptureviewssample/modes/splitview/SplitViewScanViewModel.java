@@ -27,15 +27,15 @@ import com.scandit.datacapture.barcode.capture.BarcodeCaptureSession;
 import com.scandit.datacapture.barcode.capture.BarcodeCaptureSettings;
 import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.barcode.data.Symbology;
+import com.scandit.datacapture.barcodecaptureviewssample.models.DataCaptureManager;
 import com.scandit.datacapture.core.area.RadiusLocationSelection;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.capture.DataCaptureContextListener;
 import com.scandit.datacapture.core.capture.DataCaptureMode;
-import com.scandit.datacapture.core.common.LicenseStatus;
+import com.scandit.datacapture.core.common.ContextStatus;
 import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
 import com.scandit.datacapture.core.common.geometry.MeasureUnit;
 import com.scandit.datacapture.core.data.FrameData;
-import com.scandit.datacapture.core.source.Camera;
 import com.scandit.datacapture.core.source.FrameSource;
 import com.scandit.datacapture.core.source.FrameSourceState;
 import com.scandit.datacapture.core.time.TimeInterval;
@@ -43,22 +43,19 @@ import com.scandit.datacapture.core.time.TimeInterval;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.scandit.datacapture.barcodecaptureviewssample.models.SettingsManager.SCANDIT_LICENSE_KEY;
-
 public class SplitViewScanViewModel extends ViewModel implements BarcodeCaptureListener,
         DataCaptureContextListener {
+
+    private final DataCaptureManager dataCaptureManager = DataCaptureManager.CURRENT;
 
     private static final long SCAN_TIMEOUT_DURATION = 10 * 1000;
 
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
-    private final Camera camera = Camera.getDefaultCamera();
     private Listener listener;
     private boolean isLicenseValid = false;
     private boolean inTimeoutState = false;
 
     final List<Barcode> results = new ArrayList<>();
-    final BarcodeCapture barcodeCapture;
-    final DataCaptureContext dataCaptureContext;
 
     private final CountDownTimer scanTimeoutTimer =
             new CountDownTimer(SCAN_TIMEOUT_DURATION, SCAN_TIMEOUT_DURATION) {
@@ -73,7 +70,16 @@ public class SplitViewScanViewModel extends ViewModel implements BarcodeCaptureL
             };
 
     public SplitViewScanViewModel() {
+        dataCaptureManager.barcodeCapture.applySettings(getBarcodeCaptureSettings());
 
+        // Register self as a listener to get informed of Scandit license status changes.
+        dataCaptureManager.dataCaptureContext.addListener(this);
+
+        // Register self as a listener to get informed whenever a new barcode got recognized.
+        dataCaptureManager.barcodeCapture.addListener(this);
+    }
+
+    private BarcodeCaptureSettings getBarcodeCaptureSettings() {
         // The barcode capturing process is configured through barcode capture settings
         // which are then applied to the barcode capture instance that manages barcode recognition.
         BarcodeCaptureSettings barcodeCaptureSettings = new BarcodeCaptureSettings();
@@ -100,19 +106,15 @@ public class SplitViewScanViewModel extends ViewModel implements BarcodeCaptureL
         barcodeCaptureSettings.setLocationSelection(
                 new RadiusLocationSelection(new FloatWithUnit(0f, MeasureUnit.FRACTION))
         );
+        return barcodeCaptureSettings;
+    }
 
-        // Create data capture context using your license key and set the camera as the frame source.
-        dataCaptureContext = DataCaptureContext.forLicenseKey(SCANDIT_LICENSE_KEY);
-        dataCaptureContext.setFrameSource(camera);
+    DataCaptureContext getDataCaptureContext() {
+        return dataCaptureManager.dataCaptureContext;
+    }
 
-        // Register self as a listener to get informed of Scandit license status changes.
-        dataCaptureContext.addListener(this);
-
-        // Create new barcode capture mode with the settings from above.
-        barcodeCapture = BarcodeCapture.forDataCaptureContext(dataCaptureContext, barcodeCaptureSettings);
-
-        // Register self as a listener to get informed whenever a new barcode got recognized.
-        barcodeCapture.addListener(this);
+    BarcodeCapture getBarcodeCapture() {
+        return dataCaptureManager.barcodeCapture;
     }
 
     boolean isInTimeoutState() {
@@ -130,7 +132,7 @@ public class SplitViewScanViewModel extends ViewModel implements BarcodeCaptureL
 
     void resumeScanning() {
         inTimeoutState = false;
-        barcodeCapture.setEnabled(true);
+        dataCaptureManager.barcodeCapture.setEnabled(true);
         scanTimeoutTimer.cancel();
         if (isLicenseValid) {
             scanTimeoutTimer.start();
@@ -138,19 +140,19 @@ public class SplitViewScanViewModel extends ViewModel implements BarcodeCaptureL
     }
 
     void pauseScanning() {
-        barcodeCapture.setEnabled(false);
+        dataCaptureManager.barcodeCapture.setEnabled(false);
         scanTimeoutTimer.cancel();
     }
 
     void startFrameSource() {
-        if (camera != null) {
-            camera.switchToDesiredState(FrameSourceState.ON);
+        if (dataCaptureManager.camera != null) {
+            dataCaptureManager.camera.switchToDesiredState(FrameSourceState.ON);
         }
     }
 
     void stopFrameSource() {
-        if (camera != null) {
-            camera.switchToDesiredState(FrameSourceState.OFF);
+        if (dataCaptureManager.camera != null) {
+            dataCaptureManager.camera.switchToDesiredState(FrameSourceState.OFF);
         }
     }
 
@@ -229,10 +231,10 @@ public class SplitViewScanViewModel extends ViewModel implements BarcodeCaptureL
     ) {}
 
     @Override
-    public void onLicenseStatusChanged(
-            @NonNull DataCaptureContext dataCaptureContext, @NonNull LicenseStatus licenseStatus
+    public void onStatusChanged(
+            @NonNull DataCaptureContext dataCaptureContext, @NonNull ContextStatus contextStatus
     ) {
-        boolean isNewLicenseStateValid = licenseStatus.isValid();
+        boolean isNewLicenseStateValid = contextStatus.isValid();
         if (isNewLicenseStateValid == isLicenseValid) return;// No further action required.
 
         scanTimeoutTimer.cancel();
@@ -244,7 +246,7 @@ public class SplitViewScanViewModel extends ViewModel implements BarcodeCaptureL
         if (isNewLicenseStateValid) {
             scanTimeoutTimer.start();
         }
-        isLicenseValid = licenseStatus.isValid();
+        isLicenseValid = contextStatus.isValid();
     }
 
     @Override
