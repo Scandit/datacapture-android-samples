@@ -14,28 +14,23 @@
 
 package com.scandit.datacapture.barcodecapturesettingssample.scanning;
 
-import android.Manifest;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 import com.scandit.datacapture.barcodecapturesettingssample.R;
-import com.scandit.datacapture.barcodecapturesettingssample.base.NavigationFragment;
 import com.scandit.datacapture.barcodecapturesettingssample.models.SettingsManager;
 import com.scandit.datacapture.core.common.geometry.PointWithUnit;
 import com.scandit.datacapture.core.ui.DataCaptureView;
 import com.scandit.datacapture.core.ui.control.TorchSwitchControl;
 
-public class BarcodeScanFragment extends NavigationFragment
+public class BarcodeScanFragment extends CameraPermissionFragment
         implements BarcodeScanViewModel.Listener {
-
-    private static final int PERMISSION_CODE_CAMERA = 100;
 
     public static BarcodeScanFragment newInstance() {
         return new BarcodeScanFragment();
@@ -45,7 +40,6 @@ public class BarcodeScanFragment extends NavigationFragment
 
     private DataCaptureView dataCaptureView;
     private AlertDialog dialog = null;
-    private boolean permissionDeniedOnce = false;
 
     private CountDownTimer continuousResultTimer = new CountDownTimer(500L, 500L) {
         @Override
@@ -102,23 +96,6 @@ public class BarcodeScanFragment extends NavigationFragment
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        if (dialog != null) {
-            dialog.dismiss();
-            dialog = null;
-        }
-        viewModel.setListener(this);
-
-        if (hasCameraPermissions()) {
-            startFrameSource();
-        } else if (!permissionDeniedOnce) {// We ask for permissions only once.
-            requestCameraPermissions();
-        }
-    }
-
-    @Override
     protected boolean shouldShowBackButton() {
         return false;
     }
@@ -128,42 +105,47 @@ public class BarcodeScanFragment extends NavigationFragment
         return getString(R.string.app_name);
     }
 
-    private boolean hasCameraPermissions() {
-        return ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.CAMERA
-        ) == PackageManager.PERMISSION_GRANTED;
-    }
+    @Override
+    public void onResume() {
+        super.onResume();
 
-    private void requestCameraPermissions() {
-        requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_CODE_CAMERA);
-    }
+        if (dialog != null) {
+            dialog.dismiss();
+            dialog = null;
+        }
+        viewModel.setListener(this);
 
-    private void startFrameSource() {
-        // We turn on the frame source and enable barcode capture.
-        viewModel.resumeScanning();
-        viewModel.startFrameSource();
+        // Check for camera permission and request it, if it hasn't yet been granted.
+        // Once we have the permission the onCameraPermissionGranted() method will be called.
+        requestCameraPermission();
     }
 
     @Override
-    public void onRequestPermissionsResult(
-            int requestCode,
-            @NonNull String[] permissions,
-            @NonNull int[] grantResults
-    ) {
-        if (requestCode == PERMISSION_CODE_CAMERA && grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            startFrameSource();
-        } else {
-            permissionDeniedOnce = true;
-        }
+    public void onCameraPermissionGranted() {
+        resumeFrameSource();
+    }
+
+    private void resumeFrameSource() {
+        // Switch camera on to start streaming frames.
+        // The camera is started asynchronously and will take some time to completely turn on.
+        viewModel.startFrameSource();
+        viewModel.resumeScanning();
     }
 
     @Override
     public void onPause() {
+        pauseFrameSource();
         super.onPause();
+    }
+
+    private void pauseFrameSource() {
         viewModel.setListener(null);
-        viewModel.stopFrameSource();// We turn off the frame source.
+        // Switch camera off to stop streaming frames.
+        // The camera is stopped asynchronously and will take some time to completely turn off.
+        // Until it is completely stopped, it is still possible to receive further results, hence
+        // it's a good idea to first disable barcode tracking as well.
+        viewModel.pauseScanning();
+        viewModel.stopFrameSource();
     }
 
     @Override

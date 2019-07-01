@@ -119,7 +119,7 @@ public abstract class MeasureUnitFragment extends NavigationFragment
 
     private MeasureUnitEntry[] getEntriesAndEnabledState() {
         MeasureUnit currentMeasureUnit = provideCurrentFloatWithUnit().getUnit();
-        MeasureUnit[] measureUnits = MeasureUnit.values();
+        MeasureUnit[] measureUnits = {MeasureUnit.DIP, MeasureUnit.FRACTION, MeasureUnit.PIXEL};
         MeasureUnitEntry[] values = new MeasureUnitEntry[measureUnits.length];
 
         for (int i = 0; i < measureUnits.length; i++) {

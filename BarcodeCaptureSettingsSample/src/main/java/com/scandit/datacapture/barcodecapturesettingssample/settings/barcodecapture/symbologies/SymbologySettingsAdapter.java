@@ -79,7 +79,6 @@ public class SymbologySettingsAdapter
         void bind(SymbologyDescription symbology, boolean enabled) {
             setFirstTextView(symbology.getReadableName());
             setSecondTextViewText(enabled ? "On" : "Off");
-            setIcon(R.drawable.ic_chevron_right);
         }
     }
 

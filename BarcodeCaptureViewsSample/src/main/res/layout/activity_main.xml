@@ -36,6 +36,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
+            android:id="@+id/linear_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -44,6 +45,7 @@
             android:paddingBottom="12dp"
             android:background="@android:color/white"
             android:elevation="3dp"
+            app:layout_constraintBottom_toTopOf="@+id/text_sdk_version"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -83,13 +85,12 @@
         </LinearLayout>
 
         <TextView
-            style="@style/TextAppearance.AppCompat.Body2"
             android:id="@+id/text_sdk_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginTop="12dp"
             android:gravity="center"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linear_layout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="Barcode Capture Extended Sample \n SDK 6.0.0BETA2"/>

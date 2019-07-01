@@ -1,22 +1,22 @@
 # Available Samples
 
-We have created both simple and advanced samples that show you how to capture barcodes and how to use Matrix Scan functionality.
-The simple samples allow you to get going quickly, while the advanced samples show you how to use additional settings and setup the scanner for the best user experience.
+We have created both simple and advanced samples that show you how to capture barcodes and how to use MatrixScan functionality.
+The simple samples allow you to get going quickly, while the advanced ones show you how to use the additional settings and setup the scanner for the best user experience.
 
 ## Barcode Capture Samples
 
-|                        Simple Sample                        |                                 User Interface Sample                                |                                               Settings Sample                                               |
-|:-----------------------------------------------------------:|:------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------:|
-|  ![alt text](/images/sample-bc-simple.png?raw=true "Simple Sample")  |                                      Coming Soon                                     |                                                 Coming Soon                                                 |
-| Basic sample that uses the camera to read a single barcode. | Demonstrates the various ways to best integrate the scanner into the UI of your app. | Demonstrates how you can adapt the scanner settings best to your needs and experiment with all the options. |
+|                               Simple Sample                              |                                View Sample                               |                             Settings Sample                              |
+|:------------------------------------------------------------------------:|:------------------------------------------------------------------------:|:------------------------------------------------------------------------:|
+| ![alt text](/images/sample-bc-simple.png?raw=true "Simple Sample") | ![alt text](/images/sample-bc-view-1.png?raw=true "View Sample") ![alt text](/images/sample-bc-view-2.png?raw=true "View Sample") | ![alt text](/images/sample-bc-settings-1.png?raw=true "Settings Sample") ![alt text](/images/sample-bc-settings-2.png?raw=true "Settings Sample") |
+| Basic sample that uses the camera to read a single barcode.              | Demonstrates the various ways to best integrate the scanner into the UI of your app. | Demonstrates how you can adapt the scanner settings best to your needs and experiment with all the options. |
 
 
 ## MatrixScan Samples
 
-|                                               Simple Sample                                               |                                           Advanced Sample                                           |
-|:---------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------:|
-|                         ![alt text](/images/sample-ms-simple.png?raw=true "Simple Sample")                         |                                             Coming Soon                                             |
-| Very simple sample which shows how you can highlight barcodes on screen with the Scandit Data Capture SDK. | Demonstrates the use of more advanced augmented reality use cases with the Scandit Data Capture SDK. |
+|                               Reject Sample                              |                               Bubble Sample                              |                          Search And Find Sample                          |
+|:------------------------------------------------------------------------:|:------------------------------------------------------------------------:|:------------------------------------------------------------------------:|
+| ![alt text](/images/sample-ms-simple.png?raw=true "Simple Sample") | ![alt text](/images/sample-ms-bubble.png?raw=true "Bubble Sample") | ![alt text](/images/sample-ms-saf-1.png?raw=true "Search") ![alt text](/images/sample-ms-saf-2.png?raw=true "Find") |
+| Sample which shows how you can highlight selected (by a custom condition) barcodes on screen with the Scandit Data Capture SDK. | Demonstrates the use of more advanced augmented reality use cases with the Scandit Data Capture SDK. | Demonstrates a use case that requires a consecutive use of both Barcode Capture and MatrixScan in a single app. |
 
 # Run the Samples
 

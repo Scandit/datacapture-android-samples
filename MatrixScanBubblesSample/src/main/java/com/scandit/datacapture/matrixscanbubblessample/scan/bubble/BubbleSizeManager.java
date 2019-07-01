@@ -19,7 +19,7 @@ import com.scandit.datacapture.core.common.geometry.Quadrilateral;
 
 public final class BubbleSizeManager {
 
-    private static final float SCREEN_PERCENTAGE_WIDTH_REQUIRED = 0.25f;
+    private static final float SCREEN_PERCENTAGE_WIDTH_REQUIRED = 0.1f;
 
     private final float displayWidth;
 
@@ -27,7 +27,7 @@ public final class BubbleSizeManager {
         displayWidth = context.getResources().getDisplayMetrics().widthPixels;
     }
 
-    // We want to show the bubble overlay only if the barcode takes >= 25% of the screen width.
+    // We want to show the bubble overlay only if the barcode takes >= 10% of the screen width.
     public boolean isBarcodeLargeEnoughForBubble(Quadrilateral barcodeLocation) {
         float topRightX = barcodeLocation.getTopRight().getX();
         float topLeftX = barcodeLocation.getTopLeft().getX();

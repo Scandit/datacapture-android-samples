@@ -70,6 +70,10 @@ public class ScanViewModel extends ViewModel implements BarcodeCaptureListener {
         return dataCaptureManager.dataCaptureContext;
     }
 
+    public BarcodeCapture getBarcodeCapture() {
+        return dataCaptureManager.barcodeCapture;
+    }
+
     public void setListener(@Nullable ResultListener listener) {
         this.listener = listener;
     }

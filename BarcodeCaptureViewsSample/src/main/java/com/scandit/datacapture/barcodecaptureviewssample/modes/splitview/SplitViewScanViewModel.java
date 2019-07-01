@@ -97,11 +97,11 @@ public class SplitViewScanViewModel extends ViewModel implements BarcodeCaptureL
         barcodeCaptureSettings.enableSymbology(Symbology.CODE128, true);
         barcodeCaptureSettings.enableSymbology(Symbology.INTERLEAVED_TWO_OF_FIVE, true);
 
-        // Setting the code duplicate filter to one means that the scanner won't report
-        // the same code as recognized for one second once it's recognized.
+        // Setting the code duplicate filter to one thousand milliseconds means that the scanner
+        // won't report the same code as recognized for one second once it's recognized.
         barcodeCaptureSettings.setCodeDuplicateFilter(TimeInterval.millis(1000L));
 
-        // In order to not to pick up barcodes outside of the view finder,
+        // In order not to pick up barcodes outside of the view finder,
         // restrict the code location selection to match the laser line's center.
         barcodeCaptureSettings.setLocationSelection(
                 new RadiusLocationSelection(new FloatWithUnit(0f, MeasureUnit.FRACTION))

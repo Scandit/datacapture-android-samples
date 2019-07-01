@@ -60,7 +60,6 @@ class ViewSettingsAdapter extends RecyclerView.Adapter<ViewSettingsAdapter.ViewH
 
         ViewHolder(View itemView) {
             super(itemView, R.id.text_field, R.id.text_field_2);
-            setIcon(R.drawable.ic_chevron_right);
         }
 
         void bind(ViewSettingsEntry entry) {

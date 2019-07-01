@@ -14,35 +14,31 @@
 
 package com.scandit.datacapture.barcodecaptureviewssample.modes.fragment;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.barcode.data.SymbologyDescription;
+import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
 import com.scandit.datacapture.barcodecaptureviewssample.R;
 import com.scandit.datacapture.barcodecaptureviewssample.modes.ScanViewModel;
+import com.scandit.datacapture.barcodecaptureviewssample.modes.base.CameraPermissionFragment;
 import com.scandit.datacapture.core.ui.DataCaptureView;
 
-public class FullscreenScanFragment extends Fragment implements ScanViewModel.ResultListener {
+public class FullscreenScanFragment extends CameraPermissionFragment implements ScanViewModel.ResultListener {
 
-    private static final int PERMISSION_CODE_CAMERA = 100;
-
-    public static FullscreenScanFragment newInstance() {
+    static FullscreenScanFragment newInstance() {
         return new FullscreenScanFragment();
     }
 
     private ScanViewModel viewModel;
-    private boolean permissionDeniedOnce = false;
     private AlertDialog dialog = null;
 
     @Override
@@ -61,49 +57,38 @@ public class FullscreenScanFragment extends Fragment implements ScanViewModel.Re
         // To visualize the on-going barcode capturing process on screen,
         // setup a data capture view that renders the camera preview.
         // The view must be connected to the data capture context.
-        return DataCaptureView.newInstance(requireContext(), viewModel.getDataCaptureContext());
+        DataCaptureView view = DataCaptureView.newInstance(requireContext(), viewModel.getDataCaptureContext());
+
+        // Add a barcode capture overlay to the data capture view to render the tracked
+        // barcodes on top of the video preview.
+        // This is optional, but recommended for better visual feedback.
+        BarcodeCaptureOverlay overlay =
+                BarcodeCaptureOverlay.newInstance(viewModel.getBarcodeCapture(), view);
+
+        return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (hasCameraPermissions()) {
-            startScanning();
-        } else if (!permissionDeniedOnce) {// We ask for permissions only once.
-            requestCameraPermissions();
-        }
-    }
 
-    private void startScanning() {
-        // Switch camera on to start streaming frames.
-        // The camera is started asynchronously and will take some time to completely turn on.
-        viewModel.setListener(this);
-        viewModel.startFrameSource();
-        if (!isShowingDialog()) {
-            viewModel.resumeScanning();
-        }
-    }
-
-    private boolean hasCameraPermissions() {
-        return ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestCameraPermissions() {
-        requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_CODE_CAMERA);
+        // Check for camera permission and request it, if it hasn't yet been granted.
+        // Once we have the permission the onCameraPermissionGranted() method will be called.
+        requestCameraPermission();
     }
 
     @Override
-    public void onRequestPermissionsResult(
-            int requestCode,
-            @NonNull String[] permissions,
-            @NonNull int[] grantResults
-    ) {
-        if (requestCode == PERMISSION_CODE_CAMERA && grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            startScanning();
-        } else {
-            permissionDeniedOnce = true;
+    public void onCameraPermissionGranted() {
+        resumeFrameSource();
+    }
+
+    private void resumeFrameSource() {
+        viewModel.setListener(this);
+        // Switch camera on to start streaming frames.
+        // The camera is started asynchronously and will take some time to completely turn on.
+        viewModel.startFrameSource();
+        if (!isShowingDialog()) {
+            viewModel.resumeScanning();
         }
     }
 
@@ -114,11 +99,11 @@ public class FullscreenScanFragment extends Fragment implements ScanViewModel.Re
     @Override
     public void onPause() {
         super.onPause();
+        viewModel.setListener(null);
         // Switch camera off to stop streaming frames.
         // The camera is stopped asynchronously and will take some time to completely turn off.
         // Until it is completely stopped, it is still possible to receive further results, hence
         // it's a good idea to first disable barcode tracking as well.
-        viewModel.setListener(null);
         viewModel.pauseScanning();
         viewModel.stopFrameSource();
     }

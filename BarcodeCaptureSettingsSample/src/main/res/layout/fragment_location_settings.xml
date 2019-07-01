@@ -108,7 +108,6 @@
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:gravity="center_vertical|end"
-                android:drawableEnd="@drawable/ic_chevron_right"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                 tools:text="0.00 (DIP)"/>
         </LinearLayout>
@@ -159,7 +158,6 @@
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:gravity="center_vertical|end"
-                    android:drawableEnd="@drawable/ic_chevron_right"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     tools:text="Width and Height Aspect"/>
             </LinearLayout>
@@ -191,7 +189,6 @@
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:gravity="center_vertical|end"
-                    android:drawableEnd="@drawable/ic_chevron_right"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     tools:text="0.00 (DIP)"/>
             </LinearLayout>
@@ -223,7 +220,6 @@
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:gravity="center_vertical|end"
-                    android:drawableEnd="@drawable/ic_chevron_right"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     tools:text="0.00 (DIP)"/>
             </LinearLayout>

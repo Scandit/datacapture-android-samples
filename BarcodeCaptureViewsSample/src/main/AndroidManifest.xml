@@ -46,6 +46,9 @@
                   android:label="@string/full_screen_activity"
                   android:parentActivityName=".MainActivity"/>
 
-        <activity android:name=".modes.splitview.SplitViewScanActivity"/>
+        <activity android:name=".modes.splitview.SplitViewScanActivity"
+                  android:theme="@style/Theme.AppCompat.Light"
+                  android:label="@string/split_view"
+                  android:parentActivityName=".MainActivity"/>
     </application>
 </manifest>

@@ -34,6 +34,7 @@ import com.scandit.datacapture.core.common.geometry.*;
 import com.scandit.datacapture.core.source.*;
 import com.scandit.datacapture.core.ui.overlay.DataCaptureOverlay;
 import com.scandit.datacapture.core.ui.style.Brush;
+import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinder;
 import com.scandit.datacapture.core.ui.viewfinder.Viewfinder;
 
 import java.util.Collections;
@@ -86,8 +87,8 @@ public class SettingsManager {
             ViewfinderTypeRectangular.Color.DEFAULT;
     private SizeSpecification rectangularViewfinderSizeSpecification =
             SizeSpecification.WIDTH_AND_HEIGHT;
-    private FloatWithUnit rectangularViewfinderWidth = new FloatWithUnit(0f, MeasureUnit.DIP);
-    private FloatWithUnit rectangularViewfinderHeight = new FloatWithUnit(0f, MeasureUnit.DIP);
+    private FloatWithUnit rectangularViewfinderWidth;
+    private FloatWithUnit rectangularViewfinderHeight;
     private float rectangularViewfinderWidthAspect = 0f;
     private float rectangularViewfinderHeightAspect = 0f;
 
@@ -106,6 +107,7 @@ public class SettingsManager {
     private boolean continuousScanningEnabled = false;
 
     private SettingsManager() {
+
         // The barcode capturing process is configured through barcode capture settings
         // which are then applied to the barcode capture instance that manages barcode recognition.
         barcodeCaptureSettings = new BarcodeCaptureSettings();
@@ -122,6 +124,11 @@ public class SettingsManager {
         // Create a new overlay with the barcode capture from above, and retrieve the default brush.
         barcodeCaptureOverlay = BarcodeCaptureOverlay.newInstance(barcodeCapture, null);
         defaultBrush = barcodeCaptureOverlay.getBrush();
+
+        // Create a temporary RectangularViewfinder instance to get default values for width and height.
+        RectangularViewfinder tempRectangularViewfinder = new RectangularViewfinder();
+        rectangularViewfinderWidth = tempRectangularViewfinder.getSizeWithUnitAndAspect().getWidthAndHeight().getWidth();
+        rectangularViewfinderHeight = tempRectangularViewfinder.getSizeWithUnitAndAspect().getWidthAndHeight().getHeight();
     }
 
     public BarcodeCapture getBarcodeCapture() {

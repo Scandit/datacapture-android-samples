@@ -14,8 +14,6 @@
 
 package com.scandit.datacapture.matrixscanbubblessample.scan;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -24,8 +22,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import com.scandit.datacapture.barcode.tracking.data.TrackedBarcode;
 import com.scandit.datacapture.barcode.tracking.ui.overlay.BarcodeTrackingAdvancedOverlay;
@@ -38,9 +34,7 @@ import com.scandit.datacapture.matrixscanbubblessample.scan.bubble.data.BubbleDa
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
-public class ScanFragment extends Fragment implements ScanViewModel.ScanViewModelListener {
-
-    private static final int PERMISSION_CODE_CAMERA = 100;
+public class ScanFragment extends CameraPermissionFragment implements ScanViewModel.ScanViewModelListener {
 
     public static ScanFragment newInstance() {
         return new ScanFragment();
@@ -56,8 +50,6 @@ public class ScanFragment extends Fragment implements ScanViewModel.ScanViewMode
 
     // We reuse bubble views where possible.
     private SparseArray<Bubble> bubbles;
-
-    private boolean permissionDeniedOnce = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -126,14 +118,18 @@ public class ScanFragment extends Fragment implements ScanViewModel.ScanViewMode
     @Override
     public void onResume() {
         super.onResume();
-        if (hasCameraPermissions()) {
-            startScanning();
-        } else if (!permissionDeniedOnce) {// We ask for permissions only once.
-            requestCameraPermissions();
-        }
+
+        // Check for camera permission and request it, if it hasn't yet been granted.
+        // Once we have the permission the onCameraPermissionGranted() method will be called.
+        requestCameraPermission();
     }
 
-    private void startScanning() {
+    @Override
+    public void onCameraPermissionGranted() {
+        resumeFrameSource();
+    }
+
+    private void resumeFrameSource() {
         viewModel.setListener(this);
         // Switch camera on to start streaming frames.
         // The camera is started asynchronously and will take some time to completely turn on.
@@ -141,37 +137,18 @@ public class ScanFragment extends Fragment implements ScanViewModel.ScanViewMode
         viewModel.resumeScanning();
     }
 
-    private boolean hasCameraPermissions() {
-        return ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestCameraPermissions() {
-        requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_CODE_CAMERA);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(
-            int requestCode,
-            @NonNull String[] permissions,
-            @NonNull int[] grantResults
-    ) {
-        if (requestCode == PERMISSION_CODE_CAMERA && grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            startScanning();
-        } else {
-            permissionDeniedOnce = true;
-        }
-    }
-
     @Override
     public void onPause() {
+        pauseFrameSource();
         super.onPause();
+    }
+
+    private void pauseFrameSource() {
+        viewModel.setListener(null);
         // Switch camera off to stop streaming frames.
         // The camera is stopped asynchronously and will take some time to completely turn off.
         // Until it is completely stopped, it is still possible to receive further results, hence
         // it's a good idea to first disable barcode tracking as well.
-        viewModel.setListener(null);
         viewModel.pauseScanning();
         viewModel.stopFrameSource();
     }

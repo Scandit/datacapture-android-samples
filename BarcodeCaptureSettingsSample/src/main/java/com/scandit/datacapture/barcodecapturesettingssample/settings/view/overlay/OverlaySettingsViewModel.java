@@ -24,10 +24,10 @@ import com.scandit.datacapture.core.ui.style.Brush;
 @SuppressWarnings("WeakerAccess")
 public class OverlaySettingsViewModel extends ViewModel {
 
-    @ColorInt private static final int RED = Color.parseColor("#FFFF5722");
-    @ColorInt private static final int TRANSPARENT_RED = Color.parseColor("#AAFF5722");
-    @ColorInt private static final int GREEN = Color.parseColor("#FF4CAF50");
-    @ColorInt private static final int TRANSPARENT_GREEN = Color.parseColor("#AA4CAF50");
+    @ColorInt private static final int RED = Color.parseColor("#FFFF0000");
+    @ColorInt private static final int TRANSPARENT_RED = Color.parseColor("#33FF0000");
+    @ColorInt private static final int GREEN = Color.parseColor("#FF00FF00");
+    @ColorInt private static final int TRANSPARENT_GREEN = Color.parseColor("#3300FF00");
 
     private final SettingsManager settingsManager = SettingsManager.getCurrentSettings();
 

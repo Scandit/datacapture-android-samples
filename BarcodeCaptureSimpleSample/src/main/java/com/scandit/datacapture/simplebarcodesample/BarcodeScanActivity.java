@@ -152,13 +152,9 @@ public class BarcodeScanActivity
     protected void onResume() {
         super.onResume();
 
-        // Handle permissions for Marshmallow and onwards...
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestCameraPermission();
-        } else {
-            // Once the activity is in the foreground again, restart scanning.
-            resumeFrameSource();
-        }
+        // Check for camera permission and request it, if it hasn't yet been granted.
+        // Once we have the permission the onCameraPermissionGranted() method will be called.
+        requestCameraPermission();
     }
 
     @Override

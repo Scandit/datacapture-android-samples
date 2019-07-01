@@ -61,7 +61,6 @@
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:gravity="center_vertical|end"
-                    android:drawableEnd="@drawable/ic_chevron_right"
                     tools:text="0.00 (Fraction)"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
             </LinearLayout>
@@ -93,7 +92,6 @@
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:gravity="center_vertical|end"
-                    android:drawableEnd="@drawable/ic_chevron_right"
                     tools:text="0.00 (Fraction)"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
             </LinearLayout>

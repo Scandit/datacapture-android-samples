@@ -43,7 +43,6 @@
         android:maxLines="1"
         android:ellipsize="end"
         android:gravity="center_vertical|end"
-        tools:drawableEnd="@drawable/ic_chevron_right"
         tools:text="On"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
 </LinearLayout>

@@ -1,6 +1,0 @@
-<resources>
-    <string name="app_name">MatrixScanSimple</string>
-    <string name="done">Done</string>
-    <string name="scan_results">Scan Results</string>
-    <string name="scan_again">Scan again</string>
-</resources>

@@ -28,7 +28,7 @@ public final class DataCaptureManager {
 
     public static final DataCaptureManager CURRENT = new DataCaptureManager();
 
-    public static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
+    private static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
 
     public final BarcodeTracking barcodeTracking;
     public final DataCaptureContext dataCaptureContext;

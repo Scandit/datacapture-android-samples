@@ -20,7 +20,7 @@
     <string name="sdk_version">Barcode Capture Views Sample\nSDK %1$s</string>
     <string name="scanned">Scanned</string>
     <string name="ok">Ok</string>
-    <string name="scan_result_parametrised">%1$s: %2$s\nSymbol Count: %3$d</string>
+    <string name="scan_result_parametrised">%1$s: %2$s\nSymbol count: %3$d</string>
     <string name="full_screen_activity">Full Screen (Activity)</string>
     <string name="clear">Clear</string>
     <string name="tap_to_continue">Tap to continue</string>

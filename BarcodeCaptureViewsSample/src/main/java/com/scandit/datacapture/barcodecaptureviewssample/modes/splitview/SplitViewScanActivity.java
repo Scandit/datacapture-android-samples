@@ -14,20 +14,16 @@
 
 package com.scandit.datacapture.barcodecaptureviewssample.modes.splitview;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.Button;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -36,23 +32,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
 import com.scandit.datacapture.barcodecaptureviewssample.R;
+import com.scandit.datacapture.barcodecaptureviewssample.modes.base.CameraPermissionActivity;
 import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
 import com.scandit.datacapture.core.common.geometry.MeasureUnit;
 import com.scandit.datacapture.core.ui.DataCaptureView;
 import com.scandit.datacapture.core.ui.style.Brush;
 import com.scandit.datacapture.core.ui.viewfinder.LaserlineViewfinder;
 
-public class SplitViewScanActivity extends AppCompatActivity
+public class SplitViewScanActivity extends CameraPermissionActivity
         implements SplitViewScanViewModel.Listener {
-
-    private static final int PERMISSION_CODE_CAMERA = 100;
 
     public static Intent getIntent(Context context) {
         return new Intent(context, SplitViewScanActivity.class);
     }
 
     private SplitViewScanViewModel viewModel;
-    private boolean permissionDeniedOnce = false;
     private SplitViewAdapter adapter;
 
     private RecyclerView recyclerResults;
@@ -63,6 +57,7 @@ public class SplitViewScanActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         viewModel = ViewModelProviders.of(this).get(SplitViewScanViewModel.class);
         setContentView(R.layout.activity_split_view);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setupDataCaptureView();
 
         tapToContinueLabel = findViewById(R.id.tap_to_continue_label);
@@ -80,14 +75,27 @@ public class SplitViewScanActivity extends AppCompatActivity
         recyclerResults.addItemDecoration(new DividerItemDecoration(this, RecyclerView.VERTICAL));
         adapter = new SplitViewAdapter(viewModel.results);
         recyclerResults.setAdapter(adapter);
+    }
 
-        Button buttonClear = findViewById(R.id.button_clear);
-        buttonClear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.settings_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_clear:
                 viewModel.clearCurrentResults();
-            }
-        });
+                return true;
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void setupDataCaptureView() {
@@ -101,16 +109,11 @@ public class SplitViewScanActivity extends AppCompatActivity
         // This is optional, but recommended for better visual feedback.
         BarcodeCaptureOverlay overlay =
                 BarcodeCaptureOverlay.newInstance(viewModel.getBarcodeCapture(), view);
-        view.addOverlay(overlay);
 
         // We have to add the laser line viewfinder to the overlay.
         LaserlineViewfinder viewFinder = new LaserlineViewfinder();
         viewFinder.setWidth(new FloatWithUnit(0.9f, MeasureUnit.FRACTION));
         overlay.setViewfinder(viewFinder);
-
-        // As we don't want to highlight any barcode, we disable the highlighting
-        // by setting overlay's brush with the appropriate values.
-        overlay.setBrush(new Brush(Color.TRANSPARENT, Color.TRANSPARENT, 0f));
 
         // We put the dataCaptureView in its container.
         ((ViewGroup) findViewById(R.id.scanner_container)).addView(view);
@@ -119,14 +122,18 @@ public class SplitViewScanActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if (hasCameraPermissions()) {
-            startScanning();
-        } else if (!permissionDeniedOnce) {// We ask for permissions only once.
-            requestCameraPermissions();
-        }
+
+        // Check for camera permission and request it, if it hasn't yet been granted.
+        // Once we have the permission the onCameraPermissionGranted() method will be called.
+        requestCameraPermission();
     }
 
-    private void startScanning() {
+    @Override
+    public void onCameraPermissionGranted() {
+        resumeFrameSource();
+    }
+
+    private void resumeFrameSource() {
         // Switch camera on to start streaming frames.
         // The camera is started asynchronously and will take some time to completely turn on.
         viewModel.setListener(this);
@@ -136,31 +143,6 @@ public class SplitViewScanActivity extends AppCompatActivity
             tapToContinueLabel.setVisibility(View.GONE);
         } else {
             tapToContinueLabel.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private boolean hasCameraPermissions() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestCameraPermissions() {
-        ActivityCompat.requestPermissions(
-                this, new String[]{Manifest.permission.CAMERA}, PERMISSION_CODE_CAMERA
-        );
-    }
-
-    @Override
-    public void onRequestPermissionsResult(
-            int requestCode,
-            @NonNull String[] permissions,
-            @NonNull int[] grantResults
-    ) {
-        if (requestCode == PERMISSION_CODE_CAMERA && grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            startScanning();
-        } else {
-            permissionDeniedOnce = true;
         }
     }
 

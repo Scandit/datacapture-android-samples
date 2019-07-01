@@ -14,36 +14,30 @@
 
 package com.scandit.datacapture.barcodecaptureviewssample.modes.activity;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.barcode.data.SymbologyDescription;
+import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
 import com.scandit.datacapture.barcodecaptureviewssample.R;
 import com.scandit.datacapture.barcodecaptureviewssample.modes.ScanViewModel;
+import com.scandit.datacapture.barcodecaptureviewssample.modes.base.CameraPermissionActivity;
 import com.scandit.datacapture.core.ui.DataCaptureView;
 
-public class FullscreenScanActivity extends AppCompatActivity
+public class FullscreenScanActivity extends CameraPermissionActivity
         implements ScanViewModel.ResultListener {
-
-    private static final int PERMISSION_CODE_CAMERA = 100;
 
     public static Intent getIntent(Context context) {
         return new Intent(context, FullscreenScanActivity.class);
     }
 
     private ScanViewModel viewModel;
-    private boolean permissionDeniedOnce = false;
     private AlertDialog dialog = null;
 
     @Override
@@ -55,51 +49,37 @@ public class FullscreenScanActivity extends AppCompatActivity
         // To visualize the on-going barcode capturing process on screen,
         // setup a data capture view that renders the camera preview.
         // The view must be connected to the data capture context.
-        setContentView(DataCaptureView.newInstance(this, viewModel.getDataCaptureContext()));
+        DataCaptureView view = DataCaptureView.newInstance(this, viewModel.getDataCaptureContext());
+        // Add a barcode capture overlay to the data capture view to render the tracked
+        // barcodes on top of the video preview.
+        // This is optional, but recommended for better visual feedback.
+        BarcodeCaptureOverlay overlay =
+                BarcodeCaptureOverlay.newInstance(viewModel.getBarcodeCapture(), view);
+
+        setContentView(view);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (hasCameraPermissions()) {
-            startScanning();
-        } else if (!permissionDeniedOnce) {// We ask for permissions only once.
-            requestCameraPermissions();
-        }
+
+        // Check for camera permission and request it, if it hasn't yet been granted.
+        // Once we have the permission the onCameraPermissionGranted() method will be called.
+        requestCameraPermission();
     }
 
-    private void startScanning() {
+    @Override
+    public void onCameraPermissionGranted() {
+        resumeFrameSource();
+    }
+
+    private void resumeFrameSource() {
         // Switch camera on to start streaming frames.
         // The camera is started asynchronously and will take some time to completely turn on.
         viewModel.setListener(this);
         viewModel.startFrameSource();
         if (!isShowingDialog()) {
             viewModel.resumeScanning();
-        }
-    }
-
-    private boolean hasCameraPermissions() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestCameraPermissions() {
-        ActivityCompat.requestPermissions(
-                this, new String[]{Manifest.permission.CAMERA}, PERMISSION_CODE_CAMERA
-        );
-    }
-
-    @Override
-    public void onRequestPermissionsResult(
-            int requestCode,
-            @NonNull String[] permissions,
-            @NonNull int[] grantResults
-    ) {
-        if (requestCode == PERMISSION_CODE_CAMERA && grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            startScanning();
-        } else {
-            permissionDeniedOnce = true;
         }
     }
 

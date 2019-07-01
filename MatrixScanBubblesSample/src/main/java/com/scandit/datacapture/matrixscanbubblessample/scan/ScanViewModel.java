@@ -226,8 +226,8 @@ public class ScanViewModel extends ViewModel implements BarcodeTrackingListener,
     ) {
         // We want to center the view on top of the barcode.
         return new PointWithUnit(
-                new FloatWithUnit(-0.5f, MeasureUnit.FRACTION),
-                new FloatWithUnit(-1.5f, MeasureUnit.FRACTION)
+                new FloatWithUnit(0f, MeasureUnit.FRACTION),
+                new FloatWithUnit(-1f, MeasureUnit.FRACTION)
         );
     }
 

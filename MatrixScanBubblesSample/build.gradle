@@ -14,14 +14,6 @@
 
 apply plugin: 'com.android.application'
 
-buildscript {
-    ext {
-        intern_versions = [
-                'viewmodels': '2.0.0'
-        ]
-    }
-}
-
 android {
     compileSdkVersion sdk.compile
 
@@ -51,8 +43,8 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
 
-    implementation "androidx.lifecycle:lifecycle-viewmodel:${intern_versions.viewmodels}"
-    implementation "androidx.lifecycle:lifecycle-extensions:${intern_versions.viewmodels}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:${versions.viewmodel}"
+    implementation "androidx.lifecycle:lifecycle-extensions:${versions.viewmodel}"
     implementation "com.google.android.material:material:${versions.material}"
     implementation "androidx.appcompat:appcompat:${versions.androidx_appcompat}"
     implementation "androidx.cardview:cardview:${versions.androidx_cardview}"

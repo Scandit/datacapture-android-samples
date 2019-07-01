@@ -21,9 +21,9 @@ import com.scandit.datacapture.core.source.Camera;
 
 public final class DataCaptureManager {
 
-    public static final DataCaptureManager CURRENT = new DataCaptureManager();
+    private static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
 
-    public static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
+    public static final DataCaptureManager CURRENT = new DataCaptureManager();
 
     public final BarcodeCapture barcodeCapture;
     public final DataCaptureContext dataCaptureContext;

@@ -29,7 +29,7 @@ public abstract class CameraPermissionActivity extends AppCompatActivity {
     private static final String CAMERA_PERMISSION = Manifest.permission.CAMERA;
     private static final int CAMERA_PERMISSION_REQUEST = 0;
 
-    private boolean userDeniedPermissionOnce = false;
+    private boolean permissionDeniedOnce = false;
     private boolean paused = true;
 
     @Override
@@ -56,7 +56,7 @@ public abstract class CameraPermissionActivity extends AppCompatActivity {
         // For Android M and onwards we need to request the camera permission from the user.
         if (!hasCameraPermission()) {
             // The user already denied the permission once, we don't ask twice.
-            if (!userDeniedPermissionOnce) {
+            if (!permissionDeniedOnce) {
                 // It's clear why the camera is required. We don't need to give a detailed reason.
                 requestPermissions(new String[] { CAMERA_PERMISSION }, CAMERA_PERMISSION_REQUEST);
             }
@@ -72,14 +72,14 @@ public abstract class CameraPermissionActivity extends AppCompatActivity {
             int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == CAMERA_PERMISSION_REQUEST) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                userDeniedPermissionOnce = false;
+                permissionDeniedOnce = false;
                 if (!paused) {
                     // Only call the function if not paused - camera should not be used otherwise.
                     onCameraPermissionGranted();
                 }
             } else {
                 // The user denied the permission - we are not going to ask again.
-                userDeniedPermissionOnce = true;
+                permissionDeniedOnce = true;
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
