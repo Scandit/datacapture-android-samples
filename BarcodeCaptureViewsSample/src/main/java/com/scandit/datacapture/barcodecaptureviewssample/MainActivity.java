@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle(R.string.app_name);
+        setTitle(R.string.app_title);
 
         final TextView textSdkVersion = findViewById(R.id.text_sdk_version);
         textSdkVersion.setText(getString(R.string.sdk_version, DataCaptureVersion.VERSION_STRING));

@@ -14,6 +14,7 @@
 
 <resources>
     <string name="app_name">BCViews</string>
+    <string name="app_title">Barcode Capture Views</string>
     <string name="full_screen_fragment">Full Screen (Fragment)</string>
     <string name="picker_activity">Picker Activity</string>
     <string name="split_view">Split View</string>

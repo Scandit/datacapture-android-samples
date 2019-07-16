@@ -102,7 +102,7 @@ public class BarcodeScanFragment extends CameraPermissionFragment
 
     @Override
     protected String getTitle() {
-        return getString(R.string.app_name);
+        return getString(R.string.app_title);
     }
 
     @Override

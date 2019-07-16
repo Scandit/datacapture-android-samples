@@ -60,6 +60,8 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_matrix_scan);
 
+        setTitle(R.string.app_title);
+
         // Initialize and start the barcode recognition.
         initialize();
 

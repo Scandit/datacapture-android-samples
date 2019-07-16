@@ -14,6 +14,7 @@
 
 <resources>
     <string name="app_name">BCSettings</string>
+    <string name="app_title">Barcode Capture Settings</string>
     <string name="settings">Settings</string>
     <string name="sdk_version">Barcode Capture Settings Sample\nSDK %1$s</string>
     <string name="barcode_capture">Barcode Capture</string>
