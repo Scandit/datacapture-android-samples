@@ -7,7 +7,7 @@ The simple samples allow you to get going quickly, while the advanced ones show 
 
 |                               Simple Sample                              |                                View Sample                               |                             Settings Sample                              |
 |:------------------------------------------------------------------------:|:------------------------------------------------------------------------:|:------------------------------------------------------------------------:|
-| ![alt text](/images/sample-bc-simple.png?raw=true "Simple Sample") | ![alt text](/images/sample-bc-view-1.png?raw=true "View Sample") ![alt text](/images/sample-bc-view-2.png?raw=true "View Sample") | ![alt text](/images/sample-bc-settings-1.png?raw=true "Settings Sample") ![alt text](/images/sample-bc-settings-2.png?raw=true "Settings Sample") |
+| ![alt text](/images/sample-bc-simple-1.jpg?raw=true "Simple Sample") ![alt text](/images/sample-bc-simple-2.jpg?raw=true "Simple Sample") | ![alt text](/images/sample-bc-view-1.jpg?raw=true "View Sample") ![alt text](/images/sample-bc-view-2.jpg?raw=true "View Sample") | ![alt text](/images/sample-bc-settings-1.jpg?raw=true "Settings Sample") ![alt text](/images/sample-bc-settings-2.jpg?raw=true "Settings Sample") |
 | Basic sample that uses the camera to read a single barcode.              | Demonstrates the various ways to best integrate the scanner into the UI of your app. | Demonstrates how you can adapt the scanner settings best to your needs and experiment with all the options. |
 
 
@@ -15,7 +15,7 @@ The simple samples allow you to get going quickly, while the advanced ones show 
 
 |                               Reject Sample                              |                               Bubble Sample                              |                          Search And Find Sample                          |
 |:------------------------------------------------------------------------:|:------------------------------------------------------------------------:|:------------------------------------------------------------------------:|
-| ![alt text](/images/sample-ms-simple.png?raw=true "Simple Sample") | ![alt text](/images/sample-ms-bubble.png?raw=true "Bubble Sample") | ![alt text](/images/sample-ms-saf-1.png?raw=true "Search") ![alt text](/images/sample-ms-saf-2.png?raw=true "Find") |
+| ![alt text](/images/sample-ms-reject-1.jpg?raw=true "Reject Sample") ![alt text](/images/sample-ms-reject-2.jpg?raw=true "Reject Sample") | ![alt text](/images/sample-ms-bubble-1.jpg?raw=true "Bubble Sample") ![alt text](/images/sample-ms-bubble-2.jpg?raw=true "Bubble Sample") | ![alt text](/images/sample-ms-saf-1.jpg?raw=true "Search") ![alt text](/images/sample-ms-saf-2.jpg?raw=true "Find") |
 | Sample which shows how you can highlight selected (by a custom condition) barcodes on screen with the Scandit Data Capture SDK. | Demonstrates the use of more advanced augmented reality use cases with the Scandit Data Capture SDK. | Demonstrates a use case that requires a consecutive use of both Barcode Capture and MatrixScan in a single app. |
 
 # Run the Samples
