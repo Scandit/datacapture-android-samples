@@ -28,7 +28,7 @@ public final class ScanResult implements Serializable {
 
     public ScanResult(Barcode barcode) {
         symbology = barcode.getSymbology();
-        data = barcode.getData();
+        data = barcode.getData() != null ? barcode.getData() : "";
     }
 
     @Override

@@ -53,8 +53,7 @@ public class FullscreenScanActivity extends CameraPermissionActivity
         // Add a barcode capture overlay to the data capture view to render the tracked
         // barcodes on top of the video preview.
         // This is optional, but recommended for better visual feedback.
-        BarcodeCaptureOverlay overlay =
-                BarcodeCaptureOverlay.newInstance(viewModel.getBarcodeCapture(), view);
+        BarcodeCaptureOverlay.newInstance(viewModel.getBarcodeCapture(), view);
 
         setContentView(view);
     }

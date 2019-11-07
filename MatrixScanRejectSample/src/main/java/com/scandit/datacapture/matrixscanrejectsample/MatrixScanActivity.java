@@ -89,12 +89,14 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
         // See resumeFrameSource and pauseFrameSource below.
         camera = Camera.getDefaultCamera();
         if (camera != null) {
-            // Use the settings recommended by barcode tracking.
+            // Use the recommended camera settings for the BarcodeTracking mode.
             CameraSettings cameraSettings = BarcodeTracking.createRecommendedCameraSettings();
             // Adjust camera settings - set Full HD resolution.
             cameraSettings.setPreferredResolution(VideoResolution.FULL_HD);
             camera.applySettings(cameraSettings);
             dataCaptureContext.setFrameSource(camera);
+        } else {
+            throw new IllegalStateException("Sample depends on a camera, which failed to initialize.");
         }
 
         // The barcode tracking process is configured through barcode tracking settings
@@ -243,7 +245,7 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
     // Method with custom logic for accepting/rejecting recognized barcodes.
     private boolean isValidBarcode(Barcode barcode) {
         // Reject invalid barcodes.
-        if (barcode.getData().isEmpty()) return false;
+        if (barcode.getData() == null || barcode.getData().isEmpty()) return false;
 
         // Reject barcodes based on your logic.
         if (barcode.getData().startsWith("7")) return false;

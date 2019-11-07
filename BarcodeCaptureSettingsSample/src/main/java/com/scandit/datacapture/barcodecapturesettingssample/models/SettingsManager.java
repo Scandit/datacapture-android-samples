@@ -165,7 +165,7 @@ public class SettingsManager {
     }
 
     public boolean isSymbologyEnabled(String symbologyIdentifier) {
-        Symbology symbology = SymbologyDescription.symbologyFromIdentifier(symbologyIdentifier);
+        Symbology symbology = SymbologyDescription.forIdentifier(symbologyIdentifier).getSymbology();
         return isSymbologyEnabled(symbology);
     }
 

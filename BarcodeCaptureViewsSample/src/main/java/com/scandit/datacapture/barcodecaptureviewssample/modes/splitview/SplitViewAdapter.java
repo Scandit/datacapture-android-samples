@@ -78,7 +78,7 @@ public class SplitViewAdapter extends RecyclerView.Adapter<SplitViewAdapter.View
         }
 
         void bind(Barcode result) {
-            textData.setText(result.getData());
+            textData.setText(result.getData() != null ? result.getData() : "");
             // Get the human readable name of the symbology.
             String symbology = SymbologyDescription.create(result.getSymbology()).getReadableName();
             textSymbology.setText(symbology);

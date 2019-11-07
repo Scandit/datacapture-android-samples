@@ -65,7 +65,8 @@ public final class FindScanViewModel extends ViewModel implements BarcodeTrackin
             @NotNull BarcodeTrackingBasicOverlay barcodeTrackingBasicOverlay,
             @NotNull TrackedBarcode trackedBarcode
     ) {
-        if (trackedBarcode.getBarcode().getData().equals(data)) {
+        String barcodeData = trackedBarcode.getBarcode().getData();
+        if (barcodeData != null && barcodeData.equals(data)) {
             return matchBrush;
         } else {
             return rejectBrush;

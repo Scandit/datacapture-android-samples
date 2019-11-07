@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.simplebarcodesample;
+package com.scandit.datacapture.matrixscansimplesample;
 
 import android.Manifest;
 import android.annotation.TargetApi;

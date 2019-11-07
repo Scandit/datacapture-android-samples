@@ -12,10 +12,9 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.simplebarcodesample;
+package com.scandit.datacapture.barcodecapturesimplesample;
 
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -68,9 +67,11 @@ public class BarcodeScanActivity
         // See resumeFrameSource and pauseFrameSource below.
         camera = Camera.getDefaultCamera();
         if (camera != null) {
-            // Use the settings recommended by barcode capture.
+            // Use the recommended camera settings for the BarcodeCapture mode.
             camera.applySettings(BarcodeCapture.createRecommendedCameraSettings());
             dataCaptureContext.setFrameSource(camera);
+        } else {
+            throw new IllegalStateException("Sample depends on a camera, which failed to initialize.");
         }
 
         // The barcode capturing process is configured through barcode capture settings
@@ -203,9 +204,9 @@ public class BarcodeScanActivity
 
         Barcode barcode = session.getNewlyRecognizedBarcodes().get(0);
 
-        // Stop recognizing barcodes for as long as we are displaying the result. There won't be any new results until
-        // the capture mode is enabled again. Note that disabling the capture mode does not stop the camera, the camera
-        // continues to stream frames until it is turned off.
+        // Stop recognizing barcodes for as long as we are displaying the result. There won't be any
+        // new results until the capture mode is enabled again. Note that disabling the capture mode
+        // does not stop the camera, the camera continues to stream frames until it is turned off.
         barcodeCapture.setEnabled(false);
 
         // If you are not disabling barcode capture here and want to continue scanning, consider

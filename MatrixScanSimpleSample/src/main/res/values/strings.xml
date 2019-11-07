@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MSSimple</string>
+    <string name="app_title">MatrixScan Simple</string>
+    <string name="scan_results">Scan Results</string>
+    <string name="scan_again">Scan Again</string>
+    <string name="done">Done</string>
+</resources>

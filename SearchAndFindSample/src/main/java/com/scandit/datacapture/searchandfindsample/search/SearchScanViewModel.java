@@ -57,9 +57,10 @@ public final class SearchScanViewModel extends ViewModel implements BarcodeCaptu
                     && session.getNewlyRecognizedBarcodes().get(0) != null) {
                 lastScannedBarcode = session.getNewlyRecognizedBarcodes().get(0);
 
+                String code = lastScannedBarcode.getData() != null ? lastScannedBarcode.getData() : "";
                 // This method is invoked on a non-UI thread, so in order to perform UI work,
                 // we have to switch to the main thread.
-                notifyListenerOnMainThread(lastScannedBarcode.getData());
+                notifyListenerOnMainThread(code);
             }
         }
     }

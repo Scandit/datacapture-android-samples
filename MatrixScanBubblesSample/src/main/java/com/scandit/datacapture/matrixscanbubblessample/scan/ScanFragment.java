@@ -170,9 +170,9 @@ public class ScanFragment extends CameraPermissionFragment implements ScanViewMo
         int identifier = barcode.getIdentifier();
         Bubble bubble = bubbles.get(identifier);
         if (bubble == null) {
-
             // There's no recyclable bubble for this tracking identifier, so we create one.
-            bubble = new Bubble(requireContext(), bubbleData, barcode.getBarcode().getData());
+            String code = barcode.getBarcode().getData() != null ? barcode.getBarcode().getData() : "";
+            bubble = new Bubble(requireContext(), bubbleData, code);
 
             // We store the newly created bubble to recycle it in subsequent frames.
             bubbles.put(identifier, bubble);

@@ -4,7 +4,7 @@ android {
     compileSdkVersion sdk.compile
 
     defaultConfig {
-        applicationId "com.scandit.datacapture.simplebarcodesample"
+        applicationId "com.scandit.datacapture.barcodecapturesimplesample"
         minSdkVersion sdk.min
         targetSdkVersion sdk.target
         versionCode 1
