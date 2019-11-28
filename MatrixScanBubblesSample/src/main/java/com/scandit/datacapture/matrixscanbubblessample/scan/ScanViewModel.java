@@ -170,7 +170,9 @@ public class ScanViewModel extends ViewModel implements BarcodeTrackingListener,
         mainHandler.post(new Runnable() {
             @Override
             public void run() {
-                listener.setBubbleVisibility(barcode, visible);
+                if (listener != null) {
+                    listener.setBubbleVisibility(barcode, visible);
+                }
             }
         });
     }
@@ -179,7 +181,9 @@ public class ScanViewModel extends ViewModel implements BarcodeTrackingListener,
         mainHandler.post(new Runnable() {
             @Override
             public void run() {
-                listener.removeBubbleView(identifier);
+                if (listener != null) {
+                    listener.removeBubbleView(identifier);
+                }
             }
         });
     }
