@@ -16,14 +16,15 @@ package com.scandit.datacapture.barcodecaptureviewssample.modes.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
+
 import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.barcode.data.SymbologyDescription;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;

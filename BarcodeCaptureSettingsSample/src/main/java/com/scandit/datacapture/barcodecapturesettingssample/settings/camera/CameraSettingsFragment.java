@@ -176,7 +176,13 @@ public class CameraSettingsFragment extends NavigationFragment
         PopupMenu menu = new PopupMenu(requireContext(), containerResolution, Gravity.END);
 
         for (VideoResolution value : VideoResolution.values()) {
-            menu.getMenu().add(value.name());
+            /*
+             * UHD4K is not supported in the Camera API 1. To use the Camera API 2, please contact
+             * us at support@scandit.com.
+             */
+            if (value != VideoResolution.UHD4K) {
+                menu.getMenu().add(value.name());
+            }
         }
 
         menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {

@@ -18,10 +18,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
+
 import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.barcode.data.SymbologyDescription;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
