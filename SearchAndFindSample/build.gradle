@@ -36,4 +36,6 @@ dependencies {
     implementation "androidx.dynamicanimation:dynamicanimation:${versions.androidx_animations}"
 
     implementation "androidx.constraintlayout:constraintlayout:${versions.androidx_constraintlayout}"
+
+    implementation "com.squareup.okhttp3:okhttp:${versions.okhttp}"
 }

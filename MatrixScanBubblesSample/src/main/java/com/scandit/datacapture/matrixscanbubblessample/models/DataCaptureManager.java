@@ -51,7 +51,7 @@ public final class DataCaptureManager {
         barcodeTrackingSettings.enableSymbology(Symbology.CODE39, true);
         barcodeTrackingSettings.enableSymbology(Symbology.CODE128, true);
 
-        CameraSettings cameraSettings = new CameraSettings();
+        CameraSettings cameraSettings = BarcodeTracking.createRecommendedCameraSettings();
         cameraSettings.setPreferredResolution(VideoResolution.FULL_HD);
         camera.applySettings(cameraSettings);
 

@@ -50,4 +50,6 @@ dependencies {
     implementation "androidx.cardview:cardview:${versions.androidx_cardview}"
 
     implementation "androidx.constraintlayout:constraintlayout:${versions.androidx_constraintlayout}"
+
+    implementation "com.squareup.okhttp3:okhttp:${versions.okhttp}"
 }

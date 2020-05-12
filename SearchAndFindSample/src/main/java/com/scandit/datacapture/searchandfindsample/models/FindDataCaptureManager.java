@@ -18,6 +18,7 @@ import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.tracking.capture.BarcodeTracking;
 import com.scandit.datacapture.barcode.tracking.capture.BarcodeTrackingSettings;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
+import com.scandit.datacapture.core.source.Camera;
 
 public final class FindDataCaptureManager {
 
@@ -43,5 +44,9 @@ public final class FindDataCaptureManager {
 
         // We apply the new settings to the barcode tracking.
         barcodeTracking.applySettings(settings);
+    }
+
+    public Camera camera() {
+        return baseDataCaptureManager.camera;
     }
 }

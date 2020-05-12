@@ -87,6 +87,7 @@ public final class SearchScanViewModel extends ViewModel implements BarcodeCaptu
     }
 
     void resumeScanning() {
+        dataCaptureManager.camera().applySettings(BarcodeCapture.createRecommendedCameraSettings());
         dataCaptureContext.addMode(barcodeCapture);
         barcodeCapture.setEnabled(true);
     }

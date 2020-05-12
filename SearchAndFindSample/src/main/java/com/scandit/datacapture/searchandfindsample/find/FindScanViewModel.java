@@ -50,6 +50,7 @@ public final class FindScanViewModel extends ViewModel implements BarcodeTrackin
     }
 
     void resumeScanning() {
+        dataCaptureManager.camera().applySettings(BarcodeTracking.createRecommendedCameraSettings());
         dataCaptureContext.addMode(barcodeTracking);
         barcodeTracking.setEnabled(true);
     }

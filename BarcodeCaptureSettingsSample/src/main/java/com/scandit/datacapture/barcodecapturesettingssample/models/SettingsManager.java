@@ -57,7 +57,7 @@ public class SettingsManager {
     private TorchState torchState = TorchState.OFF;
     private CameraPosition cameraPosition = CameraPosition.WORLD_FACING;
     private Camera camera = Camera.getCamera(cameraPosition);
-    private CameraSettings cameraSettings = new CameraSettings();
+    private CameraSettings cameraSettings = BarcodeCapture.createRecommendedCameraSettings();
 
     private BarcodeCaptureOverlay barcodeCaptureOverlay;
     private MarginsWithUnit scanAreaMargins = new MarginsWithUnit(

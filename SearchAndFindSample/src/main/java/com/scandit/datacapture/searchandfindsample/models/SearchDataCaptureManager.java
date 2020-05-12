@@ -21,6 +21,7 @@ import com.scandit.datacapture.core.area.RadiusLocationSelection;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
 import com.scandit.datacapture.core.common.geometry.MeasureUnit;
+import com.scandit.datacapture.core.source.Camera;
 import com.scandit.datacapture.core.time.TimeInterval;
 
 import java.util.HashSet;
@@ -56,5 +57,9 @@ public final class SearchDataCaptureManager {
         // Create new barcode capture mode with the settings from above.
         barcodeCapture = BarcodeCapture.forDataCaptureContext(dataCaptureContext, settings);
         dataCaptureContext.removeMode(barcodeCapture);
+    }
+
+    public Camera camera() {
+        return baseDataCaptureManager.camera;
     }
 }
