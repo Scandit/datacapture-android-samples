@@ -1,6 +1,5 @@
 include ':BarcodeCaptureRejectSample'
 include ':BarcodeCaptureSettingsSample'
-include ':BarcodeCaptureShelfManagementSingleSample'
 include ':BarcodeCaptureSimpleSample'
 include ':BarcodeCaptureViewsSample'
 include ':MatrixScanBubblesSample'
