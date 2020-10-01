@@ -83,20 +83,20 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
         // Create data capture context using your license key.
         dataCaptureContext = DataCaptureContext.forLicenseKey(SCANDIT_LICENSE_KEY);
 
+        // Use the recommended camera settings for the BarcodeTracking mode.
+        CameraSettings cameraSettings = BarcodeTracking.createRecommendedCameraSettings();
+        // Adjust camera settings - set Full HD resolution.
+        cameraSettings.setPreferredResolution(VideoResolution.FULL_HD);
         // Use the default camera and set it as the frame source of the context.
         // The camera is off by default and must be turned on to start streaming frames to the data
         // capture context for recognition.
         // See resumeFrameSource and pauseFrameSource below.
-        camera = Camera.getDefaultCamera();
+        camera = Camera.getDefaultCamera(cameraSettings);
         if (camera != null) {
-            // Use the recommended camera settings for the BarcodeTracking mode.
-            CameraSettings cameraSettings = BarcodeTracking.createRecommendedCameraSettings();
-            // Adjust camera settings - set Full HD resolution.
-            cameraSettings.setPreferredResolution(VideoResolution.FULL_HD);
-            camera.applySettings(cameraSettings);
             dataCaptureContext.setFrameSource(camera);
         } else {
-            throw new IllegalStateException("Sample depends on a camera, which failed to initialize.");
+            throw new IllegalStateException(
+                    "Sample depends on a camera, which failed to initialize.");
         }
 
         // The barcode tracking process is configured through barcode tracking settings

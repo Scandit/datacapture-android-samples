@@ -46,9 +46,13 @@ public class BarcodeScanViewModel extends ViewModel implements BarcodeCaptureLis
             }
             if (listener != null) {
                 Barcode barcode = session.getNewlyRecognizedBarcodes().get(0);
+                String resultData = barcode.getData();
+                if (barcode.getAddOnData() != null) {
+                    resultData += " " + barcode.getAddOnData();
+                }
                 listener.showDialog(
                         SymbologyDescription.create(barcode.getSymbology()).getReadableName(),
-                        barcode.getData(),
+                        resultData,
                         barcode.getSymbolCount()
                 );
             }

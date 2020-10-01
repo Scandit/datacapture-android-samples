@@ -61,14 +61,14 @@ public class SymbologySettingsFragment extends NavigationFragment
         view.findViewById(R.id.button_enable_all).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewModel.setAllSybologyEnabled(true);
+                viewModel.setAllSymbologiesEnabled(true);
                 refreshSymbologyAdapterData();
             }
         });
         view.findViewById(R.id.button_disable_all).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewModel.setAllSybologyEnabled(false);
+                viewModel.setAllSymbologiesEnabled(false);
                 refreshSymbologyAdapterData();
             }
         });

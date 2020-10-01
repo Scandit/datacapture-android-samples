@@ -155,7 +155,7 @@ public class ScanViewModel extends ViewModel implements BarcodeTrackingListener,
 
         for (final TrackedBarcode trackedBarcode : session.getTrackedBarcodes().values()) {
             String code = trackedBarcode.getBarcode().getData();
-            if (code == null || code.isEmpty()) return;
+            if (code == null || code.isEmpty()) continue;
 
             // We show or hide the bubble depending on its size compared to the device screen.
             setBubbleVisibilityOnMainThread(

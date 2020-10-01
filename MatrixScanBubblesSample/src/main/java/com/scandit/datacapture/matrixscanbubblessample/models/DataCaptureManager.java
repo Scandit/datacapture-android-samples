@@ -15,6 +15,7 @@
 package com.scandit.datacapture.matrixscanbubblessample.models;
 
 import android.graphics.Color;
+
 import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.tracking.capture.BarcodeTracking;
 import com.scandit.datacapture.barcode.tracking.capture.BarcodeTrackingSettings;
@@ -24,6 +25,8 @@ import com.scandit.datacapture.core.source.CameraSettings;
 import com.scandit.datacapture.core.source.VideoResolution;
 import com.scandit.datacapture.core.ui.style.Brush;
 
+import static com.scandit.datacapture.barcode.tracking.capture.BarcodeTrackingScenario.A;
+
 public final class DataCaptureManager {
 
     public static final DataCaptureManager CURRENT = new DataCaptureManager();
@@ -32,14 +35,15 @@ public final class DataCaptureManager {
 
     public final BarcodeTracking barcodeTracking;
     public final DataCaptureContext dataCaptureContext;
-    public final Camera camera = Camera.getDefaultCamera();
+    public final Camera camera;
 
     public final Brush defaultBrush = new Brush(Color.TRANSPARENT, Color.WHITE, 2f);
 
     private DataCaptureManager() {
         // The barcode tracking process is configured through barcode tracking settings
-        // which are then applied to the barcode tracking instance that manages barcode recognition and tracking.
-        BarcodeTrackingSettings barcodeTrackingSettings = new BarcodeTrackingSettings();
+        // which are then applied to the barcode tracking instance that manages barcode recognition
+        // and tracking.
+        BarcodeTrackingSettings barcodeTrackingSettings = BarcodeTrackingSettings.forScenario(A);
 
         // The settings instance initially has all types of barcodes (symbologies) disabled.
         // For the purpose of this sample we enable a generous set of symbologies.
@@ -52,8 +56,8 @@ public final class DataCaptureManager {
         barcodeTrackingSettings.enableSymbology(Symbology.CODE128, true);
 
         CameraSettings cameraSettings = BarcodeTracking.createRecommendedCameraSettings();
-        cameraSettings.setPreferredResolution(VideoResolution.FULL_HD);
-        camera.applySettings(cameraSettings);
+        cameraSettings.setPreferredResolution(VideoResolution.UHD4K);
+        camera = Camera.getDefaultCamera(cameraSettings);
 
         // Create data capture context using your license key and set the camera as the frame source.
         dataCaptureContext = DataCaptureContext.forLicenseKey(SCANDIT_LICENSE_KEY);

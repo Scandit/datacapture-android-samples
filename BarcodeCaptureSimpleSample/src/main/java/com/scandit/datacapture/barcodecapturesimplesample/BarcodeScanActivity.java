@@ -61,14 +61,12 @@ public class BarcodeScanActivity
         // Create data capture context using your license key.
         dataCaptureContext = DataCaptureContext.forLicenseKey(SCANDIT_LICENSE_KEY);
 
-        // Use the default camera and set it as the frame source of the context.
-        // The camera is off by default and must be turned on to start streaming frames to the data
-        // capture context for recognition.
+        // Use the default camera with the recommended camera settings for the BarcodeCapture mode
+        // and set it as the frame source of the context. The camera is off by default and must be
+        // turned on to start streaming frames to the data capture context for recognition.
         // See resumeFrameSource and pauseFrameSource below.
-        camera = Camera.getDefaultCamera();
+        camera = Camera.getDefaultCamera(BarcodeCapture.createRecommendedCameraSettings());
         if (camera != null) {
-            // Use the recommended camera settings for the BarcodeCapture mode.
-            camera.applySettings(BarcodeCapture.createRecommendedCameraSettings());
             dataCaptureContext.setFrameSource(camera);
         } else {
             throw new IllegalStateException("Sample depends on a camera, which failed to initialize.");

@@ -29,11 +29,7 @@ public class SymbologySettingsViewModel extends ViewModel {
         symbologyDescriptions = SymbologyDescription.all();
     }
 
-    boolean isAllSwitchEnabled() {
-        return settingsManager.isAnySymbologyEnabled();
-    }
-
-    void setAllSybologyEnabled(boolean enabled) {
+    void setAllSymbologiesEnabled(boolean enabled) {
         settingsManager.enableAllSymbologies(enabled);
     }
 
