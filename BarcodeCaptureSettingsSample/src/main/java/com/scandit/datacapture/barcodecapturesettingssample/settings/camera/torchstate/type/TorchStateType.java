@@ -12,20 +12,21 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.barcodecapturesettingssample.settings.barcodecapture;
+package com.scandit.datacapture.barcodecapturesettingssample.settings.camera.torchstate.type;
 
 import androidx.annotation.StringRes;
-import com.scandit.datacapture.barcodecapturesettingssample.R;
 
-public enum BarcodeCaptureSettingsEntry {
-    SYMBOLOGIES(R.string.symbologies),
-    LOCATION_SELECTION(R.string.location_selection),
-    FEEDBACK(R.string.feedback),
-    CODE_DUPLICATE_FILTER(R.string.code_duplicate_filter);
+import com.scandit.datacapture.core.source.TorchState;
 
-    @StringRes public final int displayNameResource;
+public abstract class TorchStateType {
 
-    BarcodeCaptureSettingsEntry(@StringRes int displayNameResource) {
-        this.displayNameResource = displayNameResource;
+    @StringRes public final int displayNameRes;
+    public final TorchState torchState;
+    public final boolean enabled;
+
+    TorchStateType(@StringRes int displayNameRes, boolean enabled, TorchState state) {
+        this.displayNameRes = displayNameRes;
+        this.torchState = state;
+        this.enabled = enabled;
     }
 }

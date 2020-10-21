@@ -61,14 +61,6 @@ public class CameraSettingsViewModel extends ViewModel {
         settingsManager.setVideoResolution(videoResolution);
     }
 
-    float getMaxFrameRate() {
-        return settingsManager.getMaxFrameRate();
-    }
-
-    void setMaxFrameRate(float maxFrameRate) {
-        settingsManager.setMaxFrameRate(maxFrameRate);
-    }
-
     float getZoomFactor() {
         return settingsManager.getZoomFactor();
     }

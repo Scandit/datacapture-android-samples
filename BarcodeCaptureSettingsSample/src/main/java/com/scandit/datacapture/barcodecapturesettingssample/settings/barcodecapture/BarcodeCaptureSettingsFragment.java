@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.scandit.datacapture.barcodecapturesettingssample.R;
 import com.scandit.datacapture.barcodecapturesettingssample.base.NavigationFragment;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.SettingsOverviewEntry;
+import com.scandit.datacapture.barcodecapturesettingssample.settings.barcodecapture.duplicatefilter.CodeDuplicateFilterSettingsFragment;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.barcodecapture.feedback.FeedbackSettingsFragment;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.barcodecapture.location.LocationSettingsFragment;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.barcodecapture.symbologies.SymbologySettingsFragment;
@@ -90,6 +91,9 @@ public class BarcodeCaptureSettingsFragment extends NavigationFragment
                 break;
             case FEEDBACK:
                 moveToFragment(FeedbackSettingsFragment.newInstance(), true, null);
+                break;
+            case CODE_DUPLICATE_FILTER:
+                moveToFragment(CodeDuplicateFilterSettingsFragment.newInstance(), true, null);
                 break;
         }
     }

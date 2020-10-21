@@ -16,7 +16,6 @@ package com.scandit.datacapture.barcodecapturesettingssample.settings.camera;
 
 import android.os.Bundle;
 import android.view.*;
-import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.scandit.datacapture.barcodecapturesettingssample.R;
 import com.scandit.datacapture.barcodecapturesettingssample.base.NavigationFragment;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.SettingsOverviewEntry;
+import com.scandit.datacapture.barcodecapturesettingssample.settings.camera.torchstate.TorchStateSettingsFragment;
 import com.scandit.datacapture.core.source.VideoResolution;
 
 public class CameraSettingsFragment extends NavigationFragment
@@ -44,8 +44,7 @@ public class CameraSettingsFragment extends NavigationFragment
     private CameraSettingsPositionAdapter positionAdapter;
 
     private RecyclerView recyclerCameraPositions;
-    private Switch torchSwitch;
-    private EditText editFrameRate;
+    private View torchEntry;
     private View containerResolution;
     private TextView textResolution, textZoomFactor;
     private SeekBar seekbarZoomFactor;
@@ -72,13 +71,8 @@ public class CameraSettingsFragment extends NavigationFragment
         recyclerCameraPositions = view.findViewById(R.id.recycler_camera_positions);
         setupCameraPositionRecycler();
 
-        torchSwitch = view.findViewById(R.id.switch_torch_state);
-        refreshTorchData();
-        setupTorchSwitch();
-
-        editFrameRate = view.findViewById(R.id.edit_frame_rate);
-        refreshFrameRateData();
-        setupEditTextFrameRate();
+        torchEntry = view.findViewById(R.id.entry_torch_state);
+        setupTorchEntry();
 
         containerResolution = view.findViewById(R.id.container_preferred_resolution);
         textResolution = view.findViewById(R.id.text_preferred_resolution);
@@ -99,27 +93,11 @@ public class CameraSettingsFragment extends NavigationFragment
         recyclerCameraPositions.setAdapter(positionAdapter);
     }
 
-    private void setupTorchSwitch() {
-        torchSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+    private void setupTorchEntry() {
+        torchEntry.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                viewModel.setTorchEnabled(isChecked);
-                refreshTorchData();
-            }
-        });
-    }
-
-    private void setupEditTextFrameRate() {
-        editFrameRate.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    parseTextAndApplyChange(v.getText().toString());
-                    dismissKeyboard(editFrameRate);
-                    editFrameRate.clearFocus();
-                    return true;
-                }
-                return false;
+            public void onClick(View v) {
+                moveToFragment(TorchStateSettingsFragment.newInstance(), true, null);
             }
         });
     }
@@ -153,25 +131,6 @@ public class CameraSettingsFragment extends NavigationFragment
         });
     }
 
-    private void parseTextAndApplyChange(String text) {
-        try {
-            float parsedNumber = Float.parseFloat(text);
-            if (parsedNumber <= 0 || Float.isInfinite(parsedNumber) || Float.isNaN(parsedNumber)) {
-                showInvalidNumberToast();
-            } else {
-                viewModel.setMaxFrameRate(parsedNumber);
-                refreshFrameRateData();
-            }
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            showInvalidNumberToast();
-        }
-    }
-
-    private void showInvalidNumberToast() {
-        Toast.makeText(requireContext(), R.string.number_not_valid, Toast.LENGTH_LONG).show();
-    }
-
     private void buildAndShowResolutionMenu() {
         PopupMenu menu = new PopupMenu(requireContext(), containerResolution, Gravity.END);
 
@@ -201,21 +160,12 @@ public class CameraSettingsFragment extends NavigationFragment
     public void onCameraPositionClick(CameraSettingsPositionEntry cameraPositionEntry) {
         viewModel.setCameraPosition(cameraPositionEntry.cameraPosition);
         refreshCameraPositionData();
-        refreshFrameRateData();
         refreshResolutionData();
         refreshZoomFactorData();
     }
 
     private void refreshCameraPositionData() {
         positionAdapter.updateData(viewModel.provideCameraPositionsAndEnableState());
-    }
-
-    private void refreshTorchData() {
-        torchSwitch.setChecked(viewModel.isTorchEnabled());
-    }
-
-    private void refreshFrameRateData() {
-        editFrameRate.setText(getString(R.string.size_no_unit, viewModel.getMaxFrameRate()));
     }
 
     private void refreshResolutionData() {

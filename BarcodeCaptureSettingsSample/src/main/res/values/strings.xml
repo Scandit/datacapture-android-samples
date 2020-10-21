@@ -28,12 +28,14 @@
     <string name="extensions">Extensions</string>
     <string name="location_selection">Location Selection</string>
     <string name="feedback">Feedback</string>
+    <string name="code_duplicate_filter">Code Duplicate Filter</string>
     <string name="sound">Sound</string>
     <string name="vibration">Vibration</string>
     <string name="type">Type</string>
     <string name="none">None</string>
     <string name="radius">Radius</string>
     <string name="size">Size</string>
+    <string name="time_millis">%1$d (ms)</string>
     <string name="size_with_unit">%1$.2f (%2$s)</string>
     <string name="size_no_unit">%1$.2f</string>
     <string name="value">Value</string>
@@ -41,6 +43,9 @@
     <string name="camera">Camera</string>
     <string name="camera_position">Camera Position</string>
     <string name="torch_state">Desired Torch State</string>
+    <string name="turned_on">ON</string>
+    <string name="turned_off">OFF</string>
+    <string name="auto">AUTO</string>
     <string name="max_frame_rate">Max Frame Rate</string>
     <string name="preferred_resolution">Preferred Resolution</string>
     <string name="zoom_factor">Zoom Factor</string>
@@ -73,7 +78,7 @@
     <string name="color">Color</string>
     <string name="size_specification">Size Specification</string>
     <string name="width">Width</string>
-    <string name="height">Heigth</string>
+    <string name="height">Height</string>
     <string name="height_aspect">Height Aspect</string>
     <string name="width_aspect">Width Aspect</string>
     <string name="enabled_color">Enabled Color</string>
@@ -82,7 +87,7 @@
     <string name="laserline">Laserline</string>
     <string name="anchor">Anchor</string>
     <string name="torch_button">Torch Button</string>
-    <string name="result_title">Scanned</string>
+    <string name="result_title">Scan results</string>
     <string name="result_parametrised">%1$s: %2$s\nSymbol count: %3$d</string>
     <string name="result_handling">Result</string>
     <string name="continuous_scanning">Continuous Scanning</string>

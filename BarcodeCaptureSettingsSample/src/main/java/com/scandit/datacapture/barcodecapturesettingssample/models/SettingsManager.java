@@ -32,6 +32,7 @@ import com.scandit.datacapture.core.common.feedback.Sound;
 import com.scandit.datacapture.core.common.feedback.Vibration;
 import com.scandit.datacapture.core.common.geometry.*;
 import com.scandit.datacapture.core.source.*;
+import com.scandit.datacapture.core.time.TimeInterval;
 import com.scandit.datacapture.core.ui.overlay.DataCaptureOverlay;
 import com.scandit.datacapture.core.ui.style.Brush;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinder;
@@ -280,6 +281,17 @@ public class SettingsManager {
     }
     //endregion
 
+    //region Code Duplicate Filter settings.
+    public void setCodeDuplicateFilter(long value) {
+        barcodeCaptureSettings.setCodeDuplicateFilter(TimeInterval.millis(value));
+        updateAndSetBarcodeCaptureSettings();
+    }
+
+    public long getCodeDuplicateFilter() {
+        return barcodeCaptureSettings.getCodeDuplicateFilter().asMillis();
+    }
+    //endregion
+
     //region Location settings.
     public LocationSelection getLocationSelection() {
         return barcodeCaptureSettings.getLocationSelection();
@@ -392,15 +404,6 @@ public class SettingsManager {
 
     public void setVideoResolution(VideoResolution videoResolution) {
         cameraSettings.setPreferredResolution(videoResolution);
-        updateAndSetCameraSettings();
-    }
-
-    public float getMaxFrameRate() {
-        return cameraSettings.getMaxFrameRate();
-    }
-
-    public void setMaxFrameRate(float maxFrameRate) {
-        cameraSettings.setMaxFrameRate(maxFrameRate);
         updateAndSetCameraSettings();
     }
 
