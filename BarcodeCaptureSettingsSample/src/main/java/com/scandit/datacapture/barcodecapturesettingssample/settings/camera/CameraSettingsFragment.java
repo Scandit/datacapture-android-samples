@@ -26,6 +26,7 @@ import com.scandit.datacapture.barcodecapturesettingssample.R;
 import com.scandit.datacapture.barcodecapturesettingssample.base.NavigationFragment;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.SettingsOverviewEntry;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.camera.torchstate.TorchStateSettingsFragment;
+import com.scandit.datacapture.core.source.FocusGestureStrategy;
 import com.scandit.datacapture.core.source.VideoResolution;
 
 public class CameraSettingsFragment extends NavigationFragment
@@ -46,8 +47,13 @@ public class CameraSettingsFragment extends NavigationFragment
     private RecyclerView recyclerCameraPositions;
     private View torchEntry;
     private View containerResolution;
-    private TextView textResolution, textZoomFactor;
+    private TextView textResolution;
+    private TextView textZoomFactor;
+    private TextView textZoomGestureZoomFactor;
     private SeekBar seekbarZoomFactor;
+    private SeekBar seekbarZoomGestureZoomFactor;
+    private View containerFocusGestureStrategy;
+    private TextView textFocusGestureStrategy;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,6 +89,17 @@ public class CameraSettingsFragment extends NavigationFragment
         textZoomFactor = view.findViewById(R.id.text_zoom_factor);
         setupZoomFactor();
         refreshZoomFactorData();
+
+        seekbarZoomGestureZoomFactor = view.findViewById(
+                R.id.seekbar_zoom_gesture_zoom_factor);
+        textZoomGestureZoomFactor = view.findViewById(R.id.text_zoom_gesture_zoom_factor);
+        setupZoomGestureZoomFactor();
+        refreshZoomGestureZoomFactorData();
+
+        containerFocusGestureStrategy = view.findViewById(R.id.container_focus_gesture_strategy);
+        textFocusGestureStrategy = view.findViewById(R.id.text_focus_gesture_strategy);
+        refreshFocusGestureStrategyData();
+        setupFocusGestureStrategy();
     }
 
     private void setupCameraPositionRecycler() {
@@ -113,21 +130,54 @@ public class CameraSettingsFragment extends NavigationFragment
 
     private void setupZoomFactor() {
         seekbarZoomFactor.setMax((int) ((ZOOM_MAX - ZOOM_MIN) / ZOOM_STEP));
-        seekbarZoomFactor.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser) {
-                    float decimalProgress = ZOOM_MIN + (progress * ZOOM_STEP);
-                    viewModel.setZoomFactor(decimalProgress);
-                    refreshZoomFactorData();
+        seekbarZoomFactor.setOnSeekBarChangeListener(
+                new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        if (fromUser) {
+                            float decimalProgress = ZOOM_MIN + (progress * ZOOM_STEP);
+                            viewModel.setZoomFactor(decimalProgress);
+                            refreshZoomFactorData();
+                        }
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {}
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {}
                 }
+        );
+    }
+
+    private void setupZoomGestureZoomFactor() {
+        seekbarZoomGestureZoomFactor.setMax((int) ((ZOOM_MAX - ZOOM_MIN) / ZOOM_STEP));
+        seekbarZoomGestureZoomFactor.setOnSeekBarChangeListener(
+                new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        if (fromUser) {
+                            float decimalProgress = ZOOM_MIN + (progress * ZOOM_STEP);
+                            viewModel.setZoomGestureZoomFactor(decimalProgress);
+                            refreshZoomGestureZoomFactorData();
+                        }
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {}
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {}
+                }
+        );
+    }
+
+    private void setupFocusGestureStrategy() {
+        containerFocusGestureStrategy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buildAndShowFocusGestureStrategyMenu();
             }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
         });
     }
 
@@ -156,12 +206,33 @@ public class CameraSettingsFragment extends NavigationFragment
         menu.show();
     }
 
+    private void buildAndShowFocusGestureStrategyMenu() {
+        PopupMenu menu = new PopupMenu(
+                requireContext(), containerFocusGestureStrategy, Gravity.END);
+
+        for (FocusGestureStrategy value : FocusGestureStrategy.values()) {
+            menu.getMenu().add(value.name());
+        }
+
+        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                String selectedStrategy = item.getTitle().toString();
+                viewModel.setFocusGestureStrategy(FocusGestureStrategy.valueOf(selectedStrategy));
+                refreshFocusGestureStrategyData();
+                return true;
+            }
+        });
+        menu.show();
+    }
+
     @Override
     public void onCameraPositionClick(CameraSettingsPositionEntry cameraPositionEntry) {
         viewModel.setCameraPosition(cameraPositionEntry.cameraPosition);
         refreshCameraPositionData();
         refreshResolutionData();
         refreshZoomFactorData();
+        refreshZoomGestureZoomFactorData();
     }
 
     private void refreshCameraPositionData() {
@@ -173,9 +244,21 @@ public class CameraSettingsFragment extends NavigationFragment
     }
 
     private void refreshZoomFactorData() {
-        float value = viewModel.getZoomFactor();
-        textZoomFactor.setText(getString(R.string.size_no_unit, value));
-        seekbarZoomFactor.setProgress((int) ((value - ZOOM_MIN) / ZOOM_STEP));
+        refreshZoomSeekbar(viewModel.getZoomFactor(), textZoomFactor, seekbarZoomFactor);
+    }
+
+    private void refreshZoomGestureZoomFactorData() {
+        refreshZoomSeekbar(viewModel.getZoomGestureZoomFactor(),
+                textZoomGestureZoomFactor, seekbarZoomGestureZoomFactor);
+    }
+
+    private void refreshZoomSeekbar(float value, TextView textView, SeekBar seekBar) {
+        textView.setText(getString(R.string.size_no_unit, value));
+        seekBar.setProgress((int) ((value - ZOOM_MIN) / ZOOM_STEP));
+    }
+
+    private void refreshFocusGestureStrategyData() {
+        textFocusGestureStrategy.setText(viewModel.getFocusGestureStrategy().name());
     }
 
     @Override

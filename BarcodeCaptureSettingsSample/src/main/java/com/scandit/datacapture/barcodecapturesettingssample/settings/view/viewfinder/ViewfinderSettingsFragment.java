@@ -46,12 +46,13 @@ public class ViewfinderSettingsFragment extends NavigationFragment
     private ViewfinderSettingsViewModel viewModel;
 
     private RecyclerView recyclerViewfinderTypes;
-    private View cardColor, cardSpecifications, cardMeasures, cardLaserline;
+    private View cardRectangularColor, cardRectangularSize, cardLaserline, cardAimer;
     private View containerHeight, containerWidth, containerSizeSpec, containerHeightAspect,
             containerWidthAspect, containerColor, containerEnabledColor, containerDisabledColor,
-            containerLaserlineWidth;
+            containerLaserlineWidth, containerAimerFrameColor, containerAimerDotColor;
     private TextView textType, textColor, textSizeSpecification, textWidth, textHeight,
-            textEnabledColor, textDisabledColor, textLaserlineWidth;
+            textEnabledColor, textDisabledColor, textLaserlineWidth, textAimerFrameColor,
+            textAimerDotColor;
     private EditText editHeightAspect, editWidthAspect;
 
     private ViewfinderTypeAdapter adapter;
@@ -78,25 +79,25 @@ public class ViewfinderSettingsFragment extends NavigationFragment
         recyclerViewfinderTypes = view.findViewById(R.id.recycler_viewfinder_types);
         setupRecyclerTypes();
 
-        cardColor = view.findViewById(R.id.card_color);
-        cardSpecifications = view.findViewById(R.id.card_size_specification);
-        cardMeasures = view.findViewById(R.id.card_measures);
+        cardRectangularColor = view.findViewById(R.id.card_rectangular_color);
+        cardRectangularSize = view.findViewById(R.id.card_rectangular_size);
         cardLaserline = view.findViewById(R.id.card_laserline);
+        cardAimer = view.findViewById(R.id.card_aimer);
 
         textType = view.findViewById(R.id.text_viewfinder_type);
         textColor = view.findViewById(R.id.text_color);
-        textSizeSpecification = view.findViewById(R.id.text_size_specification);
-        textWidth = view.findViewById(R.id.text_width);
-        textHeight = view.findViewById(R.id.text_height);
+        textSizeSpecification = view.findViewById(R.id.text_rectangular_size_specification);
+        textWidth = view.findViewById(R.id.text_rectangular_width);
+        textHeight = view.findViewById(R.id.text_rectangular_height);
         editHeightAspect = view.findViewById(R.id.edit_height);
-        editWidthAspect = view.findViewById(R.id.edit_width);
+        editWidthAspect = view.findViewById(R.id.edit_rectangular_width);
 
-        containerColor = view.findViewById(R.id.container_color);
-        containerHeight = view.findViewById(R.id.container_height);
-        containerWidth = view.findViewById(R.id.container_width);
-        containerHeightAspect = view.findViewById(R.id.container_height_aspect);
-        containerWidthAspect = view.findViewById(R.id.container_width_aspect);
-        containerSizeSpec = view.findViewById(R.id.container_size_specification);
+        containerColor = view.findViewById(R.id.container_rectangular_color);
+        containerHeight = view.findViewById(R.id.container_rectangular_height);
+        containerWidth = view.findViewById(R.id.container_rectangular_width);
+        containerHeightAspect = view.findViewById(R.id.container_rectangular_height_aspect);
+        containerWidthAspect = view.findViewById(R.id.container_rectangular_width_aspect);
+        containerSizeSpec = view.findViewById(R.id.container_rectangular_size_specification);
 
         containerLaserlineWidth = view.findViewById(R.id.container_laserline_width);
         textLaserlineWidth = view.findViewById(R.id.text_laserline_width);
@@ -104,6 +105,11 @@ public class ViewfinderSettingsFragment extends NavigationFragment
         textDisabledColor = view.findViewById(R.id.text_disabled_color);
         containerEnabledColor = view.findViewById(R.id.container_enabled_color);
         containerDisabledColor = view.findViewById(R.id.container_disabled_color);
+
+        containerAimerFrameColor = view.findViewById(R.id.container_aimer_frame_color);
+        containerAimerDotColor = view.findViewById(R.id.container_aimer_dot_color);
+        textAimerFrameColor = view.findViewById(R.id.text_aimer_frame_color);
+        textAimerDotColor = view.findViewById(R.id.text_aimer_dot_color);
 
         setupListeners();
         showHideSubSettings();
@@ -190,6 +196,20 @@ public class ViewfinderSettingsFragment extends NavigationFragment
                 buildAndShowDisabledColorMenu();
             }
         });
+
+        containerAimerFrameColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buildAndShowAimerFrameColorMenu();
+            }
+        });
+
+        containerAimerDotColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buildAndShowAimerDotColorMenu();
+            }
+        });
     }
 
     private void parseHeightAndApplyChange(String text) {
@@ -255,6 +275,12 @@ public class ViewfinderSettingsFragment extends NavigationFragment
         textDisabledColor.setText(viewfinder.getDisabledColor().displayName);
     }
 
+    private void refreshAimerViewfinderData(ViewfinderTypeAimer viewfinder) {
+        textType.setText(viewfinder.displayName);
+        textAimerFrameColor.setText(viewfinder.getFrameColor().displayName);
+        textAimerDotColor.setText(viewfinder.getDotColor().displayName);
+    }
+
     private void refreshHeight(FloatWithUnit height) {
         textHeight.setText(
                 getString(R.string.size_with_unit, height.getValue(), height.getUnit().name())
@@ -283,23 +309,25 @@ public class ViewfinderSettingsFragment extends NavigationFragment
             setupForRectangularViewfinder((ViewfinderTypeRectangular) viewfinderType);
         } else if (viewfinderType instanceof ViewfinderTypeLaserline) {
             setupForLaserlineViewfinder((ViewfinderTypeLaserline) viewfinderType);
+        } else if (viewfinderType instanceof ViewfinderTypeAimer) {
+            setupForAimerViewfinder((ViewfinderTypeAimer) viewfinderType);
         }
     }
 
     private void setupForNoViewfinder() {
         textType.setVisibility(View.GONE);
-        cardColor.setVisibility(View.GONE);
-        cardSpecifications.setVisibility(View.GONE);
-        cardMeasures.setVisibility(View.GONE);
+        cardRectangularColor.setVisibility(View.GONE);
+        cardRectangularSize.setVisibility(View.GONE);
         cardLaserline.setVisibility(View.GONE);
+        cardAimer.setVisibility(View.GONE);
     }
 
     private void setupForRectangularViewfinder(ViewfinderTypeRectangular viewfinder) {
         textType.setVisibility(View.VISIBLE);
-        cardColor.setVisibility(View.VISIBLE);
-        cardSpecifications.setVisibility(View.VISIBLE);
-        cardMeasures.setVisibility(View.VISIBLE);
+        cardRectangularColor.setVisibility(View.VISIBLE);
+        cardRectangularSize.setVisibility(View.VISIBLE);
         cardLaserline.setVisibility(View.GONE);
+        cardAimer.setVisibility(View.GONE);
 
         SizeSpecification spec = viewfinder.getSizeSpecification();
 
@@ -329,12 +357,22 @@ public class ViewfinderSettingsFragment extends NavigationFragment
 
     private void setupForLaserlineViewfinder(ViewfinderTypeLaserline viewfinder) {
         textType.setVisibility(View.VISIBLE);
-        cardColor.setVisibility(View.GONE);
-        cardSpecifications.setVisibility(View.GONE);
-        cardMeasures.setVisibility(View.GONE);
+        cardRectangularColor.setVisibility(View.GONE);
+        cardRectangularSize.setVisibility(View.GONE);
         cardLaserline.setVisibility(View.VISIBLE);
+        cardAimer.setVisibility(View.GONE);
 
         refreshLaserlineViewfinderData(viewfinder);
+    }
+
+    private void setupForAimerViewfinder(ViewfinderTypeAimer viewfinder) {
+        textType.setVisibility(View.VISIBLE);
+        cardRectangularColor.setVisibility(View.GONE);
+        cardRectangularSize.setVisibility(View.GONE);
+        cardLaserline.setVisibility(View.GONE);
+        cardAimer.setVisibility(View.VISIBLE);
+
+        refreshAimerViewfinderData(viewfinder);
     }
 
     private void buildAndShowSizeSpecificationMenu() {
@@ -424,6 +462,54 @@ public class ViewfinderSettingsFragment extends NavigationFragment
                 int selectedColor = item.getItemId();
                 viewModel.setLaserlineViewfinderDisabledColor(
                         ViewfinderTypeLaserline.DisabledColor.values()[selectedColor]
+                );
+                showHideSubSettings();
+                return true;
+            }
+        });
+        menu.show();
+    }
+
+    private void buildAndShowAimerFrameColorMenu() {
+        PopupMenu menu = new PopupMenu(requireContext(), containerAimerFrameColor, Gravity.END);
+
+        ViewfinderTypeAimer.FrameColor[] values =
+                ViewfinderTypeAimer.FrameColor.values();
+        for (int i = 0; i < values.length; i++) {
+            ViewfinderTypeAimer.FrameColor color = values[i];
+            menu.getMenu().add(0, i, i, color.displayName);
+        }
+
+        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int selectedColor = item.getItemId();
+                viewModel.setAimerViewfinderFrameColor(
+                        ViewfinderTypeAimer.FrameColor.values()[selectedColor]
+                );
+                showHideSubSettings();
+                return true;
+            }
+        });
+        menu.show();
+    }
+
+    private void buildAndShowAimerDotColorMenu() {
+        PopupMenu menu = new PopupMenu(requireContext(), containerAimerDotColor, Gravity.END);
+
+        ViewfinderTypeAimer.DotColor[] values =
+                ViewfinderTypeAimer.DotColor.values();
+        for (int i = 0; i < values.length; i++) {
+            ViewfinderTypeAimer.DotColor color = values[i];
+            menu.getMenu().add(0, i, i, color.displayName);
+        }
+
+        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int selectedColor = item.getItemId();
+                viewModel.setAimerViewfinderDotColor(
+                        ViewfinderTypeAimer.DotColor.values()[selectedColor]
                 );
                 showHideSubSettings();
                 return true;

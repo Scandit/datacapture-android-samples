@@ -19,6 +19,7 @@ import com.scandit.datacapture.barcodecapturesettingssample.R;
 
 public enum BarcodeCaptureSettingsEntry {
     SYMBOLOGIES(R.string.symbologies),
+    COMPOSITE_TYPES(R.string.composite_types),
     LOCATION_SELECTION(R.string.location_selection),
     FEEDBACK(R.string.feedback),
     CODE_DUPLICATE_FILTER(R.string.code_duplicate_filter);

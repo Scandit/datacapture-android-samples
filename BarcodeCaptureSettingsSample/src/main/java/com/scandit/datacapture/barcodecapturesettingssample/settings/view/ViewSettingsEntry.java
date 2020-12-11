@@ -23,6 +23,7 @@ public enum ViewSettingsEntry {
     OVERLAY(R.string.overlay),
     VIEWFINDER(R.string.view_finder),
     LOGO(R.string.logo),
+    GESTURES(R.string.gestures),
     CONTROLS(R.string.controls);
 
     @StringRes public final int displayNameResource;

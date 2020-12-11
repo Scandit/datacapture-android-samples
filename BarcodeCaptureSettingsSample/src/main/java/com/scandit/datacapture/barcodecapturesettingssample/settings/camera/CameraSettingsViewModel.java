@@ -17,6 +17,7 @@ package com.scandit.datacapture.barcodecapturesettingssample.settings.camera;
 import androidx.lifecycle.ViewModel;
 import com.scandit.datacapture.barcodecapturesettingssample.models.SettingsManager;
 import com.scandit.datacapture.core.source.CameraPosition;
+import com.scandit.datacapture.core.source.FocusGestureStrategy;
 import com.scandit.datacapture.core.source.TorchState;
 import com.scandit.datacapture.core.source.VideoResolution;
 
@@ -45,14 +46,6 @@ public class CameraSettingsViewModel extends ViewModel {
         settingsManager.setCameraPosition(cameraPosition);
     }
 
-    boolean isTorchEnabled() {
-        return settingsManager.getTorchState() == TorchState.ON;
-    }
-
-    void setTorchEnabled(boolean enabled) {
-        settingsManager.setTorchState(enabled ? TorchState.ON : TorchState.OFF);
-    }
-
     VideoResolution getVideoResolution() {
         return settingsManager.getVideoResolution();
     }
@@ -67,5 +60,21 @@ public class CameraSettingsViewModel extends ViewModel {
 
     void setZoomFactor(float zoomFactor) {
         settingsManager.setZoomFactor(zoomFactor);
+    }
+
+    float getZoomGestureZoomFactor() {
+        return settingsManager.getZoomGestureZoomFactor();
+    }
+
+    void setZoomGestureZoomFactor(float zoomFactor) {
+        settingsManager.setZoomGestureZoomFactor(zoomFactor);
+    }
+
+    FocusGestureStrategy getFocusGestureStrategy() {
+        return settingsManager.getFocusGestureStrategy();
+    }
+
+    void setFocusGestureStrategy(FocusGestureStrategy strategy) {
+        settingsManager.setFocusGestureStrategy(strategy);
     }
 }

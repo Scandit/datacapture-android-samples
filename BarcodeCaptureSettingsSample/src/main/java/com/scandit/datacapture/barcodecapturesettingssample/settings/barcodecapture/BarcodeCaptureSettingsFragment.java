@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.scandit.datacapture.barcodecapturesettingssample.R;
 import com.scandit.datacapture.barcodecapturesettingssample.base.NavigationFragment;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.SettingsOverviewEntry;
+import com.scandit.datacapture.barcodecapturesettingssample.settings.barcodecapture.compositetypes.CompositeTypesSettingsFragment;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.barcodecapture.duplicatefilter.CodeDuplicateFilterSettingsFragment;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.barcodecapture.feedback.FeedbackSettingsFragment;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.barcodecapture.location.LocationSettingsFragment;
@@ -85,6 +86,9 @@ public class BarcodeCaptureSettingsFragment extends NavigationFragment
         switch (entry) {
             case SYMBOLOGIES:
                 moveToFragment(SymbologySettingsFragment.newInstance(), true, null);
+                break;
+            case COMPOSITE_TYPES:
+                moveToFragment(CompositeTypesSettingsFragment.newInstance(), true, null);
                 break;
             case LOCATION_SELECTION:
                 moveToFragment(LocationSettingsFragment.newInstance(), true, null);

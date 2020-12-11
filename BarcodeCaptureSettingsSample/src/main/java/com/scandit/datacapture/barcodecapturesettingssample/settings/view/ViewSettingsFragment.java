@@ -27,6 +27,7 @@ import com.scandit.datacapture.barcodecapturesettingssample.R;
 import com.scandit.datacapture.barcodecapturesettingssample.base.NavigationFragment;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.SettingsOverviewEntry;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.view.controls.ControlsSettingsFragment;
+import com.scandit.datacapture.barcodecapturesettingssample.settings.view.gestures.GesturesSettingsFragment;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.view.logo.LogoSettingsFragment;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.view.overlay.OverlaySettingsFragment;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.view.pointofinterest.PointOfInterestSettingsFragment;
@@ -93,6 +94,9 @@ public class ViewSettingsFragment extends NavigationFragment
                 break;
             case LOGO:
                 moveToFragment(LogoSettingsFragment.newInstance(), true, null);
+                break;
+            case GESTURES:
+                moveToFragment(GesturesSettingsFragment.newInstance(), true, null);
                 break;
             case CONTROLS:
                 moveToFragment(ControlsSettingsFragment.newInstance(), true, null);

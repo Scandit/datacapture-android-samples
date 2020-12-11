@@ -281,7 +281,7 @@
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:text="@string/width_aspect"
-                    android:labelFor="@id/edit_width"/>
+                    android:labelFor="@id/edit_rectangular_width"/>
 
                 <EditText
                     android:id="@+id/edit_rectangular_width"

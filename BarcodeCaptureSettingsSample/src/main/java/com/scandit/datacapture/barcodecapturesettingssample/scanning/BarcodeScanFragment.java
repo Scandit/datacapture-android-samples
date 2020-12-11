@@ -28,6 +28,8 @@ import com.scandit.datacapture.barcodecapturesettingssample.models.SettingsManag
 import com.scandit.datacapture.core.common.geometry.PointWithUnit;
 import com.scandit.datacapture.core.ui.DataCaptureView;
 import com.scandit.datacapture.core.ui.control.TorchSwitchControl;
+import com.scandit.datacapture.core.ui.gesture.SwipeToZoom;
+import com.scandit.datacapture.core.ui.gesture.TapToFocus;
 
 public class BarcodeScanFragment extends CameraPermissionFragment
         implements BarcodeScanViewModel.Listener {
@@ -89,6 +91,8 @@ public class BarcodeScanFragment extends CameraPermissionFragment
         if (settings.isTorchButtonEnabled()) {
             dataCaptureView.addControl(new TorchSwitchControl(requireContext()));
         }
+        dataCaptureView.setFocusGesture(settings.isTapToFocusEnabled() ? new TapToFocus() : null);
+        dataCaptureView.setZoomGesture(settings.isSwipeToZoomEnabled() ? new SwipeToZoom() : null);
     }
 
     private void setupBarcodeCaptureOverlay(SettingsManager settings) {

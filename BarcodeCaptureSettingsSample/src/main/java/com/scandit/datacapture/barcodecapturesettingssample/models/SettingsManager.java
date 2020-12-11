@@ -15,12 +15,15 @@
 package com.scandit.datacapture.barcodecapturesettingssample.models;
 
 import androidx.annotation.Nullable;
+
 import com.scandit.datacapture.barcode.capture.BarcodeCapture;
 import com.scandit.datacapture.barcode.capture.BarcodeCaptureSettings;
 import com.scandit.datacapture.barcode.capture.SymbologySettings;
+import com.scandit.datacapture.barcode.data.CompositeType;
 import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.data.SymbologyDescription;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
+import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.ViewfinderTypeAimer;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.ViewfinderTypeLaserline;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.ViewfinderTypeRectangular;
 import com.scandit.datacapture.barcodecapturesettingssample.utils.SizeSpecification;
@@ -30,15 +33,29 @@ import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.common.feedback.Feedback;
 import com.scandit.datacapture.core.common.feedback.Sound;
 import com.scandit.datacapture.core.common.feedback.Vibration;
-import com.scandit.datacapture.core.common.geometry.*;
-import com.scandit.datacapture.core.source.*;
+import com.scandit.datacapture.core.common.geometry.Anchor;
+import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
+import com.scandit.datacapture.core.common.geometry.MarginsWithUnit;
+import com.scandit.datacapture.core.common.geometry.MeasureUnit;
+import com.scandit.datacapture.core.common.geometry.PointWithUnit;
+import com.scandit.datacapture.core.source.Camera;
+import com.scandit.datacapture.core.source.CameraPosition;
+import com.scandit.datacapture.core.source.CameraSettings;
+import com.scandit.datacapture.core.source.FocusGestureStrategy;
+import com.scandit.datacapture.core.source.TorchState;
+import com.scandit.datacapture.core.source.VideoResolution;
 import com.scandit.datacapture.core.time.TimeInterval;
+import com.scandit.datacapture.core.ui.gesture.FocusGesture;
+import com.scandit.datacapture.core.ui.gesture.SwipeToZoom;
+import com.scandit.datacapture.core.ui.gesture.TapToFocus;
+import com.scandit.datacapture.core.ui.gesture.ZoomGesture;
 import com.scandit.datacapture.core.ui.overlay.DataCaptureOverlay;
 import com.scandit.datacapture.core.ui.style.Brush;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinder;
 import com.scandit.datacapture.core.ui.viewfinder.Viewfinder;
 
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashSet;
 
 public class SettingsManager {
@@ -99,11 +116,19 @@ public class SettingsManager {
     private ViewfinderTypeLaserline.DisabledColor laserlineViewfinderDisabledColor =
             ViewfinderTypeLaserline.DisabledColor.DEFAULT;
 
+    private ViewfinderTypeAimer.FrameColor aimerViewfinderFrameColor =
+            ViewfinderTypeAimer.FrameColor.DEFAULT;
+    private ViewfinderTypeAimer.DotColor aimerViewfinderDotColor =
+            ViewfinderTypeAimer.DotColor.DEFAULT;
+
     private Anchor logoAnchor = Anchor.BOTTOM_RIGHT;
     private FloatWithUnit anchorXOffset = new FloatWithUnit(0f, MeasureUnit.FRACTION);
     private FloatWithUnit anchorYOffset = new FloatWithUnit(0f, MeasureUnit.FRACTION);
 
     private boolean torchButtonEnabled = false;
+
+    private boolean tapToFocusEnabled = true;
+    private boolean swipeToZoomEnabled = true;
 
     private boolean continuousScanningEnabled = false;
 
@@ -292,6 +317,18 @@ public class SettingsManager {
     }
     //endregion
 
+    //region Composite Type settings.
+    public void setEnabledCompositeTypes(EnumSet<CompositeType> types) {
+        barcodeCaptureSettings.setEnabledCompositeTypes(types);
+        barcodeCaptureSettings.enableSymbologies(types);
+        updateAndSetBarcodeCaptureSettings();
+    }
+
+    public EnumSet<CompositeType> getEnabledCompositeTypes() {
+        return barcodeCaptureSettings.getEnabledCompositeTypes();
+    }
+    //endregion
+
     //region Location settings.
     public LocationSelection getLocationSelection() {
         return barcodeCaptureSettings.getLocationSelection();
@@ -413,6 +450,24 @@ public class SettingsManager {
 
     public void setZoomFactor(float zoomFactor) {
         cameraSettings.setZoomFactor(zoomFactor);
+        updateAndSetCameraSettings();
+    }
+
+    public float getZoomGestureZoomFactor() {
+        return cameraSettings.getZoomGestureZoomFactor();
+    }
+
+    public void setZoomGestureZoomFactor(float zoomFactor) {
+        cameraSettings.setZoomGestureZoomFactor(zoomFactor);
+        updateAndSetCameraSettings();
+    }
+
+    public FocusGestureStrategy getFocusGestureStrategy() {
+        return cameraSettings.getFocusGestureStrategy();
+    }
+
+    public void setFocusGestureStrategy(FocusGestureStrategy strategy) {
+        cameraSettings.setFocusGestureStrategy(strategy);
         updateAndSetCameraSettings();
     }
     //endregion
@@ -610,6 +665,26 @@ public class SettingsManager {
     public void setLaserlineViewfinderWidth(FloatWithUnit laserlineViewfinderWidth) {
         this.laserlineViewfinderWidth = laserlineViewfinderWidth;
     }
+
+    public ViewfinderTypeAimer.FrameColor getAimerViewfinderFrameColor() {
+        return aimerViewfinderFrameColor;
+    }
+
+    public void setAimerViewfinderFrameColor(
+            ViewfinderTypeAimer.FrameColor aimerViewfinderFrameColor
+    ) {
+        this.aimerViewfinderFrameColor = aimerViewfinderFrameColor;
+    }
+
+    public ViewfinderTypeAimer.DotColor getAimerViewfinderDotColor() {
+        return aimerViewfinderDotColor;
+    }
+
+    public void setAimerViewfinderDotColor(
+            ViewfinderTypeAimer.DotColor aimerViewfinderDotColor
+    ) {
+        this.aimerViewfinderDotColor = aimerViewfinderDotColor;
+    }
     //endregion
 
     //region Logo Settings.
@@ -635,6 +710,23 @@ public class SettingsManager {
 
     public void setAnchorYOffset(FloatWithUnit anchorYOffset) {
         this.anchorYOffset = anchorYOffset;
+    }
+    //endregion
+
+    //region Gestures Settings.
+    public boolean isTapToFocusEnabled() {
+        return tapToFocusEnabled;
+    }
+
+    public void setTapToFocusEnabled(boolean tapToFocusEnabled) {
+        this.tapToFocusEnabled = tapToFocusEnabled;
+    }
+    public boolean isSwipeToZoomEnabled() {
+        return swipeToZoomEnabled;
+    }
+
+    public void setSwipeToZoomEnabled(boolean swipeToZoomEnabled) {
+        this.swipeToZoomEnabled = swipeToZoomEnabled;
     }
     //endregion
 

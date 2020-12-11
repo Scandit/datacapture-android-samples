@@ -31,6 +31,9 @@ public class ViewfinderSettingsViewModel extends ViewfinderTypeViewModel {
                 ),
                 ViewfinderTypeLaserline.fromCurrentViewfinderAndSettings(
                         settingsManager.getCurrentViewfinder(), settingsManager
+                ),
+                ViewfinderTypeAimer.fromCurrentViewfinderAndSettings(
+                        settingsManager.getCurrentViewfinder(), settingsManager
                 )
         };
     }
@@ -51,6 +54,10 @@ public class ViewfinderSettingsViewModel extends ViewfinderTypeViewModel {
             settingsManager.setLaserlineViewfinderWidth(casted.getWidth());
             settingsManager.setLaserlineViewfinderEnabledColor(casted.getEnabledColor());
             settingsManager.setLaserlineViewfinderDisabledColor(casted.getDisabledColor());
+        } else if (viewfinderType instanceof ViewfinderTypeAimer) {
+            ViewfinderTypeAimer casted = (ViewfinderTypeAimer) viewfinderType;
+            settingsManager.setAimerViewfinderFrameColor(casted.getFrameColor());
+            settingsManager.setAimerViewfinderDotColor(casted.getDotColor());
         }
         updateViewfinder(viewfinderType);
     }
@@ -103,5 +110,23 @@ public class ViewfinderSettingsViewModel extends ViewfinderTypeViewModel {
             setViewfinderType(currentViewfinder);
         }
         settingsManager.setLaserlineViewfinderDisabledColor(color);
+    }
+
+    void setAimerViewfinderFrameColor(ViewfinderTypeAimer.FrameColor color) {
+        ViewfinderType currentViewfinder = getCurrentViewfinderType();
+        if (currentViewfinder instanceof ViewfinderTypeAimer) {
+            ((ViewfinderTypeAimer) currentViewfinder).setFrameColor(color);
+            setViewfinderType(currentViewfinder);
+        }
+        settingsManager.setAimerViewfinderFrameColor(color);
+    }
+
+    void setAimerViewfinderDotColor(ViewfinderTypeAimer.DotColor color) {
+        ViewfinderType currentViewfinder = getCurrentViewfinderType();
+        if (currentViewfinder instanceof ViewfinderTypeAimer) {
+            ((ViewfinderTypeAimer) currentViewfinder).setDotColor(color);
+            setViewfinderType(currentViewfinder);
+        }
+        settingsManager.setAimerViewfinderDotColor(color);
     }
 }

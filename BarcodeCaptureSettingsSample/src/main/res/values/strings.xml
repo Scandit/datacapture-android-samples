@@ -29,6 +29,7 @@
     <string name="location_selection">Location Selection</string>
     <string name="feedback">Feedback</string>
     <string name="code_duplicate_filter">Code Duplicate Filter</string>
+    <string name="composite_types">Composite Types</string>
     <string name="sound">Sound</string>
     <string name="vibration">Vibration</string>
     <string name="type">Type</string>
@@ -49,6 +50,8 @@
     <string name="max_frame_rate">Max Frame Rate</string>
     <string name="preferred_resolution">Preferred Resolution</string>
     <string name="zoom_factor">Zoom Factor</string>
+    <string name="zoom_gesture_zoom_factor">Zoom Gesture Zoom Factor</string>
+    <string name="focus_gesture_strategy">Focus Gesture Strategy</string>
     <string name="camera_settings">Camera Settings</string>
     <string name="view">View</string>
     <string name="scan_area">Scan Area</string>
@@ -63,6 +66,9 @@
     <string name="right">Right</string>
     <string name="bottom">Bottom</string>
     <string name="left">Left</string>
+    <string name="gestures">Gestures</string>
+    <string name="tap_to_focus">Tap to Focus</string>
+    <string name="swipe_to_zoom">Swipe to Zoom</string>
     <string name="x">X</string>
     <string name="y">Y</string>
     <string name="brush">Brush</string>
@@ -83,8 +89,11 @@
     <string name="width_aspect">Width Aspect</string>
     <string name="enabled_color">Enabled Color</string>
     <string name="disabled_color">Disabled Color</string>
+    <string name="frame_color">Frame Color</string>
+    <string name="dot_color">Dot Color</string>
     <string name="white">White</string>
     <string name="laserline">Laserline</string>
+    <string name="aimer">Aimer</string>
     <string name="anchor">Anchor</string>
     <string name="torch_button">Torch Button</string>
     <string name="result_title">Scan results</string>
@@ -93,4 +102,7 @@
     <string name="continuous_scanning">Continuous Scanning</string>
     <string name="disable_all">Disable All</string>
     <string name="enable_all">Enable All</string>
+    <string name="a">A</string>
+    <string name="b">B</string>
+    <string name="c">C</string>
 </resources>

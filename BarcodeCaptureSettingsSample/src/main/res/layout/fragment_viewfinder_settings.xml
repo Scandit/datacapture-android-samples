@@ -74,7 +74,7 @@
             tools:text="Rectangular"/>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/card_color"
+            android:id="@+id/card_rectangular_color"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -83,7 +83,7 @@
             app:cardCornerRadius="0dp">
 
             <LinearLayout
-                android:id="@+id/container_color"
+                android:id="@+id/container_rectangular_color"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -117,57 +117,14 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/card_size_specification"
+            android:id="@+id/card_rectangular_size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:background="@android:color/white"
             app:cardElevation="3dp"
             app:cardCornerRadius="0dp">
-
-            <LinearLayout
-                android:id="@+id/container_size_specification"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp"
-                android:orientation="horizontal"
-                android:background="?android:attr/selectableItemBackground">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="?android:attr/listPreferredItemHeightSmall"
-                    android:textAppearance="?android:attr/textAppearanceListItem"
-                    android:paddingStart="24dp"
-                    android:paddingEnd="8dp"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:gravity="center_vertical"
-                    android:text="@string/size_specification"/>
-
-                <TextView
-                    android:id="@+id/text_size_specification"
-                    android:layout_width="match_parent"
-                    android:layout_height="?android:attr/listPreferredItemHeightSmall"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="24dp"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:gravity="center_vertical|end"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    tools:text="Width and Height Aspect"/>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_measures"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:background="@android:color/white"
-            app:cardElevation="3dp"
-            app:cardCornerRadius="0dp">
-
+            
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -176,7 +133,40 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/container_width"
+                    android:id="@+id/container_rectangular_size_specification"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:orientation="horizontal"
+                    android:background="?android:attr/selectableItemBackground">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="8dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:text="@string/size_specification"/>
+
+                    <TextView
+                        android:id="@+id/text_rectangular_size_specification"
+                        android:layout_width="match_parent"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="24dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical|end"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        tools:text="Width and Height Aspect"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/container_rectangular_width"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -194,7 +184,7 @@
                         android:text="@string/width"/>
 
                     <TextView
-                        android:id="@+id/text_width"
+                        android:id="@+id/text_rectangular_width"
                         android:layout_width="match_parent"
                         android:layout_height="?android:attr/listPreferredItemHeightSmall"
                         android:paddingStart="8dp"
@@ -207,7 +197,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/container_height"
+                    android:id="@+id/container_rectangular_height"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -225,7 +215,7 @@
                         android:text="@string/height"/>
 
                     <TextView
-                        android:id="@+id/text_height"
+                        android:id="@+id/text_rectangular_height"
                         android:layout_width="match_parent"
                         android:layout_height="?android:attr/listPreferredItemHeightSmall"
                         android:paddingStart="8dp"
@@ -238,7 +228,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/container_height_aspect"
+                    android:id="@+id/container_rectangular_height_aspect"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -276,7 +266,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/container_width_aspect"
+                    android:id="@+id/container_rectangular_width_aspect"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -294,10 +284,10 @@
                         android:ellipsize="end"
                         android:gravity="center_vertical"
                         android:text="@string/width_aspect"
-                        android:labelFor="@id/edit_width"/>
+                        android:labelFor="@id/edit_rectangular_width"/>
 
                     <EditText
-                        android:id="@+id/edit_width"
+                        android:id="@+id/edit_rectangular_width"
                         android:layout_width="120dp"
                         android:layout_height="?android:attr/listPreferredItemHeightSmall"
                         android:paddingStart="8dp"
@@ -414,6 +404,88 @@
 
                     <TextView
                         android:id="@+id/text_disabled_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="24dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical|end"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        tools:text="Default"/>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_aimer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:background="@android:color/white"
+            app:cardElevation="3dp"
+            app:cardCornerRadius="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/container_aimer_frame_color"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="?android:attr/selectableItemBackground">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="8dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:text="@string/frame_color"/>
+
+                    <TextView
+                        android:id="@+id/text_aimer_frame_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="24dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical|end"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        tools:text="Default"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/container_aimer_dot_color"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="?android:attr/selectableItemBackground">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="8dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:text="@string/dot_color"/>
+
+                    <TextView
+                        android:id="@+id/text_aimer_dot_color"
                         android:layout_width="match_parent"
                         android:layout_height="?android:attr/listPreferredItemHeightSmall"
                         android:paddingStart="8dp"
