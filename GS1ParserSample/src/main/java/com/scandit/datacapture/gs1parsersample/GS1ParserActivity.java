@@ -28,7 +28,6 @@ import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.data.FrameData;
-import com.scandit.datacapture.core.internal.sdk.utils.JsonUtils;
 import com.scandit.datacapture.core.source.Camera;
 import com.scandit.datacapture.core.source.FrameSourceState;
 import com.scandit.datacapture.core.ui.DataCaptureView;
@@ -37,8 +36,6 @@ import com.scandit.datacapture.parser.ParsedData;
 import com.scandit.datacapture.parser.ParsedField;
 import com.scandit.datacapture.parser.Parser;
 import com.scandit.datacapture.parser.ParserDataFormat;
-
-import org.json.JSONException;
 
 import java.util.HashSet;
 
@@ -183,12 +180,11 @@ public class GS1ParserActivity
 
         String barcodeData = session.getNewlyRecognizedBarcodes().get(0).getData();
         try {
-            ParsedData parsedData = parser.parseString(barcodeData);
+            final ParsedData parsedData = parser.parseString(barcodeData);
             final StringBuilder sb = new StringBuilder();
 
             for (ParsedField field : parsedData.getFields()) {
-                String fieldValue = JsonUtils.jsonFromObject(field.getParsed());
-                sb.append(field.getName()).append(": ").append(fieldValue).append("\n");
+                sb.append(field.getName()).append(": ").append(field.getParsed()).append("\n");
             }
 
             // Stop recognizing barcodes for as long as we are displaying the result. There won't be any
@@ -204,7 +200,7 @@ public class GS1ParserActivity
                     showResult(sb.toString());
                 }
             });
-        } catch (RuntimeException | JSONException e) {
+        } catch (RuntimeException e) {
             // Print the parser failure and continue.
             e.printStackTrace();
             barcodeCapture.setEnabled(true);

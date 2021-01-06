@@ -28,6 +28,7 @@ dependencies {
     api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
     api "com.scandit.datacapture::${versions.scandit_sdk_version}"
     api "com.scandit.datacapture::${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture::${versions.scandit_sdk_version}"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
 

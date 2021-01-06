@@ -17,6 +17,7 @@ package com.scandit.datacapture.mrzscanneresample;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.FrameLayout;
 
 import androidx.annotation.StringRes;
@@ -244,17 +245,7 @@ public class MRZScannerActivity
             @NotNull IdCaptureSession session,
             @NotNull FrameData data
     ) {
-        /*
-         * This callback may be executed on an arbitrary thread. We post to switch back
-         * to the main thread.
-         */
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                String message = getErrorMessage(error);
-                showResult(R.string.title_alert_error, message);
-            }
-        });
+        Log.i(getClass().getSimpleName(), getErrorMessage(error));
     }
 
     private String getErrorMessage(Throwable error) {
