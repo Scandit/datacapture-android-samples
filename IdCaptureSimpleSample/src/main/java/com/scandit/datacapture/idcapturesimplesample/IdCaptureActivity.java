@@ -280,6 +280,7 @@ public class IdCaptureActivity extends CameraPermissionActivity
 
         appendField(builder, "Issuing Authority: ", viz.getIssuingAuthority());
         appendField(builder, "Issuing Jurisdiction: ", viz.getIssuingJurisdiction());
+        appendField(builder, "Issuing Jurisdiction ISO: ", viz.getIssuingJurisdictionIso());
         appendField(builder, "Additional Name Information: ", viz.getAdditionalNameInformation());
         appendField(builder, "Additional Address Information: ", viz.getAdditionalAddressInformation());
         appendField(builder, "Place of Birth: ", viz.getPlaceOfBirth());
