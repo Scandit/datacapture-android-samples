@@ -19,6 +19,7 @@ import com.scandit.datacapture.barcode.capture.BarcodeCapture;
 import com.scandit.datacapture.barcode.capture.BarcodeCaptureListener;
 import com.scandit.datacapture.barcode.capture.BarcodeCaptureSession;
 import com.scandit.datacapture.barcode.data.Barcode;
+import com.scandit.datacapture.barcode.data.SymbologyDescription;
 import com.scandit.datacapture.barcodecapturesettingssample.models.SettingsManager;
 import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.core.source.FrameSourceState;
@@ -45,7 +46,18 @@ public class BarcodeScanViewModel extends ViewModel implements BarcodeCaptureLis
             }
             if (listener != null) {
                 Barcode barcode = session.getNewlyRecognizedBarcodes().get(0);
-                listener.showDialog(barcode);
+                String resultData = barcode.getData();
+                if (barcode.getAddOnData() != null) {
+                    resultData += " " + barcode.getAddOnData();
+                }
+                if (barcode.getCompositeData() != null) {
+                    resultData += " " + barcode.getCompositeData();
+                }
+                listener.showDialog(
+                        SymbologyDescription.create(barcode.getSymbology()).getReadableName(),
+                        resultData,
+                        barcode.getSymbolCount()
+                );
             }
         }
     }
@@ -92,6 +104,6 @@ public class BarcodeScanViewModel extends ViewModel implements BarcodeCaptureLis
     }
 
     interface Listener {
-        void showDialog(Barcode barcode);
+        void showDialog(String symbologyName, String data, int symbolCount);
     }
 }

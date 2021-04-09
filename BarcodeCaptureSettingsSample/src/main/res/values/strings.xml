@@ -97,7 +97,6 @@
     <string name="anchor">Anchor</string>
     <string name="torch_button">Torch Button</string>
     <string name="result_title">Scan results</string>
-    <string name="cc_result_parametrised">CC Type %1$s\n%2$s: %3$s\nSymbol count: %4$d</string>
     <string name="result_parametrised">%1$s: %2$s\nSymbol count: %3$d</string>
     <string name="result_handling">Result</string>
     <string name="continuous_scanning">Continuous Scanning</string>

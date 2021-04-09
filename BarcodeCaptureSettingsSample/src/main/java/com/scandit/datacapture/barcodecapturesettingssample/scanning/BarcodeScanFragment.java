@@ -23,10 +23,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProviders;
-
-import com.scandit.datacapture.barcode.data.Barcode;
-import com.scandit.datacapture.barcode.data.CompositeFlag;
-import com.scandit.datacapture.barcode.data.SymbologyDescription;
 import com.scandit.datacapture.barcodecapturesettingssample.R;
 import com.scandit.datacapture.barcodecapturesettingssample.models.SettingsManager;
 import com.scandit.datacapture.core.common.geometry.PointWithUnit;
@@ -162,45 +158,12 @@ public class BarcodeScanFragment extends CameraPermissionFragment
     }
 
     @Override
-    public void showDialog(Barcode barcode) {
-        String compositeType = null;
-        String data = barcode.getData();
-        if (barcode.getAddOnData() != null) {
-            data += " " + barcode.getAddOnData();
-        }
-        if (barcode.getCompositeData() != null) {
-            data += " " + barcode.getCompositeData();
-            compositeType = stringFromCompositeFlag(barcode.getCompositeFlag());
-        }
-        String symbology = SymbologyDescription.create(barcode.getSymbology()).getReadableName();
-        int symbolCount = barcode.getSymbolCount();
-
-
-        String text;
-        if (compositeType == null) {
-            text = getString(R.string.result_parametrised, symbology, data, symbolCount);
-        } else {
-            text = getString(R.string.cc_result_parametrised, compositeType, symbology, data, symbolCount);
-        }
-
+    public void showDialog(String symbologyName, String data, int symbolCount) {
+        String text = getString(R.string.result_parametrised, symbologyName, data, symbolCount);
         if (viewModel.isContinuousScanningEnabled()) {
             showDialogForContinuousScanning(text);
         } else {
             showDialogForOneShotScanning(text);
-        }
-    }
-
-    private String stringFromCompositeFlag(CompositeFlag compositeFlag) {
-        switch (compositeFlag) {
-            case GS1_TYPE_A:
-                return "A";
-            case GS1_TYPE_B:
-                return "B";
-            case GS1_TYPE_C:
-                return "C";
-            default:
-                return null;
-
         }
     }
 
