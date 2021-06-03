@@ -13,15 +13,18 @@
  */
 package com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
+
 import com.scandit.datacapture.barcodecapturesettingssample.R;
 import com.scandit.datacapture.barcodecapturesettingssample.models.SettingsManager;
 import com.scandit.datacapture.barcodecapturesettingssample.utils.SizeSpecification;
 import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
 import com.scandit.datacapture.core.common.geometry.SizeWithUnit;
+import com.scandit.datacapture.core.common.geometry.SizeWithUnitAndAspect;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinder;
+import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderAnimation;
+import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderLineStyle;
+import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderStyle;
 import com.scandit.datacapture.core.ui.viewfinder.Viewfinder;
 
 public class ViewfinderTypeRectangular extends ViewfinderType {
@@ -32,38 +35,72 @@ public class ViewfinderTypeRectangular extends ViewfinderType {
         return new ViewfinderTypeRectangular(
                 currentViewFinder instanceof RectangularViewfinder,
                 settingsManager.getRectangularViewfinderColor(),
+                settingsManager.getRectangularViewfinderDisabledColor(),
                 settingsManager.getRectangularViewfinderSizeSpecification(),
                 settingsManager.getRectangularViewfinderWidth(),
                 settingsManager.getRectangularViewfinderHeight(),
+                settingsManager.getRectangularViewfinderShorterDimension(),
                 settingsManager.getRectangularViewfinderWidthAspect(),
-                settingsManager.getRectangularViewfinderHeightAspect()
+                settingsManager.getRectangularViewfinderHeightAspect(),
+                settingsManager.getRectangularViewfinderLongerDimensionAspect(),
+                settingsManager.getRectangularViewfinderStyle(),
+                settingsManager.getRectangularViewfinderLineStyle(),
+                settingsManager.getRectangularViewfinderDimming(),
+                settingsManager.getRectangularViewfinderAnimationEnabled(),
+                settingsManager.getRectangularViewfinderLoopingEnabled()
         );
     }
 
-    private Color color;
+    private RectangularEnabledColor color;
+    private RectangularDisabledColor disabledColor;
     private SizeSpecification sizeSpecification;
 
     private FloatWithUnit width;
     private FloatWithUnit height;
+    private FloatWithUnit shorterDimension;
     private float widthAspect;
     private float heightAspect;
+    private float longerDimensionAspect;
+
+    private float dimming;
+    private boolean animation;
+    private boolean looping;
+
+    private RectangularViewfinderStyle style;
+    private RectangularViewfinderLineStyle lineStyle;
 
     private ViewfinderTypeRectangular(
             boolean enabled,
-            Color color,
+            RectangularEnabledColor color,
+            RectangularDisabledColor disabledColor,
             SizeSpecification sizeSpecification,
             FloatWithUnit width,
             FloatWithUnit height,
+            FloatWithUnit shorterDimension,
             float widthAspect,
-            float heightAspect
+            float heightAspect,
+            float longerDimensionAspect,
+            RectangularViewfinderStyle style,
+            RectangularViewfinderLineStyle lineStyle,
+            float dimming,
+            boolean animation,
+            boolean looping
     ) {
         super(R.string.rectangular, enabled);
         this.color = color;
+        this.disabledColor = disabledColor;
         this.sizeSpecification = sizeSpecification;
         this.width = width;
         this.height = height;
+        this.shorterDimension = shorterDimension;
         this.widthAspect = widthAspect;
         this.heightAspect = heightAspect;
+        this.longerDimensionAspect = longerDimensionAspect;
+        this.style = style;
+        this.lineStyle = lineStyle;
+        this.dimming = dimming;
+        this.animation = animation;
+        this.looping = looping;
     }
 
     public SizeSpecification getSizeSpecification() {
@@ -74,12 +111,20 @@ public class ViewfinderTypeRectangular extends ViewfinderType {
         this.sizeSpecification = sizeSpecification;
     }
 
-    public Color getColor() {
+    public RectangularEnabledColor getColor() {
         return color;
     }
 
-    public void setColor(Color color) {
+    public void setColor(RectangularEnabledColor color) {
         this.color = color;
+    }
+
+    public RectangularDisabledColor getDisabledColor() {
+        return disabledColor;
+    }
+
+    public void setDisabledColor(RectangularDisabledColor color) {
+        this.disabledColor = color;
     }
 
     public FloatWithUnit getWidth() {
@@ -98,6 +143,14 @@ public class ViewfinderTypeRectangular extends ViewfinderType {
         this.height = height;
     }
 
+    public FloatWithUnit getShorterDimension() {
+        return shorterDimension;
+    }
+
+    public void setShorterDimension(FloatWithUnit shorterDimension) {
+        this.shorterDimension = shorterDimension;
+    }
+
     public float getHeightAspect() {
         return heightAspect;
     }
@@ -114,11 +167,56 @@ public class ViewfinderTypeRectangular extends ViewfinderType {
         this.widthAspect = widthAspect;
     }
 
+    public float getLongerDimensionAspect() {
+        return longerDimensionAspect;
+    }
+
+    public void setLongerDimensionAspect(float longerDimensionAspect) {
+        this.longerDimensionAspect = longerDimensionAspect;
+    }
+
+    public RectangularViewfinderStyle getStyle() {
+        return style;
+    }
+
+    public void setStyle(RectangularViewfinderStyle style) {
+        this.style = style;
+    }
+
+    public RectangularViewfinderLineStyle getLineStyle() {
+        return lineStyle;
+    }
+
+    public void setLineStyle(RectangularViewfinderLineStyle style) {
+        this.lineStyle = style;
+    }
+
+    public float getDimming() { return dimming; }
+
+    public void setDimming(float dimming) { this.dimming = dimming; }
+
+    public boolean getAnimation() { return animation; }
+
+    public void setAnimation(boolean animation) { this.animation = animation; }
+
+    public boolean getLooping() { return looping; }
+
+    public void setLooping(boolean looping) { this.looping = looping; }
+
     @Nullable
     @Override
     public Viewfinder buildViewfinder() {
-        RectangularViewfinder viewfinder = new RectangularViewfinder();
+        RectangularViewfinder viewfinder = new RectangularViewfinder(style, lineStyle);
         viewfinder.setColor(color.color);
+        viewfinder.setDisabledColor(disabledColor.color);
+        viewfinder.setDimming(dimming);
+
+        RectangularViewfinderAnimation finalAnimation = null;
+        if (animation) {
+            finalAnimation = new RectangularViewfinderAnimation(looping);
+        }
+        viewfinder.setAnimation(finalAnimation);
+
         switch (sizeSpecification) {
             case WIDTH_AND_HEIGHT:
                 viewfinder.setSize(new SizeWithUnit(width, height));
@@ -129,21 +227,46 @@ public class ViewfinderTypeRectangular extends ViewfinderType {
             case HEIGHT_AND_WIDTH_ASPECT:
                 viewfinder.setHeightAndAspectRatio(height, widthAspect);
                 break;
+            case SHORTER_DIMENSION_AND_ASPECT:
+                viewfinder.setShorterDimensionAndAspectRatio(
+                        shorterDimension.getValue(), longerDimensionAspect);
+                break;
         }
         return viewfinder;
     }
 
-    public enum Color {
-        DEFAULT(new RectangularViewfinder().getColor(), R.string._default),
-        BLUE(android.graphics.Color.BLUE, R.string.blue),
-        BLACK(android.graphics.Color.BLACK, R.string.black);
+    @Override
+    public void resetDefaults() {
+        RectangularViewfinder viewfinder = new RectangularViewfinder(style);
 
-        @ColorInt public final int color;
-        @StringRes public final int displayName;
+        color = RectangularEnabledColor.getDefaultForStyle(style);
+        disabledColor = RectangularDisabledColor.getDefaultForStyle(style);
+        lineStyle = viewfinder.getLineStyle();
+        dimming = viewfinder.getDimming();
 
-        Color(@ColorInt int color, @StringRes int displayName) {
-            this.color = color;
-            this.displayName = displayName;
+        RectangularViewfinderAnimation currentAnimation = viewfinder.getAnimation();
+        animation = currentAnimation != null;
+        looping = currentAnimation == null || currentAnimation.isLooping();
+
+        SizeWithUnitAndAspect size = viewfinder.getSizeWithUnitAndAspect();
+        sizeSpecification = SizeSpecification.forSizingMode(size.getSizingMode());
+        switch (sizeSpecification) {
+            case WIDTH_AND_HEIGHT:
+                width = size.getWidthAndHeight().getWidth();
+                height = size.getWidthAndHeight().getHeight();
+                break;
+            case WIDTH_AND_HEIGHT_ASPECT:
+                width = size.getWidthAndAspectRatio().getSize();
+                heightAspect = size.getWidthAndAspectRatio().getAspect();
+                break;
+            case HEIGHT_AND_WIDTH_ASPECT:
+                height = size.getHeightAndAspectRatio().getSize();
+                widthAspect = size.getHeightAndAspectRatio().getAspect();
+                break;
+            case SHORTER_DIMENSION_AND_ASPECT:
+                shorterDimension = size.getShorterDimensionAndAspectRatio().getSize();
+                longerDimensionAspect = size.getShorterDimensionAndAspectRatio().getAspect();
+                break;
         }
     }
 }

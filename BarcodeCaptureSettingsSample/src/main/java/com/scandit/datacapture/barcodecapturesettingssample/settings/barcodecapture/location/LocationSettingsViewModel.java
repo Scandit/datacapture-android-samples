@@ -25,10 +25,18 @@ import com.scandit.datacapture.core.area.LocationSelection;
 import com.scandit.datacapture.core.area.RadiusLocationSelection;
 import com.scandit.datacapture.core.area.RectangularLocationSelection;
 
+import static com.scandit.datacapture.barcodecapturesettingssample.utils.SizeSpecification.HEIGHT_AND_WIDTH_ASPECT;
+import static com.scandit.datacapture.barcodecapturesettingssample.utils.SizeSpecification.WIDTH_AND_HEIGHT;
+import static com.scandit.datacapture.barcodecapturesettingssample.utils.SizeSpecification.WIDTH_AND_HEIGHT_ASPECT;
+
 @SuppressWarnings("WeakerAccess")
 public class LocationSettingsViewModel extends ViewModel {
 
     private final SettingsManager settingsManager = SettingsManager.getCurrentSettings();
+
+    private final SizeSpecification[] allowedSizeSpecifications = new SizeSpecification[] {
+            WIDTH_AND_HEIGHT, WIDTH_AND_HEIGHT_ASPECT, HEIGHT_AND_WIDTH_ASPECT
+    };
 
     public LocationType[] getAllowedLocationTypesAndEnabledState() {
         LocationSelection currentLocationSelection = getCurrentLocationSelection();
@@ -39,6 +47,10 @@ public class LocationSettingsViewModel extends ViewModel {
                         currentLocationSelection, settingsManager
                 )
         };
+    }
+
+    public SizeSpecification[] getAllowedSizeSpecifications() {
+        return allowedSizeSpecifications;
     }
 
     private LocationSelection getCurrentLocationSelection() {

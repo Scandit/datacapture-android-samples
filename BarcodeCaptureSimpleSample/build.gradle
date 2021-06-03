@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+    ndkVersion sdk.ndk
     compileSdkVersion sdk.compile
 
     defaultConfig {

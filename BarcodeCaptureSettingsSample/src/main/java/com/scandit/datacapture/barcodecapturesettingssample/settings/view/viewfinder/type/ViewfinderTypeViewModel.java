@@ -18,7 +18,9 @@ import androidx.lifecycle.ViewModel;
 import com.scandit.datacapture.barcodecapturesettingssample.models.SettingsManager;
 import com.scandit.datacapture.core.ui.viewfinder.AimerViewfinder;
 import com.scandit.datacapture.core.ui.viewfinder.LaserlineViewfinder;
+import com.scandit.datacapture.core.ui.viewfinder.LaserlineViewfinderStyle;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinder;
+import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderStyle;
 import com.scandit.datacapture.core.ui.viewfinder.Viewfinder;
 
 @SuppressWarnings("WeakerAccess")
@@ -55,5 +57,13 @@ public class ViewfinderTypeViewModel extends ViewModel {
 
     public void updateViewfinder(ViewfinderType viewfinderType) {
         settingsManager.setViewfinder(viewfinderType.buildViewfinder());
+    }
+
+    public LaserlineViewfinderStyle getLaserlineViewfinderStyle() {
+        return settingsManager.getLaserlineViewfinderStyle();
+    }
+
+    public RectangularViewfinderStyle getRectangularViewfinderStyle() {
+        return settingsManager.getRectangularViewfinderStyle();
     }
 }

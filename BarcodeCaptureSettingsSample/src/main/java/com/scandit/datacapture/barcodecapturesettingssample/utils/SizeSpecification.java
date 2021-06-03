@@ -16,15 +16,30 @@ package com.scandit.datacapture.barcodecapturesettingssample.utils;
 
 import androidx.annotation.StringRes;
 import com.scandit.datacapture.barcodecapturesettingssample.R;
+import com.scandit.datacapture.core.common.geometry.SizingMode;
 
 public enum SizeSpecification {
     WIDTH_AND_HEIGHT(R.string.width_and_height),
     WIDTH_AND_HEIGHT_ASPECT(R.string.width_and_height_aspect),
-    HEIGHT_AND_WIDTH_ASPECT(R.string.height_and_width_aspect);
+    HEIGHT_AND_WIDTH_ASPECT(R.string.height_and_width_aspect),
+    SHORTER_DIMENSION_AND_ASPECT(R.string.shorter_dimension_and_aspect_ratio);
 
     @StringRes public final int displayName;
 
     SizeSpecification(@StringRes int displayName) {
         this.displayName = displayName;
+    }
+
+    public static SizeSpecification forSizingMode(SizingMode mode) {
+        switch (mode) {
+            case WIDTH_AND_ASPECT_RATIO:
+                return WIDTH_AND_HEIGHT_ASPECT;
+            case HEIGHT_AND_ASPECT_RATIO:
+                return HEIGHT_AND_WIDTH_ASPECT;
+            case SHORTER_DIMENSION_AND_ASPECT_RATIO:
+                return SHORTER_DIMENSION_AND_ASPECT;
+            default:
+                return WIDTH_AND_HEIGHT;
+        }
     }
 }

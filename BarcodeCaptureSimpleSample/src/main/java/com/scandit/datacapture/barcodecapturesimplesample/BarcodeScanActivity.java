@@ -29,6 +29,7 @@ import com.scandit.datacapture.core.source.Camera;
 import com.scandit.datacapture.core.source.FrameSourceState;
 import com.scandit.datacapture.core.ui.DataCaptureView;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinder;
+import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderStyle;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -120,7 +121,7 @@ public class BarcodeScanActivity
         // barcodes on top of the video preview.
         // This is optional, but recommended for better visual feedback.
         BarcodeCaptureOverlay overlay = BarcodeCaptureOverlay.newInstance(barcodeCapture, dataCaptureView);
-        overlay.setViewfinder(new RectangularViewfinder());
+        overlay.setViewfinder(new RectangularViewfinder(RectangularViewfinderStyle.SQUARE));
 
         setContentView(dataCaptureView);
     }

@@ -78,7 +78,7 @@ public class ScanFragment extends CameraPermissionFragment implements ScanViewMo
         highlightOverlay = BarcodeTrackingBasicOverlay.newInstance(
                 viewModel.barcodeTracking, dataCaptureView
         );
-        highlightOverlay.setDefaultBrush(viewModel.defaultBrush);
+        highlightOverlay.setBrush(viewModel.defaultBrush);
 
         // We create an overlay for the bubbles.
         bubblesOverlay = BarcodeTrackingAdvancedOverlay.newInstance(

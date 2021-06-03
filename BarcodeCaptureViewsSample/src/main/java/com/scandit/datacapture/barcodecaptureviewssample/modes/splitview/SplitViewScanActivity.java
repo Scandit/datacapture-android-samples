@@ -38,6 +38,7 @@ import com.scandit.datacapture.core.common.geometry.MeasureUnit;
 import com.scandit.datacapture.core.ui.DataCaptureView;
 import com.scandit.datacapture.core.ui.style.Brush;
 import com.scandit.datacapture.core.ui.viewfinder.LaserlineViewfinder;
+import com.scandit.datacapture.core.ui.viewfinder.LaserlineViewfinderStyle;
 
 public class SplitViewScanActivity extends CameraPermissionActivity
         implements SplitViewScanViewModel.Listener {
@@ -111,9 +112,7 @@ public class SplitViewScanActivity extends CameraPermissionActivity
                 BarcodeCaptureOverlay.newInstance(viewModel.getBarcodeCapture(), view);
 
         // We have to add the laser line viewfinder to the overlay.
-        LaserlineViewfinder viewFinder = new LaserlineViewfinder();
-        viewFinder.setWidth(new FloatWithUnit(0.9f, MeasureUnit.FRACTION));
-        overlay.setViewfinder(viewFinder);
+        overlay.setViewfinder(new LaserlineViewfinder(LaserlineViewfinderStyle.ANIMATED));
 
         // We put the dataCaptureView in its container.
         ((ViewGroup) findViewById(R.id.scanner_container)).addView(view);

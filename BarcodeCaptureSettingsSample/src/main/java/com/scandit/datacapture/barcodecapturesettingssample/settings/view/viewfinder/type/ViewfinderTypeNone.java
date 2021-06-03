@@ -33,4 +33,7 @@ public class ViewfinderTypeNone extends ViewfinderType {
     public Viewfinder buildViewfinder() {
         return null;
     }
+
+    @Override
+    public void resetDefaults() {}
 }

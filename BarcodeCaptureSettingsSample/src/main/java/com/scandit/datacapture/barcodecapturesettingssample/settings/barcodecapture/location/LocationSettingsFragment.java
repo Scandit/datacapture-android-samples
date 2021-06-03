@@ -278,7 +278,8 @@ public class LocationSettingsFragment extends NavigationFragment
                 requireContext(), containerRectangularSpecification, Gravity.END
         );
 
-        SizeSpecification[] values = SizeSpecification.values();
+        // LocationSelection only supports a subset of SizeSpecifications.
+        SizeSpecification[] values = viewModel.getAllowedSizeSpecifications();
         for (int i = 0; i < values.length; i++) {
             SizeSpecification spec = values[i];
             menu.getMenu().add(0, i, i, spec.displayName);

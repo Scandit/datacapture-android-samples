@@ -23,9 +23,11 @@ import com.scandit.datacapture.barcode.data.CompositeType;
 import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.data.SymbologyDescription;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
+import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.LaserlineDisabledColor;
+import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.LaserlineEnabledColor;
+import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.RectangularDisabledColor;
+import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.RectangularEnabledColor;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.ViewfinderTypeAimer;
-import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.ViewfinderTypeLaserline;
-import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.ViewfinderTypeRectangular;
 import com.scandit.datacapture.barcodecapturesettingssample.utils.SizeSpecification;
 import com.scandit.datacapture.core.area.LocationSelection;
 import com.scandit.datacapture.core.area.RadiusLocationSelection;
@@ -45,13 +47,12 @@ import com.scandit.datacapture.core.source.FocusGestureStrategy;
 import com.scandit.datacapture.core.source.TorchState;
 import com.scandit.datacapture.core.source.VideoResolution;
 import com.scandit.datacapture.core.time.TimeInterval;
-import com.scandit.datacapture.core.ui.gesture.FocusGesture;
-import com.scandit.datacapture.core.ui.gesture.SwipeToZoom;
-import com.scandit.datacapture.core.ui.gesture.TapToFocus;
-import com.scandit.datacapture.core.ui.gesture.ZoomGesture;
 import com.scandit.datacapture.core.ui.overlay.DataCaptureOverlay;
 import com.scandit.datacapture.core.ui.style.Brush;
+import com.scandit.datacapture.core.ui.viewfinder.LaserlineViewfinderStyle;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinder;
+import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderLineStyle;
+import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderStyle;
 import com.scandit.datacapture.core.ui.viewfinder.Viewfinder;
 
 import java.util.Collections;
@@ -101,20 +102,28 @@ public class SettingsManager {
 
     private Brush defaultBrush;
 
-    private ViewfinderTypeRectangular.Color rectangularViewfinderColor =
-            ViewfinderTypeRectangular.Color.DEFAULT;
+    private RectangularEnabledColor rectangularColor = RectangularEnabledColor.DEFAULT;
+    private RectangularDisabledColor rectangularDisabledColor = RectangularDisabledColor.DEFAULT;
     private SizeSpecification rectangularViewfinderSizeSpecification =
             SizeSpecification.WIDTH_AND_HEIGHT;
     private FloatWithUnit rectangularViewfinderWidth;
     private FloatWithUnit rectangularViewfinderHeight;
+    private FloatWithUnit rectangularViewfinderShorterDimension;
     private float rectangularViewfinderWidthAspect = 0f;
     private float rectangularViewfinderHeightAspect = 0f;
+    private float rectangularViewfinderLongerDimensionAspect = 0f;
+    private RectangularViewfinderStyle rectangularViewfinderStyle =
+            RectangularViewfinderStyle.LEGACY;
+    private RectangularViewfinderLineStyle rectangularViewfinderLineStyle =
+            RectangularViewfinderLineStyle.LIGHT;
+    private float rectangularViewfinderDimming = 0.0f;
+    private boolean rectangularViewfinderAnimation = false;
+    private boolean rectangularViewfinderLooping = false;
 
     private FloatWithUnit laserlineViewfinderWidth = new FloatWithUnit(0.75f, MeasureUnit.FRACTION);
-    private ViewfinderTypeLaserline.EnabledColor laserlineViewfinderEnabledColor =
-            ViewfinderTypeLaserline.EnabledColor.DEFAULT;
-    private ViewfinderTypeLaserline.DisabledColor laserlineViewfinderDisabledColor =
-            ViewfinderTypeLaserline.DisabledColor.DEFAULT;
+    private LaserlineEnabledColor laserlineViewfinderEnabledColor = LaserlineEnabledColor.DEFAULT;
+    private LaserlineDisabledColor laserlineViewfinderDisabledColor = LaserlineDisabledColor.DEFAULT;
+    private LaserlineViewfinderStyle laserlineViewfinderStyle = LaserlineViewfinderStyle.LEGACY;
 
     private ViewfinderTypeAimer.FrameColor aimerViewfinderFrameColor =
             ViewfinderTypeAimer.FrameColor.DEFAULT;
@@ -154,6 +163,7 @@ public class SettingsManager {
         RectangularViewfinder tempRectangularViewfinder = new RectangularViewfinder();
         rectangularViewfinderWidth = tempRectangularViewfinder.getSizeWithUnitAndAspect().getWidthAndHeight().getWidth();
         rectangularViewfinderHeight = tempRectangularViewfinder.getSizeWithUnitAndAspect().getWidthAndHeight().getHeight();
+        rectangularViewfinderShorterDimension = new FloatWithUnit(1.0f, MeasureUnit.FRACTION);
     }
 
     public BarcodeCapture getBarcodeCapture() {
@@ -586,14 +596,21 @@ public class SettingsManager {
         barcodeCaptureOverlay.setViewfinder(viewfinder);
     }
 
-    public ViewfinderTypeRectangular.Color getRectangularViewfinderColor() {
-        return rectangularViewfinderColor;
+    public RectangularEnabledColor getRectangularViewfinderColor() {
+        return rectangularColor;
     }
 
-    public void setRectangularViewfinderColor(
-            ViewfinderTypeRectangular.Color rectangularViewfinderColor
-    ) {
-        this.rectangularViewfinderColor = rectangularViewfinderColor;
+    public void setRectangularViewfinderColor(RectangularEnabledColor rectangularEnabledColor) {
+        this.rectangularColor = rectangularEnabledColor;
+    }
+
+    public RectangularDisabledColor getRectangularViewfinderDisabledColor() {
+        return rectangularDisabledColor;
+    }
+
+    public void setRectangularViewfinderDisabledColor(
+            RectangularDisabledColor rectangularDisabledColor) {
+        this.rectangularDisabledColor = rectangularDisabledColor;
     }
 
     public SizeSpecification getRectangularViewfinderSizeSpecification() {
@@ -622,6 +639,16 @@ public class SettingsManager {
         this.rectangularViewfinderHeight = rectangularViewfinderHeight;
     }
 
+    public FloatWithUnit getRectangularViewfinderShorterDimension() {
+        return rectangularViewfinderShorterDimension;
+    }
+
+    public void setRectangularViewfinderShorterDimension(
+            FloatWithUnit rectangularViewfinderShorterDimension
+    ) {
+        this.rectangularViewfinderShorterDimension = rectangularViewfinderShorterDimension;
+    }
+
     public float getRectangularViewfinderWidthAspect() {
         return rectangularViewfinderWidthAspect;
     }
@@ -638,22 +665,72 @@ public class SettingsManager {
         this.rectangularViewfinderHeightAspect = rectangularViewfinderHeightAspect;
     }
 
-    public ViewfinderTypeLaserline.EnabledColor getLaserlineViewfinderEnabledColor() {
+    public float getRectangularViewfinderLongerDimensionAspect() {
+        return rectangularViewfinderLongerDimensionAspect;
+    }
+
+    public void setRectangularViewfinderLongerDimensionAspect(
+            float rectangularViewfinderLongerDimensionAspect
+    ) {
+        this.rectangularViewfinderLongerDimensionAspect = rectangularViewfinderLongerDimensionAspect;
+    }
+
+    public RectangularViewfinderStyle getRectangularViewfinderStyle() {
+        return rectangularViewfinderStyle;
+    }
+
+    public void setRectangularViewfinderStyle(RectangularViewfinderStyle style) {
+        this.rectangularViewfinderStyle = style;
+    }
+
+    public RectangularViewfinderLineStyle getRectangularViewfinderLineStyle() {
+        return rectangularViewfinderLineStyle;
+    }
+
+    public void setRectangularViewfinderLineStyle(RectangularViewfinderLineStyle style) {
+        this.rectangularViewfinderLineStyle = style;
+    }
+
+    public float getRectangularViewfinderDimming() {
+        return rectangularViewfinderDimming;
+    }
+
+    public void setRectangularViewfinderDimming(float dimming) {
+        this.rectangularViewfinderDimming = dimming;
+    }
+
+    public boolean getRectangularViewfinderAnimationEnabled() {
+        return rectangularViewfinderAnimation;
+    }
+
+    public void setRectangularViewfinderAnimationEnabled(boolean enabled) {
+        this.rectangularViewfinderAnimation = enabled;
+    }
+
+    public boolean getRectangularViewfinderLoopingEnabled() {
+        return rectangularViewfinderLooping;
+    }
+
+    public void setRectangularViewfinderLoopingEnabled(boolean enabled) {
+        this.rectangularViewfinderLooping = enabled;
+    }
+
+    public LaserlineEnabledColor getLaserlineViewfinderEnabledColor() {
         return laserlineViewfinderEnabledColor;
     }
 
     public void setLaserlineViewfinderEnabledColor(
-            ViewfinderTypeLaserline.EnabledColor laserlineViewfinderEnabledColor
+            LaserlineEnabledColor laserlineViewfinderEnabledColor
     ) {
         this.laserlineViewfinderEnabledColor = laserlineViewfinderEnabledColor;
     }
 
-    public ViewfinderTypeLaserline.DisabledColor getLaserlineViewfinderDisabledColor() {
+    public LaserlineDisabledColor getLaserlineViewfinderDisabledColor() {
         return laserlineViewfinderDisabledColor;
     }
 
     public void setLaserlineViewfinderDisabledColor(
-            ViewfinderTypeLaserline.DisabledColor laserlineViewfinderDisabledColor
+            LaserlineDisabledColor laserlineViewfinderDisabledColor
     ) {
         this.laserlineViewfinderDisabledColor = laserlineViewfinderDisabledColor;
     }
@@ -664,6 +741,14 @@ public class SettingsManager {
 
     public void setLaserlineViewfinderWidth(FloatWithUnit laserlineViewfinderWidth) {
         this.laserlineViewfinderWidth = laserlineViewfinderWidth;
+    }
+
+    public LaserlineViewfinderStyle getLaserlineViewfinderStyle() {
+        return laserlineViewfinderStyle;
+    }
+
+    public void setLaserlineViewfinderStyle(LaserlineViewfinderStyle style) {
+        this.laserlineViewfinderStyle = style;
     }
 
     public ViewfinderTypeAimer.FrameColor getAimerViewfinderFrameColor() {
@@ -721,6 +806,7 @@ public class SettingsManager {
     public void setTapToFocusEnabled(boolean tapToFocusEnabled) {
         this.tapToFocusEnabled = tapToFocusEnabled;
     }
+
     public boolean isSwipeToZoomEnabled() {
         return swipeToZoomEnabled;
     }

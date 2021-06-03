@@ -183,11 +183,17 @@ public class TextCaptureFragment extends CameraPermissionFragment
             }
 
             if (isValidText) {
+
+                /*
+                 * Don't capture unnecessarily when the result is displayed.
+                 */
+                dataCaptureManager.getTextCapture().setEnabled(false);
+
                 /*
                  * This callback may be executed on an arbitrary thread. We post to switch back
                  * to the main thread.
                  */
-                view.post(new Runnable() {
+                requireActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         showResult(text.getValue());
@@ -221,11 +227,6 @@ public class TextCaptureFragment extends CameraPermissionFragment
                 TextCaptureResultDialogFragment
                         .newInstance(text)
                         .show(getChildFragmentManager(), RESULT_FRAGMENT_TAG);
-
-                /*
-                 * Don't capture unnecessarily when the result is displayed.
-                 */
-                dataCaptureManager.getTextCapture().setEnabled(false);
             }
         }
     }

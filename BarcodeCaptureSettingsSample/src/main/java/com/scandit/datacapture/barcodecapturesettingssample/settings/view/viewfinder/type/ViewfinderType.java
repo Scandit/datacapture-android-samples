@@ -30,4 +30,6 @@ public abstract class ViewfinderType {
 
     @Nullable
     public abstract Viewfinder buildViewfinder();
+
+    public abstract void resetDefaults();
 }

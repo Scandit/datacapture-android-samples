@@ -61,6 +61,9 @@ public class ViewfinderTypeAimer extends ViewfinderType {
         return viewfinder;
     }
 
+    @Override
+    public void resetDefaults() {}
+
     public FrameColor getFrameColor() {
         return frameColor;
     }

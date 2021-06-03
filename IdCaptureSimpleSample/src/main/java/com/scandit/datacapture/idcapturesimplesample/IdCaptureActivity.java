@@ -34,6 +34,7 @@ import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.DateResult;
 import com.scandit.datacapture.id.data.AamvaBarcodeResult;
 import com.scandit.datacapture.id.data.VizResult;
+import com.scandit.datacapture.id.ui.IdLayoutStyle;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 
 import org.jetbrains.annotations.NotNull;
@@ -79,6 +80,7 @@ public class IdCaptureActivity extends CameraPermissionActivity
         );
 
         overlay = IdCaptureOverlay.newInstance(dataCaptureManager.getIdCapture(), view);
+        overlay.setIdLayoutStyle(IdLayoutStyle.SQUARE);
     }
 
     @Override
@@ -137,25 +139,32 @@ public class IdCaptureActivity extends CameraPermissionActivity
     ) {
         final CapturedId capturedId = session.getNewlyCapturedId();
 
+        final String message;
+
+        // The recognized fields of the captured Id can vary based on the capturedResultType.
+        switch (capturedId.getCapturedResultType()) {
+            case AAMVA_BARCODE_RESULT:
+                message = getDescriptionForAamvaBarcodeResult(capturedId);
+                break;
+            case VIZ_RESULT:
+                message = getDescriptionForViz(capturedId);
+                break;
+            default: // We don't expect any other types with the selected supported documents.
+               return;
+        }
+
+        /*
+         * Don't capture unnecessarily when the result is displayed.
+         */
+        dataCaptureManager.getIdCapture().setEnabled(false);
+
         /*
          * This callback may be executed on an arbitrary thread. We post to switch back
          * to the main thread.
          */
-        view.post(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                String message = "";
-
-                // The recognized fields of the captured Id can vary based on the capturedResultType.
-                switch (capturedId.getCapturedResultType()) {
-                    case AAMVA_BARCODE_RESULT:
-                        message = getDescriptionForAamvaBarcodeResult(capturedId);
-                        break;
-                    case VIZ_RESULT:
-                        message = getDescriptionForViz(capturedId);
-                        break;
-                    // We don't expect any other types with the selected supported documents.
-                }
                 showAlert(R.string.captured_id_title, message);
             }
         });
@@ -169,16 +178,9 @@ public class IdCaptureActivity extends CameraPermissionActivity
             @NotNull FrameData data
     ) {
         /*
-         * This callback may be executed on an arbitrary thread. We post to switch back
-         * to the main thread.
+         * Implement to handle an error encountered during the capture process.
+         * This callback may be executed on an arbitrary thread.
          */
-        view.post(new Runnable() {
-            @Override
-            public void run() {
-                String message = getErrorMessage(error);
-                showAlert(R.string.error_title, message);
-            }
-        });
     }
 
     private String getErrorMessage(Throwable error) {
@@ -217,11 +219,6 @@ public class IdCaptureActivity extends CameraPermissionActivity
             AlertDialogFragment
                     .newInstance(titleRes, message)
                     .show(getSupportFragmentManager(), RESULT_FRAGMENT_TAG);
-
-            /*
-             * Don't capture unnecessarily when the result is displayed.
-             */
-            dataCaptureManager.getIdCapture().setEnabled(false);
         }
     }
 

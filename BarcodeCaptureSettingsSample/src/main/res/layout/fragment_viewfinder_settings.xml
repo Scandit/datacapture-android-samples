@@ -32,9 +32,8 @@
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
             android:background="@android:color/white"
-            app:layout_constraintTop_toTopOf="parent"
-            app:cardElevation="3dp"
-            app:cardCornerRadius="0dp">
+            app:cardCornerRadius="0dp"
+            app:cardElevation="3dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -47,7 +46,7 @@
                     android:layout_height="wrap_content"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:text="@string/type"/>
+                    android:text="@string/type" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_viewfinder_types"
@@ -60,7 +59,7 @@
                     android:isScrollContainer="false"
                     android:overScrollMode="never"
                     tools:itemCount="3"
-                    tools:listitem="@layout/two_texts_and_icon"/>
+                    tools:listitem="@layout/two_texts_and_icon" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -71,48 +70,215 @@
             android:layout_marginTop="12dp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            tools:text="Rectangular"/>
+            tools:text="Rectangular" />
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/card_rectangular_color"
+            android:id="@+id/card_rectangular"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:background="@android:color/white"
-            app:cardElevation="3dp"
-            app:cardCornerRadius="0dp">
+            app:cardCornerRadius="0dp"
+            app:cardElevation="3dp">
 
             <LinearLayout
-                android:id="@+id/container_rectangular_color"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="12dp"
-                android:orientation="horizontal"
-                android:background="?android:attr/selectableItemBackground">
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="?android:attr/listPreferredItemHeightSmall"
-                    android:textAppearance="?android:attr/textAppearanceListItem"
-                    android:paddingStart="24dp"
-                    android:paddingEnd="8dp"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:gravity="center_vertical"
-                    android:text="@string/color"/>
+                <LinearLayout
+                    android:id="@+id/container_rectangular_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="?android:attr/selectableItemBackground">
 
-                <TextView
-                    android:id="@+id/text_color"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="8dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:text="@string/style" />
+
+                    <TextView
+                        android:id="@+id/text_rectangular_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="24dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical|end"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        tools:text="Legacy" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/container_rectangular_line_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="?android:attr/selectableItemBackground">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="8dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:text="@string/line_style" />
+
+                    <TextView
+                        android:id="@+id/text_rectangular_line_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="24dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical|end"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        tools:text="Light" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/container_rectangular_dimming"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:layout_weight="1"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="8dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:text="@string/dimming"
+                        android:labelFor="@id/edit_rectangular_width" />
+
+                    <EditText
+                        android:id="@+id/edit_rectangular_dimming"
+                        android:layout_width="120dp"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:layout_marginEnd="24dp"
+                        android:maxLines="1"
+                        android:layout_gravity="end"
+                        android:lines="1"
+                        android:imeOptions="actionDone"
+                        android:gravity="center_vertical|end"
+                        android:selectAllOnFocus="true"
+                        android:inputType="numberDecimal"
+                        android:saveEnabled="false" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/container_rectangular_color"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="?android:attr/selectableItemBackground">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="8dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:text="@string/color" />
+
+                    <TextView
+                        android:id="@+id/text_rectangular_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="24dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical|end"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        tools:text="Default" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/container_rectangular_disabled_color"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="?android:attr/selectableItemBackground">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="8dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:text="@string/disabled_color" />
+
+                    <TextView
+                        android:id="@+id/text_rectangular_disabled_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="24dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical|end"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        tools:text="Default" />
+                </LinearLayout>
+
+                <Switch
+                    android:id="@+id/switch_rectangular_animation"
                     android:layout_width="match_parent"
                     android:layout_height="?android:attr/listPreferredItemHeightSmall"
-                    android:paddingStart="8dp"
+                    android:textAppearance="?android:attr/textAppearanceListItem"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:paddingStart="24dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
                     android:paddingEnd="24dp"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:gravity="center_vertical|end"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    tools:text="Default"/>
+                    android:saveEnabled="false"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:text="@string/animation"/>
+
+                <Switch
+                    android:id="@+id/switch_rectangular_looping"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                    android:textAppearance="?android:attr/textAppearanceListItem"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:paddingStart="24dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:paddingEnd="24dp"
+                    android:saveEnabled="false"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:text="@string/looping"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -122,9 +288,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:background="@android:color/white"
-            app:cardElevation="3dp"
-            app:cardCornerRadius="0dp">
-            
+            app:cardCornerRadius="0dp"
+            app:cardElevation="3dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -150,7 +316,7 @@
                         android:maxLines="1"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
-                        android:text="@string/size_specification"/>
+                        android:text="@string/size_specification" />
 
                     <TextView
                         android:id="@+id/text_rectangular_size_specification"
@@ -162,7 +328,7 @@
                         android:ellipsize="end"
                         android:gravity="center_vertical|end"
                         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        tools:text="Width and Height Aspect"/>
+                        tools:text="Width and Height Aspect" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -181,7 +347,7 @@
                         android:maxLines="1"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
-                        android:text="@string/width"/>
+                        android:text="@string/width" />
 
                     <TextView
                         android:id="@+id/text_rectangular_width"
@@ -193,7 +359,7 @@
                         android:ellipsize="end"
                         android:gravity="center_vertical|end"
                         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        tools:text="0.00 (DIP)"/>
+                        tools:text="0.00 (DIP)" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -212,7 +378,7 @@
                         android:maxLines="1"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
-                        android:text="@string/height"/>
+                        android:text="@string/height" />
 
                     <TextView
                         android:id="@+id/text_rectangular_height"
@@ -224,7 +390,45 @@
                         android:ellipsize="end"
                         android:gravity="center_vertical|end"
                         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        tools:text="0.00 (DIP)"/>
+                        tools:text="0.00 (DIP)" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/container_rectangular_shorter_dimension"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="?android:attr/selectableItemBackground">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:layout_weight="1"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="8dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:text="@string/shorter_dimension"
+                        android:labelFor="@id/edit_rectangular_shorter_dimension" />
+
+                    <EditText
+                        android:id="@+id/edit_rectangular_shorter_dimension"
+                        android:layout_width="120dp"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:layout_marginEnd="24dp"
+                        android:maxLines="1"
+                        android:layout_gravity="end"
+                        android:lines="1"
+                        android:imeOptions="actionDone"
+                        android:gravity="center_vertical|end"
+                        android:selectAllOnFocus="true"
+                        android:inputType="numberDecimal"
+                        android:saveEnabled="false" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -246,7 +450,7 @@
                         android:ellipsize="end"
                         android:gravity="center_vertical"
                         android:text="@string/height_aspect"
-                        android:labelFor="@id/edit_height"/>
+                        android:labelFor="@id/edit_height" />
 
                     <EditText
                         android:id="@+id/edit_height"
@@ -262,7 +466,7 @@
                         android:gravity="center_vertical|end"
                         android:selectAllOnFocus="true"
                         android:inputType="numberDecimal"
-                        android:saveEnabled="false"/>
+                        android:saveEnabled="false" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -284,7 +488,7 @@
                         android:ellipsize="end"
                         android:gravity="center_vertical"
                         android:text="@string/width_aspect"
-                        android:labelFor="@id/edit_rectangular_width"/>
+                        android:labelFor="@id/edit_rectangular_width" />
 
                     <EditText
                         android:id="@+id/edit_rectangular_width"
@@ -300,7 +504,45 @@
                         android:gravity="center_vertical|end"
                         android:selectAllOnFocus="true"
                         android:inputType="numberDecimal"
-                        android:saveEnabled="false"/>
+                        android:saveEnabled="false" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/container_rectangular_longer_dimension_aspect"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:layout_weight="1"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="8dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:text="@string/longer_dimension_aspect"
+                        android:labelFor="@id/edit_rectangular_longer_dimension_aspect" />
+
+                    <EditText
+                        android:id="@+id/edit_rectangular_longer_dimension_aspect"
+                        android:layout_width="120dp"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:layout_marginEnd="24dp"
+                        android:maxLines="1"
+                        android:layout_gravity="end"
+                        android:lines="1"
+                        android:imeOptions="actionDone"
+                        android:gravity="center_vertical|end"
+                        android:selectAllOnFocus="true"
+                        android:inputType="numberDecimal"
+                        android:saveEnabled="false" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -312,8 +554,8 @@
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
             android:background="@android:color/white"
-            app:cardElevation="3dp"
-            app:cardCornerRadius="0dp">
+            app:cardCornerRadius="0dp"
+            app:cardElevation="3dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -321,6 +563,37 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="12dp"
                 android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/container_laserline_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="?android:attr/selectableItemBackground">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="8dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:text="@string/style" />
+
+                    <TextView
+                        android:id="@+id/text_laserline_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="24dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical|end"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        tools:text="Legacy" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/container_laserline_width"
@@ -338,7 +611,7 @@
                         android:maxLines="1"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
-                        android:text="@string/width"/>
+                        android:text="@string/width" />
 
                     <TextView
                         android:id="@+id/text_laserline_width"
@@ -350,7 +623,7 @@
                         android:ellipsize="end"
                         android:gravity="center_vertical|end"
                         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        tools:text="0.00 (DIP)"/>
+                        tools:text="0.00 (DIP)" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -369,7 +642,7 @@
                         android:maxLines="1"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
-                        android:text="@string/enabled_color"/>
+                        android:text="@string/enabled_color" />
 
                     <TextView
                         android:id="@+id/text_enabled_color"
@@ -381,7 +654,7 @@
                         android:ellipsize="end"
                         android:gravity="center_vertical|end"
                         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        tools:text="Default"/>
+                        tools:text="Default" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -400,7 +673,7 @@
                         android:maxLines="1"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
-                        android:text="@string/disabled_color"/>
+                        android:text="@string/disabled_color" />
 
                     <TextView
                         android:id="@+id/text_disabled_color"
@@ -412,7 +685,7 @@
                         android:ellipsize="end"
                         android:gravity="center_vertical|end"
                         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        tools:text="Default"/>
+                        tools:text="Default" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -425,8 +698,8 @@
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
             android:background="@android:color/white"
-            app:cardElevation="3dp"
-            app:cardCornerRadius="0dp">
+            app:cardCornerRadius="0dp"
+            app:cardElevation="3dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -451,7 +724,7 @@
                         android:maxLines="1"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
-                        android:text="@string/frame_color"/>
+                        android:text="@string/frame_color" />
 
                     <TextView
                         android:id="@+id/text_aimer_frame_color"
@@ -463,7 +736,7 @@
                         android:ellipsize="end"
                         android:gravity="center_vertical|end"
                         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        tools:text="Default"/>
+                        tools:text="Default" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -482,7 +755,7 @@
                         android:maxLines="1"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
-                        android:text="@string/dot_color"/>
+                        android:text="@string/dot_color" />
 
                     <TextView
                         android:id="@+id/text_aimer_dot_color"
@@ -494,7 +767,7 @@
                         android:ellipsize="end"
                         android:gravity="center_vertical|end"
                         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        tools:text="Default"/>
+                        tools:text="Default" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>

@@ -34,6 +34,7 @@ import com.scandit.datacapture.core.common.geometry.MeasureUnit;
 import com.scandit.datacapture.core.ui.DataCaptureView;
 import com.scandit.datacapture.core.ui.style.Brush;
 import com.scandit.datacapture.core.ui.viewfinder.LaserlineViewfinder;
+import com.scandit.datacapture.core.ui.viewfinder.LaserlineViewfinderStyle;
 import com.scandit.datacapture.searchandfindsample.CameraPermissionFragment;
 import com.scandit.datacapture.searchandfindsample.R;
 import com.scandit.datacapture.searchandfindsample.find.FindScanFragment;
@@ -103,9 +104,7 @@ public final class SearchScanFragment extends CameraPermissionFragment implement
         view.addOverlay(overlay);
 
         // We add the laser line viewfinder to the overlay.
-        LaserlineViewfinder viewFinder = new LaserlineViewfinder();
-        viewFinder.setWidth(new FloatWithUnit(0.9f, MeasureUnit.FRACTION));
-        overlay.setViewfinder(viewFinder);
+        overlay.setViewfinder(new LaserlineViewfinder(LaserlineViewfinderStyle.ANIMATED));
 
         // As we don't want to highlight any barcode, we disable the highlighting
         // by setting overlay's brush with the appropriate values.

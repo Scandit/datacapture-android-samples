@@ -33,6 +33,7 @@ import com.scandit.datacapture.core.source.FrameSourceState;
 import com.scandit.datacapture.core.ui.DataCaptureView;
 import com.scandit.datacapture.core.ui.style.Brush;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinder;
+import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderStyle;
 
 import static android.content.DialogInterface.OnClickListener;
 
@@ -106,9 +107,7 @@ public class BarcodeScanActivity
         overlay = BarcodeCaptureOverlay.newInstance(barcodeCapture, dataCaptureView);
 
         // Add a square viewfinder as we are only scanning square QR codes.
-        RectangularViewfinder viewfinder = new RectangularViewfinder();
-        viewfinder.setWidthAndAspectRatio(new FloatWithUnit(0.8f, MeasureUnit.FRACTION), 1f);
-        overlay.setViewfinder(viewfinder);
+        overlay.setViewfinder(new RectangularViewfinder(RectangularViewfinderStyle.SQUARE));
 
         setContentView(dataCaptureView);
     }
@@ -201,7 +200,7 @@ public class BarcodeScanActivity
 
         // If the code is recognized, we want to make sure to use the default brush to highlight
         // the code.
-        overlay.setBrush(BarcodeCaptureOverlay.defaultBrush());
+        overlay.setBrush(BarcodeCaptureOverlay.DEFAULT_BRUSH);
 
         // We also want to emit a feedback (vibration and, if enabled, sound).
         feedback.emit();
