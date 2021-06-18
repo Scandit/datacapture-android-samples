@@ -16,6 +16,7 @@ package com.scandit.datacapture.barcodecaptureviewssample.modes.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ import com.scandit.datacapture.barcodecaptureviewssample.R;
 import com.scandit.datacapture.barcodecaptureviewssample.modes.ScanViewModel;
 import com.scandit.datacapture.barcodecaptureviewssample.modes.base.CameraPermissionFragment;
 import com.scandit.datacapture.core.ui.DataCaptureView;
+import com.scandit.datacapture.core.ui.style.Brush;
 
 public class FullscreenScanFragment extends CameraPermissionFragment implements ScanViewModel.ResultListener {
 
@@ -63,7 +65,14 @@ public class FullscreenScanFragment extends CameraPermissionFragment implements 
         // Add a barcode capture overlay to the data capture view to render the tracked
         // barcodes on top of the video preview.
         // This is optional, but recommended for better visual feedback.
-        BarcodeCaptureOverlay.newInstance(viewModel.getBarcodeCapture(), view);
+        BarcodeCaptureOverlay overlay =
+                BarcodeCaptureOverlay.newInstance(viewModel.getBarcodeCapture(), view);
+
+        // Adjust the overlay's barcode highlighting to match the new viewfinder styles and improve
+        // the visibility of feedback. With 6.10 we will introduce this visual treatment as a new
+        // style for the overlay.
+        Brush brush = new Brush(Color.TRANSPARENT, Color.WHITE, 3f);
+        overlay.setBrush(brush);
 
         return view;
     }

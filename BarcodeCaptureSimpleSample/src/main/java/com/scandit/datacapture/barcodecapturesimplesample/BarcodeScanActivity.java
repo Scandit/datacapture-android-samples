@@ -15,6 +15,7 @@
 package com.scandit.datacapture.barcodecapturesimplesample;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -28,6 +29,7 @@ import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.core.source.Camera;
 import com.scandit.datacapture.core.source.FrameSourceState;
 import com.scandit.datacapture.core.ui.DataCaptureView;
+import com.scandit.datacapture.core.ui.style.Brush;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinder;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderStyle;
 
@@ -122,6 +124,12 @@ public class BarcodeScanActivity
         // This is optional, but recommended for better visual feedback.
         BarcodeCaptureOverlay overlay = BarcodeCaptureOverlay.newInstance(barcodeCapture, dataCaptureView);
         overlay.setViewfinder(new RectangularViewfinder(RectangularViewfinderStyle.SQUARE));
+
+        // Adjust the overlay's barcode highlighting to match the new viewfinder styles and improve
+        // the visibility of feedback. With 6.10 we will introduce this visual treatment as a new
+        // style for the overlay.
+        Brush brush = new Brush(Color.TRANSPARENT, Color.WHITE, 3f);
+        overlay.setBrush(brush);
 
         setContentView(dataCaptureView);
     }

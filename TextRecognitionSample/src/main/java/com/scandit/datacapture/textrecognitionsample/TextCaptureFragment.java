@@ -26,12 +26,15 @@ import androidx.annotation.Nullable;
 
 import com.scandit.datacapture.core.common.feedback.Feedback;
 import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
+import com.scandit.datacapture.core.common.geometry.MarginsWithUnit;
 import com.scandit.datacapture.core.common.geometry.MeasureUnit;
 import com.scandit.datacapture.core.common.geometry.SizeWithUnit;
 import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.core.source.FrameSourceState;
 import com.scandit.datacapture.core.ui.DataCaptureView;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinder;
+import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderLineStyle;
+import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderStyle;
 import com.scandit.datacapture.text.capture.TextCapture;
 import com.scandit.datacapture.text.feedback.TextCaptureFeedback;
 import com.scandit.datacapture.text.capture.TextCaptureListener;
@@ -87,15 +90,30 @@ public class TextCaptureFragment extends CameraPermissionFragment
 
         /*
          * Add TextCaptureOverlay with RectangularViewfinder to DataCaptureView. This will visualize
-         * the part of the frame currently taken into account for the text recognition.
+         * the part of the frame currently taken into account for the text recognition. Viewfinders
+         * are visual components only, and as such will not restrict the scan area.
          */
-        RectangularViewfinder viewfinder = new RectangularViewfinder();
+        RectangularViewfinder viewfinder = new RectangularViewfinder(
+                RectangularViewfinderStyle.SQUARE, RectangularViewfinderLineStyle.LIGHT
+        );
+        viewfinder.setDimming(.2f);
         viewfinder.setSize(
                 new SizeWithUnit(
-                        new FloatWithUnit(1f, MeasureUnit.FRACTION),
-                        new FloatWithUnit(0.4f, MeasureUnit.FRACTION)
+                        new FloatWithUnit(.9f, MeasureUnit.FRACTION),
+                        new FloatWithUnit(.1f, MeasureUnit.FRACTION)
                 )
         );
+
+        /*
+         * Restrict the scan area to match the viewfinder's outline.
+         */
+        MarginsWithUnit scanAreaMargins = new MarginsWithUnit(
+                new FloatWithUnit(.05f, MeasureUnit.FRACTION),
+                new FloatWithUnit(.45f, MeasureUnit.FRACTION),
+                new FloatWithUnit(.05f, MeasureUnit.FRACTION),
+                new FloatWithUnit(.45f, MeasureUnit.FRACTION)
+        );
+        view.setScanAreaMargins(scanAreaMargins);
 
         TextCaptureOverlay overlay =
                 TextCaptureOverlay.newInstance(dataCaptureManager.getTextCapture(), view);

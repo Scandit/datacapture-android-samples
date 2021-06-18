@@ -32,6 +32,8 @@ import com.scandit.datacapture.core.source.Camera;
 import com.scandit.datacapture.core.source.FrameSourceState;
 import com.scandit.datacapture.core.ui.DataCaptureView;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinder;
+import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderLineStyle;
+import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderStyle;
 import com.scandit.datacapture.parser.ParsedData;
 import com.scandit.datacapture.parser.ParsedField;
 import com.scandit.datacapture.parser.Parser;
@@ -105,10 +107,15 @@ public class GS1ParserActivity
         dataCaptureView = DataCaptureView.newInstance(this, dataCaptureContext);
 
         // Add a barcode capture overlay to the data capture view to render the location of captured
-        // barcodes on top of the video preview.
+        // barcodes on top of the video preview. Viewfinders are visual components only, and as
+        // such will not restrict the scan area.
         // This is optional, but recommended for better visual feedback.
         BarcodeCaptureOverlay overlay = BarcodeCaptureOverlay.newInstance(barcodeCapture, dataCaptureView);
-        overlay.setViewfinder(new RectangularViewfinder());
+        RectangularViewfinder viewfinder = new RectangularViewfinder(
+                RectangularViewfinderStyle.SQUARE,
+                RectangularViewfinderLineStyle.BOLD
+        );
+        overlay.setViewfinder(viewfinder);
 
         setContentView(dataCaptureView);
     }

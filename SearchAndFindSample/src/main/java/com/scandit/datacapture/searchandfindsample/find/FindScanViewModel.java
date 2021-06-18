@@ -40,7 +40,7 @@ public final class FindScanViewModel extends ViewModel implements BarcodeTrackin
 
     private final Brush matchBrush =
             new Brush(Color.parseColor("#444CAF50"), Color.parseColor("#4CAF50"), 2f);
-    private final Brush rejectBrush = new Brush(Color.TRANSPARENT, Color.WHITE, 2f);
+    private final Brush rejectBrush = new Brush(Color.TRANSPARENT, Color.WHITE, 3f);
 
     FindScanViewModel(Symbology symbology, String data) {
         this.data = data;

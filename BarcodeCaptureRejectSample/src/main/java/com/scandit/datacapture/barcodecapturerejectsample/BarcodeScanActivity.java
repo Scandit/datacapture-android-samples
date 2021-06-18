@@ -15,6 +15,7 @@
 package com.scandit.datacapture.barcodecapturerejectsample;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -198,9 +199,11 @@ public class BarcodeScanActivity
             return;
         }
 
-        // If the code is recognized, we want to make sure to use the default brush to highlight
-        // the code.
-        overlay.setBrush(BarcodeCaptureOverlay.DEFAULT_BRUSH);
+        // When the code is recognized, adjust the overlay's barcode highlighting to match the new
+        // viewfinder styles and improve the visibility of feedback. With 6.10 we will introduce
+        // this visual treatment as a new style for the overlay.
+        Brush brush = new Brush(Color.TRANSPARENT, Color.WHITE, 3f);
+        overlay.setBrush(brush);
 
         // We also want to emit a feedback (vibration and, if enabled, sound).
         feedback.emit();
