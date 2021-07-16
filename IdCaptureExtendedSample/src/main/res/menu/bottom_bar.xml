@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/barcode"
+        android:icon="@drawable/ic_barcode"
+        android:title="@string/menu_barcode"
+        app:iconTint="@color/black" />
+
+    <item
+        android:id="@+id/mrz"
+        android:icon="@drawable/ic_mrz"
+        android:iconTint="@color/black"
+        android:title="@string/menu_mrz" />
+
+    <item
+        android:id="@+id/viz"
+        android:iconTint="@color/black"
+        android:icon="@drawable/ic_viz"
+        android:title="@string/menu_viz" />
+</menu>

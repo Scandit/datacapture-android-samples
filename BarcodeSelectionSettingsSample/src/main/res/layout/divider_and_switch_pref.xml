@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:clickable="true"
+    android:focusable="true"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent">
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:background="?android:attr/dividerVertical" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/preference_switch"
+        android:layout_width="wrap_content"
+        android:paddingStart="8dp"
+        android:duplicateParentState="true"
+        android:layout_height="match_parent"
+        app:showText="false" />
+</LinearLayout>

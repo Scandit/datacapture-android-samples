@@ -28,7 +28,7 @@ dependencies {
     api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
     api "com.scandit.datacapture:barcode:${versions.scandit_sdk_version}"
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}"
 
     implementation "androidx.lifecycle:lifecycle-viewmodel:${versions.viewmodel}"
     implementation "androidx.lifecycle:lifecycle-extensions:${versions.viewmodel}"
