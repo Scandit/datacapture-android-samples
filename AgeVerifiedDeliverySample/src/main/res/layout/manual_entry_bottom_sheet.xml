@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="32dp">
+
+    <TextView
+        android:id="@+id/date_of_birth_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/manual_entry_date_of_birth_label"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="32dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textAllCaps="true"
+        android:labelFor="@+id/date_of_birth_text"
+        android:textColor="@color/nearly_black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/date_of_birth_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/date_of_birth_label"
+        android:hint="@string/manual_entry_date_of_birth_hint"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/divider_background"
+        app:layout_constraintTop_toBottomOf="@+id/date_of_birth_label" />
+
+    <TextView
+        android:id="@+id/full_name_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/manual_entry_full_name_label"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:textAllCaps="true"
+        android:textColor="@color/nearly_black"
+        android:labelFor="@+id/full_name_text"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/date_of_birth_label" />
+
+    <EditText
+        android:id="@+id/full_name_text"
+        android:layout_width="0dp"
+        android:layout_marginStart="16dp"
+        android:gravity="end"
+        android:background="@null"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="32dp"
+        android:singleLine="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:hint="@string/manual_entry_full_name_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/full_name_label"
+        app:layout_constraintTop_toBottomOf="@+id/date_of_birth_label" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/divider_background"
+        app:layout_constraintTop_toBottomOf="@+id/full_name_label" />
+
+    <TextView
+        android:id="@+id/date_of_expiry_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/manual_entry_date_of_expiry_label"
+        android:layout_marginStart="32dp"
+        android:textAllCaps="true"
+        android:layout_marginTop="32dp"
+        android:labelFor="@+id/date_of_expiry_text"
+        android:textColor="@color/nearly_black"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/full_name_label" />
+
+    <TextView
+        android:id="@+id/date_of_expiry_text"
+        android:layout_width="0dp"
+        android:layout_marginStart="16dp"
+        android:gravity="end"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:layout_marginTop="32dp"
+        android:hint="@string/manual_entry_date_of_expiry_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/date_of_expiry_label"
+        app:layout_constraintTop_toBottomOf="@+id/full_name_label" />
+
+    <Button
+        android:id="@+id/confirm_button"
+        style="@style/Scandit.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:gravity="center"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:text="@string/manual_entry_action_confirm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/date_of_expiry_label" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

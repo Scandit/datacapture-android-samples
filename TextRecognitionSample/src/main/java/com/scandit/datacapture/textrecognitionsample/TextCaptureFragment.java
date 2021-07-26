@@ -26,7 +26,6 @@ import androidx.annotation.Nullable;
 
 import com.scandit.datacapture.core.common.feedback.Feedback;
 import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
-import com.scandit.datacapture.core.common.geometry.MarginsWithUnit;
 import com.scandit.datacapture.core.common.geometry.MeasureUnit;
 import com.scandit.datacapture.core.common.geometry.SizeWithUnit;
 import com.scandit.datacapture.core.data.FrameData;
@@ -36,10 +35,10 @@ import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinder;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderLineStyle;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderStyle;
 import com.scandit.datacapture.text.capture.TextCapture;
-import com.scandit.datacapture.text.feedback.TextCaptureFeedback;
 import com.scandit.datacapture.text.capture.TextCaptureListener;
 import com.scandit.datacapture.text.capture.TextCaptureSession;
 import com.scandit.datacapture.text.data.CapturedText;
+import com.scandit.datacapture.text.feedback.TextCaptureFeedback;
 import com.scandit.datacapture.text.ui.TextCaptureOverlay;
 
 import org.jetbrains.annotations.NotNull;
@@ -103,17 +102,6 @@ public class TextCaptureFragment extends CameraPermissionFragment
                         new FloatWithUnit(.1f, MeasureUnit.FRACTION)
                 )
         );
-
-        /*
-         * Restrict the scan area to match the viewfinder's outline.
-         */
-        MarginsWithUnit scanAreaMargins = new MarginsWithUnit(
-                new FloatWithUnit(.05f, MeasureUnit.FRACTION),
-                new FloatWithUnit(.45f, MeasureUnit.FRACTION),
-                new FloatWithUnit(.05f, MeasureUnit.FRACTION),
-                new FloatWithUnit(.45f, MeasureUnit.FRACTION)
-        );
-        view.setScanAreaMargins(scanAreaMargins);
 
         TextCaptureOverlay overlay =
                 TextCaptureOverlay.newInstance(dataCaptureManager.getTextCapture(), view);

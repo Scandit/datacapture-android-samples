@@ -28,9 +28,9 @@ android {
 
 dependencies {
     api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
-    api "com.scandit.datacapture::${versions.scandit_sdk_version}"
-    api "com.scandit.datacapture::${versions.scandit_sdk_version}"
-    api "com.scandit.datacapture::${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:id:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:text-base:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:text:${versions.scandit_sdk_version}"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}"
 

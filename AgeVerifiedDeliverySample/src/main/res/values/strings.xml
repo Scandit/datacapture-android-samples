@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">Age Verified Delivery Sample</string>
+
+    <string name="toolbar_title">Delivery #0001</string>
+
+    <string name="scan_driver_license_viz_delayed_hint">
+        Can\'t scan? Try scanning the front of card
+    </string>
+    <string name="scan_hint_driver_license_viz">Align front of card</string>
+    <string name="scan_hint_driver_license_barcode">Align back of card</string>
+    <string name="scan_hint_passport_mrz">Align character strip</string>
+    <string name="enter_manually_delayed_hint">Can\'t scan? Enter manually</string>
+    <string name="scan_driver_license">Driver\'s License</string>
+    <string name="scan_passport">Passport</string>
+
+    <string name="result_success_title">Verification successful</string>
+    <string name="result_success_confirm_delivery_hint">Confirm delivery to proceed</string>
+    <string name="result_success_action_confirm_delivery">Confirm delivery</string>
+    <string name="result_failed_title">Verification failed</string>
+    <string name="result_failed_reason_document_expired">Document expired</string>
+    <string name="result_failed_reason_recipient_under_age">The recipient is under age</string>
+    <string name="result_failed_action_refuse_delivery">Refuse delivery</string>
+    <string name="result_failed_action_retry">Retry</string>
+
+    <string name="manual_entry_date_of_birth_label">Date of birth:</string>
+    <string name="manual_entry_full_name_label">Full name:</string>
+    <string name="manual_entry_date_of_expiry_label">Date of expiry:</string>
+    <string name="manual_entry_date_of_birth_hint">MM/DD/YYYY</string>
+    <string name="manual_entry_full_name_hint">First &amp; last name</string>
+    <string name="manual_entry_date_of_expiry_hint">MM/DD/YYYY</string>
+    <string name="manual_entry_action_confirm">Confirm</string>
+</resources>

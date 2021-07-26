@@ -5,13 +5,19 @@ android {
     compileSdkVersion sdk.compile
 
     defaultConfig {
-        applicationId "com.scandit.datacapture.idcapturesimplesample"
+        applicationId "com.scandit.datacapture.ageverifieddeliverysample"
         minSdkVersion sdk.min
         targetSdkVersion sdk.target
         versionCode 1
         versionName "1.0"
 
         vectorDrawables.useSupportLibrary = true
+    }
+
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     buildTypes {
@@ -32,9 +38,12 @@ dependencies {
     api "com.scandit.datacapture:text-base:${versions.scandit_sdk_version}"
     api "com.scandit.datacapture:text:${versions.scandit_sdk_version}"
 
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}"
 
-    implementation "androidx.appcompat:appcompat:${versions.androidx_appcompat}"
+    implementation "androidx.appcompat:appcompat:1.3.0"
+    implementation "androidx.constraintlayout:constraintlayout:2.0.4"
     implementation "com.google.android.material:material:${versions.material}"
 
     implementation "com.squareup.okhttp3:okhttp:${versions.okhttp}"

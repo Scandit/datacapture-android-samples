@@ -1,3 +1,4 @@
+include ':AgeVerifiedDeliverySample'
 include ':BarcodeCaptureRejectSample'
 include ':BarcodeCaptureSettingsSample'
 include ':BarcodeCaptureSimpleSample'

@@ -188,11 +188,7 @@ public class GS1ParserActivity
         String barcodeData = session.getNewlyRecognizedBarcodes().get(0).getData();
         try {
             final ParsedData parsedData = parser.parseString(barcodeData);
-            final StringBuilder sb = new StringBuilder();
-
-            for (ParsedField field : parsedData.getFields()) {
-                sb.append(field.getName()).append(": ").append(field.getParsed()).append("\n");
-            }
+            final String result = new ParsedDataPrettyPrinter(parsedData).getResult();
 
             // Stop recognizing barcodes for as long as we are displaying the result. There won't be any
             // new results until the capture mode is enabled again. Note that disabling the capture mode
@@ -204,7 +200,7 @@ public class GS1ParserActivity
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    showResult(sb.toString());
+                    showResult(result);
                 }
             });
         } catch (RuntimeException e) {

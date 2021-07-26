@@ -15,7 +15,10 @@
 package com.scandit.datacapture.matrixscanbubblessample.scan.bubble;
 
 import android.content.Context;
+
+import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.core.common.geometry.Quadrilateral;
+import com.scandit.datacapture.core.ui.DataCaptureView;
 
 public final class BubbleSizeManager {
 
@@ -28,12 +31,23 @@ public final class BubbleSizeManager {
     }
 
     // We want to show the bubble overlay only if the barcode takes >= 10% of the screen width.
-    public boolean isBarcodeLargeEnoughForBubble(Quadrilateral barcodeLocation) {
-        float topRightX = barcodeLocation.getTopRight().getX();
-        float topLeftX = barcodeLocation.getTopLeft().getX();
-        float bottomRightX = barcodeLocation.getBottomRight().getX();
-        float bottomLeftX = barcodeLocation.getBottomLeft().getX();
-        float avgWidth = ((topRightX - bottomLeftX) + (bottomRightX - topLeftX)) / 2;
+    public boolean isBarcodeLargeEnoughForBubble(DataCaptureView dataCaptureView, Barcode barcode) {
+        // The coordinates of the code in the image-space.
+        // This means that the coordinates correspond to actual pixels in the camera image.
+        Quadrilateral barcodePreviewLocation = barcode.getLocation();
+        // To obtain the current device's display coordinates of the barcode,
+        // we need to first convert the above image-space coordinates into screen-space ones,
+        // using DataCaptureView::MapFrameQuadrilateralToView.
+        // You can check https://docs.scandit.com/data-capture-sdk/android/add-augmented-reality-overlay.html
+        // for more information about overlays, views and coordinates.
+        Quadrilateral barcodeViewLocation = dataCaptureView.mapFrameQuadrilateralToView(barcodePreviewLocation);
+        // Let's now retrieve the quadrilateral corners and check if we want to show the bubble overlay
+        // or not based on the width of the barcode.
+        float topRightX = barcodeViewLocation.getTopRight().getX();
+        float topLeftX = barcodeViewLocation.getTopLeft().getX();
+        float bottomRightX = barcodeViewLocation.getBottomRight().getX();
+        float bottomLeftX = barcodeViewLocation.getBottomLeft().getX();
+        float avgWidth = ((topRightX - topLeftX) + (bottomRightX - bottomLeftX)) / 2;
         return (avgWidth / displayWidth) >= SCREEN_PERCENTAGE_WIDTH_REQUIRED;
     }
 }

@@ -155,9 +155,7 @@ public class ScanFragment extends CameraPermissionFragment implements ScanViewMo
 
     @Override
     public boolean shouldShowBubble(TrackedBarcode barcode) {
-        return bubbleSizeManager.isBarcodeLargeEnoughForBubble(
-                dataCaptureView.mapFrameQuadrilateralToView(barcode.getLocation())
-        );
+        return bubbleSizeManager.isBarcodeLargeEnoughForBubble(dataCaptureView, barcode.getBarcode());
     }
 
     @Nullable
