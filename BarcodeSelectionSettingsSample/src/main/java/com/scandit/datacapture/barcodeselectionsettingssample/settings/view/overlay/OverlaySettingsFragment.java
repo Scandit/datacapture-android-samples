@@ -18,6 +18,7 @@ import androidx.annotation.StringRes;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
+import androidx.preference.SwitchPreferenceCompat;
 
 import com.scandit.datacapture.barcodeselectionsettingssample.R;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.common.BasePreferenceFragment;
@@ -59,7 +60,10 @@ public final class OverlaySettingsFragment extends BasePreferenceFragment {
     }
 
     private Preference createHintsEnabledPreference() {
-        return new StyledSwitchPreference(requireContext(), OVERLAY_HINTS_KEY, R.string.show_hints, false);
+        SwitchPreferenceCompat hintsPreference =
+                new StyledSwitchPreference(requireContext(), OVERLAY_HINTS_KEY, R.string.show_hints, false);
+        hintsPreference.setDefaultValue(true);
+        return hintsPreference;
     }
 
     private Preference createBrushPreference(String key, @StringRes int title) {

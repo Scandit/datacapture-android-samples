@@ -487,7 +487,7 @@ class DataCaptureManager {
 
     private void setupShouldShowHints(BarcodeSelectionBasicOverlay overlay) {
         // Retrieve shouldShowHints flag from the desired settings.
-        boolean shouldShowHints = settingsManager.retrieveBoolean(OVERLAY_HINTS_KEY, false);
+        boolean shouldShowHints = settingsManager.retrieveBoolean(OVERLAY_HINTS_KEY, true);
         // Apply it to the barcodeSelectionBasicOverlay.
         overlay.setShouldShowHints(shouldShowHints);
     }

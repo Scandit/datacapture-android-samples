@@ -117,10 +117,7 @@ public class BarcodeScanFragment extends CameraPermissionFragment
     public void onResume() {
         super.onResume();
 
-        if (dialog != null) {
-            dialog.dismiss();
-            dialog = null;
-        }
+        dismissDialog();
         viewModel.setListener(this);
 
         // Check for camera permission and request it, if it hasn't yet been granted.
@@ -143,6 +140,7 @@ public class BarcodeScanFragment extends CameraPermissionFragment
     @Override
     public void onPause() {
         pauseFrameSource();
+        dismissDialog();
         super.onPause();
     }
 
@@ -162,32 +160,39 @@ public class BarcodeScanFragment extends CameraPermissionFragment
     }
 
     @Override
-    public void showDialog(Barcode barcode) {
-        String compositeType = null;
-        String data = barcode.getData();
-        if (barcode.getAddOnData() != null) {
-            data += " " + barcode.getAddOnData();
-        }
-        if (barcode.getCompositeData() != null) {
-            data += " " + barcode.getCompositeData();
-            compositeType = stringFromCompositeFlag(barcode.getCompositeFlag());
-        }
-        String symbology = SymbologyDescription.create(barcode.getSymbology()).getReadableName();
-        int symbolCount = barcode.getSymbolCount();
+    public void showDialog(final Barcode barcode) {
+        requireActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (!isAdded()) return;
+
+                String compositeType = null;
+                String data = barcode.getData();
+                if (barcode.getAddOnData() != null) {
+                    data += " " + barcode.getAddOnData();
+                }
+                if (barcode.getCompositeData() != null) {
+                    data += " " + barcode.getCompositeData();
+                    compositeType = stringFromCompositeFlag(barcode.getCompositeFlag());
+                }
+                String symbology = SymbologyDescription.create(barcode.getSymbology()).getReadableName();
+                int symbolCount = barcode.getSymbolCount();
 
 
-        String text;
-        if (compositeType == null) {
-            text = getString(R.string.result_parametrised, symbology, data, symbolCount);
-        } else {
-            text = getString(R.string.cc_result_parametrised, compositeType, symbology, data, symbolCount);
-        }
+                String text;
+                if (compositeType == null) {
+                    text = getString(R.string.result_parametrised, symbology, data, symbolCount);
+                } else {
+                    text = getString(R.string.cc_result_parametrised, compositeType, symbology, data, symbolCount);
+                }
 
-        if (viewModel.isContinuousScanningEnabled()) {
-            showDialogForContinuousScanning(text);
-        } else {
-            showDialogForOneShotScanning(text);
-        }
+                if (viewModel.isContinuousScanningEnabled()) {
+                    showDialogForContinuousScanning(text);
+                } else {
+                    showDialogForOneShotScanning(text);
+                }
+            }
+        });
     }
 
     private String stringFromCompositeFlag(CompositeFlag compositeFlag) {
