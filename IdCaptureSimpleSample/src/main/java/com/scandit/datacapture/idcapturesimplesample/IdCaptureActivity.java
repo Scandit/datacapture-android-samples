@@ -149,7 +149,8 @@ public class IdCaptureActivity extends CameraPermissionActivity
             case VIZ_RESULT:
                 message = getDescriptionForViz(capturedId);
                 break;
-            default: // We don't expect any other types with the selected supported documents.
+            default: // For other documents only the basic info from CapturedId is returned.
+               message = getDescriptionForCapturedId(capturedId);
                return;
         }
 
@@ -290,6 +291,12 @@ public class IdCaptureActivity extends CameraPermissionActivity
         appendField(builder, "Personal Id Number: ", viz.getPersonalIdNumber());
         appendField(builder, "Document Additional Number: ", viz.getDocumentAdditionalNumber());
 
+        return builder.toString();
+    }
+
+    private String getDescriptionForCapturedId(CapturedId result) {
+        StringBuilder builder = new StringBuilder();
+        appendDescriptionForCapturedId(result, builder);
         return builder.toString();
     }
 

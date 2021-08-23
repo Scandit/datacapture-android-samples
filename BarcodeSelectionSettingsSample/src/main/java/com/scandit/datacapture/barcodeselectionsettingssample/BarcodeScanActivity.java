@@ -66,7 +66,7 @@ public final class BarcodeScanActivity
 
         // Initialize DataCaptureContext and BarcodeSelection. This can be done only once, as the
         // FrameSource and BarcodeSelectionSettings can be updated by applying them on the same
-        // instances. 
+        // instances.
         initializeAndSetupDataCaptureComponents();
         // Initialize the camera using the currently stored settings.
         initializeAndSetupCamera();

@@ -19,11 +19,14 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 
 import com.scandit.datacapture.barcodeselectionsettingssample.R;
+import com.scandit.datacapture.barcodeselectionsettingssample.settings.DataCaptureDefaults;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.common.BasePreferenceFragment;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.common.FloatWithUnitPreference;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.common.FloatWithUnitPreferenceFragment;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.common.StyledPreferenceCategory;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.common.StyledSwitchPreference;
+import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
+import com.scandit.datacapture.core.common.geometry.MarginsWithUnit;
 
 import static com.scandit.datacapture.barcodeselectionsettingssample.settings.SharedPrefsConstants.*;
 
@@ -33,6 +36,8 @@ public final class ScanAreaSettingsFragment extends BasePreferenceFragment {
         return new ScanAreaSettingsFragment();
     }
 
+    private MarginsWithUnit defaultValue;
+
     @Override
     protected String getTitle() {
         return getString(R.string.scan_area);
@@ -40,15 +45,25 @@ public final class ScanAreaSettingsFragment extends BasePreferenceFragment {
 
     @Override
     protected void addPreferencesToScreen(PreferenceScreen screen) {
+        defaultValue = DataCaptureDefaults.getInstance(requireContext()).getScanAreaMargins();
+
         // Scan area margin category.
         StyledPreferenceCategory scanAreaMarginsCategory = new StyledPreferenceCategory(
                 requireContext(), SCAN_AREA_MARGINS_CATEGORY_KEY, R.string.margins
         );
         screen.addPreference(scanAreaMarginsCategory);
-        scanAreaMarginsCategory.addPreference(createMarginPreference(SCAN_AREA_MARGIN_TOP_KEY, R.string.top));
-        scanAreaMarginsCategory.addPreference(createMarginPreference(SCAN_AREA_MARGIN_RIGHT_KEY, R.string.right));
-        scanAreaMarginsCategory.addPreference(createMarginPreference(SCAN_AREA_MARGIN_BOTTOM_KEY, R.string.bottom));
-        scanAreaMarginsCategory.addPreference(createMarginPreference(SCAN_AREA_MARGIN_LEFT_KEY, R.string.left));
+        scanAreaMarginsCategory.addPreference(
+                createMarginPreference(SCAN_AREA_MARGIN_LEFT_KEY, R.string.left, defaultValue.getLeft())
+        );
+        scanAreaMarginsCategory.addPreference(
+                createMarginPreference(SCAN_AREA_MARGIN_TOP_KEY, R.string.top, defaultValue.getTop())
+        );
+        scanAreaMarginsCategory.addPreference(
+                createMarginPreference(SCAN_AREA_MARGIN_RIGHT_KEY, R.string.right, defaultValue.getRight())
+        );
+        scanAreaMarginsCategory.addPreference(
+                createMarginPreference(SCAN_AREA_MARGIN_BOTTOM_KEY, R.string.bottom, defaultValue.getBottom())
+        );
 
         // Scan area guides category.
         StyledPreferenceCategory scanAreaGuidesCategory = new StyledPreferenceCategory(
@@ -61,17 +76,36 @@ public final class ScanAreaSettingsFragment extends BasePreferenceFragment {
     @Override
     public boolean onPreferenceTreeClick(Preference preference) {
         String key = preference.getKey();
-        if (key.equals(SCAN_AREA_MARGIN_TOP_KEY) || key.equals(SCAN_AREA_MARGIN_RIGHT_KEY) ||
-                key.equals(SCAN_AREA_MARGIN_BOTTOM_KEY) || key.equals(SCAN_AREA_MARGIN_LEFT_KEY)) {
-            navigateTo(FloatWithUnitPreferenceFragment.newInstance(key, getString(R.string.scan_area)));
+        String title = getString(R.string.scan_area);
+        FloatWithUnit value = null;
+        switch (key) {
+            case SCAN_AREA_MARGIN_LEFT_KEY: {
+                value = defaultValue.getLeft();
+                break;
+            }
+            case SCAN_AREA_MARGIN_TOP_KEY: {
+                value = defaultValue.getTop();
+                break;
+            }
+            case SCAN_AREA_MARGIN_RIGHT_KEY: {
+                value = defaultValue.getRight();
+                break;
+            }
+            case SCAN_AREA_MARGIN_BOTTOM_KEY: {
+                value = defaultValue.getBottom();
+                break;
+            }
+        }
+        if (value != null) {
+            navigateTo(FloatWithUnitPreferenceFragment.newInstance(key, title, value));
             return true;
         } else {
             return super.onPreferenceTreeClick(preference);
         }
     }
 
-    private Preference createMarginPreference(String key, @StringRes int title) {
-        return new FloatWithUnitPreference(requireContext(), key, title, true);
+    private Preference createMarginPreference(String key, @StringRes int title, FloatWithUnit defaultValue) {
+        return new FloatWithUnitPreference(requireContext(), key, title, true, defaultValue);
     }
 
     private Preference createScanAreaGuidesPreference() {

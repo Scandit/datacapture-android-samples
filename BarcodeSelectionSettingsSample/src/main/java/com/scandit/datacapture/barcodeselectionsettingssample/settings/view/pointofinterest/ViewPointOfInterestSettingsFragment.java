@@ -19,10 +19,13 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 
 import com.scandit.datacapture.barcodeselectionsettingssample.R;
+import com.scandit.datacapture.barcodeselectionsettingssample.settings.DataCaptureDefaults;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.common.BasePreferenceFragment;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.common.FloatWithUnitPreference;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.common.FloatWithUnitPreferenceFragment;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.common.StyledPreferenceCategory;
+import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
+import com.scandit.datacapture.core.common.geometry.PointWithUnit;
 
 import static com.scandit.datacapture.barcodeselectionsettingssample.settings.SharedPrefsConstants.*;
 
@@ -32,6 +35,8 @@ public final class ViewPointOfInterestSettingsFragment extends BasePreferenceFra
         return new ViewPointOfInterestSettingsFragment();
     }
 
+    private PointWithUnit defaultValue;
+
     @Override
     protected String getTitle() {
         return getString(R.string.point_of_interest);
@@ -39,31 +44,47 @@ public final class ViewPointOfInterestSettingsFragment extends BasePreferenceFra
 
     @Override
     protected void addPreferencesToScreen(PreferenceScreen screen) {
+        defaultValue = DataCaptureDefaults.getInstance(requireContext()).getViewPointOfInterest();
+
         // View Point of Interest coordinates category.
         StyledPreferenceCategory coordinatesCategory = new StyledPreferenceCategory(
                 requireContext(), VIEW_POINT_OF_INTEREST_CATEGORY_KEY, null
         );
         screen.addPreference(coordinatesCategory);
         coordinatesCategory.addPreference(
-                createFloatWithUnitPreference(VIEW_POINT_OF_INTEREST_X_KEY, R.string.x)
+                createFloatWithUnitPreference(VIEW_POINT_OF_INTEREST_X_KEY, R.string.x, defaultValue.getX())
         );
         coordinatesCategory.addPreference(
-                createFloatWithUnitPreference(VIEW_POINT_OF_INTEREST_Y_KEY, R.string.y)
+                createFloatWithUnitPreference(VIEW_POINT_OF_INTEREST_Y_KEY, R.string.y, defaultValue.getY())
         );
     }
 
     @Override
     public boolean onPreferenceTreeClick(Preference preference) {
         String key = preference.getKey();
-        if (key.equals(VIEW_POINT_OF_INTEREST_X_KEY) || key.equals(VIEW_POINT_OF_INTEREST_Y_KEY)) {
-            navigateTo(FloatWithUnitPreferenceFragment.newInstance(key, getString(R.string.point_of_interest)));
+        String title = getString(R.string.point_of_interest);
+        FloatWithUnit value = null;
+        switch (key) {
+            case VIEW_POINT_OF_INTEREST_X_KEY: {
+                value = defaultValue.getX();
+                break;
+            }
+            case VIEW_POINT_OF_INTEREST_Y_KEY: {
+                value = defaultValue.getY();
+                break;
+            }
+        }
+        if (value != null) {
+            navigateTo(
+                    FloatWithUnitPreferenceFragment.newInstance(key, title, value)
+            );
             return true;
         } else {
             return super.onPreferenceTreeClick(preference);
         }
     }
 
-    private Preference createFloatWithUnitPreference(String key, @StringRes int title) {
-        return new FloatWithUnitPreference(requireContext(), key, title, true);
+    private Preference createFloatWithUnitPreference(String key, @StringRes int title, FloatWithUnit defaultValue) {
+        return new FloatWithUnitPreference(requireContext(), key, title, true, defaultValue);
     }
 }

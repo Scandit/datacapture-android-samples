@@ -33,6 +33,7 @@ import com.scandit.datacapture.barcode.selection.capture.BarcodeSelectionTapBeha
 import com.scandit.datacapture.barcode.selection.capture.BarcodeSelectionTapSelection;
 import com.scandit.datacapture.barcode.selection.feedback.BarcodeSelectionFeedback;
 import com.scandit.datacapture.barcode.selection.ui.overlay.BarcodeSelectionBasicOverlay;
+import com.scandit.datacapture.barcodeselectionsettingssample.settings.DataCaptureDefaults;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.SettingsManager;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.selection.type.SelectionTypeSettingsFragment;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.view.overlay.OverlaySettingsFragment;
@@ -71,6 +72,7 @@ class DataCaptureManager {
     }
 
     private final SettingsManager settingsManager;
+    private final DataCaptureDefaults dataCaptureDefaults;
 
     @ColorInt private final int scanditBlue;
     private final Brush blueBrush;
@@ -78,6 +80,7 @@ class DataCaptureManager {
 
     private DataCaptureManager(Context context) {
         settingsManager = new SettingsManager(context);
+        dataCaptureDefaults = DataCaptureDefaults.getInstance(context);
         scanditBlue = ContextCompat.getColor(context, R.color.colorAccent);
         blueBrush = new Brush(Color.TRANSPARENT, scanditBlue, 1f);
         filledBlueBrush = new Brush(scanditBlue, scanditBlue, 1f);
@@ -261,11 +264,11 @@ class DataCaptureManager {
     }
 
     private void setupBarcodeSelectionAimerSelection(BarcodeSelectionSettings settings) {
-        // Create and set BarcodeSelectionAimerSelection.
         BarcodeSelectionAimerSelection aimerSelection = new BarcodeSelectionAimerSelection();
-        settings.setSelectionType(aimerSelection);
         // Retrieve desired AimerSelectionStrategy and apply it.
         setupAimerSelectionStrategy(aimerSelection);
+        // Apply the AimerSelection to the BarcodeSelectionSettings.
+        settings.setSelectionType(aimerSelection);
     }
 
     private void setupAimerSelectionStrategy(BarcodeSelectionAimerSelection aimerSelection) {
@@ -307,7 +310,9 @@ class DataCaptureManager {
         if (!pointOfInterestEnabled) {
             barcodeSelection.setPointOfInterest(null);
         } else {
-            PointWithUnit poi = settingsManager.retrievePointWithUnit(POINT_OF_INTEREST_X_KEY, POINT_OF_INTEREST_Y_KEY);
+            PointWithUnit poi = settingsManager.retrievePointWithUnit(
+                    POINT_OF_INTEREST_X_KEY, POINT_OF_INTEREST_Y_KEY, dataCaptureDefaults.getBarcodeSelectionPointOfInterest()
+            );
             barcodeSelection.setPointOfInterest(poi);
         }
     }
@@ -345,41 +350,30 @@ class DataCaptureManager {
     }
 
     private void setupScanAreaMargins(DataCaptureView view) {
-        // Retrieve the scanAreaMargins from the desired settings.
-        MarginsWithUnit margins = settingsManager.retrieveMarginsWithUnit(
-                SCAN_AREA_MARGIN_LEFT_KEY, SCAN_AREA_MARGIN_TOP_KEY, SCAN_AREA_MARGIN_RIGHT_KEY, SCAN_AREA_MARGIN_BOTTOM_KEY
+        // Retrieve the scanAreaMargins from the desired settings, if some data is missing, we apply the defaults from DataCaptureDefaults.
+        FloatWithUnit left = settingsManager.retrieveFloatWithUnit(
+                SCAN_AREA_MARGIN_LEFT_KEY, dataCaptureDefaults.getScanAreaMargins().getLeft()
         );
-        // Apply the scanAreaMargins, if some data is missing, we apply empty margins.
-        if (margins != null) {
-            view.setScanAreaMargins(margins);
-        } else {
-            view.setScanAreaMargins(
-                    new MarginsWithUnit(
-                            new FloatWithUnit(0, MeasureUnit.FRACTION),
-                            new FloatWithUnit(0, MeasureUnit.FRACTION),
-                            new FloatWithUnit(0, MeasureUnit.FRACTION),
-                            new FloatWithUnit(0, MeasureUnit.FRACTION)
-                    )
-            );
-        }
+        FloatWithUnit top = settingsManager.retrieveFloatWithUnit(
+                SCAN_AREA_MARGIN_TOP_KEY, dataCaptureDefaults.getScanAreaMargins().getTop()
+        );
+        FloatWithUnit right = settingsManager.retrieveFloatWithUnit(
+                SCAN_AREA_MARGIN_RIGHT_KEY, dataCaptureDefaults.getScanAreaMargins().getRight()
+        );
+        FloatWithUnit bottom = settingsManager.retrieveFloatWithUnit(
+                SCAN_AREA_MARGIN_BOTTOM_KEY, dataCaptureDefaults.getScanAreaMargins().getBottom()
+        );
+        // Apply the scanAreaMargins.
+        view.setScanAreaMargins(new MarginsWithUnit(left, top, right, bottom));
     }
 
     private void setupPointOfInterest(DataCaptureView view) {
         // Retrieve the pointOfInterest from the desired settings.
         PointWithUnit pointOfInterest = settingsManager.retrievePointWithUnit(
-                VIEW_POINT_OF_INTEREST_X_KEY, VIEW_POINT_OF_INTEREST_Y_KEY
+                VIEW_POINT_OF_INTEREST_X_KEY, VIEW_POINT_OF_INTEREST_Y_KEY, dataCaptureDefaults.getViewPointOfInterest()
         );
         // Apply the pointOfInterest, if some data is missing, we apply the center of the preview.
-        if (pointOfInterest != null) {
-            view.setPointOfInterest(pointOfInterest);
-        } else {
-            view.setPointOfInterest(
-                    new PointWithUnit(
-                            new FloatWithUnit(.5f, MeasureUnit.FRACTION),
-                            new FloatWithUnit(.5f, MeasureUnit.FRACTION)
-                    )
-            );
-        }
+        view.setPointOfInterest(pointOfInterest);
     }
 
     public void setupBarcodeSelectionBasicOverlay(BarcodeSelectionBasicOverlay overlay) {

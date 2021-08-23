@@ -17,11 +17,13 @@ package com.scandit.datacapture.barcodeselectionsettingssample.settings.common;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 
 import com.scandit.datacapture.barcodeselectionsettingssample.R;
+import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
 import com.scandit.datacapture.core.common.geometry.MeasureUnit;
 
 import static com.scandit.datacapture.barcodeselectionsettingssample.settings.SharedPrefsConstants.*;
@@ -30,25 +32,37 @@ public class FloatWithUnitPreferenceFragment extends BasePreferenceFragment {
 
     private final static String BUNDLE_KEY_PREFIX = "prefix";
     private final static String BUNDLE_KEY_TITLE = "title";
+    private final static String BUNDLE_KEY_DEFAULT_VALUE = "default_value";
+    private final static String BUNDLE_KEY_DEFAULT_UNIT = "default_unit";
 
-    public static FloatWithUnitPreferenceFragment newInstance(String prefix, String title) {
+    public static FloatWithUnitPreferenceFragment newInstance(
+            String prefix, String title, FloatWithUnit defaultValue
+    ) {
         FloatWithUnitPreferenceFragment fragment = new FloatWithUnitPreferenceFragment();
         Bundle bundle = new Bundle();
         bundle.putString(BUNDLE_KEY_PREFIX, prefix);
         bundle.putString(BUNDLE_KEY_TITLE, title);
+        bundle.putFloat(BUNDLE_KEY_DEFAULT_VALUE, defaultValue.getValue());
+        bundle.putSerializable(BUNDLE_KEY_DEFAULT_UNIT, defaultValue.getUnit());
         fragment.setArguments(bundle);
         return fragment;
     }
 
     private String title;
     private String prefix;
+    private FloatWithUnit defaultValue;
 
     @Override
     public void onCreate(
             @Nullable Bundle savedInstanceState
     ) {
-        this.prefix = getArguments().getString(BUNDLE_KEY_PREFIX);
-        this.title = getArguments().getString(BUNDLE_KEY_TITLE);
+        Bundle args = getArguments();
+        this.prefix = args.getString(BUNDLE_KEY_PREFIX);
+        this.title = args.getString(BUNDLE_KEY_TITLE);
+        this.defaultValue = new FloatWithUnit(
+                args.getFloat(BUNDLE_KEY_DEFAULT_VALUE),
+                (MeasureUnit) args.getSerializable(BUNDLE_KEY_DEFAULT_UNIT)
+        );
         super.onCreate(savedInstanceState);
     }
 
@@ -69,7 +83,10 @@ public class FloatWithUnitPreferenceFragment extends BasePreferenceFragment {
     }
 
     private Preference createNumberPreference() {
-        return new StyledNumericEditTextPreference(requireContext(), getFloatWithUnitNumberKey(prefix), R.string.value, true);
+        EditTextPreference preference =
+                new StyledNumericEditTextPreference(requireContext(), getFloatWithUnitNumberKey(prefix), R.string.value, true);
+        preference.setDefaultValue(String.valueOf(defaultValue.getValue()));
+        return preference;
     }
 
     private Preference createMeasureUnitPreference() {
@@ -83,6 +100,7 @@ public class FloatWithUnitPreferenceFragment extends BasePreferenceFragment {
         }
         preference.setEntries(entries);
         preference.setEntryValues(entries);
+        preference.setDefaultValue(defaultValue.getUnit().name());
         return preference;
     }
 }

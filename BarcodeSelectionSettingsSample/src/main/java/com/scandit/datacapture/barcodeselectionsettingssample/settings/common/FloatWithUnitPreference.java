@@ -20,31 +20,46 @@ import androidx.annotation.StringRes;
 
 import com.scandit.datacapture.barcodeselectionsettingssample.R;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.SharedPrefsConstants;
+import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
+import com.scandit.datacapture.core.common.geometry.MeasureUnit;
 
 public final class FloatWithUnitPreference extends StyledPreference {
 
    private final String prefix;
+   private final FloatWithUnit defaultValue;
 
-   public FloatWithUnitPreference(final Context context, String key, @StringRes int title, boolean showDivider) {
+   public FloatWithUnitPreference(
+           final Context context, String key, @StringRes int title, boolean showDivider, FloatWithUnit defaultValue
+   ) {
       super(context, key, context.getString(title), -1, showDivider);
       this.prefix = key;
+      this.defaultValue = defaultValue;
       setSummaryProvider(new SummaryProvider<FloatWithUnitPreference>() {
          @Override
          public CharSequence provideSummary(FloatWithUnitPreference preference) {
-            String valueKey = SharedPrefsConstants.getFloatWithUnitNumberKey(prefix);
-            String measureUnitKey = SharedPrefsConstants.getFloatWithUnitMeasureUnitKey(prefix);
-            String value = getSharedPreferences().getString(valueKey, null);
-            String finalValue = null;
-            try {
-               finalValue = String.valueOf(Float.parseFloat(value));
-            } catch (Exception e) { }
-            String measureUnitString = getSharedPreferences().getString(measureUnitKey, null);
-            if (finalValue == null || measureUnitString == null) {
-               return context.getString(R.string.not_set);
-            } else {
-               return finalValue + " (" + measureUnitString + ")";
-            }
+            return buildSummary();
          }
       });
+   }
+
+   private String buildSummary() {
+      String valueKey = SharedPrefsConstants.getFloatWithUnitNumberKey(prefix);
+      String measureUnitKey = SharedPrefsConstants.getFloatWithUnitMeasureUnitKey(prefix);
+      String valueString = getSharedPreferences().getString(valueKey, null);
+      String measureUnitString = getSharedPreferences().getString(measureUnitKey, null);
+
+      try {
+          float value = Float.parseFloat(valueString);
+          MeasureUnit measureUnit = MeasureUnit.valueOf(measureUnitString);
+          return getContext().getString(
+                  R.string.float_with_unit_parametrised, value, measureUnit.name()
+          );
+      } catch (Exception e) {
+         return getContext().getString(
+                 R.string.float_with_unit_parametrised,
+                 defaultValue.getValue(),
+                 defaultValue.getUnit().name()
+         );
+      }
    }
 }

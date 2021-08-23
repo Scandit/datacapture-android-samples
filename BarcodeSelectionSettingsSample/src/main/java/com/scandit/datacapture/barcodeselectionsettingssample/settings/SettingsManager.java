@@ -34,42 +34,25 @@ public final class SettingsManager {
         sharedPrefs = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
     }
 
-    @Nullable
-    public MarginsWithUnit retrieveMarginsWithUnit(
-            String leftKey, String topKey, String rightKey, String bottomKey
-    ) {
-        FloatWithUnit left = retrieveFloatWithUnit(leftKey);
-        FloatWithUnit top = retrieveFloatWithUnit(topKey);
-        FloatWithUnit right = retrieveFloatWithUnit(rightKey);
-        FloatWithUnit bottom = retrieveFloatWithUnit(bottomKey);
-        if (top == null || right == null || bottom == null || left == null) return null;
-        return new MarginsWithUnit(left, top, right, bottom);
-    }
-
-    @Nullable
-    public PointWithUnit retrievePointWithUnit(String xKey, String yKey) {
-        FloatWithUnit x = retrieveFloatWithUnit(xKey);
-        FloatWithUnit y = retrieveFloatWithUnit(yKey);
-        if (x == null || y == null) {
-            return null;
-        }
+    public PointWithUnit retrievePointWithUnit(String xKey, String yKey, PointWithUnit defaultValue) {
+        FloatWithUnit x = retrieveFloatWithUnit(xKey, defaultValue.getX());
+        FloatWithUnit y = retrieveFloatWithUnit(yKey, defaultValue.getY());
         return new PointWithUnit(x, y);
     }
 
-    @Nullable
-    public FloatWithUnit retrieveFloatWithUnit(String key) {
+    public FloatWithUnit retrieveFloatWithUnit(String key, FloatWithUnit defaultValue) {
         String valueKey = getFloatWithUnitNumberKey(key);
         String measureUnitKey = getFloatWithUnitMeasureUnitKey(key);
 
         try {
             float value = Float.parseFloat(sharedPrefs.getString(valueKey, null));
             if (Float.isNaN(value) || Float.isInfinite(value)) {
-                return null;
+                return defaultValue;
             }
             MeasureUnit measureUnit = MeasureUnit.valueOf(sharedPrefs.getString(measureUnitKey, null));
             return new FloatWithUnit(value, measureUnit);
         } catch (Exception e) {
-            return null;
+            return defaultValue;
         }
     }
 

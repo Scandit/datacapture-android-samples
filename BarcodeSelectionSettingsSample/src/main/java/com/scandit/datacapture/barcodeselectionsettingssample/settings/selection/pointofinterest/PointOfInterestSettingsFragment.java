@@ -19,11 +19,14 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 
 import com.scandit.datacapture.barcodeselectionsettingssample.R;
+import com.scandit.datacapture.barcodeselectionsettingssample.settings.DataCaptureDefaults;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.common.BasePreferenceFragment;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.common.FloatWithUnitPreference;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.common.FloatWithUnitPreferenceFragment;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.common.StyledPreferenceCategory;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.common.StyledSwitchPreference;
+import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
+import com.scandit.datacapture.core.common.geometry.PointWithUnit;
 
 import static com.scandit.datacapture.barcodeselectionsettingssample.settings.SharedPrefsConstants.*;
 
@@ -33,6 +36,8 @@ public final class PointOfInterestSettingsFragment extends BasePreferenceFragmen
         return new PointOfInterestSettingsFragment();
     }
 
+    private PointWithUnit defaultValue;
+
     @Override
     protected String getTitle() {
         return getString(R.string.point_of_interest);
@@ -40,6 +45,8 @@ public final class PointOfInterestSettingsFragment extends BasePreferenceFragmen
 
     @Override
     protected void addPreferencesToScreen(PreferenceScreen screen) {
+        defaultValue = DataCaptureDefaults.getInstance(requireContext()).getBarcodeSelectionPointOfInterest();
+
         // Poi enabled category.
         StyledPreferenceCategory enabledCategory = new StyledPreferenceCategory(
                 requireContext(), POINT_OF_INTEREST_CATEGORY_KEY, R.string.enable_poi
@@ -54,11 +61,15 @@ public final class PointOfInterestSettingsFragment extends BasePreferenceFragmen
                 requireContext(), POINT_OF_INTEREST_COORDINATES_CATEGORY_KEY, null
         );
         screen.addPreference(coordinatesCategory);
-        Preference xPreference = createFloatWithUnitPreference(POINT_OF_INTEREST_X_KEY, R.string.x);
+        Preference xPreference = createFloatWithUnitPreference(
+                POINT_OF_INTEREST_X_KEY, R.string.x, defaultValue.getX()
+        );
         coordinatesCategory.addPreference(xPreference);
         xPreference.setDependency(POINT_OF_INTEREST_ENABLED_KEY);
 
-        Preference yPreference = createFloatWithUnitPreference(POINT_OF_INTEREST_Y_KEY, R.string.y);
+        Preference yPreference = createFloatWithUnitPreference(
+                POINT_OF_INTEREST_Y_KEY, R.string.y, defaultValue.getY()
+        );
         coordinatesCategory.addPreference(yPreference);
         yPreference.setDependency(POINT_OF_INTEREST_ENABLED_KEY);
     }
@@ -66,8 +77,22 @@ public final class PointOfInterestSettingsFragment extends BasePreferenceFragmen
     @Override
     public boolean onPreferenceTreeClick(Preference preference) {
         String key = preference.getKey();
-        if (key.equals(POINT_OF_INTEREST_X_KEY) || key.equals(POINT_OF_INTEREST_Y_KEY)) {
-            navigateTo(FloatWithUnitPreferenceFragment.newInstance(key, getString(R.string.point_of_interest)));
+        String title = getString(R.string.point_of_interest);
+        FloatWithUnit value = null;
+        switch (key) {
+            case POINT_OF_INTEREST_X_KEY: {
+                value = defaultValue.getX();
+                break;
+            }
+            case POINT_OF_INTEREST_Y_KEY: {
+                value = defaultValue.getY();
+                break;
+            }
+        }
+        if (value != null) {
+            navigateTo(
+                    FloatWithUnitPreferenceFragment.newInstance(key, title, value)
+            );
             return true;
         } else {
             return super.onPreferenceTreeClick(preference);
@@ -78,7 +103,7 @@ public final class PointOfInterestSettingsFragment extends BasePreferenceFragmen
         return new StyledSwitchPreference(requireContext(), POINT_OF_INTEREST_ENABLED_KEY, R.string.enabled, false);
     }
 
-    private Preference createFloatWithUnitPreference(String key, @StringRes int title) {
-        return new FloatWithUnitPreference(requireContext(), key, title, true);
+    private Preference createFloatWithUnitPreference(String key, @StringRes int title, FloatWithUnit defaultValue) {
+        return new FloatWithUnitPreference(requireContext(), key, title, true, defaultValue);
     }
 }
