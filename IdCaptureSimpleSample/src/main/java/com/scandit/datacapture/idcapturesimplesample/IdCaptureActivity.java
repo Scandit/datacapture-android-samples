@@ -151,7 +151,7 @@ public class IdCaptureActivity extends CameraPermissionActivity
                 break;
             default: // For other documents only the basic info from CapturedId is returned.
                message = getDescriptionForCapturedId(capturedId);
-               return;
+               break;
         }
 
         /*
