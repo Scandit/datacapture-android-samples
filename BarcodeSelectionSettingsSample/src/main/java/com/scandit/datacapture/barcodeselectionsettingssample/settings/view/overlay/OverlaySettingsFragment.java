@@ -20,11 +20,16 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreferenceCompat;
 
+import com.scandit.datacapture.barcode.selection.ui.overlay.BarcodeSelectionBasicOverlayStyle;
 import com.scandit.datacapture.barcodeselectionsettingssample.R;
+import com.scandit.datacapture.barcodeselectionsettingssample.settings.DataCaptureDefaults;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.common.BasePreferenceFragment;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.common.StyledListPreference;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.common.StyledPreferenceCategory;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.common.StyledSwitchPreference;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.scandit.datacapture.barcodeselectionsettingssample.settings.SharedPrefsConstants.*;
 
@@ -34,6 +39,8 @@ public final class OverlaySettingsFragment extends BasePreferenceFragment {
         return new OverlaySettingsFragment();
     }
 
+    private List<ListPreference> brushPreferences;
+
     @Override
     protected String getTitle() {
         return getString(R.string.overlay);
@@ -41,9 +48,18 @@ public final class OverlaySettingsFragment extends BasePreferenceFragment {
 
     @Override
     protected void addPreferencesToScreen(PreferenceScreen screen) {
+        brushPreferences = new ArrayList<>();
+
+        // Overlay style category.
+        StyledPreferenceCategory styleCategory = new StyledPreferenceCategory(
+                requireContext(), OVERLAY_STYLE_CATEGORY_KEY, null
+        );
+        screen.addPreference(styleCategory);
+        styleCategory.addPreference(createStylesPreference());
+
         // Overlay brush entries category.
         StyledPreferenceCategory brushesCategory = new StyledPreferenceCategory(
-                requireContext(), OVERLAY_BRUSHES_CATEGORY_KEY, null
+                requireContext(), OVERLAY_BRUSHES_CATEGORY_KEY, R.string.brushes
         );
         screen.addPreference(brushesCategory);
         brushesCategory.addPreference(createBrushPreference(OVERLAY_TRACKED_BRUSH_KEY, R.string.tracked_brush));
@@ -75,16 +91,57 @@ public final class OverlaySettingsFragment extends BasePreferenceFragment {
             entryValues[i] = styles[i].name();
             entries[i] = getString(styles[i].getReadableName());
         }
-        preference.setDefaultValue(BrushStyle.DEFAULT.name());
+        BrushStyle defaultBrush = DataCaptureDefaults.getInstance(requireContext()).getDefaultBrushStyle();
+        preference.setDefaultValue(defaultBrush.name());
         preference.setEntries(entries);
         preference.setEntryValues(entryValues);
+        brushPreferences.add(preference);
         return preference;
+    }
+
+    private Preference createStylesPreference() {
+        ListPreference preference = new StyledListPreference(requireContext(), OVERLAY_STYLE_KEY, R.string.style, true);
+        BarcodeSelectionBasicOverlayStyle[] styles = BarcodeSelectionBasicOverlayStyle.values();
+        String[] entries = new String[styles.length];
+        String[] entryValues = new String[styles.length];
+        for (int i = 0; i < styles.length; i++) {
+            String name = styles[i].name();
+            entryValues[i] = name;
+            entries[i] = nameCaseString(name);
+        }
+        BarcodeSelectionBasicOverlayStyle defaultStyle =
+                DataCaptureDefaults.getInstance(requireContext()).getOverlayStyle();
+        preference.setDefaultValue(defaultStyle.name());
+        preference.setEntries(entries);
+        preference.setEntryValues(entryValues);
+        preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                String defaultBrushStyle = DataCaptureDefaults.getInstance(requireContext())
+                        .getDefaultBrushStyle().name();
+                for (ListPreference brushPreference : brushPreferences) {
+                    brushPreference.setValue(defaultBrushStyle);
+                }
+                return true;
+            }
+        });
+        return preference;
+    }
+
+    private String nameCaseString(String string) {
+        if (string.isEmpty()) {
+            return string;
+        } else if (string.length() == 1) {
+            return string.toUpperCase();
+        } else {
+            return string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase();
+        }
     }
 
     public enum BrushStyle {
         DEFAULT(R.string.default_), BLUE(R.string.blue);
 
-        private int readableName;
+        private final int readableName;
 
         BrushStyle(@StringRes int readableName) {
             this.readableName = readableName;

@@ -22,11 +22,27 @@ public class ControlsSettingsViewModel extends ViewModel {
 
     private final SettingsManager settingsManager = SettingsManager.getCurrentSettings();
 
+    boolean isZoomButtonEnabled() {
+        return settingsManager.isZoomButtonEnabled();
+    }
+
+    void setZoomButtonEnabled(boolean enabled) {
+        settingsManager.setZoomButtonEnabled(enabled);
+    }
+
     boolean isTorchButtonEnabled() {
         return settingsManager.isTorchButtonEnabled();
     }
 
     void setTorchButtonEnabled(boolean enabled) {
         settingsManager.setTorchButtonEnabled(enabled);
+    }
+
+    boolean isCameraButtonEnabled() {
+        return settingsManager.isCameraButtonEnabled();
+    }
+
+    void setCameraButtonEnabled(boolean enabled) {
+        settingsManager.setCameraButtonEnabled(enabled);
     }
 }

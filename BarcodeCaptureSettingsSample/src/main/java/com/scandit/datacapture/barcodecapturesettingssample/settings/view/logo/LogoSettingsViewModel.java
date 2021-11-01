@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModel;
 import com.scandit.datacapture.barcodecapturesettingssample.models.SettingsManager;
 import com.scandit.datacapture.core.common.geometry.Anchor;
 import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
+import com.scandit.datacapture.core.ui.LogoStyle;
 
 @SuppressWarnings("WeakerAccess")
 public class LogoSettingsViewModel extends ViewModel {
@@ -42,5 +43,19 @@ public class LogoSettingsViewModel extends ViewModel {
 
     void setAnchor(Anchor anchor) {
         settingsManager.setLogoAnchor(anchor);
+    }
+
+    LogoStyleEntry[] getLogoStyles() {
+        LogoStyle[] availableStyles = LogoStyle.values();
+        LogoStyleEntry[] styleEntries = new LogoStyleEntry[availableStyles.length];
+        for (int i = 0; i< availableStyles.length; i++) {
+            LogoStyle style = availableStyles[i];
+            styleEntries[i] = new LogoStyleEntry(style, settingsManager.getLogoStyle() == style);
+        }
+        return styleEntries;
+    }
+
+    void setCurrentStyle(LogoStyleEntry entry) {
+        settingsManager.setLogoStyle(entry.getStyle());
     }
 }

@@ -39,7 +39,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 class ScanViewModel : ViewModel(), BarcodeTrackingListener, BarcodeTrackingAdvancedOverlayListener {
     private val camera = DataCaptureManager.camera
     val barcodeTracking = DataCaptureManager.barcodeTracking
-    val defaultBrush = DataCaptureManager.defaultBrush
     private val mainHandler = Handler(Looper.getMainLooper())
     private var listener: ScanViewModelListener? = null
     private val frozen = AtomicBoolean(false)

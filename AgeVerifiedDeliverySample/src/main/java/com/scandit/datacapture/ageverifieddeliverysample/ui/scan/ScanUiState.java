@@ -70,10 +70,16 @@ class ScanUiState {
     private int scanDriverLicenseVizHintVisibility = View.VISIBLE;
 
     /**
-     * The status of the hint that informs the user that they may attempt to manually enter
+     * The visibility of the hint that guides the user towards different personal identification
+     * document type selection.
+     */
+    private int selectTargetDocumentHintVisibility = View.VISIBLE;
+
+    /**
+     * The visibility hint that informs the user that they may attempt to manually enter
      * recipient's document data.
      */
-    private EnterManuallyHintStatus enterManuallyHintStatus = EnterManuallyHintStatus.NOT_SCHEDULED;
+    private int enterManuallyHintVisibility = View.GONE;
 
     /**
      * Use `builder()` to create this UI state.
@@ -110,7 +116,6 @@ class ScanUiState {
     public int getDriverLicenseToggleVisibility() {
         return driverLicenseToggleVisibility;
     }
-
     /**
      * Get the additional hint to aid the user with the capture process. It reflects the currently
      * selected document kind and/or side.
@@ -136,11 +141,19 @@ class ScanUiState {
     }
 
     /**
-     * Get the status of the hint that informs the user that they may attempt to manually enter
+     * Get the visibility of the hint that guides the user towards different personal identification
+     * document type selection.
+     */
+    public int getSelectTargetDocumentHintVisibility() {
+        return selectTargetDocumentHintVisibility;
+    }
+
+    /**
+     * Get the visibility of the hint that informs the user that they may attempt to manually enter
      * recipient's document data.
      */
-    public EnterManuallyHintStatus getEnterManuallyHintStatus() {
-        return enterManuallyHintStatus;
+    public int getEnterManuallyHintVisibility() {
+        return enterManuallyHintVisibility;
     }
 
     /**
@@ -242,11 +255,21 @@ class ScanUiState {
         }
 
         /**
-         * The status of the hint that informs the user that they may attempt to manually enter
+         * The visibility of the hint that guides the user towards different personal identification
+         * document type selection.
+         */
+        public Builder selectTargetDocumentHintVisibility(int value) {
+            state.selectTargetDocumentHintVisibility = value;
+
+            return this;
+        }
+
+        /**
+         * The visibility of the hint that informs the user that they may attempt to manually enter
          * recipient's document data.
          */
-        public Builder enterManuallyHintStatus(EnterManuallyHintStatus value) {
-            state.enterManuallyHintStatus = value;
+        public Builder enterManuallyHintVisibility(int value) {
+            state.enterManuallyHintVisibility = value;
 
             return this;
         }

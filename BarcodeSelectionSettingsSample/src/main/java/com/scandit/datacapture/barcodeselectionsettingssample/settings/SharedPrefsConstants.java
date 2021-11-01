@@ -120,6 +120,8 @@ public final class SharedPrefsConstants {
     public static final String OVERLAY_SELECTED_BRUSH_KEY = "key_overlay_selected_brush";
     public static final String OVERLAY_HINTS_CATEGORY_KEY = "key_overlay_hints_category";
     public static final String OVERLAY_HINTS_KEY = "key_overlay_hints";
+    public static final String OVERLAY_STYLE_CATEGORY_KEY = "key_overlay_style_category";
+    public static final String OVERLAY_STYLE_KEY = "key_overlay_style";
 
     // Viewfinder.
     public static final String VIEWFINDER_CATEGORY_KEY = "key_viewfinder_category";

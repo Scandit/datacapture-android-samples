@@ -15,6 +15,7 @@
 package com.scandit.datacapture.matrixscanrejectsample;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +30,7 @@ import com.scandit.datacapture.barcode.tracking.capture.BarcodeTrackingSettings;
 import com.scandit.datacapture.barcode.tracking.data.TrackedBarcode;
 import com.scandit.datacapture.barcode.tracking.ui.overlay.BarcodeTrackingBasicOverlay;
 import com.scandit.datacapture.barcode.tracking.ui.overlay.BarcodeTrackingBasicOverlayListener;
+import com.scandit.datacapture.barcode.tracking.ui.overlay.BarcodeTrackingBasicOverlayStyle;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.core.source.Camera;
@@ -128,19 +130,20 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
 
         // Add a barcode tracking overlay to the data capture view to render the tracked barcodes on
         // top of the video preview. This is optional, but recommended for better visual feedback.
-        BarcodeTrackingBasicOverlay overlay =
-                BarcodeTrackingBasicOverlay.newInstance(barcodeTracking, dataCaptureView);
+        BarcodeTrackingBasicOverlay overlay = BarcodeTrackingBasicOverlay.newInstance(
+                barcodeTracking,
+                dataCaptureView,
+                BarcodeTrackingBasicOverlayStyle.FRAME
+        );
 
         // Configure how barcodes are highlighted - apply default brush or create your own.
-        // final Brush defaultBrush = new Brush(Color.BLUE, Color.RED, 5f);
-        final Brush defaultBrush = overlay.getBrush();
-        overlay.setBrush(defaultBrush);
+        int acceptedBorderColor = getResources().getColor(R.color.barcode_accepted_border);
+        final Brush acceptedBrush = new Brush(Color.TRANSPARENT, acceptedBorderColor, 3f);
 
         // Modify brush dynamically.
         // Note that modifying a barcode's brush color requires the MatrixScan AR add-on.
-        int rejectedFillColor = getResources().getColor(R.color.barcode_rejected);
         int rejectedBorderColor = getResources().getColor(R.color.barcode_rejected_border);
-        final Brush rejectedBrush = new Brush(rejectedFillColor, rejectedBorderColor, 1f);
+        final Brush rejectedBrush = new Brush(Color.TRANSPARENT, rejectedBorderColor, 3f);
         overlay.setListener(new BarcodeTrackingBasicOverlayListener() {
             @Override
             @NonNull
@@ -149,7 +152,7 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
                     @NonNull TrackedBarcode trackedBarcode
             ) {
                 if (isValidBarcode(trackedBarcode.getBarcode())) {
-                    return defaultBrush;
+                    return acceptedBrush;
                 } else {
                     return rejectedBrush;
                 }

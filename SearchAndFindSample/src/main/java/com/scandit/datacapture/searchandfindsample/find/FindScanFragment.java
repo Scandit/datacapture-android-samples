@@ -30,6 +30,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.tracking.ui.overlay.BarcodeTrackingBasicOverlay;
+import com.scandit.datacapture.barcode.tracking.ui.overlay.BarcodeTrackingBasicOverlayStyle;
 import com.scandit.datacapture.core.ui.DataCaptureView;
 import com.scandit.datacapture.searchandfindsample.R;
 import org.jetbrains.annotations.NotNull;
@@ -105,7 +106,11 @@ public final class FindScanFragment extends Fragment {
         // Add a barcode tracking overlay to the data capture view to render the tracked
         // barcodes on top of the video preview.
         // This is optional, but recommended for better visual feedback.
-        overlay = BarcodeTrackingBasicOverlay.newInstance(viewModel.barcodeTracking, view);
+        overlay = BarcodeTrackingBasicOverlay.newInstance(
+                viewModel.barcodeTracking,
+                view,
+                BarcodeTrackingBasicOverlayStyle.FRAME
+        );
 
         return view;
     }

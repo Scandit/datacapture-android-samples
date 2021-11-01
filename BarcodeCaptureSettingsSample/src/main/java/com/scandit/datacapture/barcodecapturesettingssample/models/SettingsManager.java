@@ -14,7 +14,11 @@
 
 package com.scandit.datacapture.barcodecapturesettingssample.models;
 
+import android.graphics.Color;
+
+import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
+import androidx.core.graphics.ColorUtils;
 
 import com.scandit.datacapture.barcode.capture.BarcodeCapture;
 import com.scandit.datacapture.barcode.capture.BarcodeCaptureSettings;
@@ -23,6 +27,9 @@ import com.scandit.datacapture.barcode.data.CompositeType;
 import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.data.SymbologyDescription;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
+import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlayStyle;
+import com.scandit.datacapture.barcodecapturesettingssample.settings.view.overlay.BrushStyle;
+import com.scandit.datacapture.barcodecapturesettingssample.settings.view.overlay.BrushStyleEntry;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.LaserlineDisabledColor;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.LaserlineEnabledColor;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.RectangularDisabledColor;
@@ -47,6 +54,7 @@ import com.scandit.datacapture.core.source.FocusGestureStrategy;
 import com.scandit.datacapture.core.source.TorchState;
 import com.scandit.datacapture.core.source.VideoResolution;
 import com.scandit.datacapture.core.time.TimeInterval;
+import com.scandit.datacapture.core.ui.LogoStyle;
 import com.scandit.datacapture.core.ui.overlay.DataCaptureOverlay;
 import com.scandit.datacapture.core.ui.style.Brush;
 import com.scandit.datacapture.core.ui.viewfinder.LaserlineViewfinderStyle;
@@ -55,15 +63,23 @@ import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderLineStyle
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderStyle;
 import com.scandit.datacapture.core.ui.viewfinder.Viewfinder;
 
+import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class SettingsManager {
 
     private static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
 
-    private static SettingsManager CURRENT = new SettingsManager();
+    @ColorInt private static final int RED = Color.parseColor("#FFFF0000");
+    @ColorInt private static final int GREEN = Color.parseColor("#FF00FF00");
+
+    private static final SettingsManager CURRENT = new SettingsManager();
 
     public static SettingsManager getCurrentSettings() {
         return CURRENT;
@@ -100,7 +116,7 @@ public class SettingsManager {
     private float locationSelectionRectangularWidthAspect = 0f;
     private float locationSelectionRectangularHeightAspect = 0f;
 
-    private Brush defaultBrush;
+    private final Map<BarcodeCaptureOverlayStyle, BrushStyleEntry[]> brushes = new HashMap<>();
 
     private RectangularEnabledColor rectangularColor = RectangularEnabledColor.DEFAULT;
     private RectangularDisabledColor rectangularDisabledColor = RectangularDisabledColor.DEFAULT;
@@ -130,11 +146,14 @@ public class SettingsManager {
     private ViewfinderTypeAimer.DotColor aimerViewfinderDotColor =
             ViewfinderTypeAimer.DotColor.DEFAULT;
 
+    private LogoStyle logoStyle = LogoStyle.EXTENDED;
     private Anchor logoAnchor = Anchor.BOTTOM_RIGHT;
     private FloatWithUnit anchorXOffset = new FloatWithUnit(0f, MeasureUnit.FRACTION);
     private FloatWithUnit anchorYOffset = new FloatWithUnit(0f, MeasureUnit.FRACTION);
 
+    private boolean zoomButtonEnabled = false;
     private boolean torchButtonEnabled = false;
+    private boolean cameraButtonEnabled = false;
 
     private boolean tapToFocusEnabled = true;
     private boolean swipeToZoomEnabled = true;
@@ -156,14 +175,46 @@ public class SettingsManager {
         barcodeCapture.setEnabled(true);
 
         // Create a new overlay with the barcode capture from above, and retrieve the default brush.
-        barcodeCaptureOverlay = BarcodeCaptureOverlay.newInstance(barcodeCapture, null);
-        defaultBrush = barcodeCaptureOverlay.getBrush();
+        barcodeCaptureOverlay = BarcodeCaptureOverlay.newInstance(barcodeCapture, null, BarcodeCaptureOverlayStyle.FRAME);
+
+        initBrushStyles();
 
         // Create a temporary RectangularViewfinder instance to get default values for width and height.
         RectangularViewfinder tempRectangularViewfinder = new RectangularViewfinder();
         rectangularViewfinderWidth = tempRectangularViewfinder.getSizeWithUnitAndAspect().getWidthAndHeight().getWidth();
         rectangularViewfinderHeight = tempRectangularViewfinder.getSizeWithUnitAndAspect().getWidthAndHeight().getHeight();
         rectangularViewfinderShorterDimension = new FloatWithUnit(1.0f, MeasureUnit.FRACTION);
+    }
+
+    /*
+     * For each BarcodeCaptureOverlayStyle, create a list of brushes with the default one plus
+     * for each BrushStyle a clone of it with different tint.
+     */
+    private void initBrushStyles() {
+        BarcodeCaptureOverlayStyle[] overlayStyles = BarcodeCaptureOverlayStyle.values();
+        for (int i = 0; i< overlayStyles.length; i++) {// Loop OverlayStyles.
+            BarcodeCaptureOverlayStyle style = BarcodeCaptureOverlayStyle.values()[i];
+            Brush defaultBrush = BarcodeCaptureOverlay.newInstance(barcodeCapture, null, style).getBrush();
+
+            BrushStyle[] brushStyles = BrushStyle.values();
+            BrushStyleEntry[] styleBrushes = new BrushStyleEntry[brushStyles.length];
+            for (int j = 0; j < brushStyles.length; j++) {// Loop BrushStyle for each OverlayStyle.
+                BrushStyle brushStyle = brushStyles[j];
+                Brush styledBrush = defaultBrush;
+                switch (brushStyle) {
+                    case DEFAULT:
+                        break;
+                    case RED:
+                        styledBrush = cloneBrushStrokeAndAlpha(defaultBrush, RED, RED);
+                        break;
+                    case GREEN:
+                        styledBrush = cloneBrushStrokeAndAlpha(defaultBrush, GREEN, GREEN);
+                        break;
+                }
+                styleBrushes[j] = new BrushStyleEntry(styledBrush, brushStyle);
+            }
+            brushes.put(style, styleBrushes);
+        }
     }
 
     public BarcodeCapture getBarcodeCapture() {
@@ -178,7 +229,11 @@ public class SettingsManager {
         return camera;
     }
 
-    public DataCaptureOverlay getBarcodeCaptureOverlay() {
+    public CameraSettings getCameraSettings() {
+        return cameraSettings;
+    }
+
+    public BarcodeCaptureOverlay getBarcodeCaptureOverlay() {
         return barcodeCaptureOverlay;
     }
 
@@ -574,16 +629,31 @@ public class SettingsManager {
     //endregion
 
     //region Overlay Settings.
-    public Brush getDefaultBrush() {
-        return defaultBrush;
-    }
-
     public void setNewBrush(Brush brush) {
         barcodeCaptureOverlay.setBrush(brush);
     }
 
     public Brush getCurrentBrush() {
         return barcodeCaptureOverlay.getBrush();
+    }
+
+    public void setOverlayStyle(BarcodeCaptureOverlayStyle style) {
+        // Get previous settings.
+        boolean shouldShowScanAreaGuides = getShouldShowScanAreaGuides();
+        Viewfinder previousViewfinder = getCurrentViewfinder();
+        // Create new overlay with given style, reapply previous settings.
+        barcodeCaptureOverlay = BarcodeCaptureOverlay.newInstance(barcodeCapture, null, style);
+        setNewBrush(barcodeCaptureOverlay.getBrush());
+        setShouldShowScanAreaGuides(shouldShowScanAreaGuides);
+        setViewfinder(previousViewfinder);
+    }
+
+    public BarcodeCaptureOverlayStyle getOverlayStyle() {
+        return barcodeCaptureOverlay.getStyle();
+    }
+
+    public Map<BarcodeCaptureOverlayStyle, BrushStyleEntry[]> getBrushes() {
+        return brushes;
     }
     //endregion
 
@@ -796,6 +866,14 @@ public class SettingsManager {
     public void setAnchorYOffset(FloatWithUnit anchorYOffset) {
         this.anchorYOffset = anchorYOffset;
     }
+
+    public LogoStyle getLogoStyle() {
+        return logoStyle;
+    }
+
+    public void setLogoStyle(LogoStyle logoStyle) {
+        this.logoStyle = logoStyle;
+    }
     //endregion
 
     //region Gestures Settings.
@@ -817,12 +895,28 @@ public class SettingsManager {
     //endregion
 
     //region Controls Settings.
+    public boolean isZoomButtonEnabled() {
+        return zoomButtonEnabled;
+    }
+
+    public void setZoomButtonEnabled(boolean zoomButtonEnabled) {
+        this.zoomButtonEnabled = zoomButtonEnabled;
+    }
+
     public boolean isTorchButtonEnabled() {
         return torchButtonEnabled;
     }
 
     public void setTorchButtonEnabled(boolean torchButtonEnabled) {
         this.torchButtonEnabled = torchButtonEnabled;
+    }
+
+    public boolean isCameraButtonEnabled() {
+        return cameraButtonEnabled;
+    }
+
+    public void setCameraButtonEnabled(boolean cameraButtonEnabled) {
+        this.cameraButtonEnabled = cameraButtonEnabled;
     }
     //endregion
     //endregion
@@ -836,4 +930,14 @@ public class SettingsManager {
         continuousScanningEnabled = enabled;
     }
     //endregion
+
+    private Brush cloneBrushStrokeAndAlpha(Brush brush, int fillColor, int strokeColor) {
+        int fillAlpha = brush.getFillColor() >>> 24;
+        int strokeAlpha = brush.getStrokeColor() >>> 24;
+        return new Brush(
+                ColorUtils.setAlphaComponent(fillColor, fillAlpha),
+                ColorUtils.setAlphaComponent(strokeColor, strokeAlpha),
+                brush.getStrokeWidth()
+        );
+    }
 }

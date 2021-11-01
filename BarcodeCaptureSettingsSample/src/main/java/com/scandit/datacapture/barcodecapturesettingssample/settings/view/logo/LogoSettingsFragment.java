@@ -21,6 +21,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.scandit.datacapture.barcodecapturesettingssample.R;
 import com.scandit.datacapture.barcodecapturesettingssample.base.NavigationFragment;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.view.ViewSettingsEntry;
@@ -29,7 +31,8 @@ import com.scandit.datacapture.barcodecapturesettingssample.settings.view.logo.o
 import com.scandit.datacapture.core.common.geometry.Anchor;
 import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
 
-public class LogoSettingsFragment extends NavigationFragment {
+public class LogoSettingsFragment extends NavigationFragment
+        implements LogoStyleAdapter.Callback {
 
     public static LogoSettingsFragment newInstance() {
         return new LogoSettingsFragment();
@@ -37,8 +40,11 @@ public class LogoSettingsFragment extends NavigationFragment {
 
     private LogoSettingsViewModel viewModel;
 
+    private RecyclerView recyclerLogoStyles;
     private View containerAnchor, containerOffsetX, containerOffsetY;
     private TextView textAnchor, textOffsetX, textOffsetY;
+
+    private LogoStyleAdapter adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,6 +65,8 @@ public class LogoSettingsFragment extends NavigationFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        recyclerLogoStyles = view.findViewById(R.id.recycler_logo_styles);
+
         containerAnchor = view.findViewById(R.id.container_anchor);
         containerOffsetX = view.findViewById(R.id.container_offset_x);
         containerOffsetY = view.findViewById(R.id.container_offset_y);
@@ -67,12 +75,18 @@ public class LogoSettingsFragment extends NavigationFragment {
         textOffsetX = view.findViewById(R.id.text_offset_x);
         textOffsetY = view.findViewById(R.id.text_offset_y);
 
+        setupRecyclerStyles();
         setupAnchor();
         refreshAnchorData();
         setupOffsetX();
         refreshOffsetXData();
         setupOffsetY();
         refreshOffsetYData();
+    }
+
+    private void setupRecyclerStyles() {
+        adapter = new LogoStyleAdapter(viewModel.getLogoStyles(), this);
+        recyclerLogoStyles.setAdapter(adapter);
     }
 
     private void setupAnchor() {
@@ -149,5 +163,15 @@ public class LogoSettingsFragment extends NavigationFragment {
     @Override
     protected String getTitle() {
         return getString(ViewSettingsEntry.LOGO.displayNameResource);
+    }
+
+    @Override
+    public void onLogoStyleClicked(LogoStyleEntry style) {
+        viewModel.setCurrentStyle(style);
+        refreshRecyclerStylesData();
+    }
+
+    private void refreshRecyclerStylesData() {
+        adapter.updateData(viewModel.getLogoStyles());
     }
 }

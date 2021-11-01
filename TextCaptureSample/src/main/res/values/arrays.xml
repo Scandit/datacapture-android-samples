@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="text_types">
+        <item>GS1 AI</item>
+        <item>LOT</item>
+    </string-array>
+
+    <string-array name="recognition_areas">
+        <item>Top</item>
+        <item>Center</item>
+        <item>Bottom</item>
+    </string-array>
+
+</resources>

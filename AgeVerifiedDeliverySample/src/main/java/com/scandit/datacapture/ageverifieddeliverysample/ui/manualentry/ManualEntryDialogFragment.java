@@ -14,6 +14,7 @@
 
 package com.scandit.datacapture.ageverifieddeliverysample.ui.manualentry;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.LayoutInflater;
@@ -284,6 +285,13 @@ public class ManualEntryDialogFragment extends BottomSheetDialogFragment {
      */
     private void updateConfirmButton() {
         confirmButton.setEnabled(uiState.isConfirmEnabled());
+    }
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+        parentViewModel.onManualEntryDismissed();
     }
 
     /**

@@ -35,7 +35,9 @@ public class ControlsSettingsFragment extends NavigationFragment {
 
     private ControlsSettingsViewModel viewModel;
 
+    private Switch switchZoom;
     private Switch switchTorch;
+    private Switch switchCamera;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,8 +59,14 @@ public class ControlsSettingsFragment extends NavigationFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         switchTorch = view.findViewById(R.id.switch_torch_button);
+        switchCamera = view.findViewById(R.id.switch_camera_button);
+        switchZoom = view.findViewById(R.id.switch_zoom_button);
         refreshSwitchTorchState();
         setupSwitchTorch();
+        refreshSwitchCamera();
+        setupSwitchCamera();
+        refreshSwitchZoomState();
+        setupSwitchZoom();
     }
 
     private void refreshSwitchTorchState() {
@@ -71,6 +79,34 @@ public class ControlsSettingsFragment extends NavigationFragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 viewModel.setTorchButtonEnabled(isChecked);
                 refreshSwitchTorchState();
+            }
+        });
+    }
+
+    private void refreshSwitchCamera() {
+        switchCamera.setChecked(viewModel.isCameraButtonEnabled());
+    }
+
+    private void setupSwitchCamera() {
+        switchCamera.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                viewModel.setCameraButtonEnabled(isChecked);
+                refreshSwitchCamera();
+            }
+        });
+    }
+
+    private void refreshSwitchZoomState() {
+        switchZoom.setChecked(viewModel.isZoomButtonEnabled());
+    }
+
+    private void setupSwitchZoom() {
+        switchZoom.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                viewModel.setZoomButtonEnabled(isChecked);
+                refreshSwitchZoomState();
             }
         });
     }

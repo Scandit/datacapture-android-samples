@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_launcher_name">IdCapture Settings</string>
+    <string name="app_readable_name">IdCapture Settings Sample</string>
+    <string name="captured_id_title">Recognized Document</string>
+    <string name="error_title">Error Encountered</string>
+    <string name="result_button_resume">Resume</string>
+    <string name="document_not_supported_message">Document not supported</string>
+
+    <string name="captured_result_parametrised">%1$s\n%2$s</string>
+
+    <string name="main_settings">Settings</string>
+    <string name="alert_scan_back_title">Back of Document</string>
+    <string name="alert_scan_back_message">This document has additional data in the Visual Inspection Zone on the back of the card.</string>
+    <string name="scan">Scan</string>
+    <string name="skip">Skip</string>
+</resources>

@@ -18,7 +18,7 @@ import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.ProfessionalDrivingPermit;
 import com.scandit.datacapture.id.data.SouthAfricaDlBarcodeResult;
 import com.scandit.datacapture.id.data.VehicleRestriction;
-import com.scandit.datacapture.idcaptureextendedsample.result.ResultEntry;
+import com.scandit.datacapture.idcaptureextendedsample.ui.result.ResultEntry;
 
 import java.util.ArrayList;
 import java.util.List;

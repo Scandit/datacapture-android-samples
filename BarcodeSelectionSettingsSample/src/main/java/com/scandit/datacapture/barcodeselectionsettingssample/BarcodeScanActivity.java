@@ -99,9 +99,9 @@ public final class BarcodeScanActivity
         // Add a barcode selection overlay to the data capture view to render the location of
         // captured barcodes on top of the video preview.
         // This is optional, but recommended for better visual feedback.
-        overlay = BarcodeSelectionBasicOverlay.newInstance(barcodeSelection, dataCaptureView);
-        // Update BarcodeSelectionBasicOverlay properties from the applied settings.
-        dataCaptureManager.setupBarcodeSelectionBasicOverlay(overlay);
+        overlay = dataCaptureManager.createAndSetupBarcodeSelectionBasicOverlay(
+                barcodeSelection, dataCaptureView
+        );
 
         setContentView(dataCaptureView);
     }
@@ -201,7 +201,12 @@ public final class BarcodeScanActivity
             initializeAndSetupCamera();
             updateBarcodeSelection();
             dataCaptureManager.setupDataCaptureView(dataCaptureView);
-            dataCaptureManager.setupBarcodeSelectionBasicOverlay(overlay);
+            if (overlay != null) {
+                dataCaptureView.removeOverlay(overlay);
+            }
+            overlay = dataCaptureManager.createAndSetupBarcodeSelectionBasicOverlay(
+                    barcodeSelection, dataCaptureView
+            );
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }

@@ -73,10 +73,10 @@ public class AlertDialogFragment extends DialogFragment {
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
 
-        callbacks.onResultDismissed();
+        callbacks.onAlertDismissed();
     }
 
     public interface Callbacks {
-        void onResultDismissed();
+        void onAlertDismissed();
     }
 }

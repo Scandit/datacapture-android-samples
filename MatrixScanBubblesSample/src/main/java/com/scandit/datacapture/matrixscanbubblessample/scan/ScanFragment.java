@@ -26,6 +26,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.scandit.datacapture.barcode.tracking.data.TrackedBarcode;
 import com.scandit.datacapture.barcode.tracking.ui.overlay.BarcodeTrackingAdvancedOverlay;
 import com.scandit.datacapture.barcode.tracking.ui.overlay.BarcodeTrackingBasicOverlay;
+import com.scandit.datacapture.barcode.tracking.ui.overlay.BarcodeTrackingBasicOverlayStyle;
 import com.scandit.datacapture.core.ui.DataCaptureView;
 import com.scandit.datacapture.matrixscanbubblessample.R;
 import com.scandit.datacapture.matrixscanbubblessample.scan.bubble.Bubble;
@@ -76,9 +77,8 @@ public class ScanFragment extends CameraPermissionFragment implements ScanViewMo
 
         // We create an overlay to highlight the barcodes.
         highlightOverlay = BarcodeTrackingBasicOverlay.newInstance(
-                viewModel.barcodeTracking, dataCaptureView
+                viewModel.barcodeTracking, dataCaptureView, BarcodeTrackingBasicOverlayStyle.DOT
         );
-        highlightOverlay.setBrush(viewModel.defaultBrush);
 
         // We create an overlay for the bubbles.
         bubblesOverlay = BarcodeTrackingAdvancedOverlay.newInstance(

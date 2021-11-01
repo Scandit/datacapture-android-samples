@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="settings_value_none">None</string>
+    <string name="value">Value</string>
+    <string name="measure_unit">Measure Unit</string>
+    <string name="invalid_number">Invalid Number</string>
+    <string name="float_with_unit_parametrised">%1$.2f (%2$s)</string>
+
+    <string name="id_capture_category_title">ID Capture</string>
+    <string name="supported_documents_title">Supported Documents</string>
+    <string name="supported_sides_title">Supported Sides</string>
+    <string name="supported_images_title">Result with Image Types</string>
+
+    <string name="camera_category_title">Camera</string>
+    <string name="camera_position_title">Camera Position</string>
+    <string name="camera_torch_title">Torch Enabled</string>
+    <string name="camera_preferred_resolution_title">Preferred Resolution</string>
+    <string name="camera_zoom_factor_title">Zoom Factor</string>
+
+    <string name="view_category_title">View</string>
+
+    <string name="logo_category_title">Logo</string>
+    <string name="logo_anchor_title">Logo Anchor</string>
+    <string name="logo_anchor_offset_x_title">Logo Anchor Offset X</string>
+    <string name="logo_anchor_offset_y_title">Logo Anchor Offset Y</string>
+
+    <string name="overlay_category_title">Overlay</string>
+    <string name="overlay_style_title">Layout Style</string>
+    <string name="overlay_line_style_title">Layout Line Style</string>
+    <string name="captured_brush_title">Captured Brush</string>
+
+    <string name="gestures_category_title">Gestures</string>
+    <string name="tap_to_focus_title">Tap to Focus</string>
+    <string name="swipe_to_zoom_title">Swipe to Zoom</string>
+
+    <string name="controls_category_title">Controls</string>
+    <string name="torch_control_title">Torch Button</string>
+
+    <string name="result_category_title">Result</string>
+    <string name="continuous_scan_title">Continuous</string>
+</resources>

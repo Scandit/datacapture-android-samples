@@ -16,7 +16,7 @@ package com.scandit.datacapture.idcaptureextendedsample.mappers;
 
 import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.MrzResult;
-import com.scandit.datacapture.idcaptureextendedsample.result.ResultEntry;
+import com.scandit.datacapture.idcaptureextendedsample.ui.result.ResultEntry;
 
 import java.util.ArrayList;
 

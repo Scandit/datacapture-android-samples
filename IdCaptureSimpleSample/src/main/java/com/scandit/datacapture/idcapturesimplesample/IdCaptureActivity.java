@@ -80,7 +80,7 @@ public class IdCaptureActivity extends CameraPermissionActivity
         );
 
         overlay = IdCaptureOverlay.newInstance(dataCaptureManager.getIdCapture(), view);
-        overlay.setIdLayoutStyle(IdLayoutStyle.SQUARE);
+        overlay.setIdLayoutStyle(IdLayoutStyle.ROUNDED);
     }
 
     @Override
@@ -163,12 +163,41 @@ public class IdCaptureActivity extends CameraPermissionActivity
          * This callback may be executed on an arbitrary thread. We post to switch back
          * to the main thread.
          */
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                showAlert(R.string.captured_id_title, message);
-            }
-        });
+        runOnUiThread(() -> showAlert(R.string.captured_id_title, message));
+    }
+
+    @Override
+    public void onIdLocalized(
+            @NotNull IdCapture mode,
+            @NotNull IdCaptureSession session,
+            @NotNull FrameData data
+    ) {
+        // In this sample we are not interested in this callback.
+    }
+
+    @Override
+    public void onIdRejected(
+            @NotNull IdCapture mode,
+            @NotNull IdCaptureSession session,
+            @NotNull FrameData data
+    ) {
+        /*
+         * Implement to handle documents recognized in a frame, but rejected.
+         * A document or its part is considered rejected when (a) it's valid, but not enabled in the settings,
+         * (b) it's a barcode of a correct symbology or a Machine Readable Zone (MRZ),
+         * but the data is encoded in an unexpected/incorrect format.
+         */
+
+        /*
+         * Don't capture unnecessarily when the alert is displayed.
+         */
+        dataCaptureManager.getIdCapture().setEnabled(false);
+
+        /*
+         * This callback may be executed on an arbitrary thread. We post to switch back
+         * to the main thread.
+         */
+        runOnUiThread(() -> showAlert(R.string.error_title, R.string.document_not_supported_message));
     }
 
     @Override
@@ -184,24 +213,6 @@ public class IdCaptureActivity extends CameraPermissionActivity
          */
     }
 
-    private String getErrorMessage(Throwable error) {
-        if (error instanceof IdCaptureException) {
-            IdCaptureException idCaptureException = (IdCaptureException) error;
-
-            StringBuilder messageBuilder =
-                    new StringBuilder(idCaptureException.getKind().toString());
-
-            if (!TextUtils.isEmpty(idCaptureException.getMessage())) {
-                messageBuilder.append(": ")
-                        .append(idCaptureException.getMessage());
-            }
-
-            return messageBuilder.toString();
-        } else {
-            return error.getMessage();
-        }
-    }
-
     @Override
     public void onObservationStarted(@NotNull IdCapture mode) {
         // In this sample we are not interested in this callback.
@@ -210,6 +221,10 @@ public class IdCaptureActivity extends CameraPermissionActivity
     @Override
     public void onObservationStopped(@NotNull IdCapture mode) {
         // In this sample we are not interested in this callback.
+    }
+
+    private void showAlert(@StringRes int titleRes, @StringRes int messageRes) {
+        showAlert(titleRes, getString(messageRes));
     }
 
     private void showAlert(@StringRes int titleRes, String message) {
@@ -224,9 +239,9 @@ public class IdCaptureActivity extends CameraPermissionActivity
     }
 
     @Override
-    public void onResultDismissed() {
+    public void onAlertDismissed() {
         /*
-         * Enable capture again, after the result dialog is dismissed.
+         * Enable capture again, after the alert dialog is dismissed.
          */
         dataCaptureManager.getIdCapture().setEnabled(true);
     }

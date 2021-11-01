@@ -239,6 +239,24 @@ public class MRZScannerActivity
     }
 
     @Override
+    public void onIdLocalized(
+            @NotNull IdCapture mode,
+            @NotNull IdCaptureSession session,
+            @NotNull FrameData data
+    ) {
+        // In this sample we are not interested in this callback.
+    }
+
+    @Override
+    public void onIdRejected(
+            @NotNull IdCapture mode,
+            @NotNull IdCaptureSession session,
+            @NotNull FrameData data
+    ) {
+        // In this sample we are not interested in this callback.
+    }
+
+    @Override
     public void onErrorEncountered(
             @NotNull IdCapture mode,
             @NotNull final Throwable error,

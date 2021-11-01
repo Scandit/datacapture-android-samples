@@ -24,7 +24,6 @@ import com.scandit.datacapture.core.capture.DataCaptureContext.Companion.forLice
 import com.scandit.datacapture.core.source.Camera
 import com.scandit.datacapture.core.source.Camera.Companion.getDefaultCamera
 import com.scandit.datacapture.core.source.VideoResolution
-import com.scandit.datacapture.core.ui.style.Brush
 
 object DataCaptureManager {
     private const val SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --"
@@ -32,7 +31,6 @@ object DataCaptureManager {
     val barcodeTracking: BarcodeTracking
     val dataCaptureContext: DataCaptureContext
     val camera: Camera
-    val defaultBrush = Brush.transparent()
 
     init {
         // The barcode tracking process is configured through barcode tracking settings

@@ -14,57 +14,49 @@
 
 package com.scandit.datacapture.barcodecapturesettingssample.settings.view.overlay;
 
-import android.graphics.Color;
-import androidx.annotation.ColorInt;
 import androidx.lifecycle.ViewModel;
-import com.scandit.datacapture.barcodecapturesettingssample.R;
+
+import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlayStyle;
 import com.scandit.datacapture.barcodecapturesettingssample.models.SettingsManager;
 import com.scandit.datacapture.core.ui.style.Brush;
 
 @SuppressWarnings("WeakerAccess")
 public class OverlaySettingsViewModel extends ViewModel {
 
-    @ColorInt private static final int RED = Color.parseColor("#FFFF0000");
-    @ColorInt private static final int TRANSPARENT_RED = Color.parseColor("#33FF0000");
-    @ColorInt private static final int GREEN = Color.parseColor("#FF00FF00");
-    @ColorInt private static final int TRANSPARENT_GREEN = Color.parseColor("#3300FF00");
-
     private final SettingsManager settingsManager = SettingsManager.getCurrentSettings();
 
-    private final float strokeWidth = settingsManager.getDefaultBrush().getStrokeWidth();
-
-    private OverlaySettingsBrushEntry[] availableBrushes = new OverlaySettingsBrushEntry[]{
-            new OverlaySettingsBrushEntry(settingsManager.getDefaultBrush(), R.string._default),
-            new OverlaySettingsBrushEntry(
-                    TRANSPARENT_RED,
-                    RED,
-                    strokeWidth,
-                    R.string.red
-            ),
-            new OverlaySettingsBrushEntry(
-                    TRANSPARENT_GREEN,
-                    GREEN,
-                    strokeWidth,
-                    R.string.green
-            )
-    };
-
-    OverlaySettingsBrushEntry[] getAvailableBrushes() {
-        return availableBrushes;
+    BrushStyleEntry[] getAvailableBrushes() {
+        BarcodeCaptureOverlayStyle currentStyle = settingsManager.getOverlayStyle();
+        return settingsManager.getBrushes().get(currentStyle);
     }
 
-    void setCurrentBrush(OverlaySettingsBrushEntry brushEntry) {
+    void setCurrentBrush(BrushStyleEntry brushEntry) {
         settingsManager.setNewBrush(brushEntry.brush);
     }
 
-    OverlaySettingsBrushEntry getCurrentBrushEntry() {
+    BrushStyleEntry getCurrentBrushEntry() {
+        BrushStyleEntry[] availableBrushes = getAvailableBrushes();
         Brush currentBrush = settingsManager.getCurrentBrush();
-        for (OverlaySettingsBrushEntry entry : availableBrushes) {
+        for (BrushStyleEntry entry : availableBrushes) {
             if (entry.brush.getStrokeColor() == currentBrush.getStrokeColor()
                     && entry.brush.getFillColor() == currentBrush.getFillColor()) {
                 return entry;
             }
         }
         return availableBrushes[0];
+    }
+
+    OverlayStyleEntry[] getOverlayStyles() {
+        BarcodeCaptureOverlayStyle[] availableStyles = BarcodeCaptureOverlayStyle.values();
+        OverlayStyleEntry[] styleEntries = new OverlayStyleEntry[availableStyles.length];
+        for (int i = 0; i< availableStyles.length; i++) {
+            BarcodeCaptureOverlayStyle style = availableStyles[i];
+            styleEntries[i] = new OverlayStyleEntry(style, settingsManager.getOverlayStyle() == style);
+        }
+        return styleEntries;
+    }
+
+    void setCurrentStyle(OverlayStyleEntry entry) {
+        settingsManager.setOverlayStyle(entry.getStyle());
     }
 }

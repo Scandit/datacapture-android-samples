@@ -34,7 +34,6 @@ import com.scandit.datacapture.core.common.geometry.PointWithUnit;
 import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.core.source.Camera;
 import com.scandit.datacapture.core.source.FrameSourceState;
-import com.scandit.datacapture.core.ui.style.Brush;
 import com.scandit.datacapture.matrixscanbubblessample.models.DataCaptureManager;
 import com.scandit.datacapture.matrixscanbubblessample.scan.bubble.data.BubbleData;
 import com.scandit.datacapture.matrixscanbubblessample.scan.bubble.data.BubbleDataProvider;
@@ -47,7 +46,6 @@ public class ScanViewModel extends ViewModel implements BarcodeTrackingListener,
     private final DataCaptureManager dataCaptureManager = DataCaptureManager.CURRENT;
     private final Camera camera = dataCaptureManager.camera;
     final BarcodeTracking barcodeTracking = dataCaptureManager.barcodeTracking;
-    final Brush defaultBrush = dataCaptureManager.defaultBrush;
 
     private final BubbleDataProvider bubbleDataProvider = new BubbleDataProvider();
 

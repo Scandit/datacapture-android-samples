@@ -14,6 +14,7 @@
 
 package com.scandit.datacapture.barcodecapturesettingssample.scanning;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import com.scandit.datacapture.barcode.capture.BarcodeCapture;
 import com.scandit.datacapture.barcode.capture.BarcodeCaptureListener;
@@ -22,9 +23,13 @@ import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.barcodecapturesettingssample.models.SettingsManager;
 import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.core.source.FrameSourceState;
+import com.scandit.datacapture.core.source.TorchListener;
+import com.scandit.datacapture.core.source.TorchState;
+
 import org.jetbrains.annotations.NotNull;
 
-public class BarcodeScanViewModel extends ViewModel implements BarcodeCaptureListener {
+public class BarcodeScanViewModel extends ViewModel
+        implements BarcodeCaptureListener, TorchListener {
 
     private final SettingsManager settingsManager = SettingsManager.getCurrentSettings();
     private Listener listener = null;
@@ -63,11 +68,18 @@ public class BarcodeScanViewModel extends ViewModel implements BarcodeCaptureLis
     @Override
     public void onObservationStopped(@NotNull BarcodeCapture barcodeCapture) {}
 
+    @Override
+    public void onTorchStateChanged(@NonNull TorchState state) {
+        settingsManager.setTorchState(state);
+    }
+
     void startFrameSource() {
+        settingsManager.getCamera().addTorchListener(this);
         settingsManager.getCamera().switchToDesiredState(FrameSourceState.ON);
     }
 
     void stopFrameSource() {
+        settingsManager.getCamera().removeTorchListener(this);
         settingsManager.getCamera().switchToDesiredState(FrameSourceState.OFF, null);
     }
 

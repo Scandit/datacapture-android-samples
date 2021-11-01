@@ -46,6 +46,7 @@ import static android.Manifest.permission.CAMERA;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static androidx.core.content.ContextCompat.checkSelfPermission;
+import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.DriverLicenseSide.FRONT_VIZ;
 import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.ScanDriverLicenseVizHintStatus.DISPLAYED;
 
 /**
@@ -74,6 +75,18 @@ public class ScanFragment extends Fragment {
      * document, had the capture process failed.
      */
     private static final String MANUAL_ENTRY_TAG = "MANUAL_ENTRY";
+
+    /**
+     * The tag used by the fragment that informs the user that a given PDF417 barcode
+     * can be captured, but its data cannot be parsed.
+     */
+    private static final String BARCODE_NOT_SUPPORTED_TAG = "BARCODE_NOT_SUPPORTED";
+
+    /**
+     * The tag used by the fragment that informs the user the a given ID or MRZ is
+     * detected, but cannot be parsed.
+     */
+    private static final String ID_LOCALIZED_BUT_NOT_CAPTURED_TAG = "ID_LOCALIZED_BUT_NOT_CAPTURED";
 
     /**
      * The tag used by the fragment that displays the result of the recipient's document data
@@ -120,6 +133,12 @@ public class ScanFragment extends Fragment {
      * the recipient's driver's license.
      */
     private View scanDriverLicenseVizHintContainer;
+
+    /**
+     * The view that optionally displays the hint that guides the user towards different
+     * personal identification document type selection.
+     */
+    private View selectTargetDocumentHintContainer;
 
     /**
      * The additional hint to aid the user with the capture process. It reflects the currently
@@ -189,6 +208,7 @@ public class ScanFragment extends Fragment {
     private void initViews(@NonNull View root) {
         driverLicenseSideToggle = root.findViewById(R.id.driver_license_side_toggle);
         scanDriverLicenseVizHintContainer = root.findViewById(R.id.scan_driver_license_viz_hint_container);
+        selectTargetDocumentHintContainer = root.findViewById(R.id.select_target_document_hint_container);
         scanHintText = root.findViewById(R.id.scan_hint_text);
         enterManuallyHint = root.findViewById(R.id.enter_manually_hint);
         targetDocumentMenu = root.findViewById(R.id.target_document_menu);
@@ -229,6 +249,8 @@ public class ScanFragment extends Fragment {
          * Observe the sequences of events in order to navigate to other screens or display dialogs.
          */
         viewModel.goToManualEntry().observe(lifecycleOwner, this::goToManualEntry);
+        viewModel.goToBarcodeNotSupported().observe(lifecycleOwner, this::goToBarcodeNotSupported);
+        viewModel.goToIdLocalizedButNotCaptured().observe(lifecycleOwner, this::goToIdLocalizedButNotCaptured);
         viewModel.goToVerificationFailure().observe(lifecycleOwner, this::goToVerificationFailure);
         viewModel.goToVerificationSuccess().observe(lifecycleOwner, this::goToVerificationSuccess);
 
@@ -236,6 +258,8 @@ public class ScanFragment extends Fragment {
          * Add the listeners necessary to interact with the UI.
          */
         driverLicenseSideToggle.setOnCheckedChangeListener(this::onDriverLicenseSideToggled);
+        scanDriverLicenseVizHintContainer.setOnClickListener(this::onDriverLicenseVizHintClicked);
+        selectTargetDocumentHintContainer.setOnClickListener(this::onSelectTargetDocumentHintClicked);
         targetDocumentMenu.addOnTabSelectedListener(new OnTargetDocumentChangedListener());
         enterManuallyHint.setOnClickListener(this::onManualEntryClicked);
     }
@@ -270,6 +294,20 @@ public class ScanFragment extends Fragment {
      */
     private void onDriverLicenseSideToggled(@NonNull CompoundButton toggle, boolean isChecked) {
         viewModel.onFrontBackToggled(isChecked);
+    }
+
+    /**
+     * Dismiss the hint once the user clicked it.
+     */
+    private void onDriverLicenseVizHintClicked(@NonNull View view) {
+        viewModel.onDriverLicenseVizHintClicked();
+    }
+
+    /**
+     * Dismiss the hint once the user clicked it.
+     */
+    private void onSelectTargetDocumentHintClicked(@NonNull View view) {
+        viewModel.onSelectTargetDocumentHintClicked();
     }
 
     /**
@@ -313,6 +351,7 @@ public class ScanFragment extends Fragment {
         updateOverlay();
         updateDriverLicenseSideToggle();
         updateScanDriverLicenseVizHint();
+        updateSelectTargetDocumentHint();
         updateScanHint();
         updateEnterManuallyHint();
     }
@@ -342,6 +381,14 @@ public class ScanFragment extends Fragment {
      * driver's license and OCRing the front side of the document.
      */
     private void updateDriverLicenseSideToggle() {
+        boolean shouldBeChecked = uiState.getDriverLicenseSide() == FRONT_VIZ;
+
+        if (driverLicenseSideToggle.isChecked() != shouldBeChecked) {
+            driverLicenseSideToggle.setOnCheckedChangeListener(null);
+            driverLicenseSideToggle.setChecked(shouldBeChecked);
+            driverLicenseSideToggle.setOnCheckedChangeListener(this::onDriverLicenseSideToggled);
+        }
+
         driverLicenseSideToggle.setVisibility(uiState.getDriverLicenseToggleVisibility());
     }
 
@@ -359,6 +406,14 @@ public class ScanFragment extends Fragment {
     }
 
     /**
+     * Update the hint that guides the user towards different personal identification
+     * document type selection.
+     */
+    private void updateSelectTargetDocumentHint() {
+        selectTargetDocumentHintContainer.setVisibility(uiState.getSelectTargetDocumentHintVisibility());
+    }
+
+    /**
      * Update the additional hint to aid the user with the capture process. It reflects
      * the currently selected document kind and/or side.
      */
@@ -373,11 +428,7 @@ public class ScanFragment extends Fragment {
      * the user is unable to OCR the MRZ of the recipient's passport.
      */
     private void updateEnterManuallyHint() {
-        if (uiState.getEnterManuallyHintStatus() == EnterManuallyHintStatus.DISPLAYED) {
-            enterManuallyHint.setVisibility(View.VISIBLE);
-        } else {
-            enterManuallyHint.setVisibility(View.INVISIBLE);
-        }
+        enterManuallyHint.setVisibility(uiState.getEnterManuallyHintVisibility());
     }
 
     /**
@@ -386,6 +437,27 @@ public class ScanFragment extends Fragment {
     private void goToManualEntry(GoToManualEntry event) {
         if (!event.isHandled() && getChildFragmentManager().findFragmentByTag(MANUAL_ENTRY_TAG) == null) {
             ManualEntryDialogFragment.create().show(getChildFragmentManager(), MANUAL_ENTRY_TAG);
+        }
+    }
+
+    /**
+     * Display the UI that informs the user that a given PDF417 barcode can be captured, but its
+     * data cannot be parsed.
+     */
+    private void goToBarcodeNotSupported(GoToBarcodeNotSupported event) {
+        if (!event.isHandled() && getChildFragmentManager().findFragmentByTag(BARCODE_NOT_SUPPORTED_TAG) == null) {
+            BarcodeNotSupportedDialogFragment.create()
+                    .show(getChildFragmentManager(), BARCODE_NOT_SUPPORTED_TAG);
+        }
+    }
+
+    /**
+     * Display the UI that informs the user the a given ID or MRZ is detected, but cannot be parsed.
+     */
+    private void goToIdLocalizedButNotCaptured(GoToIdLocalizedButNotCaptured event) {
+        if (!event.isHandled() && getChildFragmentManager().findFragmentByTag(ID_LOCALIZED_BUT_NOT_CAPTURED_TAG) == null) {
+            IdLocalizedButNotCapturedDialogFragment.create()
+                    .show(getChildFragmentManager(), ID_LOCALIZED_BUT_NOT_CAPTURED_TAG);
         }
     }
 

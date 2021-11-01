@@ -27,6 +27,7 @@ import com.scandit.datacapture.barcode.tracking.capture.BarcodeTrackingSession;
 import com.scandit.datacapture.barcode.tracking.capture.BarcodeTrackingSettings;
 import com.scandit.datacapture.barcode.tracking.data.TrackedBarcode;
 import com.scandit.datacapture.barcode.tracking.ui.overlay.BarcodeTrackingBasicOverlay;
+import com.scandit.datacapture.barcode.tracking.ui.overlay.BarcodeTrackingBasicOverlayStyle;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.core.source.Camera;
@@ -123,7 +124,11 @@ public class MatrixScanActivity extends CameraPermissionActivity
 
         // Add a barcode tracking overlay to the data capture view to render the tracked barcodes on
         // top of the video preview. This is optional, but recommended for better visual feedback.
-        BarcodeTrackingBasicOverlay.newInstance(barcodeTracking, dataCaptureView);
+        BarcodeTrackingBasicOverlay.newInstance(
+                barcodeTracking,
+                dataCaptureView,
+                BarcodeTrackingBasicOverlayStyle.FRAME
+        );
 
         // Add the DataCaptureView to the container.
         FrameLayout container = findViewById(R.id.data_capture_view_container);

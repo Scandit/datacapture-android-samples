@@ -19,6 +19,8 @@ import android.content.Context;
 
 import com.scandit.datacapture.barcode.selection.capture.BarcodeSelection;
 import com.scandit.datacapture.barcode.selection.capture.BarcodeSelectionSettings;
+import com.scandit.datacapture.barcode.selection.ui.overlay.BarcodeSelectionBasicOverlayStyle;
+import com.scandit.datacapture.barcodeselectionsettingssample.settings.view.overlay.OverlaySettingsFragment;
 import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
 import com.scandit.datacapture.core.common.geometry.MarginsWithUnit;
 import com.scandit.datacapture.core.common.geometry.MeasureUnit;
@@ -42,6 +44,8 @@ public final class DataCaptureDefaults {
             new FloatWithUnit(.5f, MeasureUnit.FRACTION),
             new FloatWithUnit(.5f, MeasureUnit.FRACTION)
     );
+    private final BarcodeSelectionBasicOverlayStyle overlayStyle = BarcodeSelectionBasicOverlayStyle.FRAME;
+    private final OverlaySettingsFragment.BrushStyle defaultBrushStyle = OverlaySettingsFragment.BrushStyle.DEFAULT;
 
     private DataCaptureDefaults(Context context) {
         DataCaptureView view = DataCaptureView.newInstance(context, null);
@@ -59,5 +63,13 @@ public final class DataCaptureDefaults {
 
     public MarginsWithUnit getScanAreaMargins() {
         return scanAreaMargins;
+    }
+
+    public BarcodeSelectionBasicOverlayStyle getOverlayStyle() {
+        return overlayStyle;
+    }
+
+    public OverlaySettingsFragment.BrushStyle getDefaultBrushStyle() {
+        return defaultBrushStyle;
     }
 }

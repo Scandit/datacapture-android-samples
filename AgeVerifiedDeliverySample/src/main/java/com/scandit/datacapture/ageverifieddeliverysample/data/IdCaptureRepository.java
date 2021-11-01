@@ -70,6 +70,13 @@ public class IdCaptureRepository {
     }
 
     /**
+     * Make IdCapture process frames. This happens asynchronously.
+     */
+    public void enableIdCapture() {
+        idCapture.setEnabled(true);
+    }
+
+    /**
      * Stop IdCapture from further processing of frames. This happens asynchronously, so some
      * results may still be delivered.
      */

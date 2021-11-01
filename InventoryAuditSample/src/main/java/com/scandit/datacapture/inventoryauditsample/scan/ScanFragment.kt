@@ -22,7 +22,6 @@ import android.widget.ImageButton
 import androidx.lifecycle.ViewModelProviders
 import com.scandit.datacapture.barcode.tracking.data.TrackedBarcode
 import com.scandit.datacapture.barcode.tracking.ui.overlay.BarcodeTrackingAdvancedOverlay
-import com.scandit.datacapture.barcode.tracking.ui.overlay.BarcodeTrackingBasicOverlay
 import com.scandit.datacapture.core.ui.DataCaptureView
 import com.scandit.datacapture.core.ui.DataCaptureView.Companion.newInstance
 import com.scandit.datacapture.inventoryauditsample.R
@@ -33,7 +32,6 @@ class ScanFragment : CameraPermissionFragment(), ScanViewModel.ScanViewModelList
     private lateinit var viewModel: ScanViewModel
     private lateinit var dataCaptureView: DataCaptureView
     private lateinit var bubblesOverlay: BarcodeTrackingAdvancedOverlay
-    private lateinit var highlightOverlay: BarcodeTrackingBasicOverlay
     private lateinit var freezeButton: ImageButton
 
     // We reuse bubble views where possible.
@@ -55,12 +53,6 @@ class ScanFragment : CameraPermissionFragment(), ScanViewModel.ScanViewModelList
         // setup a data capture view that renders the camera preview.
         // The view must be connected to the data capture context.
         dataCaptureView = newInstance(requireContext(), viewModel.dataCaptureContext)
-
-        // We create an overlay to highlight the barcodes.
-        highlightOverlay = BarcodeTrackingBasicOverlay.newInstance(
-                viewModel.barcodeTracking, dataCaptureView
-        )
-        highlightOverlay.brush = viewModel.defaultBrush
 
         // We create an overlay for the bubbles.
         bubblesOverlay = BarcodeTrackingAdvancedOverlay.newInstance(
@@ -87,7 +79,6 @@ class ScanFragment : CameraPermissionFragment(), ScanViewModel.ScanViewModelList
         super.onDestroyView()
         dataCaptureView.removeOverlay(bubblesOverlay)
         bubblesOverlay.listener = null
-        highlightOverlay.listener = null
     }
 
     override fun onResume() {

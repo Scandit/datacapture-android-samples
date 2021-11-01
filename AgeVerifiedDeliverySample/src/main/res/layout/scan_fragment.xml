@@ -7,6 +7,13 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="false">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/center_vertical_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintGuide_percent="0.5"
+        android:orientation="vertical"/>
+
     <FrameLayout
         android:id="@+id/data_capture_view_container"
         android:layout_width="match_parent"
@@ -64,6 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
+        android:textStyle="bold"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -79,6 +87,7 @@
         android:layout_marginBottom="64dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
         android:textColor="@color/white"
+        android:textStyle="bold"
         android:gravity="center_vertical"
         android:text="@string/enter_manually_delayed_hint"
         app:layout_constraintBottom_toTopOf="@+id/target_document_menu"
@@ -86,6 +95,26 @@
         android:drawablePadding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/select_target_document_hint_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/center_vertical_guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/target_document_menu"
+        tools:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="120dp"
+            android:padding="8dp"
+            android:text="@string/scan_startup_hint" />
+
+    </androidx.cardview.widget.CardView>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/target_document_menu"

@@ -15,10 +15,14 @@
 package com.scandit.datacapture.barcodecapturesettingssample.scanning;
 
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -30,8 +34,12 @@ import com.scandit.datacapture.barcode.data.SymbologyDescription;
 import com.scandit.datacapture.barcodecapturesettingssample.R;
 import com.scandit.datacapture.barcodecapturesettingssample.models.SettingsManager;
 import com.scandit.datacapture.core.common.geometry.PointWithUnit;
+import com.scandit.datacapture.core.source.Camera;
+import com.scandit.datacapture.core.source.CameraPosition;
 import com.scandit.datacapture.core.ui.DataCaptureView;
+import com.scandit.datacapture.core.ui.control.CameraSwitchControl;
 import com.scandit.datacapture.core.ui.control.TorchSwitchControl;
+import com.scandit.datacapture.core.ui.control.ZoomSwitchControl;
 import com.scandit.datacapture.core.ui.gesture.SwipeToZoom;
 import com.scandit.datacapture.core.ui.gesture.TapToFocus;
 
@@ -47,7 +55,7 @@ public class BarcodeScanFragment extends CameraPermissionFragment
     private DataCaptureView dataCaptureView;
     private AlertDialog dialog = null;
 
-    private CountDownTimer continuousResultTimer = new CountDownTimer(500L, 500L) {
+    private final CountDownTimer continuousResultTimer = new CountDownTimer(500L, 500L) {
         @Override
         public void onTick(long millisUntilFinished) {}
 
@@ -89,14 +97,32 @@ public class BarcodeScanFragment extends CameraPermissionFragment
         dataCaptureView.setScanAreaMargins(settings.getScanAreaMargins());
         dataCaptureView.setPointOfInterest(settings.getPointOfInterest());
         dataCaptureView.setLogoAnchor(settings.getLogoAnchor());
+        dataCaptureView.setLogoStyle(settings.getLogoStyle());
         dataCaptureView.setLogoOffset(
                 new PointWithUnit(settings.getAnchorXOffset(), settings.getAnchorYOffset())
         );
+        if (settings.isZoomButtonEnabled()) {
+            dataCaptureView.addControl(new ZoomSwitchControl(requireContext()));
+        }
         if (settings.isTorchButtonEnabled()) {
             dataCaptureView.addControl(new TorchSwitchControl(requireContext()));
         }
+        if (settings.isCameraButtonEnabled()) {
+            dataCaptureView.addControl(createCameraSwitchControl(settings));
+        }
         dataCaptureView.setFocusGesture(settings.isTapToFocusEnabled() ? new TapToFocus() : null);
         dataCaptureView.setZoomGesture(settings.isSwipeToZoomEnabled() ? new SwipeToZoom() : null);
+    }
+
+    private CameraSwitchControl createCameraSwitchControl(SettingsManager settings) {
+        CameraPosition currentFacing = settings.getCamera().getPosition();
+        Camera worldFacingCamera = Camera.getCamera(CameraPosition.WORLD_FACING, settings.getCameraSettings());
+        Camera userFacingCamera = Camera.getCamera(CameraPosition.USER_FACING, settings.getCameraSettings());
+        return new CameraSwitchControl(
+                requireContext(),
+                currentFacing == CameraPosition.WORLD_FACING ? worldFacingCamera : userFacingCamera,
+                currentFacing == CameraPosition.WORLD_FACING ? userFacingCamera : worldFacingCamera
+        );
     }
 
     private void setupBarcodeCaptureOverlay(SettingsManager settings) {

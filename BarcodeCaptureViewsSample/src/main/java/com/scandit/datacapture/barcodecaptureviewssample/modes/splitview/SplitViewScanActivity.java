@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
+import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlayStyle;
 import com.scandit.datacapture.barcodecaptureviewssample.R;
 import com.scandit.datacapture.barcodecaptureviewssample.modes.base.CameraPermissionActivity;
 import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
@@ -109,7 +110,7 @@ public class SplitViewScanActivity extends CameraPermissionActivity
         // barcodes on top of the video preview.
         // This is optional, but recommended for better visual feedback.
         BarcodeCaptureOverlay overlay =
-                BarcodeCaptureOverlay.newInstance(viewModel.getBarcodeCapture(), view);
+                BarcodeCaptureOverlay.newInstance(viewModel.getBarcodeCapture(), view, BarcodeCaptureOverlayStyle.FRAME);
 
         // We have to add the laser line viewfinder to the overlay.
         overlay.setViewfinder(new LaserlineViewfinder(LaserlineViewfinderStyle.ANIMATED));

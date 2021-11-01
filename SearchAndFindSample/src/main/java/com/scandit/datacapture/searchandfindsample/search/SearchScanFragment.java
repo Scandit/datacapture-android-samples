@@ -29,6 +29,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
+import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlayStyle;
 import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
 import com.scandit.datacapture.core.common.geometry.MeasureUnit;
 import com.scandit.datacapture.core.ui.DataCaptureView;
@@ -99,8 +100,11 @@ public final class SearchScanFragment extends CameraPermissionFragment implement
         );
 
         // Add a barcode capture overlay to the data capture view to set a viewfinder UI.
-        BarcodeCaptureOverlay overlay =
-                BarcodeCaptureOverlay.newInstance(viewModel.barcodeCapture, view);
+        BarcodeCaptureOverlay overlay = BarcodeCaptureOverlay.newInstance(
+                viewModel.barcodeCapture,
+                view,
+                BarcodeCaptureOverlayStyle.FRAME
+        );
         view.addOverlay(overlay);
 
         // We add the laser line viewfinder to the overlay.

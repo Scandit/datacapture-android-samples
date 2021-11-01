@@ -14,7 +14,6 @@
 
 package com.scandit.datacapture.matrixscanbubblessample.models;
 
-import android.graphics.Color;
 
 import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.tracking.capture.BarcodeTracking;
@@ -23,7 +22,6 @@ import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.source.Camera;
 import com.scandit.datacapture.core.source.CameraSettings;
 import com.scandit.datacapture.core.source.VideoResolution;
-import com.scandit.datacapture.core.ui.style.Brush;
 
 import static com.scandit.datacapture.barcode.tracking.capture.BarcodeTrackingScenario.A;
 
@@ -36,8 +34,6 @@ public final class DataCaptureManager {
     public final BarcodeTracking barcodeTracking;
     public final DataCaptureContext dataCaptureContext;
     public final Camera camera;
-
-    public final Brush defaultBrush = new Brush(Color.TRANSPARENT, Color.WHITE, 2f);
 
     private DataCaptureManager() {
         // The barcode tracking process is configured through barcode tracking settings

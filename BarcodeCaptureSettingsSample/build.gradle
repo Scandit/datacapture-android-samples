@@ -33,6 +33,11 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility = versions.java
+        targetCompatibility = versions.java
+    }
+
     packagingOptions {
         pickFirst '**/*.so'
     }

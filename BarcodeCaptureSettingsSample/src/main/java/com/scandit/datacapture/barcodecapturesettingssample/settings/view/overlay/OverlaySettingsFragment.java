@@ -21,10 +21,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.scandit.datacapture.barcodecapturesettingssample.R;
 import com.scandit.datacapture.barcodecapturesettingssample.base.NavigationFragment;
 
-public class OverlaySettingsFragment extends NavigationFragment {
+public class OverlaySettingsFragment extends NavigationFragment
+        implements OverlayStyleAdapter.Callback {
 
     public static OverlaySettingsFragment newInstance() {
         return new OverlaySettingsFragment();
@@ -32,8 +35,11 @@ public class OverlaySettingsFragment extends NavigationFragment {
 
     private OverlaySettingsViewModel viewModel;
 
+    private RecyclerView recyclerOverlayStyles;
     private View containerBrush;
     private TextView textBrush;
+
+    private OverlayStyleAdapter adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,6 +64,9 @@ public class OverlaySettingsFragment extends NavigationFragment {
         containerBrush = view.findViewById(R.id.container_brush);
         setupBrush();
         refreshBrushData();
+
+        recyclerOverlayStyles = view.findViewById(R.id.recycler_overlay_styles);
+        setupRecyclerStyles();
     }
 
     private void setupBrush() {
@@ -70,22 +79,27 @@ public class OverlaySettingsFragment extends NavigationFragment {
     }
 
     private void refreshBrushData() {
-        textBrush.setText(viewModel.getCurrentBrushEntry().displayNameRes);
+        textBrush.setText(viewModel.getCurrentBrushEntry().style.displayNameRes);
+    }
+
+    private void setupRecyclerStyles() {
+        adapter = new OverlayStyleAdapter(viewModel.getOverlayStyles(), this);
+        recyclerOverlayStyles.setAdapter(adapter);
     }
 
     private void buildAndShowBrushMenu() {
         PopupMenu menu = new PopupMenu(requireContext(), containerBrush, Gravity.END);
 
-        OverlaySettingsBrushEntry[] availableBrushes = viewModel.getAvailableBrushes();
+        BrushStyleEntry[] availableBrushes = viewModel.getAvailableBrushes();
         for (int i = 0; i < availableBrushes.length; i++) {
-            OverlaySettingsBrushEntry value = availableBrushes[i];
-            menu.getMenu().add(0, i, i, value.displayNameRes);
+            BrushStyleEntry value = availableBrushes[i];
+            menu.getMenu().add(0, i, i, value.style.displayNameRes);
         }
 
         menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                OverlaySettingsBrushEntry selectedBrushEntry =
+                BrushStyleEntry selectedBrushEntry =
                         viewModel.getAvailableBrushes()[item.getItemId()];
                 viewModel.setCurrentBrush(selectedBrushEntry);
                 refreshBrushData();
@@ -103,5 +117,16 @@ public class OverlaySettingsFragment extends NavigationFragment {
     @Override
     protected String getTitle() {
         return getString(R.string.overlay);
+    }
+
+    @Override
+    public void onOverlayStyleClick(OverlayStyleEntry styleEntry) {
+        viewModel.setCurrentStyle(styleEntry);
+        refreshRecyclerStylesData();
+        refreshBrushData();
+    }
+
+    private void refreshRecyclerStylesData() {
+        adapter.updateData(viewModel.getOverlayStyles());
     }
 }

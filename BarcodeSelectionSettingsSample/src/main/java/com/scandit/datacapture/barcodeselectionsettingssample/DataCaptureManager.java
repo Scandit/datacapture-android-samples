@@ -19,6 +19,7 @@ import android.graphics.Color;
 
 import androidx.annotation.ColorInt;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.ColorUtils;
 
 import com.scandit.datacapture.barcode.capture.SymbologySettings;
 import com.scandit.datacapture.barcode.data.Symbology;
@@ -33,6 +34,7 @@ import com.scandit.datacapture.barcode.selection.capture.BarcodeSelectionTapBeha
 import com.scandit.datacapture.barcode.selection.capture.BarcodeSelectionTapSelection;
 import com.scandit.datacapture.barcode.selection.feedback.BarcodeSelectionFeedback;
 import com.scandit.datacapture.barcode.selection.ui.overlay.BarcodeSelectionBasicOverlay;
+import com.scandit.datacapture.barcode.selection.ui.overlay.BarcodeSelectionBasicOverlayStyle;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.DataCaptureDefaults;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.SettingsManager;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.selection.type.SelectionTypeSettingsFragment;
@@ -42,7 +44,6 @@ import com.scandit.datacapture.core.common.feedback.Feedback;
 import com.scandit.datacapture.core.common.feedback.Vibration;
 import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
 import com.scandit.datacapture.core.common.geometry.MarginsWithUnit;
-import com.scandit.datacapture.core.common.geometry.MeasureUnit;
 import com.scandit.datacapture.core.common.geometry.PointWithUnit;
 import com.scandit.datacapture.core.data.Range;
 import com.scandit.datacapture.core.source.Camera;
@@ -75,15 +76,11 @@ class DataCaptureManager {
     private final DataCaptureDefaults dataCaptureDefaults;
 
     @ColorInt private final int scanditBlue;
-    private final Brush blueBrush;
-    private final Brush filledBlueBrush;
 
     private DataCaptureManager(Context context) {
         settingsManager = new SettingsManager(context);
         dataCaptureDefaults = DataCaptureDefaults.getInstance(context);
         scanditBlue = ContextCompat.getColor(context, R.color.colorAccent);
-        blueBrush = new Brush(Color.TRANSPARENT, scanditBlue, 1f);
-        filledBlueBrush = new Brush(scanditBlue, scanditBlue, 1f);
     }
 
     public Camera buildCamera() {
@@ -376,7 +373,20 @@ class DataCaptureManager {
         view.setPointOfInterest(pointOfInterest);
     }
 
-    public void setupBarcodeSelectionBasicOverlay(BarcodeSelectionBasicOverlay overlay) {
+    public BarcodeSelectionBasicOverlay createAndSetupBarcodeSelectionBasicOverlay(
+            BarcodeSelection mode,
+            DataCaptureView dataCaptureView
+    ) {
+        BarcodeSelectionBasicOverlay overlay = BarcodeSelectionBasicOverlay.newInstance(
+                mode,
+                dataCaptureView,
+                settingsManager.retrieveEnum(
+                        BarcodeSelectionBasicOverlayStyle.class,
+                        OVERLAY_STYLE_KEY,
+                        dataCaptureDefaults.getOverlayStyle()
+                )
+        );
+
         // Settings shouldShowScanAreaGuides flag to true will make the overlay visualize the
         // active scan area used for BarcodeSelection.
         setupShouldShowScanAreaGuides(overlay);
@@ -398,6 +408,8 @@ class DataCaptureManager {
         setupViewfinderFrameColor(overlay);
         // Setting the viewfinder's dot color.
         setupViewfinderDotColor(overlay);
+
+        return overlay;
     }
 
     private void setupShouldShowScanAreaGuides(BarcodeSelectionBasicOverlay overlay) {
@@ -412,13 +424,14 @@ class DataCaptureManager {
         OverlaySettingsFragment.BrushStyle style = settingsManager.retrieveEnum(
                 OverlaySettingsFragment.BrushStyle.class, OVERLAY_TRACKED_BRUSH_KEY, OverlaySettingsFragment.BrushStyle.DEFAULT
         );
+        Brush defaultBrush = overlay.getTrackedBrush();
         Brush brush = null;
         switch (style) {
             case DEFAULT:
-                brush = BarcodeSelectionBasicOverlay.DEFAULT_TRACKED_BRUSH;
+                brush = defaultBrush;
                 break;
             case BLUE:
-                brush = blueBrush;
+                brush = cloneBrushStrokeAndAlpha(defaultBrush, scanditBlue, scanditBlue);
                 break;
         }
         // Apply the brush to the overlay.
@@ -430,13 +443,14 @@ class DataCaptureManager {
         OverlaySettingsFragment.BrushStyle style = settingsManager.retrieveEnum(
                 OverlaySettingsFragment.BrushStyle.class, OVERLAY_AIMED_BRUSH_KEY, OverlaySettingsFragment.BrushStyle.DEFAULT
         );
+        Brush defaultBrush = overlay.getAimedBrush();
         Brush brush = null;
         switch (style) {
             case DEFAULT:
-                brush = BarcodeSelectionBasicOverlay.DEFAULT_AIMED_BRUSH;
+                brush = defaultBrush;
                 break;
             case BLUE:
-                brush = filledBlueBrush;
+                brush = cloneBrushStrokeAndAlpha(defaultBrush, scanditBlue, scanditBlue);
                 break;
         }
         // Apply the brush to the overlay.
@@ -448,13 +462,14 @@ class DataCaptureManager {
         OverlaySettingsFragment.BrushStyle style = settingsManager.retrieveEnum(
                 OverlaySettingsFragment.BrushStyle.class, OVERLAY_SELECTING_BRUSH_KEY, OverlaySettingsFragment.BrushStyle.DEFAULT
         );
+        Brush defaultBrush = overlay.getSelectingBrush();
         Brush brush = null;
         switch (style) {
             case DEFAULT:
-                brush = BarcodeSelectionBasicOverlay.DEFAULT_SELECTING_BRUSH;
+                brush = defaultBrush;
                 break;
             case BLUE:
-                brush = blueBrush;
+                brush = cloneBrushStrokeAndAlpha(defaultBrush, scanditBlue, scanditBlue);
                 break;
         }
         // Apply the brush to the overlay.
@@ -466,17 +481,28 @@ class DataCaptureManager {
         OverlaySettingsFragment.BrushStyle style = settingsManager.retrieveEnum(
                 OverlaySettingsFragment.BrushStyle.class, OVERLAY_SELECTED_BRUSH_KEY, OverlaySettingsFragment.BrushStyle.DEFAULT
         );
+        Brush defaultBrush = overlay.getSelectedBrush();
         Brush brush = null;
         switch (style) {
             case DEFAULT:
-                brush = BarcodeSelectionBasicOverlay.DEFAULT_SELECTED_BRUSH;
+                brush = defaultBrush;
                 break;
             case BLUE:
-                brush = blueBrush;
+                brush = cloneBrushStrokeAndAlpha(defaultBrush, scanditBlue, scanditBlue);
                 break;
         }
         // Apply the brush to the overlay.
         overlay.setSelectedBrush(brush);
+    }
+
+    private Brush cloneBrushStrokeAndAlpha(Brush brush, int fillColor, int strokeColor) {
+        int fillAlpha = brush.getFillColor() >>> 24;
+        int strokeAlpha = brush.getStrokeColor() >>> 24;
+        return new Brush(
+                ColorUtils.setAlphaComponent(fillColor, fillAlpha),
+                ColorUtils.setAlphaComponent(strokeColor, strokeAlpha),
+                brush.getStrokeWidth()
+        );
     }
 
     private void setupShouldShowHints(BarcodeSelectionBasicOverlay overlay) {

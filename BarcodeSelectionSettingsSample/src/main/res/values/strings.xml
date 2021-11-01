@@ -77,6 +77,8 @@
     <string name="show_scan_area_guides">Should Show Scan Area Guides</string>
 
     <!-- Overlay -->
+    <string name="style">Style</string>
+    <string name="brushes">Brushes</string>
     <string name="selected_brush">Selected Brush</string>
     <string name="selecting_brush">Selecting Brush</string>
     <string name="aimed_brush">Aimed Brush</string>

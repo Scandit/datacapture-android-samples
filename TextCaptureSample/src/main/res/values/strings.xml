@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">TextCaptureSample</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="pref_mode_title">Mode:</string>
+
+    <string name="pref_scan_position_title">Scan Position:</string>
+
+    <string name="result_title">Recognized Text</string>
+    <string name="result_button_resume">Resume</string>
+</resources>

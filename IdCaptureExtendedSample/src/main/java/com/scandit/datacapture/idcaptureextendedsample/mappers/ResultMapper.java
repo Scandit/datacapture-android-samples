@@ -21,7 +21,7 @@ import androidx.annotation.Nullable;
 
 import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.DateResult;
-import com.scandit.datacapture.idcaptureextendedsample.result.ResultEntry;
+import com.scandit.datacapture.idcaptureextendedsample.ui.result.ResultEntry;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
