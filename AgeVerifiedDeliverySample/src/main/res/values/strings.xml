@@ -3,9 +3,6 @@
 
     <string name="toolbar_title">Delivery #0001</string>
 
-    <string name="scan_driver_license_viz_delayed_hint">
-        Can\'t scan? Try scanning the front of card
-    </string>
     <string name="scan_hint_driver_license_viz">Align front of license</string>
     <string name="scan_hint_driver_license_barcode">Align back of license</string>
     <string name="scan_hint_passport_mrz">Align character strip</string>

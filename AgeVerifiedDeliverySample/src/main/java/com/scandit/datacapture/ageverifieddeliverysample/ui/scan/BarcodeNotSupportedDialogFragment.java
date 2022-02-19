@@ -86,5 +86,6 @@ public class BarcodeNotSupportedDialogFragment extends BottomSheetDialogFragment
      */
     private void retry() {
         dismiss();
+        parentViewModel.onPopUpDismissed();
     }
 }

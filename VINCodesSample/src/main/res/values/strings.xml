@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">VINScanner</string>
+    <string name="app_title">VIN Scanner</string>
+    <string name="done">Done</string>
+    <string name="barcode_button">Barcode VIN</string>
+    <string name="text_button">Text VIN</string>
+    <string name="scan_results">Scan Result</string>
+    <string name="scan_again">Scan again</string>
+    <string name="vin_scanner_parsing_error_title">Error encountered</string>
+    <string name="result_button_resume">Resume</string>
+
+    <string name="result_region_label">Region</string>
+    <string name="result_full_code_label">Full code</string>
+    <string name="result_number_of_vehicles_label">Number of vehicles</string>
+    <string name="result_vds_label">VDS</string>
+    <string name="result_min_model_year_label">Min model year</string>
+    <string name="result_max_model_year_label">Max model year</string>
+    <string name="result_plant_label">Plant</string>
+    <string name="result_wmi_suffix_label">WMI suffix</string>
+    <string name="result_serial_number_label">Serial number</string>
+    <string name="result_checksum_label">Checksum</string>
+    <string name="result_checksum_passed_label">Checksum passed</string>
+    <string name="result_standard_label">Standard</string>
+</resources>

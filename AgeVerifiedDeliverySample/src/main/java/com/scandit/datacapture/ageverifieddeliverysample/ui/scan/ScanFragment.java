@@ -47,7 +47,6 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static androidx.core.content.ContextCompat.checkSelfPermission;
 import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.DriverLicenseSide.FRONT_VIZ;
-import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.ScanDriverLicenseVizHintStatus.DISPLAYED;
 
 /**
  * The fragment where the user may capture the recipient's document.
@@ -127,14 +126,6 @@ public class ScanFragment extends Fragment {
     private SwitchCompat driverLicenseSideToggle;
 
     /**
-     * The view that optionally displays the hint that informs the user that they may attempt
-     * to OCR the front side of the recipient's driver's license. The hint is displayed after
-     * a short delay if the user is unable to capture the barcode at the back side of
-     * the recipient's driver's license.
-     */
-    private View scanDriverLicenseVizHintContainer;
-
-    /**
      * The view that optionally displays the hint that guides the user towards different
      * personal identification document type selection.
      */
@@ -207,7 +198,6 @@ public class ScanFragment extends Fragment {
 
     private void initViews(@NonNull View root) {
         driverLicenseSideToggle = root.findViewById(R.id.driver_license_side_toggle);
-        scanDriverLicenseVizHintContainer = root.findViewById(R.id.scan_driver_license_viz_hint_container);
         selectTargetDocumentHintContainer = root.findViewById(R.id.select_target_document_hint_container);
         scanHintText = root.findViewById(R.id.scan_hint_text);
         enterManuallyHint = root.findViewById(R.id.enter_manually_hint);
@@ -258,7 +248,6 @@ public class ScanFragment extends Fragment {
          * Add the listeners necessary to interact with the UI.
          */
         driverLicenseSideToggle.setOnCheckedChangeListener(this::onDriverLicenseSideToggled);
-        scanDriverLicenseVizHintContainer.setOnClickListener(this::onDriverLicenseVizHintClicked);
         selectTargetDocumentHintContainer.setOnClickListener(this::onSelectTargetDocumentHintClicked);
         targetDocumentMenu.addOnTabSelectedListener(new OnTargetDocumentChangedListener());
         enterManuallyHint.setOnClickListener(this::onManualEntryClicked);
@@ -294,13 +283,6 @@ public class ScanFragment extends Fragment {
      */
     private void onDriverLicenseSideToggled(@NonNull CompoundButton toggle, boolean isChecked) {
         viewModel.onFrontBackToggled(isChecked);
-    }
-
-    /**
-     * Dismiss the hint once the user clicked it.
-     */
-    private void onDriverLicenseVizHintClicked(@NonNull View view) {
-        viewModel.onDriverLicenseVizHintClicked();
     }
 
     /**
@@ -350,7 +332,6 @@ public class ScanFragment extends Fragment {
 
         updateOverlay();
         updateDriverLicenseSideToggle();
-        updateScanDriverLicenseVizHint();
         updateSelectTargetDocumentHint();
         updateScanHint();
         updateEnterManuallyHint();
@@ -390,19 +371,6 @@ public class ScanFragment extends Fragment {
         }
 
         driverLicenseSideToggle.setVisibility(uiState.getDriverLicenseToggleVisibility());
-    }
-
-    /**
-     * Update the hint that informs the user that they may attempt to OCR the front side of
-     * the recipient's driver's license. The hint is displayed after a short delay if the user
-     * is unable to capture the barcode at the back side of the recipient's driver's license.
-     */
-    private void updateScanDriverLicenseVizHint() {
-        if (uiState.getScanDriverLicenseVizHintStatus() == DISPLAYED) {
-            scanDriverLicenseVizHintContainer.setVisibility(uiState.getScanDriverLicenseVizHintVisibility());
-        } else {
-            scanDriverLicenseVizHintContainer.setVisibility(View.INVISIBLE);
-        }
     }
 
     /**

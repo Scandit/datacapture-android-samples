@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:paddingHorizontal="?android:attr/listPreferredItemPaddingEnd"
+            android:paddingVertical="8dp">
+
+            <com.scandit.datacapture.vincodessample.ui.result.VinResultItemView
+                android:id="@+id/vin_region"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:labelText="@string/result_region_label"
+                tools:valueText="USA" />
+
+            <com.scandit.datacapture.vincodessample.ui.result.VinResultItemView
+                android:id="@+id/vin_full_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:labelText="@string/result_full_code_label"
+                tools:valueText="1HG" />
+
+            <com.scandit.datacapture.vincodessample.ui.result.VinResultItemView
+                android:id="@+id/vin_number_of_vehicles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:labelText="@string/result_number_of_vehicles_label"
+                tools:valueText=">2000" />
+
+            <com.scandit.datacapture.vincodessample.ui.result.VinResultItemView
+                android:id="@+id/vin_vds"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:labelText="@string/result_vds_label"
+                tools:valueText="BH41J" />
+
+            <com.scandit.datacapture.vincodessample.ui.result.VinResultItemView
+                android:id="@+id/vin_min_model_year"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:labelText="@string/result_min_model_year_label"
+                tools:valueText="1991" />
+
+            <com.scandit.datacapture.vincodessample.ui.result.VinResultItemView
+                android:id="@+id/vin_max_model_year"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:labelText="@string/result_max_model_year_label"
+                tools:valueText="2021" />
+
+            <com.scandit.datacapture.vincodessample.ui.result.VinResultItemView
+                android:id="@+id/vin_plant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:labelText="@string/result_plant_label"
+                tools:valueText="N" />
+
+            <com.scandit.datacapture.vincodessample.ui.result.VinResultItemView
+                android:id="@+id/vin_wmi_suffix"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:labelText="@string/result_wmi_suffix_label"
+                tools:valueText="" />
+
+            <com.scandit.datacapture.vincodessample.ui.result.VinResultItemView
+                android:id="@+id/vin_serial_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:labelText="@string/result_serial_number_label"
+                tools:valueText="109186" />
+
+            <com.scandit.datacapture.vincodessample.ui.result.VinResultItemView
+                android:id="@+id/vin_checksum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:labelText="@string/result_checksum_label"
+                tools:valueText="X" />
+
+            <com.scandit.datacapture.vincodessample.ui.result.VinResultItemView
+                android:id="@+id/vin_checksum_passed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:labelText="@string/result_checksum_passed_label"
+                tools:valueText="true" />
+
+            <com.scandit.datacapture.vincodessample.ui.result.VinResultItemView
+                android:id="@+id/vin_standard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:labelText="@string/result_standard_label"
+                tools:valueText="northAmerica" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

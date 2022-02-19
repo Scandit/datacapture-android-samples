@@ -12,26 +12,16 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.ageverifieddeliverysample.ui.scan;
+package com.scandit.datacapture.vincodessample.ui.scan;
+
+import com.scandit.datacapture.vincodessample.ui.Event;
 
 /**
- * The status of the hint that informs the user that they may attempt to OCR the front side of
- * the recipient's driver's license.
+ * An event for the fragment to navigate to the UI with the result of VIN parsing.
  */
-enum ScanDriverLicenseVizHintStatus {
-    /**
-     * The hint will appear after a short delay.
-     */
-    SCHEDULED,
-
-    /**
-     * The hint is displayed.
-     */
-    DISPLAYED,
-
-    /**
-     * The user chose to OCR the front side of the recipient's driver's license and therefore this
-     * hint is dismissed.
-     */
-    DISMISSED
+class GoToResult extends Event<Object> {
+    public GoToResult() {
+        super(new Object());
+    }
 }
+

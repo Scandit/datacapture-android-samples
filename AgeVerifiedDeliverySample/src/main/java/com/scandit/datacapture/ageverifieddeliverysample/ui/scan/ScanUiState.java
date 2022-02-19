@@ -57,19 +57,6 @@ class ScanUiState {
     private int scanHint = R.string.scan_hint_driver_license_barcode;
 
     /**
-     * The status of the hint that informs the user that they may attempt to OCR the front side of
-     * the recipient's driver's license.
-     */
-    private ScanDriverLicenseVizHintStatus scanDriverLicenseVizHintStatus =
-            ScanDriverLicenseVizHintStatus.SCHEDULED;
-
-    /**
-     * The visibility of the hint that informs the user that they may attempt to OCR the front
-     * side of the recipient's driver's license.
-     */
-    private int scanDriverLicenseVizHintVisibility = View.VISIBLE;
-
-    /**
      * The visibility of the hint that guides the user towards different personal identification
      * document type selection.
      */
@@ -122,22 +109,6 @@ class ScanUiState {
      */
     public int getScanHint() {
         return scanHint;
-    }
-
-    /**
-     * Get the status of the hint that informs the user that they may attempt to OCR the front
-     * side of the recipient's driver's license.
-     */
-    public ScanDriverLicenseVizHintStatus getScanDriverLicenseVizHintStatus() {
-        return scanDriverLicenseVizHintStatus;
-    }
-
-    /**
-     * Get the visibility of the hint that informs the user that they may attempt to OCR the front
-     * side of the recipient's driver's license.
-     */
-    public int getScanDriverLicenseVizHintVisibility() {
-        return scanDriverLicenseVizHintVisibility;
     }
 
     /**
@@ -230,26 +201,6 @@ class ScanUiState {
          */
         public Builder scanHint(int value) {
             state.scanHint = value;
-
-            return this;
-        }
-
-        /**
-         * The status of the hint that informs the user that they may attempt to OCR the front side of
-         * the recipient's driver's license.
-         */
-        public Builder scanDriverLicenseVizHintStatus(ScanDriverLicenseVizHintStatus value) {
-            state.scanDriverLicenseVizHintStatus = value;
-
-            return this;
-        }
-
-        /**
-         * The visibility of the hint that informs the user that they may attempt to OCR the front
-         * side of the recipient's driver's license.
-         */
-        public Builder scanDriverLicenseVizHintVisibility(int value) {
-            state.scanDriverLicenseVizHintVisibility = value;
 
             return this;
         }

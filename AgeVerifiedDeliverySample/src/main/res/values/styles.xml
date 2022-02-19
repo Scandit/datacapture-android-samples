@@ -7,6 +7,7 @@
 
         <item name="actionBarStyle">@style/ThemeActionBar</item>
         <item name="android:windowActionBarOverlay">true</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
     </style>
 
     <style name="ThemeActionBar"
@@ -25,6 +26,7 @@
     <style name="Scandit.TextAppearance.Tabs" parent="TextAppearance.Design.Tab">
         <item name="android:textColor">@color/tab_text_color</item>
         <item name="textAllCaps">false</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="Scandit.Button" parent="Widget.AppCompat.Button.Colored">
@@ -32,4 +34,11 @@
         <item name="android:textAppearance">@style/Scandit.TextAppearance.Button</item>
     </style>
 
+    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppBottomSheetStyle</item>
+    </style>
+
+    <style name="AppBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bottom_sheet_shape</item>
+    </style>
 </resources>

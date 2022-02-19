@@ -14,6 +14,15 @@
 
 package com.scandit.datacapture.ageverifieddeliverysample.ui.scan;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.DriverLicenseSide.BACK_BARCODE;
+import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.DriverLicenseSide.FRONT_VIZ;
+import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.TargetDocument.DRIVER_LICENSE;
+import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.TargetDocument.PASSPORT;
+import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.VerificationFailureReason.DOCUMENT_EXPIRED;
+import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.VerificationFailureReason.HOLDER_UNDERAGE;
+
 import android.view.View;
 
 import androidx.annotation.StringRes;
@@ -47,31 +56,16 @@ import java.time.temporal.ChronoUnit;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
-import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.DriverLicenseSide.BACK_BARCODE;
-import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.DriverLicenseSide.FRONT_VIZ;
-import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.TargetDocument.DRIVER_LICENSE;
-import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.TargetDocument.PASSPORT;
-import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.VerificationFailureReason.DOCUMENT_EXPIRED;
-import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.VerificationFailureReason.HOLDER_UNDERAGE;
-
 /**
  * The view model for the screen  where the user may capture the recipient's document.
  */
 public class ScanViewModel extends ViewModel implements IdCaptureListener {
     /**
-     * The delay in milliseconds after which the hint that informs the user that they may attempt
-     * to OCR the front side of the recipient's driver's license should be displayed.
-     */
-    private static final long SCAN_DRIVER_LICENSE_VIZ_HINT_DELAY_MS = 4000;
-
-    /**
      * The delay in milliseconds from the moment a document is localized, after which a pop-up
      * is displayed to inform the user that they may attempt to manually enter recipient's document
      * data.
      */
-    private static final long ENTER_MANUALLY_POP_UP_DELAY_MS = 5000;
+    private static final long TRY_ANOTHER_METHOD_POP_UP_DELAY_MS = 5000;
 
     /**
      * The delay in milliseconds after which the hint that informs the user that they may attempt
@@ -104,12 +98,6 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
 
     /**
      * The observer of a single event when the hint that informs the user that they may attempt
-     * to OCR the front side of the recipient's driver's license should be displayed.
-     */
-    private final Observer<Object> driverLicenseVizScanHintObserver = this::onHintDriverLicenseVizScanDelay;
-
-    /**
-     * The observer of a single event when the hint that informs the user that they may attempt
      * to manually enter recipient's document data should be displayed.
      */
     private final Observer<Object> enterManuallyHintObserver = this::onHintEnterManually;
@@ -122,7 +110,7 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
     /**
      * The observer of documents that are localized, but not yet captured.
      */
-    private final Observer<LocalizedOnlyId> localizedIdsObserver = this::startEnterManuallyPopUpTimer;
+    private final Observer<LocalizedOnlyId> localizedIdsObserver = this::startTryAnotherMethodTimer;
 
     /**
      * The observer of PDF417 barcodes that cannot be parsed.
@@ -181,12 +169,6 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
     private final MutableLiveData<GoToVerificationSuccess> goToVerificationSuccess = new MutableLiveData<>();
 
     /**
-     * The stream that emits a single event when the hint that informs the user that they may attempt
-     * to OCR the front side of the recipient's driver's license should be displayed.
-     */
-    private final MutableLiveData<Object> driverLicenseVizScanHints = new MutableLiveData<>();
-
-    /**
      * The observer that emits a single event when the hint that informs the user that they may attempt
      * to manually enter recipient's document data should be displayed.
      */
@@ -212,7 +194,6 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
          * Observe the stream of the lower layer and the timer events.
          */
         idCaptureRepository.idCaptures().observeForever(idCapturesObserver);
-        driverLicenseVizScanHints.observeForever(driverLicenseVizScanHintObserver);
         enterManuallyHints.observeForever(enterManuallyHintObserver);
         capturedIds.observeForever(capturedIdsObserver);
         localizedIds.observeForever(localizedIdsObserver);
@@ -229,21 +210,6 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
          * Post the initial UI state.
          */
         uiStates.postValue(uiState);
-
-        /*
-         * Schedule the hint that informs the user that they may attempt to OCR the front side
-         * of the recipient's driver's license. The TimerTask triggers in the background thread, so we post
-         * it to the LiveData in order to return to the UI thread.
-         *
-         * In this sample we use the timer for this purpose, but you may for example replace
-         * it with the delay operator of a reactive stream.
-         */
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                driverLicenseVizScanHints.postValue(new Object());
-            }
-        }, SCAN_DRIVER_LICENSE_VIZ_HINT_DELAY_MS);
     }
 
     @Override
@@ -252,7 +218,6 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
          * Stop observing the streams of the lower layer and the timer events to avoid memory leak.
          */
         idCaptureRepository.idCaptures().removeObserver(idCapturesObserver);
-        driverLicenseVizScanHints.removeObserver(driverLicenseVizScanHintObserver);
         enterManuallyHints.removeObserver(enterManuallyHintObserver);
         capturedIds.removeObserver(capturedIdsObserver);
         localizedIds.removeObserver(localizedIdsObserver);
@@ -342,31 +307,13 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
                 .driverLicenseSide(side)
                 .scanHint(scanHint);
 
-        resetEnterManuallyDelays();
+        resetScheduledHints();
 
-        if (side == FRONT_VIZ) {
-            uiStateBuilder.scanDriverLicenseVizHintStatus(ScanDriverLicenseVizHintStatus.DISMISSED);
-
-            if (uiState.getEnterManuallyHintVisibility() != VISIBLE) {
-                scheduleEnterManuallyHint();
-            }
+        if (side == FRONT_VIZ && uiState.getEnterManuallyHintVisibility() != VISIBLE) {
+            scheduleEnterManuallyHint();
         }
 
-
-
         uiState = uiStateBuilder.build();
-
-        uiStates.postValue(uiState);
-    }
-
-    /**
-     * Dismiss the hint the hint that informs the user that they may attempt to OCR the front side
-     * of the recipient's driver's license.
-     */
-    void onDriverLicenseVizHintClicked() {
-        uiState = uiState.toBuilder()
-                .scanDriverLicenseVizHintStatus(ScanDriverLicenseVizHintStatus.DISMISSED)
-                .build();
 
         uiStates.postValue(uiState);
     }
@@ -395,7 +342,7 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
         IdDocumentType documentType = getSupportedDocument(DRIVER_LICENSE, side);
         idCaptureRepository.recreateIdCapture(documentType);
 
-        resetEnterManuallyDelays();
+        resetScheduledHints();
 
         if (uiState.getDriverLicenseSide() == FRONT_VIZ && uiState.getEnterManuallyHintVisibility() != VISIBLE) {
             scheduleEnterManuallyHint();
@@ -405,7 +352,6 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
                 .targetDocument(DRIVER_LICENSE)
                 .scanHint(scanHint)
                 .driverLicenseToggleVisibility(VISIBLE)
-                .scanDriverLicenseVizHintVisibility(VISIBLE)
                 .build();
 
         uiStates.postValue(uiState);
@@ -429,10 +375,9 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
         ScanUiState.Builder uiStateBuilder = uiState.toBuilder()
                 .targetDocument(PASSPORT)
                 .scanHint(scanHint)
-                .driverLicenseToggleVisibility(INVISIBLE)
-                .scanDriverLicenseVizHintVisibility(INVISIBLE);
+                .driverLicenseToggleVisibility(INVISIBLE);
 
-        resetEnterManuallyDelays();
+        resetScheduledHints();
 
         if (uiState.getEnterManuallyHintVisibility() != VISIBLE) {
             scheduleEnterManuallyHint();
@@ -477,11 +422,18 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
     }
 
     /**
+     * Some pop-up covering the screen got dismissed, resume the capture.
+     */
+    public void onPopUpDismissed() {
+        cameraRepository.turnOnCamera();
+        idCaptureRepository.enableIdCapture();
+    }
+
+    /**
      * The UI to enter the recipient's data manually has been dismissed, resume the capture.
      */
     public void onManualEntryDismissed() {
-        cameraRepository.turnOnCamera();
-        idCaptureRepository.enableIdCapture();
+        onPopUpDismissed();
 
         uiState = uiState.toBuilder()
                 .enterManuallyHintVisibility(VISIBLE)
@@ -490,7 +442,7 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
         uiStates.postValue(uiState);
     }
 
-    private void resetEnterManuallyDelays() {
+    private void resetScheduledHints() {
         if (showEnterManuallyHint != null) {
             showEnterManuallyHint.cancel();
             showEnterManuallyHint = null;
@@ -530,20 +482,6 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
 
         uiState = uiState.toBuilder().overlay(overlay).build();
         uiStates.postValue(uiState);
-    }
-
-    /**
-     * After a short delay, display the hint that informs the user that they may attempt
-     * to OCR the front side of the recipient's driver's license.
-     */
-    private void onHintDriverLicenseVizScanDelay(Object ignored) {
-        if (uiState.getScanDriverLicenseVizHintStatus() == ScanDriverLicenseVizHintStatus.SCHEDULED) {
-            uiState = uiState.toBuilder()
-                    .scanDriverLicenseVizHintStatus(ScanDriverLicenseVizHintStatus.DISPLAYED)
-                    .build();
-
-            uiStates.postValue(uiState);
-        }
     }
 
     /**
@@ -600,6 +538,7 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
      * Verify the data of this CapturedId.
      */
     private void verifyCapturedId(CapturedId capturedId) {
+        resetScheduledHints();
         verifyDocumentData(toDocumentData(capturedId));
     }
 
@@ -682,35 +621,47 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
 
         LocalizedOnlyId localizedId = session.getNewlyLocalizedOnlyId();
 
-        if ((uiState.getTargetDocument() == PASSPORT ||
-                (uiState.getTargetDocument() == DRIVER_LICENSE && uiState.getDriverLicenseSide() == FRONT_VIZ))
-                && showEnterManuallyPopUp == null && uiState.getEnterManuallyHintVisibility() != VISIBLE) {
-            /*
-             * The callback is executed in the background thread. We post the value to the LiveData
-             * in order to return to the UI thread.
-             */
-            localizedIds.postValue(localizedId);
-        }
+        /*
+         * The callback is executed in the background thread. We post the value to the LiveData
+         * in order to return to the UI thread.
+         */
+        localizedIds.postValue(localizedId);
     }
 
     /**
      * We detected a document, but couldn't extract the data yet. Trigger a delay after which
-     * a pop-up is displayed to inform the user that they may attempt to manually enter recipient's
-     * document data. This task is canceled, if we manage to extract the data before.
+     * a pop-up is displayed to inform the user that they may attempt to try another method of
+     * entering the data:
+     * * to capture the front of card if they are trying to capture the barcode
+     * * to enter the data manually otherwise
      */
-    private void startEnterManuallyPopUpTimer(LocalizedOnlyId localizedOnlyId) {
-        if ((uiState.getTargetDocument() == PASSPORT ||
-                (uiState.getTargetDocument() == DRIVER_LICENSE && uiState.getDriverLicenseSide() == FRONT_VIZ))
-         && showEnterManuallyPopUp == null && uiState.getEnterManuallyHintVisibility() != VISIBLE) {
-            resetEnterManuallyDelays();
-
+    private void startTryAnotherMethodTimer(LocalizedOnlyId localizedOnlyId) {
+        if (showEnterManuallyPopUp == null) {
             showEnterManuallyPopUp = new TimerTask() {
                 @Override
                 public void run() {
-                    goToIdLocalizedButNotCaptured.postValue(new GoToIdLocalizedButNotCaptured());
+                    goToTryAnotherMethod();
                 }
             };
-            timer.schedule(showEnterManuallyPopUp, ENTER_MANUALLY_POP_UP_DELAY_MS);
+
+            timer.schedule(showEnterManuallyPopUp, TRY_ANOTHER_METHOD_POP_UP_DELAY_MS);
+        }
+    }
+
+    /**
+     * We detected a document, but couldn't extract the data yet. Show a pop-up to inform
+     * the user that they may attempt to try another method of entering the data:
+     * * to capture the front of card if they are trying to capture the barcode
+     * * to enter the data manually otherwise
+     */
+    private void goToTryAnotherMethod() {
+        showEnterManuallyPopUp = null;
+        idCaptureRepository.disableIdCapture();
+
+        if (uiState.getTargetDocument() == DRIVER_LICENSE && uiState.getDriverLicenseSide() == BACK_BARCODE) {
+            goToBarcodeNotSupported.postValue(new GoToBarcodeNotSupported());
+        } else {
+            goToIdLocalizedButNotCaptured.postValue(new GoToIdLocalizedButNotCaptured());
         }
     }
 

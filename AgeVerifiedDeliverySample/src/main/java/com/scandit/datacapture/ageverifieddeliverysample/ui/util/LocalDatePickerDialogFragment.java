@@ -66,7 +66,8 @@ public class LocalDatePickerDialogFragment extends DialogFragment implements Dat
         int month = getArguments().getInt(KEY_MONTH);
         int year = getArguments().getInt(KEY_YEAR);
 
-        return new DatePickerDialog(requireContext(), this, year, month, day);
+        // LocalDate numbers months from 1, DatePickerDialog from 0.
+        return new DatePickerDialog(requireContext(), this, year, month - 1, day);
     }
 
     /**
@@ -75,7 +76,8 @@ public class LocalDatePickerDialogFragment extends DialogFragment implements Dat
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         if (listener != null) {
-            listener.onDateSet(LocalDate.of(year, month, dayOfMonth));
+            // LocalDate numbers months from 1, DatePickerDialog from 0.
+            listener.onDateSet(LocalDate.of(year, month + 1, dayOfMonth));
         }
     }
 
