@@ -20,7 +20,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.scandit.datacapture.barcodecapturesettingssample.R;
@@ -49,7 +49,7 @@ public class LogoSettingsFragment extends NavigationFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(LogoSettingsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(LogoSettingsViewModel.class);
     }
 
     @Nullable

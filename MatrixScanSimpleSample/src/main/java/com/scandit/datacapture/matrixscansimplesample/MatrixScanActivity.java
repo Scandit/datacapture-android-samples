@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.tracking.capture.BarcodeTracking;
 import com.scandit.datacapture.barcode.tracking.capture.BarcodeTrackingListener;
+import com.scandit.datacapture.barcode.tracking.capture.BarcodeTrackingScenario;
 import com.scandit.datacapture.barcode.tracking.capture.BarcodeTrackingSession;
 import com.scandit.datacapture.barcode.tracking.capture.BarcodeTrackingSettings;
 import com.scandit.datacapture.barcode.tracking.data.TrackedBarcode;
@@ -94,9 +95,17 @@ public class MatrixScanActivity extends CameraPermissionActivity
             throw new IllegalStateException("Sample depends on a camera, which failed to initialize.");
         }
 
+        // Scenario A is used as an example to show how the scenario has to be set to configure
+        // barcode tracking properly.
+        // Please choose the right scenario depending on your exact use case; you can find more
+        // information at https://docs.scandit.com/data-capture-sdk/android/barcode-capture/barcode-tracking-scenarios.html.
+        // Feel free to contact support@scandit.com if you have any questions about it.
+        BarcodeTrackingScenario scenario = BarcodeTrackingScenario.A;
+
         // The barcode tracking process is configured through barcode tracking settings
         // which are then applied to the barcode tracking instance that manages barcode tracking.
-        BarcodeTrackingSettings barcodeTrackingSettings = new BarcodeTrackingSettings();
+        BarcodeTrackingSettings barcodeTrackingSettings =
+                BarcodeTrackingSettings.forScenario(scenario);
 
         // The settings instance initially has all types of barcodes (symbologies) disabled.
         // For the purpose of this sample we enable a very generous set of symbologies.

@@ -26,7 +26,7 @@ import androidx.dynamicanimation.animation.DynamicAnimation;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.tracking.ui.overlay.BarcodeTrackingBasicOverlay;
@@ -73,7 +73,7 @@ public final class FindScanFragment extends Fragment {
             String data = arguments.getString(FIELD_DATA);
             viewModelFactory = new FindScanViewModelFactory(symbology, data);
         }
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(FindScanViewModel.class);
+        viewModel = new ViewModelProvider(this, viewModelFactory).get(FindScanViewModel.class);
     }
 
     @NotNull

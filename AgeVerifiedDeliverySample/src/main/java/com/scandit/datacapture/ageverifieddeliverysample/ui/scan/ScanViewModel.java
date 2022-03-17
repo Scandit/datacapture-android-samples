@@ -427,6 +427,7 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
     public void onPopUpDismissed() {
         cameraRepository.turnOnCamera();
         idCaptureRepository.enableIdCapture();
+        showEnterManuallyPopUp = null;
     }
 
     /**
@@ -655,7 +656,6 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
      * * to enter the data manually otherwise
      */
     private void goToTryAnotherMethod() {
-        showEnterManuallyPopUp = null;
         idCaptureRepository.disableIdCapture();
 
         if (uiState.getTargetDocument() == DRIVER_LICENSE && uiState.getDriverLicenseSide() == BACK_BARCODE) {
@@ -681,7 +681,7 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
 
         RejectedId rejectedId = session.getNewlyRejectedId();
 
-        if (uiState.getDriverLicenseSide() == BACK_BARCODE) {
+        if (uiState.getTargetDocument() == DRIVER_LICENSE && uiState.getDriverLicenseSide() == BACK_BARCODE) {
             /*
              * The callback is executed in the background thread. We post the value to the LiveData
              * in order to return to the UI thread.
@@ -695,7 +695,7 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
      * data cannot be parsed.
      */
     private void emitBarcodeRejected(RejectedId rejectedId) {
-        if (uiState.getDriverLicenseSide() == BACK_BARCODE) {
+        if (uiState.getTargetDocument() == DRIVER_LICENSE && uiState.getDriverLicenseSide() == BACK_BARCODE) {
             goToBarcodeNotSupported.postValue(new GoToBarcodeNotSupported());
         }
     }

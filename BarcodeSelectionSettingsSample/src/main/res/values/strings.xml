@@ -11,6 +11,7 @@
     <string name="bottom">Bottom</string>
     <string name="left">Left</string>
     <string name="blue">Blue</string>
+    <string name="transparent">Transparent</string>
     <string name="default_">Default</string>
     <string name="datacapture_version">Barcode Selection Settings Sample\nSDK %1$s</string>
 
@@ -83,6 +84,7 @@
     <string name="selecting_brush">Selecting Brush</string>
     <string name="aimed_brush">Aimed Brush</string>
     <string name="tracked_brush">Tracked Brush</string>
+    <string name="frozen_overlay_background_color">Frozen background color</string>
     <string name="show_hints">Should Show Hints</string>
 
     <!-- Viewfinder -->

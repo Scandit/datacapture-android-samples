@@ -76,11 +76,15 @@ class DataCaptureManager {
     private final DataCaptureDefaults dataCaptureDefaults;
 
     @ColorInt private final int scanditBlue;
+    @ColorInt private final int scanditBlueSemitransparent;
 
     private DataCaptureManager(Context context) {
         settingsManager = new SettingsManager(context);
         dataCaptureDefaults = DataCaptureDefaults.getInstance(context);
         scanditBlue = ContextCompat.getColor(context, R.color.colorAccent);
+        scanditBlueSemitransparent = ContextCompat.getColor(
+                context, R.color.colorAccentSemitransparent
+        );
     }
 
     public Camera buildCamera() {
@@ -400,6 +404,9 @@ class DataCaptureManager {
         // Setting the brush applied to Selected Barcodes.
         setupSelectedBarcodeBrush(overlay);
 
+        // Setting the background color for the overlay when in frozen state.
+        setupFrozenBackgroundColor(overlay);
+
         // Settings shouldShowHints to the overlay will visualize some hints explaining how to
         // use barcode selection.
         setupShouldShowHints(overlay);
@@ -503,6 +510,27 @@ class DataCaptureManager {
                 ColorUtils.setAlphaComponent(strokeColor, strokeAlpha),
                 brush.getStrokeWidth()
         );
+    }
+
+    private void setupFrozenBackgroundColor(BarcodeSelectionBasicOverlay overlay) {
+        // Retrieve the desired color from the settings.
+        OverlaySettingsFragment.BackgroundColor frozenBackgroundColor =
+                settingsManager.retrieveEnum(
+                        OverlaySettingsFragment.BackgroundColor.class,
+                        FROZEN_OVERLAY_BACKGROUND_COLOR_KEY,
+                        OverlaySettingsFragment.BackgroundColor.DEFAULT
+                );
+        // Apply it to the barcodeSelectionBasicOverlay.
+        switch (frozenBackgroundColor) {
+            case DEFAULT:
+                // Leave default color.
+                break;
+            case BLUE:
+                overlay.setFrozenBackgroundColor(scanditBlueSemitransparent);
+                break;
+            case TRANSPARENT:
+                overlay.setFrozenBackgroundColor(Color.TRANSPARENT);
+        }
     }
 
     private void setupShouldShowHints(BarcodeSelectionBasicOverlay overlay) {

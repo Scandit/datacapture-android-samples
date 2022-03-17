@@ -20,7 +20,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.scandit.datacapture.barcodecapturesettingssample.R;
@@ -44,7 +44,7 @@ public class OverlaySettingsFragment extends NavigationFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(OverlaySettingsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(OverlaySettingsViewModel.class);
     }
 
     @Nullable

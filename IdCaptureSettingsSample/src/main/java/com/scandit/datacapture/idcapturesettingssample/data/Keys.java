@@ -42,7 +42,6 @@ public final class Keys {
     public final static String CAMERA_POSITION = "camera_position";
     public final static String TORCH_STATE = "torch_state";
     public final static String PREFERRED_RESOLUTION = "preferred_resolution";
-    public final static String ZOOM_FACTOR = "zoom_factor";
 
     // Logo.
     public final static String LOGO_ANCHOR = "logo_anchor";
@@ -58,7 +57,6 @@ public final class Keys {
 
     // Gestures.
     public final static String TAP_TO_FOCUS = "tap_to_focus";
-    public final static String SWIPE_TO_ZOOM = "swipe_to_zoom";
 
     // Controls.
     public final static String TORCH_CONTROL = "torch_control";

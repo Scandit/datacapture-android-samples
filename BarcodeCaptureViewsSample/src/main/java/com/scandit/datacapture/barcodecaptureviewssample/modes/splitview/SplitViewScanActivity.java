@@ -24,7 +24,7 @@ import android.widget.Button;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -57,7 +57,7 @@ public class SplitViewScanActivity extends CameraPermissionActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(SplitViewScanViewModel.class);
+        viewModel = new ViewModelProvider(this).get(SplitViewScanViewModel.class);
         setContentView(R.layout.activity_split_view);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setupDataCaptureView();

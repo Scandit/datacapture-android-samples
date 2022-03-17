@@ -27,12 +27,12 @@ import com.scandit.datacapture.core.common.geometry.SizeWithUnit;
 import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinder;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderStyle;
-import com.scandit.datacapture.core.ui.viewfinder.SpotlightViewfinder;
 import com.scandit.datacapture.text.capture.TextCapture;
 import com.scandit.datacapture.text.capture.TextCaptureListener;
 import com.scandit.datacapture.text.capture.TextCaptureSession;
 import com.scandit.datacapture.text.capture.TextCaptureSettings;
 import com.scandit.datacapture.text.data.CapturedText;
+import com.scandit.datacapture.text.feedback.TextCaptureFeedback;
 import com.scandit.datacapture.text.ui.TextCaptureOverlay;
 
 import org.jetbrains.annotations.NotNull;
@@ -87,6 +87,12 @@ public class TextCaptureRepository implements TextCaptureListener {
 
         textCapture = TextCapture.forDataCaptureContext(dataCaptureContext, settings);
         textCapture.addListener(this);
+
+        /*
+         * Disable the default feedback. We will trigger a feedback manually for successfully
+         * decoded VINs.
+         */
+        textCapture.setFeedback(new TextCaptureFeedback());
 
         /*
          * The viewfinder is an additional UI that aids the user in the capture process. We use

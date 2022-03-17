@@ -67,16 +67,5 @@ public class GesturesPreferenceBuilder implements SectionPreferenceBuilder {
                 Defaults.getDefaultTapToFocusEnabled()
         );
         gesturesCategory.addPreference(tapToFocusSwitch);
-
-        /*
-         * Switch to enable or disable swipe to zoom.
-         */
-        SwitchPreferenceCompat swipeToZoomSwitch = PreferenceBuilder._switch(
-                context,
-                Keys.SWIPE_TO_ZOOM,
-                context.getString(R.string.swipe_to_zoom_title),
-                Defaults.getDefaultSwipeToZoomEnabled()
-        );
-        gesturesCategory.addPreference(swipeToZoomSwitch);
     }
 }

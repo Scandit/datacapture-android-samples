@@ -323,7 +323,7 @@ public class ScanFragment extends Fragment {
                      * If skipping scanning the back of the document, `IdCapture().reset()` needs
                      * to ba called to allow for another front IDs to be scanned.
                      */
-                    showCapturedResultText(new ShowCaptureResultToastEvent(result));
+                    viewModel.showCapturedResultInSelectedMode(result);
                     viewModel.resetIdCapture();
                     viewModel.enableIdCapture();
                 })

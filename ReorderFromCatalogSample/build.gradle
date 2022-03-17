@@ -1,0 +1,46 @@
+plugins {
+    id("com.android.application")
+}
+
+android {
+    ndkVersion = sdk.ndk
+    compileSdkVersion = sdk.compile
+
+    defaultConfig {
+        applicationId = "com.scandit.datacapture.reorderfromcatalogsample"
+        minSdkVersion(sdk.min)
+        targetSdkVersion(sdk.target)
+        versionCode = 1
+        versionName = "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = versions.java
+        targetCompatibility = versions.java
+    }
+
+    packagingOptions {
+        pickFirst("**/*.so")
+    }
+}
+
+dependencies {
+    api(name:"ScanditCaptureCore", ext:"aar")
+    api(name:"ScanditBarcodeCapture", ext:"aar")
+
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}")
+
+    implementation("androidx.appcompat:appcompat:${versions.androidx_appcompat}")
+    implementation("com.google.android.material:material:${versions.material}")
+
+    implementation("androidx.constraintlayout:constraintlayout:${versions.androidx_constraintlayout}")
+
+    implementation("com.squareup.okhttp3:okhttp:${versions.okhttp}")
+}

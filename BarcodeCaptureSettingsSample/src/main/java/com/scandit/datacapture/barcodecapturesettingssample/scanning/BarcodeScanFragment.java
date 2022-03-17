@@ -26,7 +26,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.barcode.data.CompositeFlag;
@@ -69,7 +69,7 @@ public class BarcodeScanFragment extends CameraPermissionFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        viewModel = ViewModelProviders.of(this).get(BarcodeScanViewModel.class);
+        viewModel = new ViewModelProvider(this).get(BarcodeScanViewModel.class);
     }
 
     @Nullable

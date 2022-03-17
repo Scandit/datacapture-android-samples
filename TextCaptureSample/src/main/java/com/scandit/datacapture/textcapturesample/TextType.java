@@ -24,7 +24,7 @@ public enum TextType {
      * reasonable regex. If recognizing such codes is your use-case, then you probably don't need
      * to recognize just any GS1 AI, but a specific kind.
      */
-    GS1_AI("(\\\\([0-9]+\\\\)[A-Za-z0-9])"),
+    GS1_AI("((?:\\\\([0-9]+\\\\)[A-Za-z0-9]+)+)"),
     LOT("([A-Z0-9]{6,8})");
 
     private String regex;

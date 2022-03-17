@@ -22,7 +22,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import com.scandit.datacapture.barcodecapturesettingssample.R;
 import com.scandit.datacapture.barcodecapturesettingssample.base.NavigationFragment;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.SettingsOverviewEntry;
@@ -40,7 +40,7 @@ public class ResultHandlingSettingsFragment extends NavigationFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(ResultHandlingSettingsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(ResultHandlingSettingsViewModel.class);
     }
 
     @Nullable

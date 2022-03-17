@@ -26,7 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlayStyle;
@@ -60,7 +60,7 @@ public final class SearchScanFragment extends CameraPermissionFragment implement
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(SearchScanViewModel.class);
+        viewModel = new ViewModelProvider(this).get(SearchScanViewModel.class);
     }
 
     @NotNull

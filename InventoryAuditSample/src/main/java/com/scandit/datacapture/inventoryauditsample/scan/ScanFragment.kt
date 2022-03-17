@@ -19,7 +19,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.scandit.datacapture.barcode.tracking.data.TrackedBarcode
 import com.scandit.datacapture.barcode.tracking.ui.overlay.BarcodeTrackingAdvancedOverlay
 import com.scandit.datacapture.core.ui.DataCaptureView
@@ -39,7 +39,7 @@ class ScanFragment : CameraPermissionFragment(), ScanViewModel.ScanViewModelList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(ScanViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(ScanViewModel::class.java)
     }
 
     override fun onCreateView(

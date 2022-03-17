@@ -177,6 +177,10 @@ public class IdCaptureRepository implements IdCaptureListener {
         );
     }
 
+    public boolean isContinuousMode() {
+        return settingsRepository.isContinuousScanEnabled();
+    }
+
     @Override
     @WorkerThread
     public void onObservationStarted(@NonNull IdCapture mode) {

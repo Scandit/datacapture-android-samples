@@ -14,7 +14,7 @@
 
 package com.scandit.datacapture.barcodecapturesettingssample.settings.view.pointofinterest;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,7 +43,7 @@ public class PointOfInterestSettingsFragment extends NavigationFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(PointOfInterestSettingsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(PointOfInterestSettingsViewModel.class);
     }
 
     @Nullable

@@ -20,7 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.scandit.datacapture.barcode.data.SymbologyDescription;
@@ -42,7 +42,7 @@ public class SymbologySettingsFragment extends NavigationFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(SymbologySettingsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(SymbologySettingsViewModel.class);
     }
 
     @Nullable

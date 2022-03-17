@@ -19,7 +19,7 @@ import android.view.*;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.scandit.datacapture.barcodecapturesettingssample.R;
@@ -58,7 +58,7 @@ public class CameraSettingsFragment extends NavigationFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(CameraSettingsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(CameraSettingsViewModel.class);
     }
 
     @Nullable

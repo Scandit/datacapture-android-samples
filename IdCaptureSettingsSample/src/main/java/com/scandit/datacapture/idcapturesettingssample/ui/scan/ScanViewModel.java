@@ -223,4 +223,12 @@ public class ScanViewModel extends ViewModel {
             showToastResult.postValue(new ShowCaptureResultToastEvent(result));
         }
     }
+
+    void showCapturedResultInSelectedMode(CaptureResult result) {
+        if (!idCaptureRepository.isContinuousMode()) {
+            showCaptureResult.postValue(new ShowCaptureResultEvent(result));
+        } else {
+            showToastResult.postValue(new ShowCaptureResultToastEvent(result));
+        }
+    }
 }

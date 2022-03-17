@@ -20,7 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.scandit.datacapture.barcodecapturesettingssample.R;
@@ -44,7 +44,7 @@ public class BarcodeCaptureSettingsFragment extends NavigationFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(BarcodeCaptureSettingsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(BarcodeCaptureSettingsViewModel.class);
     }
 
     @Nullable

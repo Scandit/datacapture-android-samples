@@ -14,7 +14,7 @@
 
 package com.scandit.datacapture.barcodecapturesettingssample.settings.view.scanarea;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,7 +49,7 @@ public class ScanAreaSettingsFragment extends NavigationFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(ScanAreaSettingsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(ScanAreaSettingsViewModel.class);
     }
 
     @Nullable

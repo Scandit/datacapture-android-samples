@@ -73,7 +73,7 @@ public final class DataCaptureManager implements OnSharedPreferenceChangeListene
     private void initCamera() {
         /*
          * Set the device's default camera as DataCaptureContext's FrameSource. DataCaptureContext
-         * passes the frames from it's FrameSource to the added modes to perform capture or
+         * passes the frames from its FrameSource to the added modes to perform capture or
          * tracking.
          *
          * Since we are going to perform TextCapture in this sample, we initiate the camera with

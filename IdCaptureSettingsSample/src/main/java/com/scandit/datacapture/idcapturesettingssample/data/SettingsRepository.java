@@ -17,6 +17,7 @@ package com.scandit.datacapture.idcapturesettingssample.data;
 import android.graphics.Color;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceDataStore;
 
@@ -27,9 +28,7 @@ import com.scandit.datacapture.core.source.CameraPosition;
 import com.scandit.datacapture.core.source.TorchState;
 import com.scandit.datacapture.core.source.VideoResolution;
 import com.scandit.datacapture.core.ui.gesture.FocusGesture;
-import com.scandit.datacapture.core.ui.gesture.SwipeToZoom;
 import com.scandit.datacapture.core.ui.gesture.TapToFocus;
-import com.scandit.datacapture.core.ui.gesture.ZoomGesture;
 import com.scandit.datacapture.core.ui.style.Brush;
 import com.scandit.datacapture.id.data.IdDocumentType;
 import com.scandit.datacapture.id.data.IdImageType;
@@ -38,8 +37,6 @@ import com.scandit.datacapture.id.ui.IdLayoutLineStyle;
 import com.scandit.datacapture.id.ui.IdLayoutStyle;
 import com.scandit.datacapture.idcapturesettingssample.ui.BrushStyle;
 import com.scandit.datacapture.idcapturesettingssample.utils.BrushUtils;
-
-import androidx.annotation.NonNull;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -192,13 +189,6 @@ public class SettingsRepository extends PreferenceDataStore {
     }
 
     /*
-     * Retrieves from settings the Camera zoom factor.
-     */
-    public int getZoomFactor() {
-        return getInt(Keys.ZOOM_FACTOR, Defaults.getDefaultZoomFactor());
-    }
-
-    /*
      * Retrieves from settings the Camera preferred resolution.
      */
     public CameraPosition getCameraPosition() {
@@ -330,18 +320,6 @@ public class SettingsRepository extends PreferenceDataStore {
         boolean tapToFocusEnabled = getBoolean(Keys.TAP_TO_FOCUS, Defaults.getDefaultTapToFocusEnabled());
         if (tapToFocusEnabled) {
             return new TapToFocus();
-        } else {
-            return null;
-        }
-    }
-
-    /*
-     * Retrieves from settings the zoom gesture.
-     */
-    public ZoomGesture getZoomGesture() {
-        boolean swipeToZoomEnabled = getBoolean(Keys.SWIPE_TO_ZOOM, Defaults.getDefaultSwipeToZoomEnabled());
-        if (swipeToZoomEnabled) {
-            return new SwipeToZoom();
         } else {
             return null;
         }

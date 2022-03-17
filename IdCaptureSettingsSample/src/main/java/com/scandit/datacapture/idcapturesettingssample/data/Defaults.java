@@ -113,18 +113,6 @@ public final class Defaults {
         return VideoResolution.AUTO;
     }
 
-    public static int getMinZoomFactor() {
-        return 1;
-    }
-
-    public static int getMaxZoomFactor() {
-        return 20;
-    }
-
-    public static int getDefaultZoomFactor() {
-        return 1;
-    }
-
     // Logo.
     private final static Anchor[] SUPPORTED_LOGO_ANCHORS = Anchor.values();
     private final static MeasureUnit[] SUPPORTED_MEASURE_UNITS = MeasureUnit.values();
@@ -205,10 +193,6 @@ public final class Defaults {
 
     // Gestures.
     public static boolean getDefaultTapToFocusEnabled() {
-        return true;
-    }
-
-    public static boolean getDefaultSwipeToZoomEnabled() {
         return true;
     }
 

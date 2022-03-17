@@ -14,7 +14,7 @@
 
 package com.scandit.datacapture.barcodecapturesettingssample.settings.view.scanarea.left;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import com.scandit.datacapture.barcodecapturesettingssample.R;
@@ -33,7 +33,7 @@ public class ScanAreaLeftMarginFragment extends MeasureUnitFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(ScanAreaLeftMarginViewModel.class);
+        viewModel = new ViewModelProvider(this).get(ScanAreaLeftMarginViewModel.class);
     }
 
     @Override

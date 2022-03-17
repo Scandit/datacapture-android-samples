@@ -19,6 +19,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
+import com.scandit.datacapture.core.common.feedback.Feedback;
 import com.scandit.datacapture.core.ui.overlay.DataCaptureOverlay;
 import com.scandit.datacapture.vincodessample.data.BarcodeCaptureRepository;
 import com.scandit.datacapture.vincodessample.data.CameraRepository;
@@ -85,6 +86,16 @@ public class VinScannerViewModel extends ViewModel {
      * Events to display the error encountered when parsing VINs.
      */
     private final MutableLiveData<ShowVinParsingError> showVinParsingError = new MutableLiveData<>();
+
+    /**
+     * A sound/vibration to trigger once a VIN has been parsed.
+     */
+    private Feedback feedback = Feedback.defaultFeedback();
+
+    /**
+     * Whether the UI should handle any parser results.
+     */
+    private boolean shouldHandleResults = false;
 
     public VinScannerViewModel() {
         /*
@@ -168,6 +179,8 @@ public class VinScannerViewModel extends ViewModel {
      * Enable the currently selected mode.
      */
     void enableMode() {
+        shouldHandleResults = true;
+
         if (uiState.getMode() == VinScannerMode.BARCODE) {
             barcodeCaptureRepository.enableBarcodeCapture();
             textCaptureRepository.disableTextCapture();
@@ -177,12 +190,18 @@ public class VinScannerViewModel extends ViewModel {
         }
     }
 
+    private void disableMode() {
+        barcodeCaptureRepository.disableBarcodeCapture();
+        textCaptureRepository.disableTextCapture();
+
+        shouldHandleResults = false;
+    }
+
     /**
      * Pause the capture process.
      */
     void stopCapture() {
-        barcodeCaptureRepository.disableBarcodeCapture();
-        textCaptureRepository.disableTextCapture();
+        disableMode();
         cameraRepository.turnOffCamera();
     }
 
@@ -190,16 +209,22 @@ public class VinScannerViewModel extends ViewModel {
      * Display the data decoded from a VIN.
      */
     private void onNewVin(VinResult vin) {
-        goToResult.postValue(new GoToResult());
+        if (shouldHandleResults) {
+            disableMode();
+
+            feedback.emit();
+            goToResult.postValue(new GoToResult());
+        }
     }
 
     /**
      * Display an error encountered when parsing VINs.
      */
     private void onNewVinParsingError(String message) {
-        barcodeCaptureRepository.disableBarcodeCapture();
-        textCaptureRepository.disableTextCapture();
+        if (shouldHandleResults) {
+            disableMode();
 
-        showVinParsingError.postValue(new ShowVinParsingError(message));
+            showVinParsingError.postValue(new ShowVinParsingError(message));
+        }
     }
 }

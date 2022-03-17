@@ -77,11 +77,6 @@ public class CameraRepository {
         cameraSettings.setPreferredResolution(settingsRepository.getPreferredResolution());
 
         /*
-         * Apply the desired zoom factor from the settings.
-         */
-        cameraSettings.setZoomFactor(settingsRepository.getZoomFactor());
-
-        /*
          * Set the device's default camera as DataCaptureContext's FrameSource. DataCaptureContext
          * passes the frames from it's FrameSource to the added modes to perform capture or
          * tracking.

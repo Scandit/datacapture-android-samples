@@ -67,6 +67,13 @@ public final class OverlaySettingsFragment extends BasePreferenceFragment {
         brushesCategory.addPreference(createBrushPreference(OVERLAY_SELECTING_BRUSH_KEY, R.string.selecting_brush));
         brushesCategory.addPreference(createBrushPreference(OVERLAY_SELECTED_BRUSH_KEY, R.string.selected_brush));
 
+        // Overlay background color.
+        StyledPreferenceCategory overlayBackgroundCategory = new StyledPreferenceCategory(
+                requireContext(), OVERLAY_BACKGROUND_CATEGORY_KEY, null
+        );
+        screen.addPreference(overlayBackgroundCategory);
+        overlayBackgroundCategory.addPreference(createFrozenOverlayBackgroundColorCategory());
+
         // Overlay hints category.
         StyledPreferenceCategory hintsCategory = new StyledPreferenceCategory(
                 requireContext(), OVERLAY_HINTS_CATEGORY_KEY, null
@@ -80,6 +87,23 @@ public final class OverlaySettingsFragment extends BasePreferenceFragment {
                 new StyledSwitchPreference(requireContext(), OVERLAY_HINTS_KEY, R.string.show_hints, false);
         hintsPreference.setDefaultValue(true);
         return hintsPreference;
+    }
+
+    private Preference createFrozenOverlayBackgroundColorCategory() {
+        ListPreference preference = new StyledListPreference(requireContext(),
+                FROZEN_OVERLAY_BACKGROUND_COLOR_KEY, R.string.frozen_overlay_background_color, true
+        );
+        BackgroundColor[] colors = BackgroundColor.values();
+        String[] entries = new String[colors.length];
+        String[] entryValues = new String[colors.length];
+        for (int i = 0; i < colors.length; i++) {
+            entryValues[i] = colors[i].name();
+            entries[i] = getString(colors[i].getReadableName());
+        }
+        preference.setDefaultValue(BackgroundColor.DEFAULT.name());
+        preference.setEntries(entries);
+        preference.setEntryValues(entryValues);
+        return preference;
     }
 
     private Preference createBrushPreference(String key, @StringRes int title) {
@@ -144,6 +168,20 @@ public final class OverlaySettingsFragment extends BasePreferenceFragment {
         private final int readableName;
 
         BrushStyle(@StringRes int readableName) {
+            this.readableName = readableName;
+        }
+
+        public int getReadableName() {
+            return readableName;
+        }
+    }
+
+    public enum BackgroundColor {
+        DEFAULT(R.string.default_), BLUE(R.string.blue), TRANSPARENT(R.string.transparent);
+
+        private final int readableName;
+
+        BackgroundColor(@StringRes int readableName) {
             this.readableName = readableName;
         }
 

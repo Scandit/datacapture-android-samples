@@ -33,7 +33,7 @@ public class CameraRepository {
     public CameraRepository(DataCaptureContext dataCaptureContext) {
         /*
          * Set the device's default camera as DataCaptureContext's FrameSource. DataCaptureContext
-         * passes the frames from it's FrameSource to the added modes to perform capture or
+         * passes the frames from its FrameSource to the added modes to perform capture or
          * tracking.
          */
         CameraSettings settings = new CameraSettings();

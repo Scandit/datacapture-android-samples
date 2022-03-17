@@ -129,10 +129,26 @@ public class CaptureResult implements Parcelable {
         return 0;
     }
 
-    public static class Entry {
+    public static class Entry implements Parcelable {
+        public static final Creator<Entry> CREATOR = new Creator<Entry>() {
+            public Entry createFromParcel(Parcel in) {
+                return new Entry(in);
+            }
+
+            public Entry[] newArray(int size) {
+                return new Entry[size];
+            }
+        };
+
         private final String key;
 
         private final String value;
+
+
+        private Entry(Parcel in) {
+            key = in.readString();
+            value = in.readString();
+        }
 
         public Entry(String key, String value) {
             this.key = key;
@@ -145,6 +161,15 @@ public class CaptureResult implements Parcelable {
 
         public String getValue() {
             return value;
+        }
+
+        @Override
+        public int describeContents() { return 0; }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(key);
+            dest.writeString(value);
         }
     }
 }

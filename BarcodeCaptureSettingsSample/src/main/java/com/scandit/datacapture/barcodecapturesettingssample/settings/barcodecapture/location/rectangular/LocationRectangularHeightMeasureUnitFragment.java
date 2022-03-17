@@ -16,7 +16,7 @@ package com.scandit.datacapture.barcodecapturesettingssample.settings.barcodecap
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import com.scandit.datacapture.barcodecapturesettingssample.R;
 import com.scandit.datacapture.barcodecapturesettingssample.base.measureunit.MeasureUnitFragment;
 import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
@@ -33,7 +33,7 @@ public class LocationRectangularHeightMeasureUnitFragment extends MeasureUnitFra
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(
+        viewModel = new ViewModelProvider(this).get(
                 LocationRectangularHeightMeasureUnitViewModel.class
         );
     }

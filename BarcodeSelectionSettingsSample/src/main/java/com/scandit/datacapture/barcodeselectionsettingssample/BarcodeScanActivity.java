@@ -140,6 +140,8 @@ public final class BarcodeScanActivity
 
     @Override
     protected void onDestroy() {
+        // It is good practice to properly disable and remove the mode.
+        barcodeSelection.setEnabled(false);
         barcodeSelection.removeListener(this);
         dataCaptureContext.removeMode(barcodeSelection);
         super.onDestroy();
@@ -147,10 +149,6 @@ public final class BarcodeScanActivity
 
     private void pauseFrameSource() {
         // Switch camera off to stop streaming frames.
-        // The camera is stopped asynchronously and will take some time to completely turn off.
-        // Until it is completely stopped, it is still possible to receive further results, hence
-        // it's a good idea to first disable barcode selection as well.
-        barcodeSelection.setEnabled(false);
         camera.switchToDesiredState(FrameSourceState.OFF, null);
     }
 

@@ -14,7 +14,7 @@
 
 package com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.rectanglewidth;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import com.scandit.datacapture.barcodecapturesettingssample.R;
@@ -33,7 +33,7 @@ public class ViewfinderRectangleWidthMeasureFragment extends MeasureUnitFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(ViewfinderRectangleWidthViewModel.class);
+        viewModel = new ViewModelProvider(this).get(ViewfinderRectangleWidthViewModel.class);
     }
 
     @Override

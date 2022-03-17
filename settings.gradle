@@ -1,18 +1,19 @@
-include ':AgeVerifiedDeliverySample'
-include ':BarcodeCaptureRejectSample'
-include ':BarcodeCaptureSettingsSample'
-include ':BarcodeCaptureSimpleSample'
-include ':BarcodeCaptureViewsSample'
-include ':BarcodeSelectionSettingsSample'
-include ':GS1ParserSample'
-include ':IdCaptureSettingsSample'
-include ':IdCaptureSimpleSample'
-include ':IdCaptureExtendedSample'
-include ':InventoryAuditSample'
-include ':MatrixScanBubblesSample'
-include ':MatrixScanRejectSample'
-include ':MatrixScanSimpleSample'
-include ':MRZScannerSample'
-include ':SearchAndFindSample'
-include ':TextCaptureSample'
-include ':VINCodesSample'
+include(":AgeVerifiedDeliverySample")
+include(":BarcodeCaptureRejectSample")
+include(":BarcodeCaptureSettingsSample")
+include(":BarcodeCaptureSimpleSample")
+include(":BarcodeCaptureViewsSample")
+include(":BarcodeSelectionSettingsSample")
+include(":GS1ParserSample")
+include(":IdCaptureSettingsSample")
+include(":IdCaptureSimpleSample")
+include(":IdCaptureExtendedSample")
+include(":InventoryAuditSample")
+include(":MatrixScanBubblesSample")
+include(":MatrixScanRejectSample")
+include(":MatrixScanSimpleSample")
+include(":MRZScannerSample")
+include(":ReorderFromCatalogSample")
+include(":SearchAndFindSample")
+include(":TextCaptureSample")
+include(":VINCodesSample")

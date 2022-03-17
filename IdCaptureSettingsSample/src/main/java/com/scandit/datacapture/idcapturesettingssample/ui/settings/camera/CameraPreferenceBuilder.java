@@ -101,18 +101,5 @@ public class CameraPreferenceBuilder implements SectionPreferenceBuilder {
                 Defaults.getDefaultResolution().name()
         );
         parent.addPreference(resolutionPreference);
-
-        /*
-         * Seekbar preference to choose the zoom factor.
-         */
-        SeekBarPreference zoomPreference = PreferenceBuilder.seekBar(
-                context,
-                Keys.ZOOM_FACTOR,
-                context.getString(R.string.camera_zoom_factor_title),
-                Defaults.getMinZoomFactor(),
-                Defaults.getMaxZoomFactor(),
-                Defaults.getDefaultZoomFactor()
-        );
-        parent.addPreference(zoomPreference);
     }
 }

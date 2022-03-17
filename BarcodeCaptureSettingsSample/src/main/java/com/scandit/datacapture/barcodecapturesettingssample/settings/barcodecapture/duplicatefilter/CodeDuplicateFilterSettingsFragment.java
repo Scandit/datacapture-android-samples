@@ -26,7 +26,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.scandit.datacapture.barcodecapturesettingssample.R;
 import com.scandit.datacapture.barcodecapturesettingssample.base.NavigationFragment;
@@ -44,7 +44,7 @@ public class CodeDuplicateFilterSettingsFragment extends NavigationFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(CodeDuplicateFilterSettingsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(CodeDuplicateFilterSettingsViewModel.class);
     }
 
     @Nullable

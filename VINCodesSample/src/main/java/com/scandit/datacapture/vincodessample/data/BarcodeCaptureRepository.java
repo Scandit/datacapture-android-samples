@@ -25,15 +25,15 @@ import com.scandit.datacapture.barcode.capture.BarcodeCaptureSession;
 import com.scandit.datacapture.barcode.capture.BarcodeCaptureSettings;
 import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.barcode.data.Symbology;
+import com.scandit.datacapture.barcode.feedback.BarcodeCaptureFeedback;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.core.time.TimeInterval;
 import com.scandit.datacapture.core.ui.viewfinder.LaserlineViewfinder;
+import com.scandit.datacapture.core.ui.viewfinder.LaserlineViewfinderStyle;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.HashSet;
 
 /**
  * The repository to interact with the BarcodeCapture mode.
@@ -82,11 +82,17 @@ public class BarcodeCaptureRepository implements BarcodeCaptureListener {
         barcodeCapture.addListener(this);
 
         /*
+         * Disable the default feedback. We will trigger a feedback manually for successfully
+         * decoded VINs.
+         */
+        barcodeCapture.setFeedback(new BarcodeCaptureFeedback());
+
+        /*
          * Setup an overlay that provides UI to aid the user in the capture process. It later needs
          * to be attached to DataCaptureView.
          */
         overlay = BarcodeCaptureOverlay.newInstance(barcodeCapture, null);
-        overlay.setViewfinder(new LaserlineViewfinder());
+        overlay.setViewfinder(new LaserlineViewfinder(LaserlineViewfinderStyle.ANIMATED));
     }
 
     /**

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">ReorderCatalog</string>
+    <string name="go_to_results">Go to results</string>
+    <string name="items">Items</string>
+    <string name="close">Close</string>
+    <string name="resume_scanning">Resume scanning</string>
+    <string name="clear_list">Clear list</string>
+    <string name="cd_image">List image</string>
+    <string name="total_items_parametrised">Items (%1$o)</string>
+</resources>

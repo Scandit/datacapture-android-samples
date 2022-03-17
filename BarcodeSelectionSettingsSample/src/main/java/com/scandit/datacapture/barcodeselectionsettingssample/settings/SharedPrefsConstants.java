@@ -114,6 +114,8 @@ public final class SharedPrefsConstants {
 
     // Overlay.
     public static final String OVERLAY_BRUSHES_CATEGORY_KEY = "key_overlay_brushes_category";
+    public static final String OVERLAY_BACKGROUND_CATEGORY_KEY = "key_overlay_background_category";
+    public static final String FROZEN_OVERLAY_BACKGROUND_COLOR_KEY = "key_frozen_overlay_background_background";
     public static final String OVERLAY_TRACKED_BRUSH_KEY = "key_overlay_tracked_brush";
     public static final String OVERLAY_AIMED_BRUSH_KEY = "key_overlay_aimed_brush";
     public static final String OVERLAY_SELECTING_BRUSH_KEY = "key_overlay_selecting_brush";

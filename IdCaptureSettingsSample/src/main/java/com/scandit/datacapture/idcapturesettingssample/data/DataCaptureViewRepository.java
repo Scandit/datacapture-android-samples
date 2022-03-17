@@ -65,9 +65,9 @@ public class DataCaptureViewRepository {
         view.setFocusGesture(settingsRepository.getFocusGesture());
 
         /*
-         * Enable or disable the swipe to zoom from the settings.
+         * Disable the swipe to zoom.
          */
-        view.setZoomGesture(settingsRepository.getZoomGesture());
+        view.setZoomGesture(null);
 
         /*
          * Enable or disable the torch control from the settings.

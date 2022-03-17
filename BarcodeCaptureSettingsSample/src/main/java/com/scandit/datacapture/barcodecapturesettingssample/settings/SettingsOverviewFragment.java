@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.scandit.datacapture.barcodecapturesettingssample.R;
@@ -45,7 +45,7 @@ public class SettingsOverviewFragment extends NavigationFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(false);
-        viewModel = ViewModelProviders.of(this).get(SettingsOverviewViewModel.class);
+        viewModel = new ViewModelProvider(this).get(SettingsOverviewViewModel.class);
     }
 
     @Nullable
