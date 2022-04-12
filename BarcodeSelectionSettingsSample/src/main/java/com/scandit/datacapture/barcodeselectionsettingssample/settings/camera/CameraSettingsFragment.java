@@ -84,7 +84,7 @@ public final class CameraSettingsFragment extends BasePreferenceFragment {
                 requireContext(), CAMERA_PREFERRED_RESOLUTION_KEY, R.string.preferred_resolution, true
         );
         String[] resolutions = new String[] {
-                VideoResolution.AUTO.name(), VideoResolution.HD.name(), VideoResolution.FULL_HD.name(), VideoResolution.UHD4K.name()
+                VideoResolution.AUTO.name(), VideoResolution.HD.name(), VideoResolution.FULL_HD.name()
         };
         preference.setEntryValues(resolutions);
         preference.setEntries(getResources().getStringArray(R.array.camera_resolutions));
