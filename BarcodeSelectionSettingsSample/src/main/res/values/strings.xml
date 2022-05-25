@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BSSettings Sample</string>
+    <string name="app_name">Barcode Selection Settings</string>
     <string name="unknown">Unknown</string>
     <string name="invalid_number">Invalid Number</string>
     <string name="x">X</string>
@@ -23,7 +23,6 @@
     <string name="barcode_selection">Barcode Selection</string>
     <string name="camera">Camera</string>
     <string name="view">View</string>
-    <string name="reset_session">Reset BarcodeSelection Session</string>
 
     <!-- Barcode Selection Settings -->
     <string name="symbologies">Symbologies</string>
@@ -102,7 +101,7 @@
         <item>World Facing</item>
         <item>User Facing</item>
     </string-array>
-    <string-array name="camera_resolutions">
+    <string-array name="video_resolutions">
         <item>Auto</item>
         <item>HD</item>
         <item>Full HD</item>

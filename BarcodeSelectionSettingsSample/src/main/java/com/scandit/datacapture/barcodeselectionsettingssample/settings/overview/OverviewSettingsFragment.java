@@ -49,21 +49,11 @@ public final class OverviewSettingsFragment extends BasePreferenceFragment {
         sectionsCategory.addPreference(createOverviewPreference(CAMERA_KEY, R.string.camera));
         sectionsCategory.addPreference(createOverviewPreference(VIEW_KEY, R.string.view));
 
-        // Reset button category.
-        StyledPreferenceCategory resetCategory = new StyledPreferenceCategory(
-                requireContext(), RESET_CATEGORY_KEY, null
-        );
-        screen.addPreference(resetCategory);
-        resetCategory.addPreference(createResetPreference(RESET_KEY, R.string.reset_session));
         screen.addPreference(createDataCaptureVersionPreference());
     }
 
     private Preference createOverviewPreference(String key, int title) {
         return new StyledPreference(requireContext(), key, title, true);
-    }
-
-    private Preference createResetPreference(String key, int title) {
-        return new StyledPreference(requireContext(), key, title, getResources().getColor(R.color.colorAccent));
     }
 
     private Preference createDataCaptureVersionPreference() {
@@ -85,17 +75,7 @@ public final class OverviewSettingsFragment extends BasePreferenceFragment {
                 navigateTo(ViewSettingsFragment.newInstance());
                 return true;
             }
-            case RESET_KEY: {
-                storeResetSession();
-                return true;
-            }
         }
         return super.onPreferenceTreeClick(preference);
-    }
-
-    private void storeResetSession() {
-        getPreferenceManager().getSharedPreferences().edit()
-                .putBoolean(RESET_KEY, true)
-                .apply();
     }
 }

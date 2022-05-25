@@ -24,12 +24,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.scandit.datacapture.barcode.data.Checksum;
 import com.scandit.datacapture.barcodecapturesettingssample.R;
 import com.scandit.datacapture.barcodecapturesettingssample.base.NavigationFragment;
 import com.scandit.datacapture.core.data.Range;
 
 public class SpecificSymbologyFragment extends NavigationFragment
-        implements SymbologyExtensionsAdapter.Callback {
+        implements SymbologyExtensionsAdapter.Callback,
+        SymbologyChecksumsAdapter.Callback {
 
     private static final String KEY_SYMBOLOGY_IDENTIFIER = "symbology_identifier";
 
@@ -43,12 +46,19 @@ public class SpecificSymbologyFragment extends NavigationFragment
 
     private SpecificSymbologyViewModel viewModel;
 
-    private Switch switchEnabled, switchColorInverted;
-    private View containerRange, containerRangeMin, containerRangeMax, containerExtensions;
+    private Switch switchEnabled;
+    private Switch switchColorInverted;
+    private View containerRange;
+    private View containerRangeMin;
+    private View containerRangeMax;
+    private View containerExtensions;
+    private View containerChecksums;
     private TextView textRangeMin, textRangeMax;
     private RecyclerView recyclerExtensions;
+    private RecyclerView recyclerChecksums;
 
-    private SymbologyExtensionsAdapter adapter;
+    private SymbologyExtensionsAdapter extensionsAdapter;
+    private SymbologyChecksumsAdapter checksumsAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,6 +108,10 @@ public class SpecificSymbologyFragment extends NavigationFragment
         containerExtensions = view.findViewById(R.id.card_extensions);
         recyclerExtensions = view.findViewById(R.id.recycler_extensions);
         setupExtensions();
+
+        containerChecksums = view.findViewById(R.id.card_checksums);
+        recyclerChecksums = view.findViewById(R.id.recycler_checksums);
+        setupChecksums();
     }
 
     private void setupEnabledSwitch() {
@@ -148,11 +162,22 @@ public class SpecificSymbologyFragment extends NavigationFragment
     private void setupExtensions() {
         if (viewModel.extensionsAvailable()) {
             containerExtensions.setVisibility(View.VISIBLE);
-            adapter = new SymbologyExtensionsAdapter(
+            extensionsAdapter = new SymbologyExtensionsAdapter(
                     viewModel.getExtensionsAndEnabledState(), this
             );
             recyclerExtensions.setLayoutManager(new LinearLayoutManager(requireContext()));
-            recyclerExtensions.setAdapter(adapter);
+            recyclerExtensions.setAdapter(extensionsAdapter);
+        }
+    }
+
+    private void setupChecksums() {
+        if (viewModel.checksumsAvailable()) {
+            containerChecksums.setVisibility(View.VISIBLE);
+            checksumsAdapter = new SymbologyChecksumsAdapter(
+                    viewModel.getChecksumsAndEnabledState(), this
+            );
+            recyclerChecksums.setLayoutManager(new LinearLayoutManager(requireContext()));
+            recyclerChecksums.setAdapter(checksumsAdapter);
         }
     }
 
@@ -211,8 +236,12 @@ public class SpecificSymbologyFragment extends NavigationFragment
         menu.show();
     }
 
-    private void refreshSymbologyAdapterData() {
-        adapter.updateData(viewModel.getExtensionsAndEnabledState());
+    private void refreshExtensionsAdapterData() {
+        extensionsAdapter.updateData(viewModel.getExtensionsAndEnabledState());
+    }
+
+    private void refreshChecksumsAdapterData() {
+        checksumsAdapter.updateData(viewModel.getChecksumsAndEnabledState());
     }
 
     @Override
@@ -228,6 +257,12 @@ public class SpecificSymbologyFragment extends NavigationFragment
     @Override
     public void onExtensionClick(String extension) {
         viewModel.toggleExtension(extension);
-        refreshSymbologyAdapterData();
+        refreshExtensionsAdapterData();
+    }
+
+    @Override
+    public void onChecksumClick(Checksum checksum) {
+        viewModel.toggleChecksum(checksum);
+        refreshChecksumsAdapterData();
     }
 }

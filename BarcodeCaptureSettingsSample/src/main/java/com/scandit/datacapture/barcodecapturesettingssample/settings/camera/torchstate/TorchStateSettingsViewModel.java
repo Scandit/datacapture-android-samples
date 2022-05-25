@@ -18,7 +18,6 @@ import androidx.lifecycle.ViewModel;
 
 import com.scandit.datacapture.barcodecapturesettingssample.models.SettingsManager;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.camera.torchstate.type.TorchStateType;
-import com.scandit.datacapture.barcodecapturesettingssample.settings.camera.torchstate.type.TorchStateTypeAuto;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.camera.torchstate.type.TorchStateTypeOff;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.camera.torchstate.type.TorchStateTypeOn;
 import com.scandit.datacapture.core.source.TorchState;
@@ -33,7 +32,6 @@ public class TorchStateSettingsViewModel extends ViewModel {
         return new TorchStateType[]{
                 TorchStateTypeOn.fromCurrentTorchState(currentTorchState),
                 TorchStateTypeOff.fromCurrentTorchState(currentTorchState),
-                TorchStateTypeAuto.fromCurrentTorchState(currentTorchState)
         };
     }
 

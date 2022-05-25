@@ -87,7 +87,7 @@ public final class CameraSettingsFragment extends BasePreferenceFragment {
                 VideoResolution.AUTO.name(), VideoResolution.HD.name(), VideoResolution.FULL_HD.name()
         };
         preference.setEntryValues(resolutions);
-        preference.setEntries(getResources().getStringArray(R.array.camera_resolutions));
+        preference.setEntries(getResources().getStringArray(R.array.video_resolutions));
         if (preference.getValue() == null) {
             preference.setValueIndex(0);
         }

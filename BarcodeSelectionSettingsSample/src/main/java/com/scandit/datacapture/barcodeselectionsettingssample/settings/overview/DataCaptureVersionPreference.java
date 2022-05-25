@@ -39,6 +39,7 @@ public final class DataCaptureVersionPreference extends Preference {
         setKey(DATACAPTURE_VERSION_KEY);
         setTitle(getContext().getString(R.string.datacapture_version, DataCaptureVersion.VERSION_STRING));
         setIconSpaceReserved(false);
+        setSelectable(false);
     }
 
     @Override

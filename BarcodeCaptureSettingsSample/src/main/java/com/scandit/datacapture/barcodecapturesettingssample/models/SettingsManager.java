@@ -23,6 +23,7 @@ import androidx.core.graphics.ColorUtils;
 import com.scandit.datacapture.barcode.capture.BarcodeCapture;
 import com.scandit.datacapture.barcode.capture.BarcodeCaptureSettings;
 import com.scandit.datacapture.barcode.capture.SymbologySettings;
+import com.scandit.datacapture.barcode.data.Checksum;
 import com.scandit.datacapture.barcode.data.CompositeType;
 import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.data.SymbologyDescription;
@@ -55,7 +56,6 @@ import com.scandit.datacapture.core.source.TorchState;
 import com.scandit.datacapture.core.source.VideoResolution;
 import com.scandit.datacapture.core.time.TimeInterval;
 import com.scandit.datacapture.core.ui.LogoStyle;
-import com.scandit.datacapture.core.ui.overlay.DataCaptureOverlay;
 import com.scandit.datacapture.core.ui.style.Brush;
 import com.scandit.datacapture.core.ui.viewfinder.LaserlineViewfinderStyle;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinder;
@@ -63,14 +63,11 @@ import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderLineStyle
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderStyle;
 import com.scandit.datacapture.core.ui.viewfinder.Viewfinder;
 
-import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class SettingsManager {
 
@@ -300,6 +297,21 @@ public class SettingsManager {
 
     public void setExtensionEnabled(Symbology symbology, String extension, boolean enabled) {
         getSymbologySettings(symbology).setExtensionEnabled(extension, enabled);
+        updateAndSetBarcodeCaptureSettings();
+    }
+
+    public boolean isChecksumEnabled(Symbology symbology, Checksum checksum) {
+        return getSymbologySettings(symbology).getChecksums().contains(checksum);
+    }
+
+    public void setChecksumEnabled(Symbology symbology, Checksum checksum, boolean enabled) {
+        EnumSet<Checksum> enabledChecksums = getSymbologySettings(symbology).getChecksums();
+        if (enabled) {
+            enabledChecksums.add(checksum);
+        } else {
+            enabledChecksums.remove(checksum);
+        }
+        getSymbologySettings(symbology).setChecksums(enabledChecksums);
         updateAndSetBarcodeCaptureSettings();
     }
 

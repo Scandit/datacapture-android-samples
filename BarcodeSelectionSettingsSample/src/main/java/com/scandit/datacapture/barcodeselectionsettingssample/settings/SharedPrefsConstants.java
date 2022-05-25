@@ -34,8 +34,6 @@ public final class SharedPrefsConstants {
     public static final String BARCODE_SELECTION_KEY = "key_barcode_selection";
     public static final String CAMERA_KEY = "key_camera";
     public static final String VIEW_KEY = "key_view";
-    public static final String RESET_CATEGORY_KEY = "key_reset_category";
-    public static final String RESET_KEY = "key_reset";
     public static final String DATACAPTURE_VERSION_KEY = "key_scandit_version";
 
     // Barcode Selection.

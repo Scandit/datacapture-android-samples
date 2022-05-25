@@ -35,9 +35,9 @@ android {
 }
 
 dependencies {
-    api(name:"ScanditCaptureCore", ext:"aar")
-    api(name:"ScanditIdCapture", ext:"aar")
-    api(name:"ScanditTextCaptureBase", ext:"aar")
+    api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:id:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:text-base:${versions.scandit_sdk_version}"
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${versions.desugar}")
 

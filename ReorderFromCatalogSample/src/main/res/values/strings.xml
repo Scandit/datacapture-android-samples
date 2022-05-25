@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ReorderCatalog</string>
+    <string name="app_name">ReorderFromCatalog</string>
     <string name="go_to_results">Go to results</string>
     <string name="items">Items</string>
     <string name="close">Close</string>

@@ -84,6 +84,7 @@ public final class DataCaptureManager {
         settings.setSupportedDocuments(
                 IdDocumentType.ID_CARD_VIZ, IdDocumentType.DL_VIZ, IdDocumentType.AAMVA_BARCODE,
                 IdDocumentType.US_US_ID_BARCODE, IdDocumentType.COLOMBIA_ID_BARCODE,
+                IdDocumentType.COLOMBIA_DL_BARCODE,
                 IdDocumentType.ARGENTINA_ID_BARCODE, IdDocumentType.SOUTH_AFRICA_DL_BARCODE,
                 IdDocumentType.SOUTH_AFRICA_ID_BARCODE
         );

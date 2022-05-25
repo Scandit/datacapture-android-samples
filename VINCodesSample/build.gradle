@@ -34,11 +34,11 @@ android {
 }
 
 dependencies {
-    api(name:"ScanditCaptureCore", ext:"aar")
-    api(name:"ScanditBarcodeCapture", ext:"aar")
-    api(name:"ScanditParser", ext:"aar")
-    api(name:"ScanditTextCapture", ext:"aar")
-    api(name:"ScanditTextCaptureBase", ext:"aar")
+    api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:barcode:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:parser:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:text:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:text-base:${versions.scandit_sdk_version}"
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}")
 

@@ -299,8 +299,6 @@ class DataCaptureManager {
     public void setupBarcodeSelection(BarcodeSelection barcodeSelection) {
         // Set the center of the location selection and aimer from the desired settings.
         setupPointOfInterest(barcodeSelection);
-        // Reset the barcodeSelectionSession if requested from the settings.
-        checkAndResetBarcodeSelection(barcodeSelection);
         // Set the feedback from the settings.
         // Feedbacks determine what sound and/or vibration should be emitted when selecting barcodes.
         setupFeedback(barcodeSelection);
@@ -315,14 +313,6 @@ class DataCaptureManager {
                     POINT_OF_INTEREST_X_KEY, POINT_OF_INTEREST_Y_KEY, dataCaptureDefaults.getBarcodeSelectionPointOfInterest()
             );
             barcodeSelection.setPointOfInterest(poi);
-        }
-    }
-
-    private void checkAndResetBarcodeSelection(BarcodeSelection barcodeSelection) {
-        boolean resetRequested = settingsManager.retrieveBoolean(RESET_KEY, false);
-        if (resetRequested) {
-            barcodeSelection.reset();
-            settingsManager.setBoolean(RESET_KEY, false);
         }
     }
 
@@ -348,6 +338,9 @@ class DataCaptureManager {
         // - Auto focus and exposure metering of the camera.
         // - Rendered Viewfinders.
         setupPointOfInterest(view);
+
+        // Zoom gesture is disabled, since zoom will be controlled only by the Camera - Zoom Factor setting.
+        view.setZoomGesture(null);
     }
 
     private void setupScanAreaMargins(DataCaptureView view) {

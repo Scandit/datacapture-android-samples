@@ -144,6 +144,7 @@ public class IdCaptureRepository implements IdCaptureListener {
         settings.setSupportedDocuments(
                 IdDocumentType.AAMVA_BARCODE,
                 IdDocumentType.ARGENTINA_ID_BARCODE,
+                IdDocumentType.COLOMBIA_DL_BARCODE,
                 IdDocumentType.COLOMBIA_ID_BARCODE,
                 IdDocumentType.SOUTH_AFRICA_DL_BARCODE,
                 IdDocumentType.SOUTH_AFRICA_ID_BARCODE,

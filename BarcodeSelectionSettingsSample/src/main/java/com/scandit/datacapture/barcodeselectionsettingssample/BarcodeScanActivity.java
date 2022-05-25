@@ -149,6 +149,7 @@ public final class BarcodeScanActivity
 
     private void pauseFrameSource() {
         // Switch camera off to stop streaming frames.
+        barcodeSelection.setEnabled(false);
         camera.switchToDesiredState(FrameSourceState.OFF, null);
     }
 

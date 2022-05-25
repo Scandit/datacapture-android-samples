@@ -15,6 +15,8 @@
 package com.scandit.datacapture.barcodecapturesettingssample.settings.barcodecapture.symbologies.symbology;
 
 import androidx.lifecycle.ViewModel;
+
+import com.scandit.datacapture.barcode.data.Checksum;
 import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.data.SymbologyDescription;
 import com.scandit.datacapture.barcodecapturesettingssample.models.SettingsManager;
@@ -106,6 +108,32 @@ public class SpecificSymbologyViewModel extends ViewModel {
     void toggleExtension(String extension) {
         settingsManager.setExtensionEnabled(
                 symbology, extension, !settingsManager.isExtensionEnabled(symbology, extension)
+        );
+    }
+
+    boolean checksumsAvailable() {
+        return !symbologyDescription.getSupportedChecksums().isEmpty();
+    }
+
+    SymbologyChecksumEntry[] getChecksumsAndEnabledState() {
+
+        Set<Checksum> supportedChecksums = symbologyDescription.getSupportedChecksums();
+        SymbologyChecksumEntry[] checksumsAndEnabledState =
+                new SymbologyChecksumEntry[supportedChecksums.size()];
+
+        int counter = 0;
+        for (Checksum checksum : supportedChecksums) {
+            checksumsAndEnabledState[counter] = new SymbologyChecksumEntry(
+                    checksum, settingsManager.isChecksumEnabled(symbology, checksum)
+            );
+            counter++;
+        }
+        return checksumsAndEnabledState;
+    }
+
+    void toggleChecksum(Checksum checksum) {
+        settingsManager.setChecksumEnabled(
+                symbology, checksum, !settingsManager.isChecksumEnabled(symbology, checksum)
         );
     }
 }

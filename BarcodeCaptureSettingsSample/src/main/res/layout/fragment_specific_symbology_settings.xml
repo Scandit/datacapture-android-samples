@@ -71,7 +71,8 @@
                     android:saveEnabled="false"
                     android:background="?android:attr/selectableItemBackground"
                     android:text="@string/color_inverted"
-                    android:visibility="gone"/>
+                    android:visibility="gone"
+                    tools:visibility="visible" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -82,12 +83,12 @@
             android:background="@android:color/white"
             android:elevation="3dp"
             android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@+id/card_symbology_enabled"
-            app:layout_constraintStart_toStartOf="parent"
+            app:cardCornerRadius="0dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:cardCornerRadius="0dp">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card_symbology_enabled"
+            tools:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -101,7 +102,7 @@
                     android:layout_height="wrap_content"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:text="@string/range"/>
+                    android:text="@string/range" />
 
                 <LinearLayout
                     android:id="@+id/container_range_min"
@@ -120,7 +121,7 @@
                         android:maxLines="1"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
-                        android:text="@string/minimum"/>
+                        android:text="@string/minimum" />
 
                     <TextView
                         android:id="@+id/text_range_min"
@@ -132,8 +133,8 @@
                         android:ellipsize="end"
                         android:gravity="center_vertical|end"
                         android:drawableEnd="@drawable/ic_expand"
-                        tools:text="7"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        tools:text="7" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -152,7 +153,7 @@
                         android:maxLines="1"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
-                        android:text="@string/maximum"/>
+                        android:text="@string/maximum" />
 
                     <TextView
                         android:id="@+id/text_range_max"
@@ -164,8 +165,8 @@
                         android:ellipsize="end"
                         android:gravity="center_vertical|end"
                         android:drawableEnd="@drawable/ic_expand"
-                        tools:text="7"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        tools:text="7" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -175,12 +176,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
             android:background="@android:color/white"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@+id/card_range"
+            app:cardCornerRadius="0dp"
             app:cardElevation="3dp"
-            app:cardCornerRadius="0dp">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card_range"
+            tools:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -193,7 +196,7 @@
                     android:layout_height="wrap_content"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:text="@string/extensions"/>
+                    android:text="@string/extensions" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_extensions"
@@ -204,7 +207,47 @@
                     android:clipToPadding="false"
                     android:nestedScrollingEnabled="false"
                     android:isScrollContainer="false"
-                    tools:listitem="@layout/two_texts_and_icon"/>
+                    tools:listitem="@layout/two_texts_and_icon" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_checksums"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:visibility="gone"
+            android:layout_marginTop="12dp"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="3dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card_extensions"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/checksums" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_checksums"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
+                    android:isScrollContainer="false"
+                    tools:listitem="@layout/two_texts_and_icon" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

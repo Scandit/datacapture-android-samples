@@ -26,6 +26,7 @@
     <string name="minimum">Minimum</string>
     <string name="maximum">Maximum</string>
     <string name="extensions">Extensions</string>
+    <string name="checksums">Checksums</string>
     <string name="location_selection">Location Selection</string>
     <string name="feedback">Feedback</string>
     <string name="code_duplicate_filter">Code Duplicate Filter</string>

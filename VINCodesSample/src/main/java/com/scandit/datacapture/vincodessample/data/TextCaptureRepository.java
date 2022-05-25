@@ -98,7 +98,7 @@ public class TextCaptureRepository implements TextCaptureListener {
          * The viewfinder is an additional UI that aids the user in the capture process. We use
          * this viewfinder to visualize the scan area that we've earlier set with LocationSelection.
          */
-        RectangularViewfinder viewfinder = new RectangularViewfinder(RectangularViewfinderStyle.ROUNDED);
+        RectangularViewfinder viewfinder = new RectangularViewfinder(RectangularViewfinderStyle.SQUARE);
         viewfinder.setSize(new SizeWithUnit(new FloatWithUnit(0.7f, FRACTION),
             new FloatWithUnit(0.07f, FRACTION)));
         viewfinder.setDimming(.3f);
