@@ -35,7 +35,7 @@ public class RectangularDisabledColor {
             new HashMap<>();
 
     public static final RectangularDisabledColor DEFAULT = new RectangularDisabledColor(
-            new RectangularViewfinder().getColor(),
+            new RectangularViewfinder(RectangularViewfinderStyle.LEGACY).getColor(),
             R.string._default
     );
 

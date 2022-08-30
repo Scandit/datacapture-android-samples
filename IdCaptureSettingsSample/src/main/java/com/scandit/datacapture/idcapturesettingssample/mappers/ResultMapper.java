@@ -45,6 +45,10 @@ public abstract class ResultMapper {
                 return new AamvaResultMapper(capturedId);
             case ARGENTINA_ID_BARCODE_RESULT:
                 return new ArgentinaIdBarcodeResultMapper(capturedId);
+            case CHINA_EXIT_ENTRY_PERMIT_MRZ_RESULT:
+                return new ChinaExitEntryPermitMrzResultMapper(capturedId);
+            case CHINA_MAINLAND_TRAVEL_PERMIT_MRZ_RESULT:
+                return new ChinaMainlandTravelPermitMrzResultMapper(capturedId);
             case COLOMBIA_DL_BARCODE_RESULT:
                 return new ColombiaDlBarcodeResultMapper(capturedId);
             case COLOMBIA_ID_BARCODE_RESULT:

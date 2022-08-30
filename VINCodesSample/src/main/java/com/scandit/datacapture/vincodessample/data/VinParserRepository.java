@@ -22,6 +22,7 @@ import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.parser.ParsedData;
 import com.scandit.datacapture.parser.Parser;
 import com.scandit.datacapture.parser.ParserDataFormat;
+import com.scandit.datacapture.parser.ParserException;
 import com.scandit.datacapture.text.data.CapturedText;
 
 import java.util.HashMap;
@@ -108,7 +109,7 @@ public class VinParserRepository {
              * Send the parsed VIN data to the UI layer.
              */
             vins.postValue(vin);
-        } catch (RuntimeException e) {
+        } catch (ParserException e) {
             /*
              * Send the error to the UI layer.
              */

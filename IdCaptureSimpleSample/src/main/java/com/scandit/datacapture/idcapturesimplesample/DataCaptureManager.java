@@ -79,14 +79,10 @@ public final class DataCaptureManager {
          */
         IdCaptureSettings settings = new IdCaptureSettings();
 
-        // Recognize national ID cards, US driver licenses, US Uniformed services barcodes, Argentina ID barcodes,
-        // South Africa ID barcodes, South Africa DL barcodes and Colombian ID barcodes.
+        // Recognize national ID cards & driver's licenses.
         settings.setSupportedDocuments(
-                IdDocumentType.ID_CARD_VIZ, IdDocumentType.DL_VIZ, IdDocumentType.AAMVA_BARCODE,
-                IdDocumentType.US_US_ID_BARCODE, IdDocumentType.COLOMBIA_ID_BARCODE,
-                IdDocumentType.COLOMBIA_DL_BARCODE,
-                IdDocumentType.ARGENTINA_ID_BARCODE, IdDocumentType.SOUTH_AFRICA_DL_BARCODE,
-                IdDocumentType.SOUTH_AFRICA_ID_BARCODE
+                IdDocumentType.ID_CARD_VIZ,
+                IdDocumentType.DL_VIZ
         );
 
         idCapture = IdCapture.forDataCaptureContext(dataCaptureContext, settings);

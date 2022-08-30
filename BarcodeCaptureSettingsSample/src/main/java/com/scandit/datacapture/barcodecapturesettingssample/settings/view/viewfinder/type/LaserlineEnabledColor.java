@@ -35,7 +35,7 @@ public class LaserlineEnabledColor {
             new HashMap<>();
 
     public static final LaserlineEnabledColor DEFAULT = new LaserlineEnabledColor(
-            new LaserlineViewfinder().getEnabledColor(),
+            new LaserlineViewfinder(LaserlineViewfinderStyle.LEGACY).getEnabledColor(),
             R.string._default
     );
 

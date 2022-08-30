@@ -162,7 +162,9 @@ public class IdCaptureRepository implements IdCaptureListener {
                 IdDocumentType.ID_CARD_MRZ,
                 IdDocumentType.PASSPORT_MRZ,
                 IdDocumentType.VISA_MRZ,
-                IdDocumentType.SWISS_DL_MRZ
+                IdDocumentType.SWISS_DL_MRZ,
+                IdDocumentType.CHINA_MAINLAND_TRAVEL_PERMIT_MRZ,
+                IdDocumentType.CHINA_EXIT_ENTRY_PERMIT_MRZ
         );
         return settings;
     }

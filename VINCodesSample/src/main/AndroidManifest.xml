@@ -13,8 +13,8 @@
 
         <activity
             android:name=".ui.MainActivity"
-            android:screenOrientation="sensor"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="sensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

@@ -14,6 +14,8 @@
 
 package com.scandit.datacapture.gs1parsersample;
 
+import static android.content.DialogInterface.OnClickListener;
+
 import android.content.DialogInterface;
 import android.os.Bundle;
 
@@ -36,13 +38,11 @@ import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinder;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderLineStyle;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderStyle;
 import com.scandit.datacapture.parser.ParsedData;
-import com.scandit.datacapture.parser.ParsedField;
 import com.scandit.datacapture.parser.Parser;
 import com.scandit.datacapture.parser.ParserDataFormat;
+import com.scandit.datacapture.parser.ParserException;
 
 import java.util.HashSet;
-
-import static android.content.DialogInterface.OnClickListener;
 
 public class GS1ParserActivity
         extends CameraPermissionActivity implements BarcodeCaptureListener {
@@ -208,7 +208,7 @@ public class GS1ParserActivity
                     showResult(result);
                 }
             });
-        } catch (RuntimeException e) {
+        } catch (ParserException e) {
             // Print the parser failure and continue.
             e.printStackTrace();
             barcodeCapture.setEnabled(true);

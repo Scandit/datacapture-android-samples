@@ -14,6 +14,8 @@
 
 package com.scandit.datacapture.idcapturesimplesample;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -27,12 +29,11 @@ import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.core.source.FrameSourceState;
 import com.scandit.datacapture.core.ui.DataCaptureView;
 import com.scandit.datacapture.id.capture.IdCapture;
-import com.scandit.datacapture.id.capture.IdCaptureException;
 import com.scandit.datacapture.id.capture.IdCaptureListener;
 import com.scandit.datacapture.id.capture.IdCaptureSession;
 import com.scandit.datacapture.id.data.CapturedId;
+import com.scandit.datacapture.id.data.CapturedResultType;
 import com.scandit.datacapture.id.data.DateResult;
-import com.scandit.datacapture.id.data.AamvaBarcodeResult;
 import com.scandit.datacapture.id.data.VizResult;
 import com.scandit.datacapture.id.ui.IdLayoutStyle;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
@@ -41,8 +42,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public class IdCaptureActivity extends CameraPermissionActivity
         implements IdCaptureListener, AlertDialogFragment.Callbacks {
@@ -142,16 +141,11 @@ public class IdCaptureActivity extends CameraPermissionActivity
         final String message;
 
         // The recognized fields of the captured Id can vary based on the capturedResultType.
-        switch (capturedId.getCapturedResultType()) {
-            case AAMVA_BARCODE_RESULT:
-                message = getDescriptionForAamvaBarcodeResult(capturedId);
-                break;
-            case VIZ_RESULT:
-                message = getDescriptionForViz(capturedId);
-                break;
-            default: // For other documents only the basic info from CapturedId is returned.
-               message = getDescriptionForCapturedId(capturedId);
-               break;
+        // For other documents only the basic info from CapturedId is returned.
+        if (capturedId.getCapturedResultType() == CapturedResultType.VIZ_RESULT) {
+            message = getDescriptionForViz(capturedId);
+        } else {
+            message = getDescriptionForCapturedId(capturedId);
         }
 
         /*
@@ -246,44 +240,6 @@ public class IdCaptureActivity extends CameraPermissionActivity
         dataCaptureManager.getIdCapture().setEnabled(true);
     }
 
-    private String getDescriptionForAamvaBarcodeResult(CapturedId result) {
-        StringBuilder builder = new StringBuilder();
-
-        appendDescriptionForCapturedId(result, builder);
-
-        AamvaBarcodeResult aamvaBarcode = result.getAamvaBarcode();
-
-        appendField(builder, "AAMVA Version: ", aamvaBarcode.getAamvaVersion());
-        appendField(builder, "Jurisdiction Version: ", aamvaBarcode.getJurisdictionVersion());
-        appendField(builder, "IIN: ", aamvaBarcode.getIin());
-        appendField(builder, "Issuing Jurisdiction: ", aamvaBarcode.getIssuingJurisdiction());
-        appendField(builder, "Issuing Jurisdiction ISO: ", aamvaBarcode.getIssuingJurisdictionIso());
-        appendField(builder, "Eye Color: ", aamvaBarcode.getEyeColor());
-        appendField(builder, "Hair Color: ", aamvaBarcode.getHairColor());
-        appendField(builder, "Height (inch): ", aamvaBarcode.getHeightInch());
-        appendField(builder, "Height (cm): ", aamvaBarcode.getHeightCm());
-        appendField(builder, "Weight (lbs): ", aamvaBarcode.getWeightLbs());
-        appendField(builder, "Weight (kg): ", aamvaBarcode.getWeightKg());
-        appendField(builder, "Place Of Birth: ", aamvaBarcode.getPlaceOfBirth());
-        appendField(builder, "Race: ", aamvaBarcode.getRace());
-        appendField(builder, "Document Discriminator Number: ", aamvaBarcode.getDocumentDiscriminatorNumber());
-        appendField(builder, "Vehicle Class: ", aamvaBarcode.getVehicleClass());
-        appendField(builder, "Restrictions Code: ", aamvaBarcode.getRestrictionsCode());
-        appendField(builder, "Endorsements Code: ", aamvaBarcode.getEndorsementsCode());
-        appendField(builder, "Card Revision Date: ", aamvaBarcode.getCardRevisionDate());
-        appendField(builder, "Middle Name: ", aamvaBarcode.getMiddleName());
-        appendField(builder, "Driver Name Suffix: ", aamvaBarcode.getDriverNameSuffix());
-        appendField(builder, "Driver Name Prefix: ", aamvaBarcode.getDriverNamePrefix());
-        appendField(builder, "Last Name Truncation: ", aamvaBarcode.getLastNameTruncation());
-        appendField(builder, "First Name Truncation: ", aamvaBarcode.getFirstNameTruncation());
-        appendField(builder, "Middle Name Truncation: ", aamvaBarcode.getMiddleNameTruncation());
-        appendField(builder, "Alias Family Name: ", aamvaBarcode.getAliasFamilyName());
-        appendField(builder, "Alias Given Name: ", aamvaBarcode.getAliasGivenName());
-        appendField(builder, "Alias Suffix Name: ", aamvaBarcode.getAliasSuffixName());
-
-        return builder.toString();
-    }
-
     private String getDescriptionForViz(CapturedId result) {
         StringBuilder builder = new StringBuilder();
 
@@ -330,24 +286,6 @@ public class IdCaptureActivity extends CameraPermissionActivity
         appendField(builder, "Document Number: ", result.getDocumentNumber());
         appendField(builder, "Date of Expiry: ", result.getDateOfExpiry());
         appendField(builder, "Date of Issue: ", result.getDateOfIssue());
-    }
-
-    private void appendField(StringBuilder builder, String name, int value) {
-        builder.append(name)
-                .append(value)
-                .append("\n");
-    }
-
-    private void appendField(StringBuilder builder, String name, Integer value) {
-        builder.append(name);
-
-        if (value == null) {
-            builder.append("<empty>");
-        } else {
-            builder.append(value);
-        }
-
-        builder.append("\n");
     }
 
     private void appendField(StringBuilder builder, String name, String value) {

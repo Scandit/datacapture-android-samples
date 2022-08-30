@@ -25,11 +25,11 @@ import java.util.List;
 
 public final class SouthAfricaDlResultMapper extends ResultMapper {
 
-    private final SouthAfricaDlBarcodeResult southAfricaDlResult;
+    private final SouthAfricaDlBarcodeResult result;
 
     public SouthAfricaDlResultMapper(CapturedId capturedId) {
         super(capturedId);
-        southAfricaDlResult = capturedId.getSouthAfricaDlBarcode();
+        result = capturedId.getSouthAfricaDlBarcode();
     }
 
     /*
@@ -40,14 +40,14 @@ public final class SouthAfricaDlResultMapper extends ResultMapper {
     public ArrayList<ResultEntry> mapResult() {
         ArrayList<ResultEntry> result = super.mapResult();
 
-        result.add(new ResultEntry("Personal Id Number", extractField(southAfricaDlResult.getPersonalIdNumber())));
-        result.add(new ResultEntry("Personal Id Number Type", extractField(southAfricaDlResult.getPersonalIdNumberType())));
-        result.add(new ResultEntry("Document Copy", extractField(southAfricaDlResult.getDocumentCopy())));
-        result.add(new ResultEntry("License Country of Issue", extractField(southAfricaDlResult.getLicenseCountryOfIssue())));
-        result.add(new ResultEntry("Driver Restriction Codes", extractIntFields(southAfricaDlResult.getDriverRestrictionCodes())));
-        result.add(new ResultEntry("Professional Driving Permit", extractField(southAfricaDlResult.getProfessionalDrivingPermit())));
-        result.add(new ResultEntry("Vehicle Restrictions", extractField(southAfricaDlResult.getVehicleRestrictions())));
-        result.add(new ResultEntry("Version", extractField(southAfricaDlResult.getVersion())));
+        result.add(new ResultEntry("Personal Id Number", extractField(this.result.getPersonalIdNumber())));
+        result.add(new ResultEntry("Personal Id Number Type", extractField(this.result.getPersonalIdNumberType())));
+        result.add(new ResultEntry("Document Copy", extractField(this.result.getDocumentCopy())));
+        result.add(new ResultEntry("License Country of Issue", extractField(this.result.getLicenseCountryOfIssue())));
+        result.add(new ResultEntry("Driver Restriction Codes", extractIntFields(this.result.getDriverRestrictionCodes())));
+        result.add(new ResultEntry("Professional Driving Permit", extractField(this.result.getProfessionalDrivingPermit())));
+        result.add(new ResultEntry("Vehicle Restrictions", extractField(this.result.getVehicleRestrictions())));
+        result.add(new ResultEntry("Version", extractField(this.result.getVersion())));
 
         return result;
     }

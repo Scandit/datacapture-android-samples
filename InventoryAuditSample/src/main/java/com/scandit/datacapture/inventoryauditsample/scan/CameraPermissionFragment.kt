@@ -14,71 +14,39 @@
 
 package com.scandit.datacapture.inventoryauditsample.scan
 
-import android.Manifest
-import android.annotation.TargetApi
+import android.Manifest.permission
+import android.Manifest.permission.CAMERA
 import android.content.pm.PackageManager
-import android.os.Build
+import android.content.pm.PackageManager.PERMISSION_GRANTED
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 
 /**
  * A fragment to request the camera permission.
  */
 abstract class CameraPermissionFragment : Fragment() {
-    private var permissionDeniedOnce = false
-    private var paused = true
-    override fun onPause() {
-        super.onPause()
-        paused = true
-    }
-
-    override fun onResume() {
-        super.onResume()
-        paused = false
-    }
-
-    protected fun hasCameraPermission(): Boolean {
-        return (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
-                || ContextCompat.checkSelfPermission(requireContext(), CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED)
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    protected fun requestCameraPermission() {
-        // For Android M and onwards we need to request the camera permission from the user.
-        if (!hasCameraPermission()) {
-            // The user already denied the permission once, we don't ask twice.
-            if (!permissionDeniedOnce) {
-                // It's clear why the camera is required. We don't need to give a detailed reason.
-                requestPermissions(arrayOf(CAMERA_PERMISSION), CAMERA_PERMISSION_REQUEST)
-            }
-        } else {
-            // We already have the permission or don't need it.
+    /**
+     * The launcher to request the user permission to use their device's camera.
+     */
+    private val requestCameraPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+        if (isGranted && isResumed) {
             onCameraPermissionGranted()
         }
     }
 
-    override fun onRequestPermissionsResult(
-            requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        if (requestCode == CAMERA_PERMISSION_REQUEST) {
-            if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                permissionDeniedOnce = false
-                if (!paused) {
-                    // Only call the function if not paused - camera should not be used otherwise.
-                    onCameraPermissionGranted()
-                }
-            } else {
-                // The user denied the permission - we are not going to ask again.
-                permissionDeniedOnce = true
-            }
+    protected fun requestCameraPermission() {
+        /*
+         * Check for camera permission and request it, if it hasn't yet been granted.
+         * Once we have the permission start the capture process.
+         */
+        if (checkSelfPermission(requireContext(), CAMERA) == PERMISSION_GRANTED) {
+            onCameraPermissionGranted()
         } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+            requestCameraPermission.launch(CAMERA)
         }
     }
 
     abstract fun onCameraPermissionGranted()
-
-    companion object {
-        private const val CAMERA_PERMISSION = Manifest.permission.CAMERA
-        private const val CAMERA_PERMISSION_REQUEST = 0
-    }
 }

@@ -23,11 +23,11 @@ import java.util.List;
 
 public final class ColombiaDlResultMapper extends ResultMapper {
 
-    private final ColombiaDlBarcodeResult colombiaDlResult;
+    private final ColombiaDlBarcodeResult result;
 
     public ColombiaDlResultMapper(CapturedId capturedId) {
         super(capturedId);
-        colombiaDlResult = capturedId.getColombiaDlBarcode();
+        result = capturedId.getColombiaDlBarcode();
     }
 
     /*
@@ -38,8 +38,8 @@ public final class ColombiaDlResultMapper extends ResultMapper {
     public ArrayList<ResultEntry> mapResult() {
         ArrayList<ResultEntry> result = super.mapResult();
 
-        result.add(new ResultEntry("Categories", extractField(colombiaDlResult.getCategories())));
-        result.add(new ResultEntry("Identification Type", extractField(colombiaDlResult.getIdentificationType())));
+        result.add(new ResultEntry("Categories", extractField(this.result.getCategories())));
+        result.add(new ResultEntry("Identification Type", extractField(this.result.getIdentificationType())));
 
         return result;
     }

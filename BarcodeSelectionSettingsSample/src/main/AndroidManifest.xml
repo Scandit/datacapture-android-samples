@@ -13,8 +13,8 @@
 
         <activity
             android:name=".BarcodeScanActivity"
-            android:screenOrientation="user"
-            android:label="@string/app_name">
+            android:exported="true"
+            android:screenOrientation="user">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

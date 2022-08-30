@@ -14,76 +14,37 @@
 
 package com.scandit.datacapture.barcodecaptureviewssample.modes.base;
 
-import android.Manifest;
-import android.annotation.TargetApi;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
+import static android.Manifest.permission.CAMERA;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static androidx.core.content.ContextCompat.checkSelfPermission;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
 /**
  * A fragment to request the camera permission.
  */
 public abstract class CameraPermissionFragment extends Fragment {
-
-    private static final String CAMERA_PERMISSION = Manifest.permission.CAMERA;
-    private static final int CAMERA_PERMISSION_REQUEST = 0;
-
-    private boolean permissionDeniedOnce = false;
-    private boolean paused = true;
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        paused = true;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        paused = false;
-    }
-
-    protected boolean hasCameraPermission() {
-        return Build.VERSION.SDK_INT < Build.VERSION_CODES.M
-                || ContextCompat.checkSelfPermission(requireContext(), CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    protected void requestCameraPermission() {
-        // For Android M and onwards we need to request the camera permission from the user.
-        if (!hasCameraPermission()) {
-            // The user already denied the permission once, we don't ask twice.
-            if (!permissionDeniedOnce) {
-                // It's clear why the camera is required. We don't need to give a detailed reason.
-                requestPermissions(new String[] { CAMERA_PERMISSION }, CAMERA_PERMISSION_REQUEST);
-            }
-
-        } else {
-            // We already have the permission or don't need it.
-            onCameraPermissionGranted();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(
-            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == CAMERA_PERMISSION_REQUEST) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                permissionDeniedOnce = false;
-                if (!paused) {
-                    // Only call the function if not paused - camera should not be used otherwise.
+    /**
+     * The launcher to request the user permission to use their device's camera.
+     */
+    private final ActivityResultLauncher<String> requestCameraPermission =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted && isResumed()) {
                     onCameraPermissionGranted();
                 }
-            } else {
-                // The user denied the permission - we are not going to ask again.
-                permissionDeniedOnce = true;
-            }
+            });
+
+    protected void requestCameraPermission() {
+        /*
+         * Check for camera permission and request it, if it hasn't yet been granted.
+         * Once we have the permission start the capture process.
+         */
+        if (checkSelfPermission(requireContext(), CAMERA) == PERMISSION_GRANTED) {
+            onCameraPermissionGranted();
         } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            requestCameraPermission.launch(CAMERA);
         }
     }
 

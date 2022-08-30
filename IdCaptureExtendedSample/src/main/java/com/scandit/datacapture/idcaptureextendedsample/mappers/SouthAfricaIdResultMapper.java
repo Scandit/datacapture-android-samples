@@ -22,11 +22,11 @@ import java.util.ArrayList;
 
 public final class SouthAfricaIdResultMapper extends ResultMapper {
 
-    private final SouthAfricaIdBarcodeResult southAfricaIdResult;
+    private final SouthAfricaIdBarcodeResult result;
 
     public SouthAfricaIdResultMapper(CapturedId capturedId) {
         super(capturedId);
-        southAfricaIdResult = capturedId.getSouthAfricaIdBarcode();
+        result = capturedId.getSouthAfricaIdBarcode();
     }
 
     /*
@@ -37,10 +37,10 @@ public final class SouthAfricaIdResultMapper extends ResultMapper {
     public ArrayList<ResultEntry> mapResult() {
         ArrayList<ResultEntry> result = super.mapResult();
 
-        result.add(new ResultEntry("Personal Id Number", extractField(southAfricaIdResult.getPersonalIdNumber())));
-        result.add(new ResultEntry("Citizenship Status", extractField(southAfricaIdResult.getCitizenshipStatus())));
-        result.add(new ResultEntry("Country of Birth", extractField(southAfricaIdResult.getCountryOfBirth())));
-        result.add(new ResultEntry("Country of Birth ISO", extractField(southAfricaIdResult.getCountryOfBirthIso())));
+        result.add(new ResultEntry("Personal Id Number", extractField(this.result.getPersonalIdNumber())));
+        result.add(new ResultEntry("Citizenship Status", extractField(this.result.getCitizenshipStatus())));
+        result.add(new ResultEntry("Country of Birth", extractField(this.result.getCountryOfBirth())));
+        result.add(new ResultEntry("Country of Birth ISO", extractField(this.result.getCountryOfBirthIso())));
 
         return result;
     }

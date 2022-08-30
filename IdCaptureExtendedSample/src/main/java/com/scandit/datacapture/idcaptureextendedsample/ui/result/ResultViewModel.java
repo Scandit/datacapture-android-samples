@@ -25,6 +25,8 @@ import com.scandit.datacapture.idcaptureextendedsample.data.IdCaptureRepository;
 import com.scandit.datacapture.idcaptureextendedsample.di.Injector;
 import com.scandit.datacapture.idcaptureextendedsample.mappers.AamvaResultMapper;
 import com.scandit.datacapture.idcaptureextendedsample.mappers.ArgentinaIdResultMapper;
+import com.scandit.datacapture.idcaptureextendedsample.mappers.ChinaExitEntryPermitMrzResultMapper;
+import com.scandit.datacapture.idcaptureextendedsample.mappers.ChinaMainlandTravelPermitMrzResultMapper;
 import com.scandit.datacapture.idcaptureextendedsample.mappers.ColombiaDlResultMapper;
 import com.scandit.datacapture.idcaptureextendedsample.mappers.ColombiaIdResultMapper;
 import com.scandit.datacapture.idcaptureextendedsample.mappers.MrzResultMapper;
@@ -92,6 +94,10 @@ public class ResultViewModel extends ViewModel {
         switch (capturedId.getCapturedResultType()) {
             case AAMVA_BARCODE_RESULT:
                 return new AamvaResultMapper(capturedId).mapResult();
+            case CHINA_EXIT_ENTRY_PERMIT_MRZ_RESULT:
+                return new ChinaExitEntryPermitMrzResultMapper(capturedId).mapResult();
+            case CHINA_MAINLAND_TRAVEL_PERMIT_MRZ_RESULT:
+                return new ChinaMainlandTravelPermitMrzResultMapper(capturedId).mapResult();
             case COLOMBIA_DL_BARCODE_RESULT:
                 return new ColombiaDlResultMapper(capturedId).mapResult();
             case COLOMBIA_ID_BARCODE_RESULT:

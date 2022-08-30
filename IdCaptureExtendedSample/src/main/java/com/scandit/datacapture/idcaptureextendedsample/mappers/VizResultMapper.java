@@ -36,11 +36,11 @@ import java.util.ArrayList;
 
 public final class VizResultMapper extends ResultMapper {
 
-    private final VizResult vizResult;
+    private final VizResult result;
 
     public VizResultMapper(CapturedId capturedId) {
         super(capturedId);
-        vizResult = capturedId.getViz();
+        result = capturedId.getViz();
     }
 
     /*
@@ -50,20 +50,20 @@ public final class VizResultMapper extends ResultMapper {
     public ArrayList<ResultEntry> mapResult() {
         ArrayList<ResultEntry> result = super.mapResult();
 
-        result.add(new ResultEntry("Issuing Authority", extractField(vizResult.getIssuingAuthority())));
-        result.add(new ResultEntry("Issuing Jurisdiction", extractField(vizResult.getIssuingJurisdiction())));
-        result.add(new ResultEntry("Issuing Jurisdiction ISO", extractField(vizResult.getIssuingJurisdictionIso())));
-        result.add(new ResultEntry("Additional Name Information", extractField(vizResult.getAdditionalNameInformation())));
-        result.add(new ResultEntry("Additional Address Information", extractField(vizResult.getAdditionalAddressInformation())));
-        result.add(new ResultEntry("Place of Birth", extractField(vizResult.getPlaceOfBirth())));
-        result.add(new ResultEntry("Race", extractField(vizResult.getRace())));
-        result.add(new ResultEntry("Religion", extractField(vizResult.getReligion())));
-        result.add(new ResultEntry("Profession", extractField(vizResult.getProfession())));
-        result.add(new ResultEntry("Marital Status", extractField(vizResult.getMaritalStatus())));
-        result.add(new ResultEntry("Residential Status", extractField(vizResult.getResidentialStatus())));
-        result.add(new ResultEntry("Employer", extractField(vizResult.getEmployer())));
-        result.add(new ResultEntry("Personal Id Number", extractField(vizResult.getPersonalIdNumber())));
-        result.add(new ResultEntry("Document Additional Number", extractField(vizResult.getDocumentAdditionalNumber())));
+        result.add(new ResultEntry("Issuing Authority", extractField(this.result.getIssuingAuthority())));
+        result.add(new ResultEntry("Issuing Jurisdiction", extractField(this.result.getIssuingJurisdiction())));
+        result.add(new ResultEntry("Issuing Jurisdiction ISO", extractField(this.result.getIssuingJurisdictionIso())));
+        result.add(new ResultEntry("Additional Name Information", extractField(this.result.getAdditionalNameInformation())));
+        result.add(new ResultEntry("Additional Address Information", extractField(this.result.getAdditionalAddressInformation())));
+        result.add(new ResultEntry("Place of Birth", extractField(this.result.getPlaceOfBirth())));
+        result.add(new ResultEntry("Race", extractField(this.result.getRace())));
+        result.add(new ResultEntry("Religion", extractField(this.result.getReligion())));
+        result.add(new ResultEntry("Profession", extractField(this.result.getProfession())));
+        result.add(new ResultEntry("Marital Status", extractField(this.result.getMaritalStatus())));
+        result.add(new ResultEntry("Residential Status", extractField(this.result.getResidentialStatus())));
+        result.add(new ResultEntry("Employer", extractField(this.result.getEmployer())));
+        result.add(new ResultEntry("Personal Id Number", extractField(this.result.getPersonalIdNumber())));
+        result.add(new ResultEntry("Document Additional Number", extractField(this.result.getDocumentAdditionalNumber())));
 
         return result;
     }

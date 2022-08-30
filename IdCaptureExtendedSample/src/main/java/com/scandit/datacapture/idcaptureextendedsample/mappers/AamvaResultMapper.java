@@ -22,11 +22,11 @@ import java.util.ArrayList;
 
 public final class AamvaResultMapper extends ResultMapper {
 
-    private final AamvaBarcodeResult aamvaResult;
+    private final AamvaBarcodeResult result;
 
     public AamvaResultMapper(CapturedId capturedId) {
         super(capturedId);
-        aamvaResult = capturedId.getAamvaBarcode();
+        result = capturedId.getAamvaBarcode();
     }
 
     /*
@@ -36,33 +36,33 @@ public final class AamvaResultMapper extends ResultMapper {
     @Override
     public ArrayList<ResultEntry> mapResult() {
         ArrayList<ResultEntry> result = super.mapResult();
-        result.add(new ResultEntry("AAMVA Version", extractField(aamvaResult.getAamvaVersion())));
-        result.add(new ResultEntry("Jurisdiction Version", extractField(aamvaResult.getJurisdictionVersion())));
-        result.add(new ResultEntry("IIN", extractField(aamvaResult.getIin())));
-        result.add(new ResultEntry("Issuing Jurisdiction", extractField(aamvaResult.getIssuingJurisdiction())));
-        result.add(new ResultEntry("Issuing Jurisdiction ISO", extractField(aamvaResult.getIssuingJurisdictionIso())));
-        result.add(new ResultEntry("Eye Color", extractField(aamvaResult.getEyeColor())));
-        result.add(new ResultEntry("Hair Color", extractField(aamvaResult.getHairColor())));
-        result.add(new ResultEntry("Height (inch)", extractField(aamvaResult.getHeightInch())));
-        result.add(new ResultEntry("Height (cm)", extractField(aamvaResult.getHeightCm())));
-        result.add(new ResultEntry("Weight (lbs)", extractField(aamvaResult.getWeightLbs())));
-        result.add(new ResultEntry("Weight (kg)", extractField(aamvaResult.getWeightKg())));
-        result.add(new ResultEntry("Place Of Birth", extractField(aamvaResult.getPlaceOfBirth())));
-        result.add(new ResultEntry("Race", extractField(aamvaResult.getRace())));
-        result.add(new ResultEntry("Document Discriminator Number", extractField(aamvaResult.getDocumentDiscriminatorNumber())));
-        result.add(new ResultEntry("Vehicle Class", extractField(aamvaResult.getVehicleClass())));
-        result.add(new ResultEntry("Restrictions Code", extractField(aamvaResult.getRestrictionsCode())));
-        result.add(new ResultEntry("Endorsements Code", extractField(aamvaResult.getEndorsementsCode())));
-        result.add(new ResultEntry("Card Revision Date", extractField(aamvaResult.getCardRevisionDate())));
-        result.add(new ResultEntry("Middle Name", extractField(aamvaResult.getMiddleName())));
-        result.add(new ResultEntry("Driver Name Suffix", extractField(aamvaResult.getDriverNameSuffix())));
-        result.add(new ResultEntry("Driver Name Prefix", extractField(aamvaResult.getDriverNamePrefix())));
-        result.add(new ResultEntry("Last Name Truncation", extractField(aamvaResult.getLastNameTruncation())));
-        result.add(new ResultEntry("First Name Truncation", extractField(aamvaResult.getFirstNameTruncation())));
-        result.add(new ResultEntry("Middle Name Truncation", extractField(aamvaResult.getMiddleNameTruncation())));
-        result.add(new ResultEntry("Alias Family Name", extractField(aamvaResult.getAliasFamilyName())));
-        result.add(new ResultEntry("Alias Given Name", extractField(aamvaResult.getAliasGivenName())));
-        result.add(new ResultEntry("Alias Suffix Name", extractField(aamvaResult.getAliasSuffixName())));
+        result.add(new ResultEntry("AAMVA Version", extractField(this.result.getAamvaVersion())));
+        result.add(new ResultEntry("Jurisdiction Version", extractField(this.result.getJurisdictionVersion())));
+        result.add(new ResultEntry("IIN", extractField(this.result.getIin())));
+        result.add(new ResultEntry("Issuing Jurisdiction", extractField(this.result.getIssuingJurisdiction())));
+        result.add(new ResultEntry("Issuing Jurisdiction ISO", extractField(this.result.getIssuingJurisdictionIso())));
+        result.add(new ResultEntry("Eye Color", extractField(this.result.getEyeColor())));
+        result.add(new ResultEntry("Hair Color", extractField(this.result.getHairColor())));
+        result.add(new ResultEntry("Height (inch)", extractField(this.result.getHeightInch())));
+        result.add(new ResultEntry("Height (cm)", extractField(this.result.getHeightCm())));
+        result.add(new ResultEntry("Weight (lbs)", extractField(this.result.getWeightLbs())));
+        result.add(new ResultEntry("Weight (kg)", extractField(this.result.getWeightKg())));
+        result.add(new ResultEntry("Place Of Birth", extractField(this.result.getPlaceOfBirth())));
+        result.add(new ResultEntry("Race", extractField(this.result.getRace())));
+        result.add(new ResultEntry("Document Discriminator Number", extractField(this.result.getDocumentDiscriminatorNumber())));
+        result.add(new ResultEntry("Vehicle Class", extractField(this.result.getVehicleClass())));
+        result.add(new ResultEntry("Restrictions Code", extractField(this.result.getRestrictionsCode())));
+        result.add(new ResultEntry("Endorsements Code", extractField(this.result.getEndorsementsCode())));
+        result.add(new ResultEntry("Card Revision Date", extractField(this.result.getCardRevisionDate())));
+        result.add(new ResultEntry("Middle Name", extractField(this.result.getMiddleName())));
+        result.add(new ResultEntry("Driver Name Suffix", extractField(this.result.getDriverNameSuffix())));
+        result.add(new ResultEntry("Driver Name Prefix", extractField(this.result.getDriverNamePrefix())));
+        result.add(new ResultEntry("Last Name Truncation", extractField(this.result.getLastNameTruncation())));
+        result.add(new ResultEntry("First Name Truncation", extractField(this.result.getFirstNameTruncation())));
+        result.add(new ResultEntry("Middle Name Truncation", extractField(this.result.getMiddleNameTruncation())));
+        result.add(new ResultEntry("Alias Family Name", extractField(this.result.getAliasFamilyName())));
+        result.add(new ResultEntry("Alias Given Name", extractField(this.result.getAliasGivenName())));
+        result.add(new ResultEntry("Alias Suffix Name", extractField(this.result.getAliasSuffixName())));
         return result;
     }
 }

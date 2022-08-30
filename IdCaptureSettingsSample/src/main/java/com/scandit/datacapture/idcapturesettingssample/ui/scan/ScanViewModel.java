@@ -53,7 +53,7 @@ public class ScanViewModel extends ViewModel {
     /**
      * The observer of captured document data.
      */
-    private final Observer<ScanResult> scanResultsObserver = this::displayCapturedResult;
+    private final Observer<ScanResultEvent> scanResultsObserver = this::displayCapturedResult;
 
     /**
      * Events to display the UI with the details of a captured personal
@@ -72,11 +72,6 @@ public class ScanViewModel extends ViewModel {
      */
     private final MutableLiveData<ShowBackScanAvailableEvent> showScanBack = new MutableLiveData<>();
 
-    /**
-     * The stream of captured document data.
-     */
-    private final MutableLiveData<ScanResult> scanResults = new MutableLiveData<>();
-
     public ScanViewModel() {
 
         /*
@@ -90,7 +85,7 @@ public class ScanViewModel extends ViewModel {
         /*
          * Stop observing the streams of the lower layer and the timer events to avoid memory leak.
          */
-        scanResults.removeObserver(scanResultsObserver);
+        idCaptureRepository.scanResults().removeObserver(scanResultsObserver);
     }
 
     /**
@@ -200,21 +195,16 @@ public class ScanViewModel extends ViewModel {
      * Display the UI with the details of a captured personal
      * identification document data.
      */
-    private void displayCapturedResult(ScanResult scanResult) {
+    private void displayCapturedResult(ScanResultEvent event) {
+        ScanResult scanResult = event.getContentIfNotHandled();
+
+        if (scanResult == null) return;
+
         final CaptureResult result = ResultMapper.create(scanResult.getCapturedId()).mapResult();
 
         if (scanResult.isNeedsBackScan()) {
-            /*
-             * Scan of the back of the document is enabled, the mode needs to be disabled while the
-             * user decides if they want to continue scanning or just display the partial result.
-             */
-            disableIdCapture();
             showScanBack.postValue(new ShowBackScanAvailableEvent(result));
         } else if (!scanResult.isContinuousMode()) {
-            /*
-             * Don't capture unnecessarily when the result is displayed without continuous mode.
-             */
-            disableIdCapture();
             showCaptureResult.postValue(new ShowCaptureResultEvent(result));
         } else {
             /*

@@ -13,6 +13,7 @@
 
         <activity
             android:name=".GS1ParserActivity"
+            android:exported="true"
             android:screenOrientation="sensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

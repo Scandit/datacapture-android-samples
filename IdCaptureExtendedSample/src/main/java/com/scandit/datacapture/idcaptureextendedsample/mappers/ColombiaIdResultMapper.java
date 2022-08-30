@@ -22,11 +22,11 @@ import java.util.ArrayList;
 
 public final class ColombiaIdResultMapper extends ResultMapper {
 
-    private final ColombiaIdBarcodeResult colombiaIdResult;
+    private final ColombiaIdBarcodeResult result;
 
     public ColombiaIdResultMapper(CapturedId capturedId) {
         super(capturedId);
-        colombiaIdResult = capturedId.getColombiaIdBarcode();
+        result = capturedId.getColombiaIdBarcode();
     }
 
     /*
@@ -37,7 +37,7 @@ public final class ColombiaIdResultMapper extends ResultMapper {
     public ArrayList<ResultEntry> mapResult() {
         ArrayList<ResultEntry> result = super.mapResult();
 
-        result.add(new ResultEntry("Blood Type", extractField(colombiaIdResult.getBloodType())));
+        result.add(new ResultEntry("Blood Type", extractField(this.result.getBloodType())));
 
         return result;
     }

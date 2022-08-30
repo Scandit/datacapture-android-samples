@@ -22,11 +22,11 @@ import java.util.ArrayList;
 
 public final class ArgentinaIdResultMapper extends ResultMapper {
 
-    private final ArgentinaIdBarcodeResult argentinaIdResult;
+    private final ArgentinaIdBarcodeResult result;
 
     public ArgentinaIdResultMapper(CapturedId capturedId) {
         super(capturedId);
-        argentinaIdResult = capturedId.getArgentinaIdBarcode();
+        result = capturedId.getArgentinaIdBarcode();
     }
 
     /*
@@ -37,8 +37,8 @@ public final class ArgentinaIdResultMapper extends ResultMapper {
     public ArrayList<ResultEntry> mapResult() {
         ArrayList<ResultEntry> result = super.mapResult();
 
-        result.add(new ResultEntry("Document Copy", extractField(argentinaIdResult.getDocumentCopy())));
-        result.add(new ResultEntry("Personal Id Number", extractField(argentinaIdResult.getPersonalIdNumber())));
+        result.add(new ResultEntry("Document Copy", extractField(this.result.getDocumentCopy())));
+        result.add(new ResultEntry("Personal Id Number", extractField(this.result.getPersonalIdNumber())));
 
         return result;
     }

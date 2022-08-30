@@ -177,7 +177,7 @@ public class SettingsManager {
         initBrushStyles();
 
         // Create a temporary RectangularViewfinder instance to get default values for width and height.
-        RectangularViewfinder tempRectangularViewfinder = new RectangularViewfinder();
+        RectangularViewfinder tempRectangularViewfinder = new RectangularViewfinder(RectangularViewfinderStyle.LEGACY);
         rectangularViewfinderWidth = tempRectangularViewfinder.getSizeWithUnitAndAspect().getWidthAndHeight().getWidth();
         rectangularViewfinderHeight = tempRectangularViewfinder.getSizeWithUnitAndAspect().getWidthAndHeight().getHeight();
         rectangularViewfinderShorterDimension = new FloatWithUnit(1.0f, MeasureUnit.FRACTION);

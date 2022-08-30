@@ -14,6 +14,7 @@
 
 package com.scandit.datacapture.idcapturesettingssample.data;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -29,8 +30,7 @@ import com.scandit.datacapture.id.data.IdImageType;
 import com.scandit.datacapture.id.data.SupportedSides;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 import com.scandit.datacapture.idcapturesettingssample.ui.scan.ScanResult;
-
-import androidx.annotation.NonNull;
+import com.scandit.datacapture.idcapturesettingssample.ui.scan.ScanResultEvent;
 
 import java.util.Arrays;
 
@@ -52,7 +52,7 @@ public class IdCaptureRepository implements IdCaptureListener {
     /**
      * The stream of Captured IDs.
      */
-    private final MutableLiveData<ScanResult> scanResults = new MutableLiveData<>();
+    private final MutableLiveData<ScanResultEvent> scanResults = new MutableLiveData<>();
 
     /**
      * The DataCaptureContext that the current IdCapture is attached to.
@@ -70,7 +70,7 @@ public class IdCaptureRepository implements IdCaptureListener {
     /**
      * The stream of captured IDs.
      */
-    public LiveData<ScanResult> scanResults() {
+    public LiveData<ScanResultEvent> scanResults() {
         return scanResults;
     }
 
@@ -122,7 +122,8 @@ public class IdCaptureRepository implements IdCaptureListener {
          * Enable showing the desired image types from the settings.
          */
         Arrays.stream(IdImageType.values()).forEach((type) -> {
-            idCaptureSettings.setShouldPassImageTypeToResult(type, settingsRepository.getShouldPassImageForType(type));
+            idCaptureSettings.setShouldPassImageTypeToResult(type,
+                    settingsRepository.getShouldPassImageForType(type));
         });
 
         /*
@@ -160,19 +161,29 @@ public class IdCaptureRepository implements IdCaptureListener {
          * in order to return to the UI thread.
          */
         CapturedId capturedId = session.getNewlyCapturedId();
-        boolean needsBackScan = false;
-        if (capturedId != null &&
+        boolean needsBackScan = capturedId != null &&
+                settingsRepository.getSupportedSides() == SupportedSides.FRONT_AND_BACK &&
                 capturedId.getViz() != null &&
                 capturedId.getViz().isBackSideCaptureSupported() &&
-                capturedId.getViz().getCapturedSides() == SupportedSides.FRONT_ONLY
-        ) {
-            needsBackScan = true;
+                capturedId.getViz().getCapturedSides() == SupportedSides.FRONT_ONLY;
+
+        /*
+         * Scan of the back of the document is enabled, the mode needs to be disabled while the
+         * user decides if they want to continue scanning or just display the partial result.
+         *
+         * Don't capture unnecessarily when the result is displayed without continuous mode.
+         */
+        if (needsBackScan || !settingsRepository.isContinuousScanEnabled()) {
+            disableIdCapture();
         }
+
         scanResults.postValue(
-                new ScanResult(
-                        capturedId,
-                        settingsRepository.isContinuousScanEnabled(),
-                        needsBackScan
+                new ScanResultEvent(
+                        new ScanResult(
+                                capturedId,
+                                settingsRepository.isContinuousScanEnabled(),
+                                needsBackScan
+                        )
                 )
         );
     }

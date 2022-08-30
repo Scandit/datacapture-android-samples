@@ -22,11 +22,11 @@ import java.util.ArrayList;
 
 public final class MrzResultMapper extends ResultMapper {
 
-    private final MrzResult mrzResult;
+    private final MrzResult result;
 
     public MrzResultMapper(CapturedId capturedId) {
         super(capturedId);
-        mrzResult = capturedId.getMrz();
+        result = capturedId.getMrz();
     }
 
     /*
@@ -36,10 +36,10 @@ public final class MrzResultMapper extends ResultMapper {
     public ArrayList<ResultEntry> mapResult() {
         ArrayList<ResultEntry> result = super.mapResult();
 
-        result.add(new ResultEntry("Document Code", extractField(mrzResult.getDocumentCode())));
-        result.add(new ResultEntry("Names Are Truncated", extractField(mrzResult.getNamesAreTruncated())));
-        result.add(new ResultEntry("Optional", extractField(mrzResult.getOptional())));
-        result.add(new ResultEntry("Optional1", extractField(mrzResult.getOptional1())));
+        result.add(new ResultEntry("Document Code", extractField(this.result.getDocumentCode())));
+        result.add(new ResultEntry("Names Are Truncated", extractField(this.result.getNamesAreTruncated())));
+        result.add(new ResultEntry("Optional", extractField(this.result.getOptional())));
+        result.add(new ResultEntry("Optional1", extractField(this.result.getOptional1())));
 
         return result;
     }
