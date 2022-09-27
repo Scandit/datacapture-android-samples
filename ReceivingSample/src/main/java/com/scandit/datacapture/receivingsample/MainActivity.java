@@ -35,14 +35,12 @@ import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.tracking.data.TrackedBarcode;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.data.FrameData;
-import com.scandit.datacapture.core.source.Camera;
-import com.scandit.datacapture.core.source.CameraSettings;
-import com.scandit.datacapture.core.source.FrameSourceState;
-import com.scandit.datacapture.core.source.VideoResolution;
 import com.scandit.datacapture.core.ui.DataCaptureView;
 import com.scandit.datacapture.core.ui.style.Brush;
 import com.scandit.datacapture.receivingsample.data.ScanDetails;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -56,12 +54,11 @@ public class MainActivity extends CameraPermissionActivity
 
     private BarcodeCount barcodeCount;
     private DataCaptureContext dataCaptureContext;
-    private BarcodeCountSession lastSession;
     private BarcodeCountBasicOverlay overlay;
 
     private boolean navigatingInternally = false;
 
-    private final HashMap<String, ScanDetails> scanResults = new HashMap<>();
+    private Collection<TrackedBarcode> scannedBarcodes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,20 +165,7 @@ public class MainActivity extends CameraPermissionActivity
         @NonNull BarcodeCountSession session,
         @NonNull FrameData data
     ) {
-        lastSession = session;
-        synchronized (scanResults) {
-            for (TrackedBarcode trackedBarcode : session.getTrackedBarcodes().values()) {
-                String barcodeData = trackedBarcode.getBarcode().getData();
-                if (barcodeData == null) return;
-                ScanDetails scanDetails = scanResults.get(barcodeData);
-
-                if (scanDetails != null) {
-                    scanDetails.increaseQuantity();
-                } else {
-                    scanResults.put(barcodeData, new ScanDetails(barcodeData));
-                }
-            }
-        }
+        scannedBarcodes = session.getTrackedBarcodes().values();
     }
 
     @Nullable
@@ -208,16 +192,34 @@ public class MainActivity extends CameraPermissionActivity
     public void onListButtonTapped(
         @NonNull BarcodeCountBasicOverlay overlay
     ) {
-        synchronized (scanResults) {
-            navigatingInternally = true;
-            listLauncher.launch(
-                    ResultsActivity.getIntent(
-                            MainActivity.this,
-                            scanResults,
-                            ResultsActivity.DoneButtonStyle.RESUME
-                    )
-            );
+        navigatingInternally = true;
+        listLauncher.launch(
+            ResultsActivity.getIntent(
+                MainActivity.this,
+                getScanResults(),
+                ResultsActivity.DoneButtonStyle.RESUME
+            )
+        );
+    }
+
+    private HashMap<String, ScanDetails> getScanResults() {
+        final Collection<TrackedBarcode> barcodes = scannedBarcodes;
+        HashMap<String, ScanDetails> scanResults = new HashMap<>();
+
+        for (TrackedBarcode trackedBarcode : barcodes) {
+            String barcodeData = trackedBarcode.getBarcode().getData();
+            if (barcodeData == null) continue;
+
+            ScanDetails scanDetails = scanResults.get(barcodeData);
+            if (scanDetails != null) {
+                scanDetails.increaseQuantity();
+                scanResults.put(barcodeData, scanDetails);
+            } else {
+                scanResults.put(barcodeData, new ScanDetails(barcodeData));
+            }
         }
+
+        return scanResults;
     }
 
     /**
@@ -235,16 +237,14 @@ public class MainActivity extends CameraPermissionActivity
     public void onExitButtonTapped(
         @NonNull BarcodeCountBasicOverlay overlay
     ) {
-        synchronized (scanResults) {
-            navigatingInternally = true;
-            exitLauncher.launch(
-                    ResultsActivity.getIntent(
-                            MainActivity.this,
-                            scanResults,
-                            ResultsActivity.DoneButtonStyle.NEW_SCAN
-                    )
-            );
-        }
+        navigatingInternally = true;
+        exitLauncher.launch(
+            ResultsActivity.getIntent(
+                MainActivity.this,
+                getScanResults(),
+                ResultsActivity.DoneButtonStyle.NEW_SCAN
+            )
+        );
     }
 
     /**
@@ -257,14 +257,8 @@ public class MainActivity extends CameraPermissionActivity
         });
 
     private void resetSession() {
-        synchronized (scanResults) {
-            scanResults.clear();
-            barcodeCount.reset();
-            if (lastSession != null) {
-                // reset last session
-                lastSession.reset();
-            }
-        }
+        scannedBarcodes.clear();
+        barcodeCount.reset();
     }
 
     @Override
