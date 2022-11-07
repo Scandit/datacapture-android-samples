@@ -22,10 +22,12 @@ import java.io.Serializable;
 public final class ScanDetails implements Serializable {
 
     public final String barcodeData;
+    public final String symbology;
     public int quantity;
 
-    public ScanDetails(String barcodeData) {
+    public ScanDetails(String barcodeData, String symbology) {
         this.barcodeData = barcodeData;
+        this.symbology = symbology;
         this.quantity = 1;
     }
 

@@ -14,14 +14,15 @@
 
 package com.scandit.datacapture.idcaptureextendedsample.ui.scan;
 
+import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.idcaptureextendedsample.ui.Event;
 
 /**
  * An event for the fragment to display the UI that checks whether the user wishes to capture
  * also the back side of a document.
  */
-class AskScanBackSide extends Event<Object> {
-    public AskScanBackSide() {
-        super(new Object());
+class AskScanBackSide extends Event<CapturedId> {
+    public AskScanBackSide(CapturedId capturedId) {
+        super(capturedId);
     }
 }

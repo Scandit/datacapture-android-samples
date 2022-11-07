@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.scandit.datacapture.barcode.spark.ui.SparkScanCoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/spark_scan_coordinator"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:background="@android:color/white"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/item_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:textSize="12sp"
+            android:textColor="#3D4852"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/result_recycler"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="7 items" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/result_recycler"
+            android:layout_width="match_parent"
+            android:background="@android:color/white"
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@id/clear_list"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/item_count" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/light_grey"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/result_recycler" />
+
+        <Button
+            android:id="@+id/clear_list"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/clear_button_background"
+            android:text="@string/clear_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.scandit.datacapture.barcode.spark.ui.SparkScanCoordinatorLayout>

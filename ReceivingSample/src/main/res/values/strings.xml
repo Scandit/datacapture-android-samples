@@ -8,5 +8,6 @@
     <string name="multiple_quantity_product_description">Non-unique item %d</string>
     <string name="product_description">Item %d</string>
     <string name="quantity">Qty: %d</string>
-    <string name="gtin">GTIN: %s</string>
+    <string name="result_item">%s: %s</string>
+    <string name="results_amount">Items (%d)</string>
 </resources>

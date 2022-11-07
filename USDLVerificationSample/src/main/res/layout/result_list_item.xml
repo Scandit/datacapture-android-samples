@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/default_padding_large"
+    android:paddingBottom="@dimen/default_padding_large"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/result_header_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/default_padding"
+        android:layout_weight="1"
+        android:gravity="start"
+        android:maxLines="2"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/grey_id_scanning"
+        android:textSize="14sp"
+        tools:text="FULL NAME" />
+
+    <TextView
+        android:id="@+id/result_value_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_padding"
+        android:layout_weight="1"
+        android:gravity="end"
+        android:maxLines="3"
+        android:textColor="@color/id_scanning_text_color"
+        android:textSize="16sp"
+        android:fontFamily="sans-serif-medium"
+        tools:text="Sample Person" />
+</LinearLayout>

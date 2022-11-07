@@ -30,9 +30,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-class ResultListAdapter extends ListAdapter<ResultEntry, ResultListViewHolder> {
+class ResultListAdapter extends ListAdapter<CaptureResult.Entry, ResultListViewHolder> {
 
-    public ResultListAdapter(List<ResultEntry> entries) {
+    public ResultListAdapter(List<CaptureResult.Entry> entries) {
         super(new ItemCallback());
         // We set the result entries as our adapter's list.
         submitList(entries);
@@ -62,20 +62,20 @@ class ResultListViewHolder extends RecyclerView.ViewHolder {
 
     public ResultListViewHolder(@NotNull View itemView) { super(itemView); }
 
-    public void bind(ResultEntry item) {
+    public void bind(CaptureResult.Entry item) {
         ((TextView) itemView.findViewById(R.id.text_value)).setText(item.getValue());
         ((TextView) itemView.findViewById(R.id.text_key)).setText(item.getKey());
     }
 }
 
-class ItemCallback extends DiffUtil.ItemCallback<ResultEntry> {
+class ItemCallback extends DiffUtil.ItemCallback<CaptureResult.Entry> {
     @Override
-    public boolean areItemsTheSame(@NotNull ResultEntry oldItem, @NotNull ResultEntry newItem) {
+    public boolean areItemsTheSame(@NotNull CaptureResult.Entry oldItem, @NotNull CaptureResult.Entry newItem) {
         return oldItem.getKey().equals(newItem.getKey());
     }
 
     @Override
-    public boolean areContentsTheSame(@NotNull ResultEntry oldItem, @NotNull ResultEntry newItem) {
+    public boolean areContentsTheSame(@NotNull CaptureResult.Entry oldItem, @NotNull CaptureResult.Entry newItem) {
         return oldItem.getValue().equals(newItem.getValue());
     }
 }

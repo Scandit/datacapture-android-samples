@@ -24,18 +24,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.scandit.datacapture.barcode.count.capture.BarcodeCount;
-import com.scandit.datacapture.barcode.count.capture.BarcodeCountBasicOverlayStyle;
 import com.scandit.datacapture.barcode.count.capture.BarcodeCountListener;
 import com.scandit.datacapture.barcode.count.capture.BarcodeCountSession;
 import com.scandit.datacapture.barcode.count.capture.BarcodeCountSettings;
-import com.scandit.datacapture.barcode.count.ui.overlay.BarcodeCountBasicOverlay;
-import com.scandit.datacapture.barcode.count.ui.overlay.BarcodeCountBasicOverlayListener;
-import com.scandit.datacapture.barcode.count.ui.overlay.BarcodeCountBasicOverlayUiListener;
+import com.scandit.datacapture.barcode.count.ui.view.BarcodeCountView;
+import com.scandit.datacapture.barcode.count.ui.view.BarcodeCountViewListener;
+import com.scandit.datacapture.barcode.count.ui.view.BarcodeCountViewStyle;
+import com.scandit.datacapture.barcode.count.ui.view.BarcodeCountViewUiListener;
 import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.tracking.data.TrackedBarcode;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.data.FrameData;
-import com.scandit.datacapture.core.ui.DataCaptureView;
 import com.scandit.datacapture.core.ui.style.Brush;
 import com.scandit.datacapture.receivingsample.data.ScanDetails;
 
@@ -45,8 +44,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class MainActivity extends CameraPermissionActivity
-    implements BarcodeCountListener, BarcodeCountBasicOverlayListener,
-        BarcodeCountBasicOverlayUiListener {
+    implements BarcodeCountListener, BarcodeCountViewListener,
+        BarcodeCountViewUiListener {
 
     // Enter your Scandit License key here.
     // Your Scandit License key is available via your Scandit SDK web account.
@@ -54,7 +53,6 @@ public class MainActivity extends CameraPermissionActivity
 
     private BarcodeCount barcodeCount;
     private DataCaptureContext dataCaptureContext;
-    private BarcodeCountBasicOverlay overlay;
 
     private boolean navigatingInternally = false;
 
@@ -98,27 +96,25 @@ public class MainActivity extends CameraPermissionActivity
         // Register self as a listener to get informed of tracked barcodes.
         barcodeCount.addListener(this);
 
-        // To visualize the on-going barcode count process on screen, setup a data capture view
-        // that renders the camera preview. The view must be connected to the data capture context.
-        DataCaptureView dataCaptureView = DataCaptureView.newInstance(this, dataCaptureContext);
-
-        // Add a barcode count basic overlay to the data capture view to render the tracked barcodes on
-        // top of the video preview. This is optional, but recommended for better visual feedback.
-        overlay = BarcodeCountBasicOverlay.newInstance(
-            barcodeCount,
-            dataCaptureView,
-            BarcodeCountBasicOverlayStyle.ICON
+        // To visualize the on-going barcode count process on screen, setup a BarcodeCountView
+        // that renders the camera preview. The view must be connected to the data capture context
+        // and to the barcode count. This is optional, but recommended for better visual feedback.
+        BarcodeCountView barcodeCountView = BarcodeCountView.newInstance(
+                this,
+                dataCaptureContext,
+                barcodeCount,
+                BarcodeCountViewStyle.ICON
         );
 
-        // Register self as a listener to provide custom brushes and get informed of overlay events.
-        overlay.setListener(this);
+        // Register self as a listener to provide custom brushes and get informed of view events.
+        barcodeCountView.setListener(this);
 
         // Register self as a listener to get informed of UI events.
-        overlay.setUiListener(this);
+        barcodeCountView.setUiListener(this);
 
-        // Add the DataCaptureView to the container.
+        // Add the BarcodeCountView to the container.
         FrameLayout container = findViewById(R.id.data_capture_view_container);
-        container.addView(dataCaptureView);
+        container.addView(barcodeCountView);
     }
 
     @Override
@@ -136,6 +132,7 @@ public class MainActivity extends CameraPermissionActivity
     protected void onResume() {
         super.onResume();
         navigatingInternally = false;
+        barcodeCount.setEnabled(true);
 
         // Check for camera permission and request it, if it hasn't yet been granted.
         // Once we have the permission the onCameraPermissionGranted() method will be called.
@@ -165,32 +162,45 @@ public class MainActivity extends CameraPermissionActivity
         @NonNull BarcodeCountSession session,
         @NonNull FrameData data
     ) {
-        scannedBarcodes = session.getTrackedBarcodes().values();
+        // Not relevant in this sample
+    }
+
+    @Override
+    public void onScan(
+        @NonNull BarcodeCount mode,
+        @NonNull BarcodeCountSession session,
+        @NonNull FrameData data
+    ) {
+        scannedBarcodes = session.getRecognizedBarcodes().values();
     }
 
     @Nullable
     @Override
-    public Brush brushForTrackedBarcode(
-        @NonNull BarcodeCountBasicOverlay overlay,
-        @NonNull TrackedBarcode trackedBarcode
-    ) {
+    public Brush brushForRecognizedBarcode(
+            @NonNull BarcodeCountView view, @NonNull TrackedBarcode trackedBarcode) {
         // No need to return a brush here, BarcodeCountBasicOverlayStyle.ICON style is used
         return null;
     }
 
     @Nullable
     @Override
-    public Brush brushForUntrackedBarcode(
-        @NonNull BarcodeCountBasicOverlay overlay,
-        @NonNull TrackedBarcode trackedBarcode
-    ) {
+    public Brush brushForUnrecognizedBarcode(
+            @NonNull BarcodeCountView view, @NonNull TrackedBarcode trackedBarcode) {
+        // No need to return a brush here, BarcodeCountBasicOverlayStyle.ICON style is used
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public Brush brushForRecognizedBarcodeNotInList(
+            @NonNull BarcodeCountView view, @NonNull TrackedBarcode trackedBarcode) {
         // No need to return a brush here, BarcodeCountBasicOverlayStyle.ICON style is used
         return null;
     }
 
     @Override
     public void onListButtonTapped(
-        @NonNull BarcodeCountBasicOverlay overlay
+        @NonNull BarcodeCountView view
     ) {
         navigatingInternally = true;
         listLauncher.launch(
@@ -208,6 +218,7 @@ public class MainActivity extends CameraPermissionActivity
 
         for (TrackedBarcode trackedBarcode : barcodes) {
             String barcodeData = trackedBarcode.getBarcode().getData();
+            String symbology = trackedBarcode.getBarcode().getSymbology().name();
             if (barcodeData == null) continue;
 
             ScanDetails scanDetails = scanResults.get(barcodeData);
@@ -215,7 +226,7 @@ public class MainActivity extends CameraPermissionActivity
                 scanDetails.increaseQuantity();
                 scanResults.put(barcodeData, scanDetails);
             } else {
-                scanResults.put(barcodeData, new ScanDetails(barcodeData));
+                scanResults.put(barcodeData, new ScanDetails(barcodeData, symbology));
             }
         }
 
@@ -235,7 +246,7 @@ public class MainActivity extends CameraPermissionActivity
 
     @Override
     public void onExitButtonTapped(
-        @NonNull BarcodeCountBasicOverlay overlay
+        @NonNull BarcodeCountView view
     ) {
         navigatingInternally = true;
         exitLauncher.launch(
@@ -262,18 +273,26 @@ public class MainActivity extends CameraPermissionActivity
     }
 
     @Override
-    public void onTrackedBarcodeTapped(
-        @NonNull BarcodeCountBasicOverlay overlay,
-        @NonNull TrackedBarcode trackedBarcode
-    ) {
+    public void onRecognizedBarcodeTapped(
+            @NonNull BarcodeCountView view, @NonNull TrackedBarcode trackedBarcode) {
         // Not relevant in this sample
     }
 
     @Override
-    public void onUntrackedBarcodeTapped(
-        @NonNull BarcodeCountBasicOverlay overlay,
-        @NonNull TrackedBarcode trackedBarcode
-    ) {
+    public void onUnrecognizedBarcodeTapped(
+            @NonNull BarcodeCountView view, @NonNull TrackedBarcode trackedBarcode) {
+        // Not relevant in this sample
+    }
+
+    @Override
+    public void onFilteredBarcodeTapped(
+            @NonNull BarcodeCountView view, @NonNull TrackedBarcode filteredBarcode) {
+        // Not relevant in this sample
+    }
+
+    @Override
+    public void onRecognizedBarcodeNotInListTapped(
+            @NonNull BarcodeCountView view, @NonNull TrackedBarcode trackedBarcode) {
         // Not relevant in this sample
     }
 

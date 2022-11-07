@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.scandit.datacapture.idcaptureextendedsample.R;
+import com.scandit.datacapture.idcaptureextendedsample.ui.result.CaptureResult;
 import com.scandit.datacapture.idcaptureextendedsample.ui.result.ResultFragment;
 
 /**
@@ -45,10 +46,10 @@ public class MainActivity extends AppCompatActivity {
      * Navigate to the screen that shows data extracted from a personal identification document
      * or its part.
      */
-    public void goToResultScreen() {
+    public void goToResultScreen(CaptureResult captureResult) {
         if (getSupportFragmentManager().findFragmentByTag(KEY_RESULT_SCREEN) == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.scan_fragment_container, new ResultFragment(), KEY_RESULT_SCREEN)
+                    .replace(R.id.scan_fragment_container, ResultFragment.create(captureResult), KEY_RESULT_SCREEN)
                     .addToBackStack(null)
                     .commit();
         }

@@ -241,7 +241,7 @@ public final class BarcodeScanActivity
     private Toast toast = null;
 
     private void showResult(String result) {
-        if (toast != null && toast.getView().getVisibility() == View.VISIBLE) {
+        if (toast != null) {
             dismissToast();
         }
         toast = Toast.makeText(this, result, Toast.LENGTH_SHORT);

@@ -16,7 +16,7 @@ package com.scandit.datacapture.idcaptureextendedsample.mappers;
 
 import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.ChinaExitEntryPermitMrzResult;
-import com.scandit.datacapture.idcaptureextendedsample.ui.result.ResultEntry;
+import com.scandit.datacapture.idcaptureextendedsample.ui.result.CaptureResult;
 
 import java.util.ArrayList;
 
@@ -34,12 +34,12 @@ public final class ChinaExitEntryPermitMrzResultMapper extends ResultMapper {
     * CapturedId.
     */
    @Override
-   public ArrayList<ResultEntry> mapResult() {
-      ArrayList<ResultEntry> result = super.mapResult();
+   public ArrayList<CaptureResult.Entry> extractFields() {
+      ArrayList<CaptureResult.Entry> result = super.extractFields();
 
-      result.add(new ResultEntry("Document Code", extractField(
+      result.add(new CaptureResult.Entry("Document Code", extractField(
               this.result.getDocumentCode())));
-      result.add(new ResultEntry("Captured MRZ", extractField(
+      result.add(new CaptureResult.Entry("Captured MRZ", extractField(
               this.result.getCapturedMrz())));
 
       return result;

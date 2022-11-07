@@ -17,6 +17,7 @@ package com.scandit.datacapture.receivingsample;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +34,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.scandit.datacapture.receivingsample.data.ScanDetails;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ResultsActivity extends AppCompatActivity {
 
@@ -88,11 +91,26 @@ public class ResultsActivity extends AppCompatActivity {
             finish();
         });
 
+        TextView resultsAmount = findViewById(R.id.result_items_count);
+        if (scanResults != null) {
+            resultsAmount.setText(getString(R.string.results_amount, getScanResultsCount(scanResults)));
+        }
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    private int getScanResultsCount(ScanDetails[] scanResults) {
+        int count = 0;
+
+        for (ScanDetails detail : scanResults) {
+            count += detail.quantity;
+        }
+
+        return count;
     }
 
     @Override
@@ -116,11 +134,19 @@ public class ResultsActivity extends AppCompatActivity {
 
     private static class ScanResultsAdapter extends RecyclerView.Adapter<ViewHolder> {
         private final Context context;
-        private final ScanDetails[] items;
+        private final List<ScanDetails> nonUniqueItems = new ArrayList<>();
+        private final List<ScanDetails> uniqueItems = new ArrayList<>();
 
         ScanResultsAdapter(Context context, ScanDetails[] items) {
             this.context = context;
-            this.items = items;
+
+            for (ScanDetails item : items) {
+                if (item.quantity == 1) {
+                    uniqueItems.add(item);
+                } else {
+                    nonUniqueItems.add(item);
+                }
+            }
         }
 
         @NonNull
@@ -133,12 +159,58 @@ public class ResultsActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            holder.update(position, items[position]);
+            Pair<Integer, Integer> positionInSection = getPositionInSection(position);
+            holder.update(
+                positionInSection.first,
+                positionInSection.second,
+                getItemForPositionInSection(positionInSection.first, positionInSection.second)
+            );
+        }
+
+        private Pair<Integer, Integer> getPositionInSection(int position) {
+            int accumulatedItemCount = 0;
+            for (int i = 0; i < getSectionCount(); i++) {
+                if (position < accumulatedItemCount + getItemCountForSection(i)) {
+                    return new Pair<>(i, position - accumulatedItemCount);
+                }
+                accumulatedItemCount += getItemCountForSection(i);
+            }
+            return new Pair<>(-1, 0);
+        }
+
+        private ScanDetails getItemForPositionInSection(int section, int position) {
+            switch (section) {
+                case 0:
+                    return nonUniqueItems.get(position);
+                case 1:
+                    return uniqueItems.get(position);
+                default:
+                    return null;
+            }
         }
 
         @Override
         public int getItemCount() {
-            return items.length;
+            int total = 0;
+            for (int i = 0; i < getSectionCount(); i++) {
+                total += getItemCountForSection(i);
+            }
+            return total;
+        }
+
+        private int getSectionCount() {
+            return 2;
+        }
+
+        private int getItemCountForSection(int section) {
+            switch (section) {
+                case 0:
+                    return nonUniqueItems.size();
+                case 1:
+                    return uniqueItems.size();
+                default:
+                    return 0;
+            }
         }
     }
 
@@ -154,31 +226,36 @@ public class ResultsActivity extends AppCompatActivity {
             quantityTextView = itemView.findViewById(R.id.quantity_text);
         }
 
-        void update(int position, ScanDetails scanDetails) {
-            if (scanDetails.quantity > 1) {
-                productDescriptionTextView.setText(
-                    itemView.getContext().getString(
-                        R.string.multiple_quantity_product_description, position + 1
-                    )
-                );
-                quantityTextView.setVisibility(View.VISIBLE);
-                quantityTextView.setText(
-                    itemView.getContext().getString(
-                        R.string.quantity, scanDetails.quantity
-                    )
-                );
-            } else {
-                quantityTextView.setVisibility(View.GONE);
-                productDescriptionTextView.setText(
-                    itemView.getContext().getString(
-                        R.string.product_description, position + 1
-                    )
-                );
+        void update(int section, int position, ScanDetails scanDetails) {
+            switch (section) {
+                case 0: {
+                    productDescriptionTextView.setText(
+                        itemView.getContext().getString(
+                            R.string.multiple_quantity_product_description, position + 1
+                        )
+                    );
+                    quantityTextView.setVisibility(View.VISIBLE);
+                    quantityTextView.setText(
+                        itemView.getContext().getString(
+                            R.string.quantity, scanDetails.quantity
+                        )
+                    );
+                }
+                break;
+                case 1: {
+                    quantityTextView.setVisibility(View.GONE);
+                    productDescriptionTextView.setText(
+                        itemView.getContext().getString(
+                            R.string.product_description, position + 1
+                        )
+                    );
+                }
+                break;
             }
 
             gtinTextView.setText(
                 itemView.getContext().getString(
-                    R.string.gtin, scanDetails.barcodeData
+                    R.string.result_item, scanDetails.symbology, scanDetails.barcodeData
                 )
             );
         }

@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import static androidx.recyclerview.widget.DividerItemDecoration.VERTICAL;
 
 public class ResultFragment extends Fragment {
+    private final static String KEY_CAPTURE_RESULT = "CAPTURE_RESULT";
+
     /**
      * The view model of this fragment.
      */
@@ -68,6 +70,19 @@ public class ResultFragment extends Fragment {
      */
     private ResultListAdapter resultAdapter;
 
+    /*
+     * Store inside a bundle the result data and, if available, the byteArray extracted from the
+     * Face image.
+     */
+    public static ResultFragment create(CaptureResult result) {
+        ResultFragment fragment = new ResultFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(KEY_CAPTURE_RESULT, result);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +92,6 @@ public class ResultFragment extends Fragment {
          */
         viewModel = new ViewModelProvider(this).get(ResultViewModel.class);
     }
-
 
     @Nullable
     @Override
@@ -101,6 +115,9 @@ public class ResultFragment extends Fragment {
         RecyclerView recyclerResult = root.findViewById(R.id.results_list);
         recyclerResult.addItemDecoration(new DividerItemDecoration(requireContext(), VERTICAL));
         recyclerResult.setAdapter(resultAdapter);
+
+        // Retrieve the results map from the intent's bundle.
+        viewModel.onResult(getArguments().getParcelable(KEY_CAPTURE_RESULT));
 
         return root;
     }

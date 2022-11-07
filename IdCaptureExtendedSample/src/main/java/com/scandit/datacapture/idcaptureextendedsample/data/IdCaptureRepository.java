@@ -24,12 +24,12 @@ import com.scandit.datacapture.id.capture.IdCapture;
 import com.scandit.datacapture.id.capture.IdCaptureListener;
 import com.scandit.datacapture.id.capture.IdCaptureSession;
 import com.scandit.datacapture.id.capture.IdCaptureSettings;
-import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.IdDocumentType;
 import com.scandit.datacapture.id.data.IdImageType;
-import com.scandit.datacapture.id.data.RejectedId;
 import com.scandit.datacapture.id.data.SupportedSides;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
+import com.scandit.datacapture.idcaptureextendedsample.ui.scan.CapturedIdEvent;
+import com.scandit.datacapture.idcaptureextendedsample.ui.scan.RejectedIdEvent;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -46,7 +46,7 @@ public class IdCaptureRepository implements IdCaptureListener {
     /**
      * The stream of data captured from personal identification documents or their parts.
      */
-    private final MutableLiveData<CapturedId> capturedIds = new MutableLiveData<>();
+    private final MutableLiveData<CapturedIdEvent> capturedIds = new MutableLiveData<>();
 
     /**
      * The stream of information about personal identification documents or their parts that
@@ -57,7 +57,7 @@ public class IdCaptureRepository implements IdCaptureListener {
      *   (b) it's a barcode of a correct symbology, but the data is encoded in an unexpected format,
      *   (c) it's Machine Readable Zone (MRZ), but the data is encoded in an unexpected format.
      */
-    private final MutableLiveData<RejectedId> rejectedIds = new MutableLiveData<>();
+    private final MutableLiveData<RejectedIdEvent> rejectedIds = new MutableLiveData<>();
 
     /**
      * The DataCaptureContext that the current IdCapture is attached to.
@@ -84,7 +84,7 @@ public class IdCaptureRepository implements IdCaptureListener {
     /**
      * The stream of data captured from personal identification documents or their parts.
      */
-    public LiveData<CapturedId> capturedIds() {
+    public LiveData<CapturedIdEvent> capturedIds() {
         return capturedIds;
     }
 
@@ -97,7 +97,7 @@ public class IdCaptureRepository implements IdCaptureListener {
      *   (b) it's a barcode of a correct symbology, but the data is encoded in an unexpected format,
      *   (c) it's Machine Readable Zone (MRZ), but the data is encoded in an unexpected format.
      */
-    public LiveData<RejectedId> rejectedIds() {
+    public LiveData<RejectedIdEvent> rejectedIds() {
         return rejectedIds;
     }
 
@@ -218,13 +218,18 @@ public class IdCaptureRepository implements IdCaptureListener {
             @NotNull FrameData data
     ) {
         /*
+         * Don't capture unnecessarily when the result is displayed or when the user has to decide
+         * if he wants to continue scanning or just display the partial result.
+         */
+        disableIdCapture();
+        /*
          * Implement to handle data captured from personal identification documents or their
          * elements like a barcode or the Machine Readable Zone (MRZ).
          *
          * This callback is executed on the background thread. We post the value to the LiveData
          * in order to return to the UI thread.
          */
-        capturedIds.postValue(session.getNewlyCapturedId());
+        capturedIds.postValue(new CapturedIdEvent(session.getNewlyCapturedId()));
     }
 
     @Override
@@ -256,11 +261,11 @@ public class IdCaptureRepository implements IdCaptureListener {
          *   (a) it's a valid document, but its type is not enabled in the settings,
          *   (b) it's a barcode of a correct symbology, but the data is encoded in an unexpected format,
          *   (c) it's Machine Readable Zone (MRZ), but the data is encoded in an unexpected format.
-        *
+         *
          * This callback is executed on the background thread. We post the value to the LiveData
          * in order to return to the UI thread.
          */
-        rejectedIds.postValue(session.getNewlyRejectedId());
+        rejectedIds.postValue(new RejectedIdEvent(session.getNewlyRejectedId()));
     }
 
     @Override

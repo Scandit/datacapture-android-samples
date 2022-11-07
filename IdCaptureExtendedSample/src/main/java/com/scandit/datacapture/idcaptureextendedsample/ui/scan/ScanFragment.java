@@ -24,6 +24,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -33,10 +34,12 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.ui.DataCaptureView;
+import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 import com.scandit.datacapture.idcaptureextendedsample.R;
 import com.scandit.datacapture.idcaptureextendedsample.di.Injector;
 import com.scandit.datacapture.idcaptureextendedsample.ui.MainActivity;
+import com.scandit.datacapture.idcaptureextendedsample.ui.result.CaptureResult;
 import com.scandit.datacapture.idcaptureextendedsample.ui.util.AlertDialogFragment;
 
 import static android.Manifest.permission.CAMERA;
@@ -45,12 +48,9 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static androidx.core.content.ContextCompat.checkSelfPermission;
 
 public class ScanFragment extends Fragment
-    implements
+        implements
         AlertDialogFragment.Callbacks,
-        AskScanBackSideDialogFragment.Callbacks,
-        BottomNavigationView.OnNavigationItemSelectedListener
-{
-    private static final String ASK_SCAN_BACK_SIDE_TAG = "ASK_SCAN_BACK_SIDE";
+        BottomNavigationView.OnNavigationItemSelectedListener {
 
     private static final String ID_NOT_SUPPORTED_TAG = "ID_NOT_SUPPORTED";
 
@@ -249,29 +249,31 @@ public class ScanFragment extends Fragment
      * whether they wish to scan one.
      */
     private void askScanBackSide(AskScanBackSide event) {
-        if (event.getContentIfNotHandled() == null) {
-            return;
-        }
+        CapturedId capturedId = event.getContentIfNotHandled();
+        if (capturedId == null) return;
 
-        if (getChildFragmentManager().findFragmentByTag(ASK_SCAN_BACK_SIDE_TAG) == null) {
-            AskScanBackSideDialogFragment.create().show(getChildFragmentManager(), ASK_SCAN_BACK_SIDE_TAG);
-        }
-    }
-
-    /**
-     * The user decided to capture also the back side of the document.
-     */
-    @Override
-    public void onBackSideScanAccepted() {
-        viewModel.onBackSideScanAccepted();
-    }
-
-    /**
-     * The user decided to skip the back side of the document.
-     */
-    @Override
-    public void onBackSideScanSkipped() {
-        viewModel.onBackSideScanSkipped();
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.alert_scan_back_title)
+                .setMessage(R.string.alert_scan_back_message)
+                .setPositiveButton(R.string.scan, (dialog, which) -> {
+                    /*
+                     * If we continue with scanning the back of the document, the IdCapture settings
+                     * will automatically allow only for this to be scanned, blocking you from
+                     * scanning other front of IDs. The next `onIdCaptured` will contain data from
+                     * both the front and the back scans.
+                     */
+                    viewModel.onBackSideScanAccepted();
+                })
+                .setNegativeButton(R.string.skip, (dialog, which) -> {
+                    dialog.dismiss();
+                    /*
+                     * If we want to skip scanning the back of the document, we have to call
+                     * `IdCapture().reset()` to allow for another front IDs to be scanned.
+                     */
+                    viewModel.onBackSideScanSkipped(capturedId);
+                })
+                .setCancelable(false)
+                .show();
     }
 
     /**
@@ -299,11 +301,10 @@ public class ScanFragment extends Fragment
      * Display the UI to manually enter the recipient's document data.
      */
     private void goToResult(GoToResult event) {
-        if (event.getContentIfNotHandled() == null) {
-            return;
-        }
+        CaptureResult captureResult = event.getContentIfNotHandled();
+        if (captureResult == null) return;
 
-        ((MainActivity) requireActivity()).goToResultScreen();
+        ((MainActivity) requireActivity()).goToResultScreen(captureResult);
     }
 
     @Override

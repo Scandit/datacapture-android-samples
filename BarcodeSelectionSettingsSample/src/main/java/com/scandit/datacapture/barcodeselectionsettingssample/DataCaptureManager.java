@@ -19,7 +19,6 @@ import android.graphics.Color;
 
 import androidx.annotation.ColorInt;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.ColorUtils;
 
 import com.scandit.datacapture.barcode.capture.SymbologySettings;
 import com.scandit.datacapture.barcode.data.Symbology;
@@ -431,7 +430,7 @@ class DataCaptureManager {
                 brush = defaultBrush;
                 break;
             case BLUE:
-                brush = cloneBrushStrokeAndAlpha(defaultBrush, scanditBlue, scanditBlue);
+                brush = defaultBrush.copy(scanditBlue, scanditBlue, true);
                 break;
         }
         // Apply the brush to the overlay.
@@ -450,7 +449,7 @@ class DataCaptureManager {
                 brush = defaultBrush;
                 break;
             case BLUE:
-                brush = cloneBrushStrokeAndAlpha(defaultBrush, scanditBlue, scanditBlue);
+                brush = defaultBrush.copy(scanditBlue, scanditBlue, true);
                 break;
         }
         // Apply the brush to the overlay.
@@ -469,7 +468,7 @@ class DataCaptureManager {
                 brush = defaultBrush;
                 break;
             case BLUE:
-                brush = cloneBrushStrokeAndAlpha(defaultBrush, scanditBlue, scanditBlue);
+                brush = defaultBrush.copy(scanditBlue, scanditBlue, true);
                 break;
         }
         // Apply the brush to the overlay.
@@ -488,21 +487,11 @@ class DataCaptureManager {
                 brush = defaultBrush;
                 break;
             case BLUE:
-                brush = cloneBrushStrokeAndAlpha(defaultBrush, scanditBlue, scanditBlue);
+                brush = defaultBrush.copy(scanditBlue, scanditBlue, true);
                 break;
         }
         // Apply the brush to the overlay.
         overlay.setSelectedBrush(brush);
-    }
-
-    private Brush cloneBrushStrokeAndAlpha(Brush brush, int fillColor, int strokeColor) {
-        int fillAlpha = brush.getFillColor() >>> 24;
-        int strokeAlpha = brush.getStrokeColor() >>> 24;
-        return new Brush(
-                ColorUtils.setAlphaComponent(fillColor, fillAlpha),
-                ColorUtils.setAlphaComponent(strokeColor, strokeAlpha),
-                brush.getStrokeWidth()
-        );
     }
 
     private void setupFrozenBackgroundColor(BarcodeSelectionBasicOverlay overlay) {

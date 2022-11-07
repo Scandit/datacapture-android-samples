@@ -18,7 +18,6 @@ import android.graphics.Color;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
-import androidx.core.graphics.ColorUtils;
 
 import com.scandit.datacapture.barcode.capture.BarcodeCapture;
 import com.scandit.datacapture.barcode.capture.BarcodeCaptureSettings;
@@ -202,10 +201,10 @@ public class SettingsManager {
                     case DEFAULT:
                         break;
                     case RED:
-                        styledBrush = cloneBrushStrokeAndAlpha(defaultBrush, RED, RED);
+                        styledBrush = defaultBrush.copy(RED, RED, true);
                         break;
                     case GREEN:
-                        styledBrush = cloneBrushStrokeAndAlpha(defaultBrush, GREEN, GREEN);
+                        styledBrush = defaultBrush.copy(GREEN, GREEN, true);
                         break;
                 }
                 styleBrushes[j] = new BrushStyleEntry(styledBrush, brushStyle);
@@ -942,14 +941,4 @@ public class SettingsManager {
         continuousScanningEnabled = enabled;
     }
     //endregion
-
-    private Brush cloneBrushStrokeAndAlpha(Brush brush, int fillColor, int strokeColor) {
-        int fillAlpha = brush.getFillColor() >>> 24;
-        int strokeAlpha = brush.getStrokeColor() >>> 24;
-        return new Brush(
-                ColorUtils.setAlphaComponent(fillColor, fillAlpha),
-                ColorUtils.setAlphaComponent(strokeColor, strokeAlpha),
-                brush.getStrokeWidth()
-        );
-    }
 }

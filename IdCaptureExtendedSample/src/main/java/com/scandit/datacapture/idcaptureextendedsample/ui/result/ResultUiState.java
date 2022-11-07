@@ -47,7 +47,7 @@ class ResultUiState {
     /*
      * The data extracted from the captured document.
      */
-    private List<ResultEntry> data = new ArrayList<>();
+    private List<CaptureResult.Entry> data = new ArrayList<>();
 
     /**
      * Use `builder()` to create this UI state.
@@ -82,7 +82,7 @@ class ResultUiState {
      * Get the data extracted from the captured document.
      */
     @Nullable
-    public List<ResultEntry> getData() {
+    public List<CaptureResult.Entry> getData() {
         return new ArrayList<>(data);
     }
 
@@ -144,16 +144,16 @@ class ResultUiState {
         }
 
         /*
-         * The image of the back side of the captured document, if relevant.
+         * The data extracted from the captured document.
          */
-        public Builder data(Collection<ResultEntry> data) {
+        public Builder data(Collection<CaptureResult.Entry> data) {
             state.data = new ArrayList<>(data);
 
             return this;
         }
 
         /*
-         * The data extracted from the captured document.
+         * Create an immutable UI state from this builder.
          */
         public ResultUiState build() {
             return state;

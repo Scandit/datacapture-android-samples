@@ -16,7 +16,7 @@ package com.scandit.datacapture.idcaptureextendedsample.mappers;
 
 import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.SouthAfricaIdBarcodeResult;
-import com.scandit.datacapture.idcaptureextendedsample.ui.result.ResultEntry;
+import com.scandit.datacapture.idcaptureextendedsample.ui.result.CaptureResult;
 
 import java.util.ArrayList;
 
@@ -34,13 +34,13 @@ public final class SouthAfricaIdResultMapper extends ResultMapper {
      * CapturedId.
      */
     @Override
-    public ArrayList<ResultEntry> mapResult() {
-        ArrayList<ResultEntry> result = super.mapResult();
+    public ArrayList<CaptureResult.Entry> extractFields() {
+        ArrayList<CaptureResult.Entry> result = super.extractFields();
 
-        result.add(new ResultEntry("Personal Id Number", extractField(this.result.getPersonalIdNumber())));
-        result.add(new ResultEntry("Citizenship Status", extractField(this.result.getCitizenshipStatus())));
-        result.add(new ResultEntry("Country of Birth", extractField(this.result.getCountryOfBirth())));
-        result.add(new ResultEntry("Country of Birth ISO", extractField(this.result.getCountryOfBirthIso())));
+        result.add(new CaptureResult.Entry("Personal Id Number", extractField(this.result.getPersonalIdNumber())));
+        result.add(new CaptureResult.Entry("Citizenship Status", extractField(this.result.getCitizenshipStatus())));
+        result.add(new CaptureResult.Entry("Country of Birth", extractField(this.result.getCountryOfBirth())));
+        result.add(new CaptureResult.Entry("Country of Birth ISO", extractField(this.result.getCountryOfBirthIso())));
 
         return result;
     }

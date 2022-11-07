@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#39c1cc</color>
+
+    <color name="white">@android:color/white</color>
+    <color name="black">@android:color/black</color>
+    <color name="toolbarBackground">#401B2026</color>
+    <color name="lightGrey">#E5E5E5</color>
+    <color name="transparentLightGrey">#80E5E5E5</color>
+
+    <color name="grey_id_scanning">#AAAAAA</color>
+    <color name="id_scanning_text_color">#2E2E2E</color>
+    <color name="id_scanning_results_text_color">#121619</color>
+    <color name="id_scanning_verification_success_background_color">#D4F6E6</color>
+    <color name="id_scanning_verification_error_background_color">#FEDADA</color>
+    <color name="id_scanning_issuing_country_text_color">#606F7B</color>
+</resources>

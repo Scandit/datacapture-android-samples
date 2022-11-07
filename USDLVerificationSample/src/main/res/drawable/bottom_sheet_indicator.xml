@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <size
+        android:width="@dimen/bottom_sheet_indicator_width"
+        android:height="@dimen/bottom_sheet_indicator_height" />
+    <solid android:color="@color/lightGrey" />
+    <corners android:radius="@dimen/bottom_sheet_indicator_radius" />
+</shape>

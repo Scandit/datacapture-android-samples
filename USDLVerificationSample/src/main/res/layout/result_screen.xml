@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nestedScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/indicator"
+            android:layout_width="@dimen/bottom_sheet_indicator_width"
+            android:layout_height="@dimen/bottom_sheet_indicator_height"
+            android:layout_marginTop="@dimen/default_padding_small"
+            android:background="@drawable/bottom_sheet_indicator"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/document_type_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_padding_large"
+            android:layout_marginTop="@dimen/default_padding_large"
+            android:fontFamily="sans-serif"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:text="@string/document_type_driving_license"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/indicator" />
+
+        <TextView
+            android:id="@+id/issuing_country_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_padding_large"
+            android:fontFamily="sans-serif-medium"
+            android:textAllCaps="true"
+            android:textColor="@color/id_scanning_issuing_country_text_color"
+            android:textSize="@dimen/dl_scanning_result_text_size"
+            android:text="United States of America"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/document_type_header"
+            tools:ignore="HardcodedText" />
+
+        <ImageView
+            android:id="@+id/close_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/default_padding_large"
+            android:contentDescription="@android:string/cancel"
+            android:src="@drawable/ic_close"
+            app:layout_constraintBottom_toBottomOf="@+id/document_type_header"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/document_type_header" />
+
+        <LinearLayout
+            android:id="@+id/verification_success_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_padding_large"
+            android:layout_marginTop="@dimen/default_padding_large"
+            android:layout_marginEnd="@dimen/default_padding_large"
+            android:paddingVertical="@dimen/default_padding_small"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:background="@color/id_scanning_verification_success_background_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/issuing_country_header" />
+
+        <LinearLayout
+            android:id="@+id/verification_error_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_padding_large"
+            android:layout_marginTop="@dimen/default_padding_small"
+            android:layout_marginEnd="@dimen/default_padding_large"
+            android:background="@color/id_scanning_verification_error_background_color"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/default_padding_small"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/verification_success_layout" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/user_image"
+            android:layout_width="@dimen/user_image_size"
+            android:layout_height="@dimen/user_image_size"
+            android:layout_marginTop="@dimen/default_padding_large"
+            android:scaleType="centerCrop"
+            android:background="@drawable/bg_circle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/verification_error_layout"
+            app:shapeAppearanceOverlay="@style/CircularImage"
+            tools:ignore="ContentDescription" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/scanning_results_recycler_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding_large"
+            android:paddingStart="@dimen/default_padding_large"
+            android:paddingEnd="@dimen/default_padding_large"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/user_image"
+            tools:itemCount="4"
+            tools:listitem="@layout/result_list_item" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

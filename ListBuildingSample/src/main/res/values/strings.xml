@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">ListBuildingSample</string>
+    <string name="app_title">ListBuilding</string>
+    <string name="item_title">Item %d</string>
+    <string name="item_description">%s: %s</string>
+    <string name="clear_button">CLEAR LIST</string>
+    <plurals name="results_amount">
+        <item quantity="one">%d item</item>
+        <item quantity="other">%d items</item>
+    </plurals>
+</resources>

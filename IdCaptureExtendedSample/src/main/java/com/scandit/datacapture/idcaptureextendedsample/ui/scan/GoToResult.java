@@ -15,13 +15,14 @@
 package com.scandit.datacapture.idcaptureextendedsample.ui.scan;
 
 import com.scandit.datacapture.idcaptureextendedsample.ui.Event;
+import com.scandit.datacapture.idcaptureextendedsample.ui.result.CaptureResult;
 
 /**
  * An event for the fragment to navigate to the UI with the result of ID capture.
  */
-class GoToResult extends Event<Object> {
-    public GoToResult() {
-        super(new Object());
+class GoToResult extends Event<CaptureResult> {
+    public GoToResult(CaptureResult result) {
+        super(result);
     }
 }
 

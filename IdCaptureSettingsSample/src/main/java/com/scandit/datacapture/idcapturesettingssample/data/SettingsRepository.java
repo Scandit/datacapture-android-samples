@@ -36,7 +36,6 @@ import com.scandit.datacapture.id.data.SupportedSides;
 import com.scandit.datacapture.id.ui.IdLayoutLineStyle;
 import com.scandit.datacapture.id.ui.IdLayoutStyle;
 import com.scandit.datacapture.idcapturesettingssample.ui.BrushStyle;
-import com.scandit.datacapture.idcapturesettingssample.utils.BrushUtils;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -304,9 +303,9 @@ public class SettingsRepository extends PreferenceDataStore {
         Brush defaultBrush = Defaults.getDefaultBrush();
         switch (brushStyle) {
             case RED:
-                return BrushUtils.cloneBrushStrokeAndAlpha(defaultBrush, RED, RED);
+                return defaultBrush.copy(RED, RED, true);
             case GREEN:
-                return BrushUtils.cloneBrushStrokeAndAlpha(defaultBrush, GREEN, GREEN);
+                return defaultBrush.copy(GREEN, GREEN, true);
             case DEFAULT:
             default:
                 return defaultBrush;

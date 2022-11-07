@@ -18,7 +18,7 @@ import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.ProfessionalDrivingPermit;
 import com.scandit.datacapture.id.data.SouthAfricaDlBarcodeResult;
 import com.scandit.datacapture.id.data.VehicleRestriction;
-import com.scandit.datacapture.idcaptureextendedsample.ui.result.ResultEntry;
+import com.scandit.datacapture.idcaptureextendedsample.ui.result.CaptureResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,17 +37,17 @@ public final class SouthAfricaDlResultMapper extends ResultMapper {
      * CapturedId.
      */
     @Override
-    public ArrayList<ResultEntry> mapResult() {
-        ArrayList<ResultEntry> result = super.mapResult();
+    public ArrayList<CaptureResult.Entry> extractFields() {
+        ArrayList<CaptureResult.Entry> result = super.extractFields();
 
-        result.add(new ResultEntry("Personal Id Number", extractField(this.result.getPersonalIdNumber())));
-        result.add(new ResultEntry("Personal Id Number Type", extractField(this.result.getPersonalIdNumberType())));
-        result.add(new ResultEntry("Document Copy", extractField(this.result.getDocumentCopy())));
-        result.add(new ResultEntry("License Country of Issue", extractField(this.result.getLicenseCountryOfIssue())));
-        result.add(new ResultEntry("Driver Restriction Codes", extractIntFields(this.result.getDriverRestrictionCodes())));
-        result.add(new ResultEntry("Professional Driving Permit", extractField(this.result.getProfessionalDrivingPermit())));
-        result.add(new ResultEntry("Vehicle Restrictions", extractField(this.result.getVehicleRestrictions())));
-        result.add(new ResultEntry("Version", extractField(this.result.getVersion())));
+        result.add(new CaptureResult.Entry("Personal Id Number", extractField(this.result.getPersonalIdNumber())));
+        result.add(new CaptureResult.Entry("Personal Id Number Type", extractField(this.result.getPersonalIdNumberType())));
+        result.add(new CaptureResult.Entry("Document Copy", extractField(this.result.getDocumentCopy())));
+        result.add(new CaptureResult.Entry("License Country of Issue", extractField(this.result.getLicenseCountryOfIssue())));
+        result.add(new CaptureResult.Entry("Driver Restriction Codes", extractIntFields(this.result.getDriverRestrictionCodes())));
+        result.add(new CaptureResult.Entry("Professional Driving Permit", extractField(this.result.getProfessionalDrivingPermit())));
+        result.add(new CaptureResult.Entry("Vehicle Restrictions", extractField(this.result.getVehicleRestrictions())));
+        result.add(new CaptureResult.Entry("Version", extractField(this.result.getVersion())));
 
         return result;
     }

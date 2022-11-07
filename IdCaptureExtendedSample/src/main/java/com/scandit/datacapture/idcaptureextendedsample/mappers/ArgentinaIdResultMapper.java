@@ -16,7 +16,7 @@ package com.scandit.datacapture.idcaptureextendedsample.mappers;
 
 import com.scandit.datacapture.id.data.ArgentinaIdBarcodeResult;
 import com.scandit.datacapture.id.data.CapturedId;
-import com.scandit.datacapture.idcaptureextendedsample.ui.result.ResultEntry;
+import com.scandit.datacapture.idcaptureextendedsample.ui.result.CaptureResult;
 
 import java.util.ArrayList;
 
@@ -34,11 +34,11 @@ public final class ArgentinaIdResultMapper extends ResultMapper {
      * CapturedId.
      */
     @Override
-    public ArrayList<ResultEntry> mapResult() {
-        ArrayList<ResultEntry> result = super.mapResult();
+    public ArrayList<CaptureResult.Entry> extractFields() {
+        ArrayList<CaptureResult.Entry> result = super.extractFields();
 
-        result.add(new ResultEntry("Document Copy", extractField(this.result.getDocumentCopy())));
-        result.add(new ResultEntry("Personal Id Number", extractField(this.result.getPersonalIdNumber())));
+        result.add(new CaptureResult.Entry("Document Copy", extractField(this.result.getDocumentCopy())));
+        result.add(new CaptureResult.Entry("Personal Id Number", extractField(this.result.getPersonalIdNumber())));
 
         return result;
     }

@@ -1,0 +1,17 @@
+<resources>
+    <dimen name="default_padding_very_very_small">2dp</dimen>
+    <dimen name="default_padding_very_small">4dp</dimen>
+    <dimen name="default_padding_small">8dp</dimen>
+    <dimen name="default_padding_medium_small">12dp</dimen>
+    <dimen name="default_padding">16dp</dimen>
+    <dimen name="default_padding_large">24dp</dimen>
+
+    <!--Scanning id-->
+    <dimen name="user_image_size">136dp</dimen>
+    <dimen name="dl_scanning_result_text_size">14sp</dimen>
+
+    <!--bottom sheet-->
+    <dimen name="bottom_sheet_indicator_width">40dp</dimen>
+    <dimen name="bottom_sheet_indicator_height">5dp</dimen>
+    <dimen name="bottom_sheet_indicator_radius">3dp</dimen>
+</resources>

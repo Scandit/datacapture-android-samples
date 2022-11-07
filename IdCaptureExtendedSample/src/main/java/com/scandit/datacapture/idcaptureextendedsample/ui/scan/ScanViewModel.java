@@ -28,6 +28,8 @@ import com.scandit.datacapture.idcaptureextendedsample.data.CameraRepository;
 import com.scandit.datacapture.idcaptureextendedsample.data.CapturedDataType;
 import com.scandit.datacapture.idcaptureextendedsample.data.IdCaptureRepository;
 import com.scandit.datacapture.idcaptureextendedsample.di.Injector;
+import com.scandit.datacapture.idcaptureextendedsample.mappers.ResultMapper;
+import com.scandit.datacapture.idcaptureextendedsample.ui.result.CaptureResult;
 
 /**
  * The view model for the screen where the user may capture an ID document.
@@ -50,7 +52,8 @@ public class ScanViewModel extends ViewModel {
      * The repository to interact with the IdCapture mode. We use our own dependency injection
      * to obtain it, but you may use your favorite framework, like Dagger or Hilt instead.
      */
-    private final IdCaptureRepository idCaptureRepository = Injector.getInstance().getIdCaptureRepository();
+    private final IdCaptureRepository idCaptureRepository =
+            Injector.getInstance().getIdCaptureRepository();
 
     /**
      * The observer of IdCaptureOverlays that come from the lower layer. The overlay is recreated
@@ -58,12 +61,13 @@ public class ScanViewModel extends ViewModel {
      * IdCaptureOverlay offers an UI to aid the user in the capture process, it needs to be
      * attached to DataCaptureView.
      */
-    private final Observer<IdCaptureOverlay> idCaptureOverlaysObserver = this::onNewIdCaptureOverlay;
+    private final Observer<IdCaptureOverlay> idCaptureOverlaysObserver =
+            this::onNewIdCaptureOverlay;
 
     /**
      * The observer of data captured from personal identification documents or their parts.
      */
-    private final Observer<CapturedId> capturedIdsObserver = this::onIdCaptured;
+    private final Observer<CapturedIdEvent> capturedIdsObserver = this::onIdCaptured;
 
     /**
      * The observer of information about personal identification documents or their parts that
@@ -74,7 +78,7 @@ public class ScanViewModel extends ViewModel {
      *   (b) it's a barcode of a correct symbology, but the data is encoded in an unexpected format,
      *   (c) it's Machine Readable Zone (MRZ), but the data is encoded in an unexpected format.
      */
-    private final Observer<RejectedId> rejectedIdsObserver = this::onIdRejected;
+    private final Observer<RejectedIdEvent> rejectedIdsObserver = this::onIdRejected;
 
     /**
      * The state representing the currently displayed UI.
@@ -206,14 +210,15 @@ public class ScanViewModel extends ViewModel {
     /**
      * Omit the capture of the back side of the document and navigate to the result screen.
      */
-    public void onBackSideScanSkipped() {
+    public void onBackSideScanSkipped(CapturedId capturedId) {
         /*
          * If IdCapture supports the back side of a given document, but the user decides to skip
          * the capture, it is necessary to reset the IdCapture state.
          */
         idCaptureRepository.resetIdCapture();
 
-        goToResult.postValue(new GoToResult());
+        final CaptureResult result = ResultMapper.create(capturedId).mapResult();
+        goToResult.postValue(new GoToResult(result));
     }
 
     /**
@@ -247,7 +252,9 @@ public class ScanViewModel extends ViewModel {
         uiStates.postValue(uiState);
     }
 
-    private void onIdCaptured(CapturedId capturedId) {
+    private void onIdCaptured(CapturedIdEvent capturedIdEvent) {
+        CapturedId capturedId = capturedIdEvent.getContentIfNotHandled();
+        if (capturedId == null) return;
         /*
          *  If the captured document type allows to also scan it's back
          * side, ask the user whether they wish to do so. Otherwise present the data extracted
@@ -256,13 +263,16 @@ public class ScanViewModel extends ViewModel {
         if (capturedId.getCapturedResultType() == CapturedResultType.VIZ_RESULT &&
                 capturedId.getViz().getCapturedSides() == SupportedSides.FRONT_ONLY &&
                 capturedId.getViz().isBackSideCaptureSupported()) {
-            askScanBackSide.postValue(new AskScanBackSide());
+            askScanBackSide.postValue(new AskScanBackSide(capturedId));
         } else {
-            goToResult.postValue(new GoToResult());
+            final CaptureResult result = ResultMapper.create(capturedId).mapResult();
+            goToResult.postValue(new GoToResult(result));
         }
     }
 
-    private void onIdRejected(RejectedId rejectedId) {
+    private void onIdRejected(RejectedIdEvent rejectedIdEvent) {
+        RejectedId rejectedId = rejectedIdEvent.getContentIfNotHandled();
+        if (rejectedId == null) return;
         /*
          * Inform the user that data from a document that they try to
          * scan cannot be extracted.

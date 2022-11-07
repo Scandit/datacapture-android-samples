@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="LightNavigationBarBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:statusBarColor">@color/black</item>
+    </style>
+
+    <style name="RoundedCornersBottomSheet" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/rounded_corners_bottom_sheet_shape</item>
+    </style>
+
+    <style name="RoundedCornersBottomSheetDialogTheme" parent="LightNavigationBarBottomSheetDialogTheme">
+        <item name="bottomSheetStyle">@style/RoundedCornersBottomSheet</item>
+    </style>
+
+    <style name="CircularImage">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+</resources>

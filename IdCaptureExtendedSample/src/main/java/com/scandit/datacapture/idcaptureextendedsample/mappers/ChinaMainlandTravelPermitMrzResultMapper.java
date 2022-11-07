@@ -16,7 +16,7 @@ package com.scandit.datacapture.idcaptureextendedsample.mappers;
 
 import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.ChinaMainlandTravelPermitMrzResult;
-import com.scandit.datacapture.idcaptureextendedsample.ui.result.ResultEntry;
+import com.scandit.datacapture.idcaptureextendedsample.ui.result.CaptureResult;
 
 import java.util.ArrayList;
 
@@ -34,24 +34,24 @@ public final class ChinaMainlandTravelPermitMrzResultMapper extends ResultMapper
      * CapturedId.
      */
     @Override
-    public ArrayList<ResultEntry> mapResult() {
-        ArrayList<ResultEntry> result = super.mapResult();
+    public ArrayList<CaptureResult.Entry> extractFields() {
+        ArrayList<CaptureResult.Entry> result = super.extractFields();
 
-        result.add(new ResultEntry("Document Code", extractField(
+        result.add(new CaptureResult.Entry("Document Code", extractField(
                 this.result.getDocumentCode())));
-        result.add(new ResultEntry("Captured MRZ", extractField(
+        result.add(new CaptureResult.Entry("Captured MRZ", extractField(
                 this.result.getCapturedMrz())));
-        result.add(new ResultEntry("Personal ID Number", extractField(
+        result.add(new CaptureResult.Entry("Personal ID Number", extractField(
                 this.result.getPersonalIdNumber())));
-        result.add(new ResultEntry("Renewal Times", extractField(
+        result.add(new CaptureResult.Entry("Renewal Times", extractField(
                 this.result.getRenewalTimes())));
-        result.add(new ResultEntry("GBK Name", extractField(
+        result.add(new CaptureResult.Entry("GBK Name", extractField(
                 this.result.getGbkName())));
-        result.add(new ResultEntry("Omitted Character Count in GBK Name", extractField(
+        result.add(new CaptureResult.Entry("Omitted Character Count in GBK Name", extractField(
                 this.result.getOmittedCharacterCountInGBKName())));
-        result.add(new ResultEntry("Omitted Name Count", extractField(
+        result.add(new CaptureResult.Entry("Omitted Name Count", extractField(
                 this.result.getOmittedNameCount())));
-        result.add(new ResultEntry("Issuing Authority Code", extractField(
+        result.add(new CaptureResult.Entry("Issuing Authority Code", extractField(
                 this.result.getIssuingAuthorityCode())));
 
         return result;

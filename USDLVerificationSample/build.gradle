@@ -1,0 +1,47 @@
+plugins {
+    id("com.android.application")
+}
+
+android {
+    ndkVersion = sdk.ndk
+    compileSdkVersion = sdk.compile
+
+    defaultConfig {
+        applicationId = "com.scandit.datacapture.usdlverificationsample"
+        minSdkVersion(sdk.min)
+        targetSdkVersion(sdk.target)
+        versionCode = 1
+        versionName = "1.0"
+
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+        }
+    }
+    compileOptions {
+        sourceCompatibility = versions.java
+        targetCompatibility = versions.java
+    }
+
+    packagingOptions {
+        pickFirst("**/*.so")
+    }
+}
+
+dependencies {
+    api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:id:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:id-backend:${versions.scandit_sdk_version}"
+
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}")
+
+    implementation("androidx.appcompat:appcompat:${versions.androidx_appcompat}")
+    implementation("androidx.constraintlayout:constraintlayout:${versions.androidx_constraintlayout}")
+    implementation("com.google.android.material:material:${versions.material}")
+
+    implementation("com.squareup.okhttp3:okhttp:${versions.okhttp}")
+}

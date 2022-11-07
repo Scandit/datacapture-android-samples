@@ -16,7 +16,7 @@ package com.scandit.datacapture.idcaptureextendedsample.mappers;
 
 import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.MrzResult;
-import com.scandit.datacapture.idcaptureextendedsample.ui.result.ResultEntry;
+import com.scandit.datacapture.idcaptureextendedsample.ui.result.CaptureResult;
 
 import java.util.ArrayList;
 
@@ -33,13 +33,13 @@ public final class MrzResultMapper extends ResultMapper {
      * We extract all the MrzResult's specific fields and add them to the ones from CapturedId.
      */
     @Override
-    public ArrayList<ResultEntry> mapResult() {
-        ArrayList<ResultEntry> result = super.mapResult();
+    public ArrayList<CaptureResult.Entry> extractFields() {
+        ArrayList<CaptureResult.Entry> result = super.extractFields();
 
-        result.add(new ResultEntry("Document Code", extractField(this.result.getDocumentCode())));
-        result.add(new ResultEntry("Names Are Truncated", extractField(this.result.getNamesAreTruncated())));
-        result.add(new ResultEntry("Optional", extractField(this.result.getOptional())));
-        result.add(new ResultEntry("Optional1", extractField(this.result.getOptional1())));
+        result.add(new CaptureResult.Entry("Document Code", extractField(this.result.getDocumentCode())));
+        result.add(new CaptureResult.Entry("Names Are Truncated", extractField(this.result.getNamesAreTruncated())));
+        result.add(new CaptureResult.Entry("Optional", extractField(this.result.getOptional())));
+        result.add(new CaptureResult.Entry("Optional1", extractField(this.result.getOptional1())));
 
         return result;
     }
