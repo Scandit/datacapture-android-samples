@@ -83,4 +83,11 @@ public class IdCaptureRepository {
     public void disableIdCapture() {
         idCapture.setEnabled(false);
     }
+
+    /**
+     * Reset the internal IdCapture state.
+     */
+    public void resetIdCapture() {
+        idCapture.reset();
+    }
 }

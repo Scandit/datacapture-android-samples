@@ -14,6 +14,7 @@
 
 package com.scandit.datacapture.usdlverificationsample.data;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -178,6 +179,20 @@ public class IdCaptureRepository implements IdCaptureListener {
          * Here, the document is considered rejected when:
          *   (a) it's not a driver's license,
          *   (b) the barcode at the back side of a document is encoded in an unexpected format.
+         *
+         * In this sample we are not interested in this callback.
+         */
+    }
+
+    @Override
+    @WorkerThread
+    public void onIdCaptureTimedOut(
+            @NonNull IdCapture mode,
+            @NonNull IdCaptureSession session,
+            @NonNull FrameData data
+    ) {
+        /*
+         * Implement to handle documents that were localized, but could not be captured within a period of time.
          *
          * In this sample we are not interested in this callback.
          */

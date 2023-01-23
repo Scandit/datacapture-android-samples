@@ -39,6 +39,7 @@ public final class AamvaResultMapper extends ResultMapper {
         result.add(new CaptureResult.Entry("AAMVA Version", extractField(this.result.getAamvaVersion())));
         result.add(new CaptureResult.Entry("Jurisdiction Version", extractField(this.result.getJurisdictionVersion())));
         result.add(new CaptureResult.Entry("IIN", extractField(this.result.getIin())));
+        result.add(new CaptureResult.Entry("Is Real ID", extractField(this.result.isRealId())));
         result.add(new CaptureResult.Entry("Issuing Jurisdiction", extractField(this.result.getIssuingJurisdiction())));
         result.add(new CaptureResult.Entry("Issuing Jurisdiction ISO", extractField(this.result.getIssuingJurisdictionIso())));
         result.add(new CaptureResult.Entry("Eye Color", extractField(this.result.getEyeColor())));

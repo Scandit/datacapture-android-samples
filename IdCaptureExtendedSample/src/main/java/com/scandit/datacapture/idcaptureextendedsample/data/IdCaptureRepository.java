@@ -14,6 +14,7 @@
 
 package com.scandit.datacapture.idcaptureextendedsample.data;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -164,7 +165,10 @@ public class IdCaptureRepository implements IdCaptureListener {
                 IdDocumentType.VISA_MRZ,
                 IdDocumentType.SWISS_DL_MRZ,
                 IdDocumentType.CHINA_MAINLAND_TRAVEL_PERMIT_MRZ,
-                IdDocumentType.CHINA_EXIT_ENTRY_PERMIT_MRZ
+                IdDocumentType.CHINA_EXIT_ENTRY_PERMIT_MRZ,
+                IdDocumentType.CHINA_ONE_WAY_PERMIT_BACK_MRZ,
+                IdDocumentType.CHINA_ONE_WAY_PERMIT_FRONT_MRZ,
+                IdDocumentType.APEC_BUSINESS_TRAVEL_CARD_MRZ
         );
         return settings;
     }
@@ -266,6 +270,20 @@ public class IdCaptureRepository implements IdCaptureListener {
          * in order to return to the UI thread.
          */
         rejectedIds.postValue(new RejectedIdEvent(session.getNewlyRejectedId()));
+    }
+
+    @Override
+    @WorkerThread
+    public void onIdCaptureTimedOut(
+            @NonNull IdCapture mode,
+            @NonNull IdCaptureSession session,
+            @NonNull FrameData data
+    ) {
+        /*
+         * Implement to handle documents that were localized, but could not be captured within a period of time.
+         *
+         * In this sample we are not interested in this callback.
+         */
     }
 
     @Override

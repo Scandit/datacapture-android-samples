@@ -32,11 +32,26 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.TimeZone;
 
 public abstract class ResultMapper {
 
-    protected static final DateFormat shortDateFormat = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT);
-    protected static final DateFormat dateFormat = SimpleDateFormat.getDateInstance();
+    protected static final DateFormat shortDateFormat;
+    protected static final DateFormat dateFormat;
+
+    static {
+        /*
+         * DateResult::toDate() returns dates in UTC. We need to use the same timezone for
+         * formatting, otherwise we may end up with a wrong date displayed if our local timezone
+         * is a day behind/ahead from UTC.
+         */
+        shortDateFormat = SimpleDateFormat.getDateInstance();
+        shortDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        dateFormat = SimpleDateFormat.getDateInstance();
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
+
     protected final CapturedId capturedId;
 
     public static ResultMapper create(CapturedId capturedId) {
@@ -49,6 +64,10 @@ public abstract class ResultMapper {
                 return new ChinaExitEntryPermitMrzResultMapper(capturedId);
             case CHINA_MAINLAND_TRAVEL_PERMIT_MRZ_RESULT:
                 return new ChinaMainlandTravelPermitMrzResultMapper(capturedId);
+            case CHINA_ONE_WAY_PERMIT_BACK_MRZ_RESULT:
+                return new ChinaOneWayPermitBackMrzResultMapper(capturedId);
+            case CHINA_ONE_WAY_PERMIT_FRONT_MRZ_RESULT:
+                return new ChinaOneWayPermitFrontMrzResultMapper(capturedId);
             case COLOMBIA_DL_BARCODE_RESULT:
                 return new ColombiaDlBarcodeResultMapper(capturedId);
             case COLOMBIA_ID_BARCODE_RESULT:
@@ -63,6 +82,8 @@ public abstract class ResultMapper {
                 return new UsUniformedServiceBarcodeResultMapper(capturedId);
             case VIZ_RESULT:
                 return new VizResultMapper(capturedId);
+            case APEC_BUSINESS_TRAVEL_CARD_MRZ_RESULT:
+                return new ApecBusinessTravelCardMrzResultMapper(capturedId);
             default:
                 throw new AssertionError(
                         "Unsupported result type " + capturedId.getCapturedResultType());
@@ -137,12 +158,14 @@ public abstract class ResultMapper {
         entries.add(new CaptureResult.Entry("Full Name", extractField(capturedId.getFullName())));
         entries.add(new CaptureResult.Entry("Sex", extractField(capturedId.getSex())));
         entries.add(new CaptureResult.Entry("Date of Birth", extractField(capturedId.getDateOfBirth())));
+        entries.add(new CaptureResult.Entry("Age", extractField(capturedId.getAge())));
         entries.add(new CaptureResult.Entry("Nationality", extractField(capturedId.getNationality())));
         entries.add(new CaptureResult.Entry("Address", extractField(capturedId.getAddress())));
         entries.add(new CaptureResult.Entry("Issuing Country ISO", extractField(capturedId.getIssuingCountryIso())));
         entries.add(new CaptureResult.Entry("Issuing Country", extractField(capturedId.getIssuingCountry())));
         entries.add(new CaptureResult.Entry("Document Number", extractField(capturedId.getDocumentNumber())));
         entries.add(new CaptureResult.Entry("Date of Expiry", extractField(capturedId.getDateOfExpiry())));
+        entries.add(new CaptureResult.Entry("Is Expired", extractField(capturedId.isExpired())));
         entries.add(new CaptureResult.Entry("Date of Issue", extractField(capturedId.getDateOfIssue())));
 
         return entries;
@@ -166,7 +189,11 @@ public abstract class ResultMapper {
     }
 
     @NonNull
-    protected String extractField(boolean value) {
+    protected String extractField(Boolean value) {
+        if (value == null) {
+            return "<empty>";
+        }
+
         return String.valueOf(value);
     }
 

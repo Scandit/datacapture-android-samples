@@ -29,6 +29,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * A helper class to convert the data captured from a driver's license to a result entity that
@@ -36,7 +37,18 @@ import java.util.List;
  */
 public class ResultMapper {
 
-    protected static final DateFormat dateFormat = SimpleDateFormat.getDateInstance();
+    protected static final DateFormat dateFormat;
+
+    static {
+        /*
+         * DateResult::toDate() returns dates in UTC. We need to use the same timezone for
+         * formatting, otherwise we may end up with a wrong date displayed if our local timezone
+         * is a day behind/ahead from UTC.
+         */
+        dateFormat = SimpleDateFormat.getDateInstance();
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
+
     protected final CapturedId capturedId;
 
     public ResultMapper(CapturedId capturedId) {

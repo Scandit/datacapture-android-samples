@@ -106,17 +106,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:tabBackground="@drawable/tab_item_background"
         app:tabIndicator="@null"
+        app:tabMode="scrollable"
+        app:tabPaddingStart="18dp"
+        app:tabPaddingEnd="18dp"
         app:tabTextAppearance="@style/Scandit.TextAppearance.Tabs">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingStart="8dp"
             android:text="@string/scan_driver_license" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/scan_passport" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/scan_military_id" />
 
     </com.google.android.material.tabs.TabLayout>
 

@@ -26,5 +26,10 @@ enum TargetDocument {
     /**
      * The recipient's passport.
      */
-    PASSPORT
+    PASSPORT,
+
+    /**
+     * The recipient's U.S. military ID (US Uniformed Services document).
+     */
+    MILITARY_ID,
 }

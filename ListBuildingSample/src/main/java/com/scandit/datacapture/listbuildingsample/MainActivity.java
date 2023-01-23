@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,7 +41,6 @@ import com.scandit.datacapture.barcode.spark.ui.SparkScanViewSettings;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.common.geometry.Point;
 import com.scandit.datacapture.core.data.FrameData;
-import com.scandit.datacapture.core.source.Camera;
 import com.scandit.datacapture.core.time.TimeInterval;
 import com.scandit.datacapture.listbuildingsample.data.ScanResult;
 
@@ -103,16 +103,6 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
         // Create data capture context using your license key.
         dataCaptureContext = DataCaptureContext.forLicenseKey(SCANDIT_LICENSE_KEY);
 
-        // Use the default camera with the recommended camera settings for the SparkScan mode
-        // and set it as the frame source of the context.
-        Camera camera = Camera.getDefaultCamera(SparkScan.createRecommendedCameraSettings());
-        if (camera != null) {
-            dataCaptureContext.setFrameSource(camera);
-        } else {
-            throw new IllegalStateException(
-                "Sample depends on a camera, which failed to initialize.");
-        }
-
         // The spark scan process is configured through SparkScan settings
         // which are then applied to the spark scan instance that manages the spark scan.
         SparkScanSettings sparkScanSettings = new SparkScanSettings();
@@ -144,8 +134,9 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
 
         symbologySettings.setActiveSymbolCounts(activeSymbolCounts);
 
-        // Create spark scan and attach to data capture context.
-        sparkScan = SparkScan.forDataCaptureContext(dataCaptureContext, sparkScanSettings);
+        // Create the spark scan instance.
+        // Spark scan will automatically apply and maintain the optimal camera settings.
+        sparkScan = new SparkScan(sparkScanSettings);
 
         // Register self as a listener to get informed of tracked barcodes.
         sparkScan.addListener(this);
@@ -179,7 +170,6 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
     @Override
     protected void onDestroy() {
         sparkScan.removeListener(this);
-        dataCaptureContext.removeMode(sparkScan);
         backgroundExecutor.shutdown();
         super.onDestroy();
     }
@@ -187,6 +177,7 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
     @Override
     protected void onResume() {
         super.onResume();
+        sparkScanView.onResume();
 
         // Check for camera permission and request it, if it hasn't yet been granted.
         requestCameraPermission();
@@ -198,18 +189,19 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
 
     private void validBarcodeScanned(Barcode barcode, FrameData data) {
         // Emit sound and vibration feedback
-        sparkScanView.setFeedback(new SparkScanViewFeedback.Success());
+        sparkScanView.emitFeedback(new SparkScanViewFeedback.Success());
 
-        data.retain();
+        if (data != null) {
+            data.retain();
 
-        backgroundExecutor.execute(() -> {
-            Bitmap image = cropBarcode(barcode, data.getImageBuffer().toBitmap());
-            ScanResult result =
-                new ScanResult(barcode.getData(), barcode.getSymbology().name(), image);
-            postResult(result);
-            data.release();
-        });
-
+            backgroundExecutor.execute(() -> {
+                Bitmap image = cropBarcode(barcode, data.getImageBuffer().toBitmap());
+                ScanResult result =
+                        new ScanResult(barcode.getData(), barcode.getSymbology().name(), image);
+                postResult(result);
+                data.release();
+            });
+        }
     }
 
     private void postResult(ScanResult result) {
@@ -287,14 +279,14 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
 
     private void invalidBarcodeScanned() {
         // Emit sound and vibration feedback
-        sparkScanView.setFeedback(
+        sparkScanView.emitFeedback(
             new SparkScanViewFeedback.Error("This code should not have been scanned",
                 TimeInterval.seconds(60f)));
     }
 
     @Override
     public void onBarcodeScanned(
-        @NonNull SparkScan sparkScan, @NonNull SparkScanSession session, @NonNull FrameData data
+        @NonNull SparkScan sparkScan, @NonNull SparkScanSession session, @Nullable FrameData data
     ) {
         List<Barcode> barcodes = session.getNewlyRecognizedBarcodes();
         Barcode barcode = barcodes.get(0);
@@ -308,21 +300,7 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
 
     @Override
     public void onSessionUpdated(
-        @NonNull SparkScan sparkScan, @NonNull SparkScanSession session, @NonNull FrameData data
-    ) {
-        // Not relevant in this sample
-    }
-
-    @Override
-    public void onObservationStarted(
-        @NonNull SparkScan sparkScan
-    ) {
-        // Not relevant in this sample
-    }
-
-    @Override
-    public void onObservationStopped(
-        @NonNull SparkScan sparkScan
+        @NonNull SparkScan sparkScan, @NonNull SparkScanSession session, @Nullable FrameData data
     ) {
         // Not relevant in this sample
     }

@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.appcompat.widget.Toolbar;
 
@@ -42,12 +43,23 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 public class IdCaptureActivity extends CameraPermissionActivity
         implements IdCaptureListener, AlertDialogFragment.Callbacks {
     private static final String RESULT_FRAGMENT_TAG = "result_fragment";
 
-    private static final DateFormat dateFormat = SimpleDateFormat.getDateInstance();
+    private static final DateFormat dateFormat;
+
+    static {
+        /*
+         * DateResult::toDate() returns dates in UTC. We need to use the same timezone for
+         * formatting, otherwise we may end up with a wrong date displayed if our local timezone
+         * is a day behind/ahead from UTC.
+         */
+        dateFormat = SimpleDateFormat.getDateInstance();
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
 
     private DataCaptureManager dataCaptureManager;
     private DataCaptureView view;
@@ -195,6 +207,19 @@ public class IdCaptureActivity extends CameraPermissionActivity
     }
 
     @Override
+    public void onIdCaptureTimedOut(
+            @NonNull IdCapture mode,
+            @NonNull IdCaptureSession session,
+            @NonNull FrameData data
+    ) {
+        /*
+         * Implement to handle documents that were localized, but could not be captured within a period of time.
+         *
+         * In this sample we are not interested in this callback.
+         */
+    }
+
+    @Override
     public void onErrorEncountered(
             @NotNull IdCapture mode,
             @NotNull final Throwable error,
@@ -279,12 +304,14 @@ public class IdCaptureActivity extends CameraPermissionActivity
         appendField(builder, "Full Name: ", result.getFullName());
         appendField(builder, "Sex: ", result.getSex());
         appendField(builder, "Date of Birth: ", result.getDateOfBirth());
+        appendField(builder, "Age: ", result.getAge());
         appendField(builder, "Nationality: ", result.getNationality());
         appendField(builder, "Address: ", result.getAddress());
         appendField(builder, "Issuing Country ISO: ", result.getIssuingCountryIso());
         appendField(builder, "Issuing Country: ", result.getIssuingCountry());
         appendField(builder, "Document Number: ", result.getDocumentNumber());
         appendField(builder, "Date of Expiry: ", result.getDateOfExpiry());
+        appendField(builder, "Is Expired: ", String.valueOf(result.isExpired()));
         appendField(builder, "Date of Issue: ", result.getDateOfIssue());
     }
 
@@ -292,6 +319,18 @@ public class IdCaptureActivity extends CameraPermissionActivity
         builder.append(name);
 
         if (TextUtils.isEmpty(value)) {
+            builder.append("<empty>");
+        } else {
+            builder.append(value);
+        }
+
+        builder.append("\n");
+    }
+
+    private void appendField(StringBuilder builder, String name, Integer value) {
+        builder.append(name);
+
+        if (value == null) {
             builder.append("<empty>");
         } else {
             builder.append(value);

@@ -20,6 +20,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
@@ -42,6 +43,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 import static android.content.DialogInterface.OnClickListener;
 
@@ -52,7 +54,17 @@ public class MRZScannerActivity
     // Your Scandit License key is available via your Scandit SDK web account.
     public static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
 
-    private static final DateFormat dateFormat = SimpleDateFormat.getDateInstance();
+    private static final DateFormat dateFormat;
+
+    static {
+        /*
+         * DateResult::toDate() returns dates in UTC. We need to use the same timezone for
+         * formatting, otherwise we may end up with a wrong date displayed if our local timezone
+         * is a day behind/ahead from UTC.
+         */
+        dateFormat = SimpleDateFormat.getDateInstance();
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
 
     private DataCaptureContext dataCaptureContext;
     private IdCapture idCapture;
@@ -254,6 +266,19 @@ public class MRZScannerActivity
             @NotNull FrameData data
     ) {
         // In this sample we are not interested in this callback.
+    }
+
+    @Override
+    public void onIdCaptureTimedOut(
+            @NonNull IdCapture mode,
+            @NonNull IdCaptureSession session,
+            @NonNull FrameData data
+    ) {
+        /*
+         * Implement to handle documents that were localized, but could not be captured within a period of time.
+         *
+         * In this sample we are not interested in this callback.
+         */
     }
 
     @Override

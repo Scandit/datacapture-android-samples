@@ -19,12 +19,14 @@ import static android.view.View.VISIBLE;
 import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.DriverLicenseSide.BACK_BARCODE;
 import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.DriverLicenseSide.FRONT_VIZ;
 import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.TargetDocument.DRIVER_LICENSE;
+import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.TargetDocument.MILITARY_ID;
 import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.TargetDocument.PASSPORT;
 import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.VerificationFailureReason.DOCUMENT_EXPIRED;
 import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.VerificationFailureReason.HOLDER_UNDERAGE;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
@@ -60,13 +62,6 @@ import java.util.TimerTask;
  * The view model for the screen  where the user may capture the recipient's document.
  */
 public class ScanViewModel extends ViewModel implements IdCaptureListener {
-    /**
-     * The delay in milliseconds from the moment a document is localized, after which a pop-up
-     * is displayed to inform the user that they may attempt to manually enter recipient's document
-     * data.
-     */
-    private static final long TRY_ANOTHER_METHOD_POP_UP_DELAY_MS = 5000;
-
     /**
      * The delay in milliseconds after which the hint that informs the user that they may attempt
      * to manually enter recipient's document data should be displayed.
@@ -108,11 +103,6 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
     private final Observer<CapturedId> capturedIdsObserver = this::verifyCapturedId;
 
     /**
-     * The observer of documents that are localized, but not yet captured.
-     */
-    private final Observer<LocalizedOnlyId> localizedIdsObserver = this::startTryAnotherMethodTimer;
-
-    /**
      * The observer of PDF417 barcodes that cannot be parsed.
      */
     private final Observer<RejectedId> rejectedBarcodesObserver = this::emitBarcodeRejected;
@@ -125,8 +115,6 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
     private final Timer timer = new Timer();
 
     private TimerTask showEnterManuallyHint = null;
-
-    private TimerTask showEnterManuallyPopUp = null;
 
     /**
      * The state representing the currently displayed UI.
@@ -196,7 +184,6 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
         idCaptureRepository.idCaptures().observeForever(idCapturesObserver);
         enterManuallyHints.observeForever(enterManuallyHintObserver);
         capturedIds.observeForever(capturedIdsObserver);
-        localizedIds.observeForever(localizedIdsObserver);
         rejectedBarcodes.observeForever(rejectedBarcodesObserver);
 
         /*
@@ -220,7 +207,6 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
         idCaptureRepository.idCaptures().removeObserver(idCapturesObserver);
         enterManuallyHints.removeObserver(enterManuallyHintObserver);
         capturedIds.removeObserver(capturedIdsObserver);
-        localizedIds.removeObserver(localizedIdsObserver);
         rejectedBarcodes.removeObserver(rejectedBarcodesObserver);
         timer.cancel();
     }
@@ -389,6 +375,39 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
     }
 
     /**
+     * The user will attempt to capture the barcode of the recipient's U.S. military ID (US
+     * Uniformed Services document).
+     *
+     * Recreate the IdCapture with the new configuration.
+     *
+     * Schedule the hint that informs the user that they may attempt to manually enter
+     * the recipient's document data if not yet shown/scheduled.
+     */
+    public void onMilitaryIdSelected() {
+        DriverLicenseSide side = uiState.getDriverLicenseSide();
+        @StringRes int scanHint = getScanHint(MILITARY_ID, side);
+
+        IdDocumentType documentType = getSupportedDocument(MILITARY_ID, side);
+        idCaptureRepository.recreateIdCapture(documentType);
+
+        ScanUiState.Builder uiStateBuilder = uiState.toBuilder()
+                .targetDocument(MILITARY_ID)
+                .scanHint(scanHint)
+                .driverLicenseToggleVisibility(INVISIBLE);
+
+        resetScheduledHints();
+
+        if (uiState.getEnterManuallyHintVisibility() != VISIBLE) {
+            scheduleEnterManuallyHint();
+        }
+
+        uiState = uiStateBuilder.build();
+
+        uiStates.postValue(uiState);
+    }
+
+
+    /**
      * Schedule the hint that informs the user that they may attempt to manually enter
      * the recipient's document data. The TimerTask triggers in the background thread, so we post
      * it to the LiveData in order to return to the UI thread.
@@ -427,7 +446,6 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
     public void onPopUpDismissed() {
         cameraRepository.turnOnCamera();
         idCaptureRepository.enableIdCapture();
-        showEnterManuallyPopUp = null;
     }
 
     /**
@@ -447,11 +465,6 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
         if (showEnterManuallyHint != null) {
             showEnterManuallyHint.cancel();
             showEnterManuallyHint = null;
-        }
-
-        if (showEnterManuallyPopUp != null) {
-            showEnterManuallyPopUp.cancel();
-            showEnterManuallyPopUp = null;
         }
     }
 
@@ -630,26 +643,6 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
     }
 
     /**
-     * We detected a document, but couldn't extract the data yet. Trigger a delay after which
-     * a pop-up is displayed to inform the user that they may attempt to try another method of
-     * entering the data:
-     * * to capture the front of card if they are trying to capture the barcode
-     * * to enter the data manually otherwise
-     */
-    private void startTryAnotherMethodTimer(LocalizedOnlyId localizedOnlyId) {
-        if (showEnterManuallyPopUp == null) {
-            showEnterManuallyPopUp = new TimerTask() {
-                @Override
-                public void run() {
-                    goToTryAnotherMethod();
-                }
-            };
-
-            timer.schedule(showEnterManuallyPopUp, TRY_ANOTHER_METHOD_POP_UP_DELAY_MS);
-        }
-    }
-
-    /**
      * We detected a document, but couldn't extract the data yet. Show a pop-up to inform
      * the user that they may attempt to try another method of entering the data:
      * * to capture the front of card if they are trying to capture the barcode
@@ -657,8 +650,13 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
      */
     private void goToTryAnotherMethod() {
         idCaptureRepository.disableIdCapture();
+        // Reset ID capture internal state so that the timeout timer is reset as well. This is
+        // important because the timeout timer could be started if an ID is localized between the
+        // moment onIdCaptureTimedOut is triggered and the moment ID capture is disabled in this
+        // method.
+        idCaptureRepository.resetIdCapture();
 
-        if (uiState.getTargetDocument() == DRIVER_LICENSE && uiState.getDriverLicenseSide() == BACK_BARCODE) {
+        if (isBackOfDriverLicenseExpected()) {
             goToBarcodeNotSupported.postValue(new GoToBarcodeNotSupported());
         } else {
             goToIdLocalizedButNotCaptured.postValue(new GoToIdLocalizedButNotCaptured());
@@ -681,7 +679,7 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
 
         RejectedId rejectedId = session.getNewlyRejectedId();
 
-        if (uiState.getTargetDocument() == DRIVER_LICENSE && uiState.getDriverLicenseSide() == BACK_BARCODE) {
+        if (isBarcodeExpected()) {
             /*
              * The callback is executed in the background thread. We post the value to the LiveData
              * in order to return to the UI thread.
@@ -691,13 +689,51 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
     }
 
     /**
+     * Check whether back of driver's license is expected to be scanned.
+     */
+    private boolean isBackOfDriverLicenseExpected() {
+        return uiState.getTargetDocument() == DRIVER_LICENSE &&
+                uiState.getDriverLicenseSide() == BACK_BARCODE;
+    }
+
+    /**
+     * Check whether U.S. military ID (US Uniformed Services document) is expected to be scanned.
+     */
+    private boolean isMilitaryIdExpected() {
+        return uiState.getTargetDocument() == MILITARY_ID;
+    }
+
+    /**
+     * Check whether a barcode is expected to be scanned.
+     */
+    private boolean isBarcodeExpected() {
+        return isBackOfDriverLicenseExpected() || isMilitaryIdExpected();
+    }
+
+    /**
      * Display the UI that informs the user that a given PDF417 barcode can be captured, but its
      * data cannot be parsed.
      */
     private void emitBarcodeRejected(RejectedId rejectedId) {
-        if (uiState.getTargetDocument() == DRIVER_LICENSE && uiState.getDriverLicenseSide() == BACK_BARCODE) {
+        if (isBarcodeExpected()) {
             goToBarcodeNotSupported.postValue(new GoToBarcodeNotSupported());
         }
+    }
+
+    /**
+     * We detected a document, but couldn't extract the data yet. Show a pop-up to inform
+     * the user that they may attempt to try another method of entering the data:
+     * * to capture the front of card if they are trying to capture the barcode
+     * * to enter the data manually otherwise
+     */
+    @Override
+    @WorkerThread
+    public void onIdCaptureTimedOut(
+            @NonNull IdCapture mode,
+            @NonNull IdCaptureSession session,
+            @NonNull FrameData data
+    ) {
+        goToTryAnotherMethod();
     }
 
     @Override
@@ -735,6 +771,8 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
                 return IdLayout.AUTO;
             case PASSPORT:
                 return IdLayout.TD3;
+            case MILITARY_ID:
+                return IdLayout.PDF417;
             default:
                 throw new AssertionError("Unknown target document " + document);
         }
@@ -759,6 +797,8 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
                 }
             case PASSPORT:
                 return IdDocumentType.PASSPORT_MRZ;
+            case MILITARY_ID:
+                return IdDocumentType.US_US_ID_BARCODE;
             default:
                 throw new AssertionError("Unknown target document " + document);
         }
@@ -785,6 +825,8 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
                 }
             case PASSPORT:
                 return R.string.scan_hint_passport_mrz;
+            case MILITARY_ID:
+                return R.string.scan_hint_military_id;
             default:
                 throw new AssertionError("Unknown target document " + document);
         }
