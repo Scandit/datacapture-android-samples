@@ -146,8 +146,8 @@ public class ScanFragment extends Fragment {
     private View enterManuallyHint;
 
     /**
-     * The menu that allows the user to switch between capturing a driver's license, capturing
-     * a passport and capturing a U.S. military ID.
+     * The menu that allows the user to switch between capturing a driver's license and capturing
+     * a passport.
      */
     private TabLayout targetDocumentMenu;
 
@@ -264,11 +264,6 @@ public class ScanFragment extends Fragment {
     private static final int TARGET_DOCUMENT_ITEM_PASSPORT = 1;
 
     /**
-     * The const representing the U.S. military ID tab.
-     */
-    private static final int TARGET_DOCUMENT_ITEM_MILITARY_ID = 2;
-
-    /**
      * Inform the view model that the user selected a different target document.
      */
     private boolean onTargetDocumentSelected(@NonNull TabLayout.Tab tab) {
@@ -278,8 +273,6 @@ public class ScanFragment extends Fragment {
             viewModel.onDriverLicenseSelected();
         } else if (position == TARGET_DOCUMENT_ITEM_PASSPORT) {
             viewModel.onPassportSelected();
-        } else if (position == TARGET_DOCUMENT_ITEM_MILITARY_ID) {
-            viewModel.onMilitaryIdSelected();
         }
 
         return true;

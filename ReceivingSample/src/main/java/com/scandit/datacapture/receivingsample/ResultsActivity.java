@@ -118,11 +118,7 @@ public class ResultsActivity extends AppCompatActivity {
         // Pause camera if the app is going to background.
         if (!isFinishing()) {
             CameraManager.getInstance().pauseFrameSource();
-
-            // Save current barcodes as additional barcodes.
-            BarcodeManager.getInstance().saveCurrentBarcodesAsAdditionalBarcodes();
         }
-
         super.onPause();
     }
 

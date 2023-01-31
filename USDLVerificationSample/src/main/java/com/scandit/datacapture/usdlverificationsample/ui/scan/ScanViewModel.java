@@ -35,6 +35,8 @@ import com.scandit.datacapture.usdlverificationsample.di.Injector;
 import com.scandit.datacapture.usdlverificationsample.ui.result.ResultMapper;
 import com.scandit.datacapture.usdlverificationsample.ui.result.CaptureResult;
 
+import java.util.Date;
+
 /**
  * The view model for the screen where the user may capture a Driver's License.
  */
@@ -270,16 +272,17 @@ public class ScanViewModel extends ViewModel {
         AamvaVizBarcodeComparisonResult comparisonResult =
                 driverLicenseVerificationRepository.compareFrontAndBack(capturedId);
         boolean isFrontBackComparisonSuccessful = comparisonResult.getChecksPassed();
+        boolean isExpired = isDocumentExpired(capturedId);
 
         /*
          * If front and back match AND ID is not expired, run cloud-based verification
          */
-        if (isFrontBackComparisonSuccessful && !capturedId.isExpired()) {
+        if (isFrontBackComparisonSuccessful && !isExpired) {
             cloudVerificationTask = driverLicenseVerificationRepository.verifyIdOnCloud(capturedId);
             setIsCloudVerificationRunning(true);
             setUpCloudVerificationTaskListeners();
         } else {
-            navigateToResult(capturedId, isFrontBackComparisonSuccessful, false);
+            navigateToResult(capturedId, isExpired, isFrontBackComparisonSuccessful, false);
         }
     }
 
@@ -298,7 +301,7 @@ public class ScanViewModel extends ViewModel {
         cloudVerificationTask.doOnVerificationResult(cloudVerificationResult -> {
             if (driverLicense != null) {
                 boolean checksPassed = cloudVerificationResult.getAllChecksPassed();
-                navigateToResult(driverLicense, true, checksPassed);
+                navigateToResult(driverLicense, false, true, checksPassed);
                 setIsCloudVerificationRunning(false);
                 cloudVerificationTask = null;
                 driverLicense = null;
@@ -337,14 +340,24 @@ public class ScanViewModel extends ViewModel {
      */
     private void navigateToResult(
             CapturedId capturedId,
+            boolean isExpired,
             boolean isFrontBackComparisonSuccessful,
             boolean isCloudVerificationSuccessful
     ) {
         final CaptureResult result = new ResultMapper(capturedId).mapResult(
-                capturedId.isExpired(),
+                isExpired,
                 isFrontBackComparisonSuccessful,
                 isCloudVerificationSuccessful
         );
         goToResult.postValue(new GoToResult(result));
+    }
+
+
+    private boolean isDocumentExpired(CapturedId capturedId) {
+        if (capturedId.getDateOfExpiry() == null) return true;
+
+        long now = System.currentTimeMillis();
+        Date expiryDate = capturedId.getDateOfExpiry().toDate();
+        return expiryDate.getTime() < now;
     }
 }

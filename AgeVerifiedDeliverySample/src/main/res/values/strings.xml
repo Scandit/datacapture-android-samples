@@ -6,11 +6,9 @@
     <string name="scan_hint_driver_license_viz">Align front of license</string>
     <string name="scan_hint_driver_license_barcode">Align back of license</string>
     <string name="scan_hint_passport_mrz">Align character strip</string>
-    <string name="scan_hint_military_id">Scan barcode on the back of the card</string>
     <string name="enter_manually_delayed_hint">Can\'t scan? Enter manually</string>
     <string name="scan_driver_license">Driver\'s License</string>
     <string name="scan_passport">Passport</string>
-    <string name="scan_military_id">Military ID</string>
     <string name="scan_startup_hint">Choose document and start scanning</string>
 
     <string name="barcode_not_supported_title">Verification failed</string>

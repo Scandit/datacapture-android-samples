@@ -36,7 +36,11 @@ import com.scandit.datacapture.barcode.tracking.data.TrackedBarcode;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.core.ui.style.Brush;
+import com.scandit.datacapture.receivingsample.data.ScanDetails;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class MainActivity extends CameraPermissionActivity
@@ -51,6 +55,8 @@ public class MainActivity extends CameraPermissionActivity
     private DataCaptureContext dataCaptureContext;
 
     private boolean navigatingInternally = false;
+
+    private Collection<TrackedBarcode> scannedBarcodes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +93,8 @@ public class MainActivity extends CameraPermissionActivity
         // Create barcode count and attach to context.
         barcodeCount = BarcodeCount.forDataCaptureContext(dataCaptureContext, barcodeCountSettings);
 
-        // Initialize the shared barcode manager.
-        BarcodeManager.getInstance().initialize(barcodeCount);
+        // Register self as a listener to get informed of tracked barcodes.
+        barcodeCount.addListener(this);
 
         // To visualize the on-going barcode count process on screen, setup a BarcodeCountView
         // that renders the camera preview. The view must be connected to the data capture context
@@ -118,14 +124,7 @@ public class MainActivity extends CameraPermissionActivity
         // That way the session is not lost when coming back from results.
         if (!navigatingInternally) {
             CameraManager.getInstance().pauseFrameSource();
-
-            // Save current barcodes as additional barcodes.
-            BarcodeManager.getInstance().saveCurrentBarcodesAsAdditionalBarcodes();
         }
-
-        // Unregister self as listener.
-        barcodeCount.removeListener(this);
-
         super.onPause();
     }
 
@@ -133,11 +132,6 @@ public class MainActivity extends CameraPermissionActivity
     protected void onResume() {
         super.onResume();
         navigatingInternally = false;
-
-        // Register self as a listener to get informed of tracked barcodes.
-        barcodeCount.addListener(this);
-
-        // Enable the mode to start processing frames.
         barcodeCount.setEnabled(true);
 
         // Check for camera permission and request it, if it hasn't yet been granted.
@@ -177,7 +171,7 @@ public class MainActivity extends CameraPermissionActivity
         @NonNull BarcodeCountSession session,
         @NonNull FrameData data
     ) {
-        BarcodeManager.getInstance().updateWithSession(session);
+        scannedBarcodes = session.getRecognizedBarcodes().values();
     }
 
     @Nullable
@@ -212,10 +206,31 @@ public class MainActivity extends CameraPermissionActivity
         listLauncher.launch(
             ResultsActivity.getIntent(
                 MainActivity.this,
-                BarcodeManager.getInstance().getScanResults(),
+                getScanResults(),
                 ResultsActivity.DoneButtonStyle.RESUME
             )
         );
+    }
+
+    private HashMap<String, ScanDetails> getScanResults() {
+        final Collection<TrackedBarcode> barcodes = scannedBarcodes;
+        HashMap<String, ScanDetails> scanResults = new HashMap<>();
+
+        for (TrackedBarcode trackedBarcode : barcodes) {
+            String barcodeData = trackedBarcode.getBarcode().getData();
+            String symbology = trackedBarcode.getBarcode().getSymbology().name();
+            if (barcodeData == null) continue;
+
+            ScanDetails scanDetails = scanResults.get(barcodeData);
+            if (scanDetails != null) {
+                scanDetails.increaseQuantity();
+                scanResults.put(barcodeData, scanDetails);
+            } else {
+                scanResults.put(barcodeData, new ScanDetails(barcodeData, symbology));
+            }
+        }
+
+        return scanResults;
     }
 
     /**
@@ -237,7 +252,7 @@ public class MainActivity extends CameraPermissionActivity
         exitLauncher.launch(
             ResultsActivity.getIntent(
                 MainActivity.this,
-                BarcodeManager.getInstance().getScanResults(),
+                getScanResults(),
                 ResultsActivity.DoneButtonStyle.NEW_SCAN
             )
         );
@@ -248,11 +263,12 @@ public class MainActivity extends CameraPermissionActivity
      */
     ActivityResultLauncher<Intent> exitLauncher = registerForActivityResult(
         new ActivityResultContracts.StartActivityForResult(),
-        result -> resetSession());
+        result -> {
+            resetSession();
+        });
 
     private void resetSession() {
-        BarcodeManager.getInstance().reset();
-        barcodeCount.clearAdditionalBarcodes();
+        scannedBarcodes.clear();
         barcodeCount.reset();
     }
 
@@ -277,11 +293,6 @@ public class MainActivity extends CameraPermissionActivity
     @Override
     public void onRecognizedBarcodeNotInListTapped(
             @NonNull BarcodeCountView view, @NonNull TrackedBarcode trackedBarcode) {
-        // Not relevant in this sample
-    }
-
-    @Override
-    public void onSingleScanButtonTapped(@NonNull BarcodeCountView view) {
         // Not relevant in this sample
     }
 
