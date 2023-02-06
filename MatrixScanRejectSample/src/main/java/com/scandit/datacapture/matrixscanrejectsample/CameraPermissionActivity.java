@@ -47,11 +47,9 @@ public abstract class CameraPermissionActivity extends AppCompatActivity {
     }
 
     protected boolean hasCameraPermission() {
-        return (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
-                || checkSelfPermission(CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED);
+        return checkSelfPermission(CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED;
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     protected void requestCameraPermission() {
         // For Android M and onwards we need to request the camera permission from the user.
         if (!hasCameraPermission()) {

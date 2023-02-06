@@ -241,6 +241,20 @@ public class IdCaptureRepository implements IdCaptureListener {
 
     @Override
     @WorkerThread
+    public void onIdCaptureTimedOut(
+            @NonNull IdCapture mode,
+            @NonNull IdCaptureSession session,
+            @NonNull FrameData data
+    ) {
+        /*
+         * Implement to handle documents that were localized, but could not be captured within a period of time.
+         *
+         * In this sample we are not interested in this callback.
+         */
+    }
+
+    @Override
+    @WorkerThread
     public void onErrorEncountered(
             @NonNull IdCapture mode,
             @NonNull Throwable error,

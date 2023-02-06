@@ -46,8 +46,8 @@ public final class ChinaMainlandTravelPermitMrzResultMapper extends ResultMapper
                 chinaMainlandTravelPermitMrzResult.getPersonalIdNumber())));
         result.add(new CaptureResult.Entry("Renewal Times", extractField(
                 chinaMainlandTravelPermitMrzResult.getRenewalTimes())));
-        result.add(new CaptureResult.Entry("GBK Name", extractField(
-                chinaMainlandTravelPermitMrzResult.getGbkName())));
+        result.add(new CaptureResult.Entry("Full Name Simplified Chinese", extractField(
+                chinaMainlandTravelPermitMrzResult.getFullNameSimplifiedChinese())));
         result.add(new CaptureResult.Entry("Omitted Character Count in GBK Name", extractField(
                 chinaMainlandTravelPermitMrzResult.getOmittedCharacterCountInGBKName())));
         result.add(new CaptureResult.Entry("Omitted Name Count", extractField(

@@ -14,12 +14,17 @@
 
 package com.scandit.datacapture.barcodecaptureviewssample.models;
 
+import androidx.annotation.NonNull;
 import com.scandit.datacapture.barcode.capture.BarcodeCapture;
 import com.scandit.datacapture.barcode.capture.BarcodeCaptureSettings;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
+import com.scandit.datacapture.core.capture.DataCaptureContextListener;
+import com.scandit.datacapture.core.capture.DataCaptureMode;
+import com.scandit.datacapture.core.common.ContextStatus;
 import com.scandit.datacapture.core.source.Camera;
+import com.scandit.datacapture.core.source.FrameSource;
 
-public final class DataCaptureManager {
+public final class DataCaptureManager implements DataCaptureContextListener {
 
     private static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
 
@@ -28,10 +33,14 @@ public final class DataCaptureManager {
     public final BarcodeCapture barcodeCapture;
     public final DataCaptureContext dataCaptureContext;
     public final Camera camera;
+    public boolean isLicenseValid = false;
 
     private DataCaptureManager() {
         // Create data capture context using your license key and set the camera as the frame source.
         dataCaptureContext = DataCaptureContext.forLicenseKey(SCANDIT_LICENSE_KEY);
+
+        // Register self as a listener to get informed of Scandit license status changes.
+        dataCaptureContext.addListener(this);
 
         // Use the default camera with the recommended camera settings for the BarcodeCapture mode
         // and set it as the frame source of the context. The camera is off by default and must be
@@ -48,4 +57,32 @@ public final class DataCaptureManager {
         // apply its own settings specific to its use case.
         barcodeCapture = BarcodeCapture.forDataCaptureContext(dataCaptureContext, new BarcodeCaptureSettings());
     }
+
+    @Override
+    public void onFrameSourceChanged(
+            @NonNull DataCaptureContext dataCaptureContext, @NonNull FrameSource frameSource
+    ) {}
+
+    @Override
+    public void onModeAdded(
+            @NonNull DataCaptureContext dataCaptureContext, @NonNull DataCaptureMode dataCaptureMode
+    ) {}
+
+    @Override
+    public void onStatusChanged(
+            @NonNull DataCaptureContext dataCaptureContext, @NonNull ContextStatus contextStatus
+    ) {
+        isLicenseValid = contextStatus.isValid();
+    }
+
+    @Override
+    public void onModeRemoved(
+            @NonNull DataCaptureContext dataCaptureContext, @NonNull DataCaptureMode dataCaptureMode
+    ) {}
+
+    @Override
+    public void onObservationStarted(@NonNull DataCaptureContext dataCaptureContext) {}
+
+    @Override
+    public void onObservationStopped(@NonNull DataCaptureContext dataCaptureContext) {}
 }

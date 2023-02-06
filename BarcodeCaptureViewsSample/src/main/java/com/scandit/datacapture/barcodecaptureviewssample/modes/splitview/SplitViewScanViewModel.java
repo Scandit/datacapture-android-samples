@@ -52,7 +52,6 @@ public class SplitViewScanViewModel extends ViewModel implements BarcodeCaptureL
 
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private Listener listener;
-    private boolean isLicenseValid = false;
     private boolean inTimeoutState = false;
 
     final List<Barcode> results = new ArrayList<>();
@@ -134,7 +133,7 @@ public class SplitViewScanViewModel extends ViewModel implements BarcodeCaptureL
         inTimeoutState = false;
         dataCaptureManager.barcodeCapture.setEnabled(true);
         scanTimeoutTimer.cancel();
-        if (isLicenseValid) {
+        if (dataCaptureManager.isLicenseValid) {
             scanTimeoutTimer.start();
         }
     }
@@ -234,19 +233,15 @@ public class SplitViewScanViewModel extends ViewModel implements BarcodeCaptureL
     public void onStatusChanged(
             @NonNull DataCaptureContext dataCaptureContext, @NonNull ContextStatus contextStatus
     ) {
-        boolean isNewLicenseStateValid = contextStatus.isValid();
-        if (isNewLicenseStateValid == isLicenseValid) return;// No further action required.
-
         scanTimeoutTimer.cancel();
         inTimeoutState = false;
         notifyClearTimeoutOverlay();
 
         // We want to start the countdown to show the tap-to-continue overlay only if the license
         // is valid.
-        if (isNewLicenseStateValid) {
+        if (contextStatus.isValid()) {
             scanTimeoutTimer.start();
         }
-        isLicenseValid = contextStatus.isValid();
     }
 
     @Override

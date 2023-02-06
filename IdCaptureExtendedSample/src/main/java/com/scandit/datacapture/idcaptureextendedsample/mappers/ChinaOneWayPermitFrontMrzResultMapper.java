@@ -15,22 +15,22 @@
 package com.scandit.datacapture.idcaptureextendedsample.mappers;
 
 import com.scandit.datacapture.id.data.CapturedId;
-import com.scandit.datacapture.id.data.ChinaMainlandTravelPermitMrzResult;
+import com.scandit.datacapture.id.data.ChinaOneWayPermitFrontMrzResult;
 import com.scandit.datacapture.idcaptureextendedsample.ui.result.CaptureResult;
 
 import java.util.ArrayList;
 
-public final class ChinaMainlandTravelPermitMrzResultMapper extends ResultMapper {
+public final class ChinaOneWayPermitFrontMrzResultMapper extends ResultMapper {
 
-    private final ChinaMainlandTravelPermitMrzResult result;
+    private final ChinaOneWayPermitFrontMrzResult result;
 
-    public ChinaMainlandTravelPermitMrzResultMapper(CapturedId capturedId) {
+    public ChinaOneWayPermitFrontMrzResultMapper(CapturedId capturedId) {
         super(capturedId);
-        result = capturedId.getChinaMainlandTravelPermitMrz();
+        result = capturedId.getChinaOneWayPermitFrontMrz();
     }
 
     /*
-     * We extract all the ChinaMainlandTravelPermitMrzResult's specific fields and add them to the ones from
+     * We extract all the ChinaOneWayPermitFrontMrzResult's specific fields and add them to the ones from
      * CapturedId.
      */
     @Override
@@ -41,18 +41,8 @@ public final class ChinaMainlandTravelPermitMrzResultMapper extends ResultMapper
                 this.result.getDocumentCode())));
         result.add(new CaptureResult.Entry("Captured MRZ", extractField(
                 this.result.getCapturedMrz())));
-        result.add(new CaptureResult.Entry("Personal ID Number", extractField(
-                this.result.getPersonalIdNumber())));
-        result.add(new CaptureResult.Entry("Renewal Times", extractField(
-                this.result.getRenewalTimes())));
         result.add(new CaptureResult.Entry("Full Name Simplified Chinese", extractField(
                 this.result.getFullNameSimplifiedChinese())));
-        result.add(new CaptureResult.Entry("Omitted Character Count in GBK Name", extractField(
-                this.result.getOmittedCharacterCountInGBKName())));
-        result.add(new CaptureResult.Entry("Omitted Name Count", extractField(
-                this.result.getOmittedNameCount())));
-        result.add(new CaptureResult.Entry("Issuing Authority Code", extractField(
-                this.result.getIssuingAuthorityCode())));
 
         return result;
     }
