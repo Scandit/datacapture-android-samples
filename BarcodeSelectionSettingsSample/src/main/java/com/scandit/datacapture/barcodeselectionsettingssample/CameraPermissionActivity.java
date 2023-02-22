@@ -16,7 +16,6 @@ package com.scandit.datacapture.barcodeselectionsettingssample;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 

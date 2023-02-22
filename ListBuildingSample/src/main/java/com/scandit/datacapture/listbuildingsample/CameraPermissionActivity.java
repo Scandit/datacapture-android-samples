@@ -15,9 +15,7 @@
 package com.scandit.datacapture.listbuildingsample;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
-import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,11 +31,9 @@ public abstract class CameraPermissionActivity extends AppCompatActivity {
     private boolean permissionDeniedOnce = false;
 
     protected boolean hasCameraPermission() {
-        return (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
-                || checkSelfPermission(CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED);
+        return checkSelfPermission(CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED;
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     protected void requestCameraPermission() {
         // For Android M and onwards we need to request the camera permission from the user.
         if (!hasCameraPermission()) {

@@ -15,9 +15,7 @@
 package com.scandit.datacapture.matrixscanrejectsample;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
