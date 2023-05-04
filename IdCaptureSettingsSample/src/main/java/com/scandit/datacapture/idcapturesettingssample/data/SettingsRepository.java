@@ -30,6 +30,7 @@ import com.scandit.datacapture.core.source.VideoResolution;
 import com.scandit.datacapture.core.ui.gesture.FocusGesture;
 import com.scandit.datacapture.core.ui.gesture.TapToFocus;
 import com.scandit.datacapture.core.ui.style.Brush;
+import com.scandit.datacapture.id.data.IdAnonymizationMode;
 import com.scandit.datacapture.id.data.IdDocumentType;
 import com.scandit.datacapture.id.data.IdImageType;
 import com.scandit.datacapture.id.data.SupportedSides;
@@ -176,6 +177,19 @@ public class SettingsRepository extends PreferenceDataStore {
     }
 
     /*
+     * Retrieves from settings whether sensitive data should be removed from images, result fields
+     * or both before passing to the IdCapture result.
+     */
+    public IdAnonymizationMode getAnonymizationMode() {
+        String anonymizationMode = getString(Keys.ANONYMIZATION_MODE, null);
+        if (anonymizationMode == null) {
+            return Defaults.getDefaultAnonymizationMode();
+        } else {
+            return IdAnonymizationMode.valueOf(anonymizationMode);
+        }
+    }
+
+    /*
      * Retrieves from settings the Camera preferred resolution.
      */
     public VideoResolution getPreferredResolution() {
@@ -310,6 +324,14 @@ public class SettingsRepository extends PreferenceDataStore {
             default:
                 return defaultBrush;
         }
+    }
+
+    public String getViewfinderFrontText() {
+        return getString(Keys.VIEWFINDER_FRONT_TEXT, "");
+    }
+
+    public String getViewfinderBackText() {
+        return getString(Keys.VIEWFINDER_BACK_TEXT, "");
     }
 
     /*

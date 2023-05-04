@@ -37,6 +37,7 @@ public final class Keys {
     public final static String SUPPORTED_IMAGES = "supported_images";
     public final static String SUPPORTED_SIDES = "supported_sides";
     public final static String SUPPORTED_DOCUMENTS = "supported_documents";
+    public final static String ANONYMIZATION_MODE = "anonymization_mode";
 
     // Camera.
     public final static String CAMERA_POSITION = "camera_position";
@@ -54,6 +55,8 @@ public final class Keys {
     public final static String OVERLAY_STYLE = "style";
     public final static String OVERLAY_LINE_STYLE = "line_style";
     public final static String CAPTURED_BRUSH = "captured_brush";
+    public final static String VIEWFINDER_FRONT_TEXT = "viewfinder_front_text";
+    public final static String VIEWFINDER_BACK_TEXT = "viewfinder_back_text";
 
     // Gestures.
     public final static String TAP_TO_FOCUS = "tap_to_focus";

@@ -1,8 +1,5 @@
 <resources>
     <string name="app_name">US DL Verification</string>
-
-    <string name="scanning_dl_front_side_helper_text">Align front of document</string>
-    <string name="scanning_dl_back_side_helper_text">Align back of document</string>
     <string name="scanning_dl_not_supported_message">Document is not a US driver’s license.</string>
     <string name="scanning_dl_not_expired">Document has not expired.</string>
     <string name="scanning_dl_expired">Document has expired.</string>

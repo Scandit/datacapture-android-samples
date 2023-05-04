@@ -20,6 +20,7 @@ plugins {
 android {
     ndkVersion = sdk.ndk
     compileSdkVersion = sdk.compile
+    namespace = "com.scandit.datacapture.inventoryauditsample"
 
     defaultConfig {
         applicationId = "com.scandit.datacapture.inventoryauditsample"

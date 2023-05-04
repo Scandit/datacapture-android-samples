@@ -59,6 +59,7 @@ package com.scandit.datacapture.idcapturesettingssample.ui.settings.view;
 import android.content.Context;
 
 import androidx.preference.DropDownPreference;
+import androidx.preference.EditTextPreference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceGroup;
 
@@ -123,5 +124,19 @@ public class OverlayPreferenceBuilder implements SectionPreferenceBuilder {
                 Defaults.getDefaultCapturedBrushStyle().name()
         );
         overlayCategory.addPreference(capturedBrushPreference);
+
+        EditTextPreference viewfinderFrontTextPreference = PreferenceBuilder.editText(
+                context,
+                Keys.VIEWFINDER_FRONT_TEXT,
+                context.getString(R.string.viewfinder_front_text_title)
+        );
+        overlayCategory.addPreference(viewfinderFrontTextPreference);
+
+        EditTextPreference viewfinderBackTextPreference = PreferenceBuilder.editText(
+                context,
+                Keys.VIEWFINDER_BACK_TEXT,
+                context.getString(R.string.viewfinder_back_text_title)
+        );
+        overlayCategory.addPreference(viewfinderBackTextPreference);
     }
 }

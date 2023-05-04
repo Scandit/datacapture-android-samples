@@ -50,13 +50,6 @@ class ScanUiState {
     private int driverLicenseToggleVisibility = View.VISIBLE;
 
     /**
-     * The additional hint to aid the user with the capture process. It reflects the currently
-     * selected document kind and/or side.
-     */
-    @StringRes
-    private int scanHint = R.string.scan_hint_driver_license_barcode;
-
-    /**
      * The visibility of the hint that guides the user towards different personal identification
      * document type selection.
      */
@@ -102,13 +95,6 @@ class ScanUiState {
      */
     public int getDriverLicenseToggleVisibility() {
         return driverLicenseToggleVisibility;
-    }
-    /**
-     * Get the additional hint to aid the user with the capture process. It reflects the currently
-     * selected document kind and/or side.
-     */
-    public int getScanHint() {
-        return scanHint;
     }
 
     /**
@@ -191,16 +177,6 @@ class ScanUiState {
          */
         public Builder driverLicenseToggleVisibility(int value) {
             state.driverLicenseToggleVisibility = value;
-
-            return this;
-        }
-
-        /**
-         * The additional hint to aid the user with the capture process. It reflects the currently
-         * selected document kind and/or side.
-         */
-        public Builder scanHint(int value) {
-            state.scanHint = value;
 
             return this;
         }

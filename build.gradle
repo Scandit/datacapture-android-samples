@@ -5,12 +5,12 @@ buildscript {
         sdk = [
                 "min"    : 23,
                 "target" : 32,
-                "compile": 32
+                "compile": 32,
         ]
 
         versions = [
                 // The value of scandit_sdk_version is updated automatically in the prepare-release.py script, please do not edit manually.
-                "scandit_sdk_version"       : "6.16.2",
+                "scandit_sdk_version"       : "6.17.1",
                 "android_gradle"            : "7.2.2",
                 "androidx_animations"       : "1.0.0",
                 "androidx_appcompat"        : "1.3.1",

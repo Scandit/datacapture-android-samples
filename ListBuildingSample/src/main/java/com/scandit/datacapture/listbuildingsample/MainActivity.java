@@ -58,6 +58,8 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
 
     private static final float CROPPED_IMAGE_PADDING = 1.2f;
 
+    private static final int SCALED_IMAGE_SIZE_IN_PIXELS = 100;
+
     private DataCaptureContext dataCaptureContext;
 
     private SparkScan sparkScan;
@@ -194,6 +196,10 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
         if (data != null) {
             data.retain();
 
+            // For simplicity's sake, the generated images are kept in memory.
+            // In a real-world scenario, these images would need to be stored in disk and loaded
+            // into memory as needed, maybe via an external library, to prevent filling
+            // all available memory.
             backgroundExecutor.execute(() -> {
                 Bitmap image = cropBarcode(barcode, data.getImageBuffer().toBitmap());
                 ScanResult result =
@@ -251,25 +257,46 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
         int height = (int) (largerSize * CROPPED_IMAGE_PADDING);
         int width = (int) (largerSize * CROPPED_IMAGE_PADDING);
 
-        int x = (int) (center.x - largerSize * (CROPPED_IMAGE_PADDING / 2));
-        int y = (int) (center.y - largerSize * (CROPPED_IMAGE_PADDING / 2));
+        int x = Math.max((int) (center.x - largerSize * (CROPPED_IMAGE_PADDING / 2)), 0);
+        int y = Math.max((int) (center.y - largerSize * (CROPPED_IMAGE_PADDING / 2)), 0);
 
-        if ((y + height) > frame.getHeight()) { // safety check
-            y -= ((y + height) - frame.getHeight());
+        if ((y + height) > frame.getHeight()) {
+            int difference = ((y + height) - frame.getHeight());
+
+            if (y - difference < 0) {
+                height -= difference;
+                width -= difference;
+            } else {
+                y -= difference;
+            }
         }
 
-        if ((x + width) > frame.getWidth()) { // safety check
-            x -= ((x + width) - frame.getWidth());
+        if ((x + width) > frame.getWidth()) {
+            int difference = ((x + width) - frame.getWidth());
+            if (x - difference < 0) {
+                width -= difference;
+                height -= difference;
+            } else {
+                x -= difference;
+            }
         }
 
-        if (y <= 0 || x <= 0) {
+        if (width <= 0 || height <= 0) { // safety check
             return frame;
         }
 
+        float scaleFactor = getScaleFactor(width, height, SCALED_IMAGE_SIZE_IN_PIXELS);
+
         Matrix matrix = new Matrix();
         matrix.postRotate(90f);
+        matrix.postScale(scaleFactor, scaleFactor);
 
         return Bitmap.createBitmap(frame, x, y, width, height, matrix, true);
+    }
+
+    private float getScaleFactor(int bitmapWidth, int bitmapHeight, int targetDimension) {
+        float smallestDimension = (float) Math.min(bitmapWidth, bitmapHeight);
+        return targetDimension / smallestDimension;
     }
 
     private void setItemCount(int count) {

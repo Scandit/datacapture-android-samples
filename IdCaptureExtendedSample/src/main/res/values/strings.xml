@@ -3,10 +3,6 @@
     <string name="menu_barcode">Barcode</string>
     <string name="menu_mrz">MRZ</string>
     <string name="menu_viz">VIZ</string>
-    <string name="alert_scan_back_title">Back of Card</string>
-    <string name="alert_scan_back_message">This document has additional data on the back of the card.</string>
-    <string name="scan">Scan</string>
-    <string name="skip">Skip</string>
     <string name="error">Error</string>
     <string name="ok">OK</string>
     <string name="scan_result">Scan Result</string>

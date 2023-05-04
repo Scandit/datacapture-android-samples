@@ -77,12 +77,6 @@ public class ScanFragment extends Fragment implements AlertDialogFragment.Callba
     private IdCaptureOverlay idCaptureOverlay;
 
     /**
-     * The additional hint to aid the user with the capture process. It reflects the currently
-     * selected document kind and/or side.
-     */
-    private TextView scanHintText;
-
-    /**
      * The additional text that indicates whether cloud-based verification is running.
      */
     private TextView cloudVerificationIndicatorText;
@@ -142,7 +136,6 @@ public class ScanFragment extends Fragment implements AlertDialogFragment.Callba
     }
 
     private void initViews(@NonNull View root) {
-        scanHintText = root.findViewById(R.id.scan_hint_text);
         cloudVerificationIndicatorText = root.findViewById(R.id.cloud_verification_indicator_text);
     }
 
@@ -221,7 +214,6 @@ public class ScanFragment extends Fragment implements AlertDialogFragment.Callba
         this.uiState = uiState;
 
         updateOverlay();
-        updateScanHint();
         updateVerificationIndicatorVisibility(uiState);
     }
 
@@ -252,14 +244,6 @@ public class ScanFragment extends Fragment implements AlertDialogFragment.Callba
         if (idCaptureOverlay != null) {
             dataCaptureView.addOverlay(idCaptureOverlay);
         }
-    }
-
-    /**
-     * Update the additional hint to aid the user with the capture process. It reflects
-     * the currently selected document side.
-     */
-    private void updateScanHint() {
-        scanHintText.setText(uiState.getScanHint());
     }
 
     /**

@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import java.time.LocalDate;
+import java.util.Calendar;
 
 /**
  * The DialogFragment to pick a date.
@@ -35,6 +36,7 @@ public class LocalDatePickerDialogFragment extends DialogFragment implements Dat
     private static final String KEY_DAY = "DAY";
     private static final String KEY_MONTH = "MONTH";
     private static final String KEY_YEAR = "YEAR";
+    private static final String KEY_HIDE_FUTURE_DATES = "HIDE_FUTURE_DATES";
 
     /**
      * The listener called when the user picks a date.
@@ -45,12 +47,13 @@ public class LocalDatePickerDialogFragment extends DialogFragment implements Dat
     /**
      * Create an instance of this fragment with the given date preselected.
      */
-    public static LocalDatePickerDialogFragment create(LocalDate date) {
+    public static LocalDatePickerDialogFragment create(LocalDate date, boolean hideFutureDates) {
         LocalDatePickerDialogFragment fragment = new LocalDatePickerDialogFragment();
         Bundle args = new Bundle();
         args.putInt(KEY_DAY, date.getDayOfMonth());
         args.putInt(KEY_MONTH, date.getMonth().getValue());
         args.putInt(KEY_YEAR, date.getYear());
+        args.putBoolean(KEY_HIDE_FUTURE_DATES, hideFutureDates);
         fragment.setArguments(args);
 
         return fragment;
@@ -65,9 +68,16 @@ public class LocalDatePickerDialogFragment extends DialogFragment implements Dat
         int day = getArguments().getInt(KEY_DAY);
         int month = getArguments().getInt(KEY_MONTH);
         int year = getArguments().getInt(KEY_YEAR);
+        boolean hideFutureDates = getArguments().getBoolean(KEY_HIDE_FUTURE_DATES);
 
         // LocalDate numbers months from 1, DatePickerDialog from 0.
-        return new DatePickerDialog(requireContext(), this, year, month - 1, day);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(), this, year, month - 1, day);
+
+        if (hideFutureDates) {
+            datePickerDialog.getDatePicker().setMaxDate(Calendar.getInstance().getTimeInMillis());
+        }
+
+        return datePickerDialog;
     }
 
     /**

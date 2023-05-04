@@ -11,6 +11,7 @@
     <string name="supported_documents_title">Supported Documents</string>
     <string name="supported_sides_title">Supported Sides</string>
     <string name="supported_images_title">Result with Image Types</string>
+    <string name="anonymization_mode_title">Anonymization Mode</string>
 
     <string name="camera_category_title">Camera</string>
     <string name="camera_position_title">Camera Position</string>
@@ -37,4 +38,7 @@
 
     <string name="result_category_title">Result</string>
     <string name="continuous_scan_title">Continuous</string>
+
+    <string name="viewfinder_front_text_title">Viewfinder front text</string>
+    <string name="viewfinder_back_text_title">Viewfinder back text</string>
 </resources>

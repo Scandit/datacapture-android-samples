@@ -31,13 +31,6 @@ class ScanUiState {
     private IdCaptureOverlay overlay;
 
     /**
-     * The additional hint to aid the user with the capture process. It reflects the currently
-     * selected document side.
-     */
-    @StringRes
-    private int scanHint = R.string.scanning_dl_front_side_helper_text;
-
-    /**
      * Indicate whether cloud-based verification is running.
      */
     private boolean isCloudVerificationRunning = false;
@@ -53,14 +46,6 @@ class ScanUiState {
     @Nullable
     public IdCaptureOverlay getOverlay() {
         return overlay;
-    }
-
-    /**
-     * Get the additional hint to aid the user with the capture process. It reflects the currently
-     * selected side.
-     */
-    public int getScanHint() {
-        return scanHint;
     }
 
     /**
@@ -105,16 +90,6 @@ class ScanUiState {
          */
         public Builder overlay(IdCaptureOverlay value) {
             state.overlay = value;
-
-            return this;
-        }
-
-        /**
-         * The additional hint to aid the user with the capture process. It reflects the currently
-         * selected document kind and/or side.
-         */
-        public Builder scanHint(int value) {
-            state.scanHint = value;
 
             return this;
         }

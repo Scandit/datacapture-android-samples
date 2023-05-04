@@ -27,7 +27,7 @@ import com.scandit.datacapture.idcapturesettingssample.data.CameraRepository;
 import com.scandit.datacapture.idcapturesettingssample.data.DataCaptureViewRepository;
 import com.scandit.datacapture.idcapturesettingssample.data.IdCaptureRepository;
 import com.scandit.datacapture.idcapturesettingssample.di.Injector;
-import com.scandit.datacapture.idcapturesettingssample.mappers.ResultMapper;
+import com.scandit.datacapture.idcapturesettingssample.mappers.IdCaptureResultFactory;
 import com.scandit.datacapture.idcapturesettingssample.ui.result.CaptureResult;
 
 public class ScanViewModel extends ViewModel {
@@ -200,7 +200,7 @@ public class ScanViewModel extends ViewModel {
 
         if (scanResult == null) return;
 
-        final CaptureResult result = ResultMapper.create(scanResult.getCapturedId()).mapResult();
+        final CaptureResult result = IdCaptureResultFactory.extract(scanResult.getCapturedId());
 
         if (scanResult.isNeedsBackScan()) {
             showScanBack.postValue(new ShowBackScanAvailableEvent(result));

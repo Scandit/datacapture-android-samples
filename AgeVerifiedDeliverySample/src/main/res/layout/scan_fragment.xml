@@ -46,19 +46,6 @@
         tools:visibility="visible" />
 
     <TextView
-        android:id="@+id/scan_hint_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/driver_license_side_toggle"
-        tools:text="@string/scan_hint_driver_license_barcode" />
-
-    <TextView
         android:id="@+id/enter_manually_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

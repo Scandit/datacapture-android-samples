@@ -120,7 +120,15 @@ public class IdCaptureRepository implements IdCaptureListener {
         idCapture = IdCapture.forDataCaptureContext(dataCaptureContext, getSettingsForMode(type));
         idCapture.addListener(this);
 
-        idCaptureOverlays.postValue(IdCaptureOverlay.newInstance(idCapture, null));
+        createIdCaptureOverlay();
+    }
+
+    /**
+     * Create and returns Id Capture Overlay.
+     */
+    public void createIdCaptureOverlay() {
+        IdCaptureOverlay overlay = IdCaptureOverlay.newInstance(idCapture, null);
+        idCaptureOverlays.postValue(overlay);
     }
 
     private IdCaptureSettings getSettingsForMode(CapturedDataType type) {
@@ -205,15 +213,6 @@ public class IdCaptureRepository implements IdCaptureListener {
         idCapture.setEnabled(false);
     }
 
-    /**
-     * Reset the state of IdCapture. This is necessary if you decide to skip the back side of
-     * a document when the back side scan is supported. If you omit this call, IdCapture still
-     * expects to capture the back side of the previous document instead of the new one.
-     */
-    public void resetIdCapture() {
-        idCapture.reset();
-    }
-
     @Override
     @WorkerThread
     public void onIdCaptured(
@@ -221,11 +220,6 @@ public class IdCaptureRepository implements IdCaptureListener {
             @NotNull IdCaptureSession session,
             @NotNull FrameData data
     ) {
-        /*
-         * Don't capture unnecessarily when the result is displayed or when the user has to decide
-         * if he wants to continue scanning or just display the partial result.
-         */
-        disableIdCapture();
         /*
          * Implement to handle data captured from personal identification documents or their
          * elements like a barcode or the Machine Readable Zone (MRZ).

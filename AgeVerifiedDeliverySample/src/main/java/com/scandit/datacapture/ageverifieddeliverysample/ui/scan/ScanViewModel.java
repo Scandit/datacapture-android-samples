@@ -284,14 +284,11 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
      * the recipient's document data if necessary.
      */
     public void onDriverLicenseSideSelected(DriverLicenseSide side) {
-        @StringRes int scanHint = getScanHint(uiState.getTargetDocument(), side);
-
         IdDocumentType documentType = getSupportedDocument(uiState.getTargetDocument(), side);
         idCaptureRepository.recreateIdCapture(documentType);
 
         ScanUiState.Builder uiStateBuilder = uiState.toBuilder()
-                .driverLicenseSide(side)
-                .scanHint(scanHint);
+                .driverLicenseSide(side);
 
         resetScheduledHints();
 
@@ -323,8 +320,6 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
      */
     public void onDriverLicenseSelected() {
         DriverLicenseSide side = uiState.getDriverLicenseSide();
-        @StringRes int scanHint = getScanHint(DRIVER_LICENSE, side);
-
         IdDocumentType documentType = getSupportedDocument(DRIVER_LICENSE, side);
         idCaptureRepository.recreateIdCapture(documentType);
 
@@ -336,7 +331,6 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
 
         uiState = uiState.toBuilder()
                 .targetDocument(DRIVER_LICENSE)
-                .scanHint(scanHint)
                 .driverLicenseToggleVisibility(VISIBLE)
                 .build();
 
@@ -353,14 +347,12 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
      */
     public void onPassportSelected() {
         DriverLicenseSide side = uiState.getDriverLicenseSide();
-        @StringRes int scanHint = getScanHint(PASSPORT, side);
 
         IdDocumentType documentType = getSupportedDocument(PASSPORT, side);
         idCaptureRepository.recreateIdCapture(documentType);
 
         ScanUiState.Builder uiStateBuilder = uiState.toBuilder()
                 .targetDocument(PASSPORT)
-                .scanHint(scanHint)
                 .driverLicenseToggleVisibility(INVISIBLE);
 
         resetScheduledHints();
@@ -385,14 +377,12 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
      */
     public void onMilitaryIdSelected() {
         DriverLicenseSide side = uiState.getDriverLicenseSide();
-        @StringRes int scanHint = getScanHint(MILITARY_ID, side);
 
         IdDocumentType documentType = getSupportedDocument(MILITARY_ID, side);
         idCaptureRepository.recreateIdCapture(documentType);
 
         ScanUiState.Builder uiStateBuilder = uiState.toBuilder()
                 .targetDocument(MILITARY_ID)
-                .scanHint(scanHint)
                 .driverLicenseToggleVisibility(INVISIBLE);
 
         resetScheduledHints();
@@ -650,11 +640,6 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
      */
     private void goToTryAnotherMethod() {
         idCaptureRepository.disableIdCapture();
-        // Reset ID capture internal state so that the timeout timer is reset as well. This is
-        // important because the timeout timer could be started if an ID is localized between the
-        // moment onIdCaptureTimedOut is triggered and the moment ID capture is disabled in this
-        // method.
-        idCaptureRepository.resetIdCapture();
 
         if (isBackOfDriverLicenseExpected()) {
             goToBarcodeNotSupported.postValue(new GoToBarcodeNotSupported());
@@ -799,34 +784,6 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
                 return IdDocumentType.PASSPORT_MRZ;
             case MILITARY_ID:
                 return IdDocumentType.US_US_ID_BARCODE;
-            default:
-                throw new AssertionError("Unknown target document " + document);
-        }
-    }
-
-    /**
-     * Extract from the selected document kind and/or side the text of the additional hint
-     * to aid the user with the capture process.
-     */
-    @StringRes
-    private static int getScanHint(
-            TargetDocument document,
-            DriverLicenseSide side
-    ) {
-        switch (document) {
-            case DRIVER_LICENSE:
-                switch (side) {
-                    case BACK_BARCODE:
-                        return R.string.scan_hint_driver_license_barcode;
-                    case FRONT_VIZ:
-                        return R.string.scan_hint_driver_license_viz;
-                    default:
-                        throw new AssertionError("Unknown driver license side " + side);
-                }
-            case PASSPORT:
-                return R.string.scan_hint_passport_mrz;
-            case MILITARY_ID:
-                return R.string.scan_hint_military_id;
             default:
                 throw new AssertionError("Unknown target document " + document);
         }

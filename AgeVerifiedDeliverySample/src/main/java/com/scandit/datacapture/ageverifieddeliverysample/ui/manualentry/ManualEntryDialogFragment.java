@@ -174,7 +174,7 @@ public class ManualEntryDialogFragment extends BottomSheetDialogFragment {
 
         if (selectedDate != null && getChildFragmentManager().findFragmentByTag(DATE_PICKER_TAG) == null) {
             LocalDatePickerDialogFragment fragment =
-                    LocalDatePickerDialogFragment.create(selectedDate);
+                    LocalDatePickerDialogFragment.create(selectedDate, true);
             fragment.setOnDateSetListener(this::onDateOfBirthSet);
             fragment.show(getChildFragmentManager(), DATE_PICKER_TAG);
         }
@@ -204,7 +204,7 @@ public class ManualEntryDialogFragment extends BottomSheetDialogFragment {
 
         if (selectedDate != null && getChildFragmentManager().findFragmentByTag(DATE_PICKER_TAG) == null) {
             LocalDatePickerDialogFragment fragment =
-                    LocalDatePickerDialogFragment.create(selectedDate);
+                    LocalDatePickerDialogFragment.create(selectedDate, false);
             fragment.setOnDateSetListener(this::onDateOfExpirySet);
             fragment.show(getChildFragmentManager(), DATE_PICKER_TAG);
         }

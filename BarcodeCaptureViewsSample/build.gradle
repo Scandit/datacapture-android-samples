@@ -19,6 +19,7 @@ plugins {
 android {
     ndkVersion = sdk.ndk
     compileSdkVersion = sdk.compile
+    namespace = "com.scandit.datacapture.barcodecaptureviewssample"
 
     defaultConfig {
         applicationId = "com.scandit.datacapture.barcodecaptureviewssample"

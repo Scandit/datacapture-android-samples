@@ -1,23 +1,24 @@
 plugins {
-    id("com.android.application")
+    id 'com.android.application'
 }
 
 android {
     ndkVersion = sdk.ndk
     compileSdkVersion = sdk.compile
+    namespace "com.scandit.datacapture.receivingsample"
 
     defaultConfig {
-        applicationId = "com.scandit.datacapture.receivingsample"
+        applicationId "com.scandit.datacapture.receivingsample"
         minSdkVersion(sdk.min)
         targetSdkVersion(sdk.target)
-        versionCode = 1
-        versionName = "1.0"
+        versionCode 1
+        versionName "1.0"
     }
 
     buildTypes {
         release {
             minifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 
@@ -34,6 +35,7 @@ android {
 dependencies {
     api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
     api "com.scandit.datacapture:barcode:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:parser:${versions.scandit_sdk_version}"
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}")
     implementation("com.google.android.material:material:${versions.material}")

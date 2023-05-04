@@ -132,12 +132,6 @@ public class ScanFragment extends Fragment {
     private View selectTargetDocumentHintContainer;
 
     /**
-     * The additional hint to aid the user with the capture process. It reflects the currently
-     * selected document kind and/or side.
-     */
-    private TextView scanHintText;
-
-    /**
      * The view that optionally displays the hint that informs the user that they may attempt
      * to manually enter recipient's document data. The hint is displayed after a short delay if
      * the user is unable to OCR the front side of the recipient's driver's license or if
@@ -199,7 +193,6 @@ public class ScanFragment extends Fragment {
     private void initViews(@NonNull View root) {
         driverLicenseSideToggle = root.findViewById(R.id.driver_license_side_toggle);
         selectTargetDocumentHintContainer = root.findViewById(R.id.select_target_document_hint_container);
-        scanHintText = root.findViewById(R.id.scan_hint_text);
         enterManuallyHint = root.findViewById(R.id.enter_manually_hint);
         targetDocumentMenu = root.findViewById(R.id.target_document_menu);
     }
@@ -340,7 +333,6 @@ public class ScanFragment extends Fragment {
         updateOverlay();
         updateDriverLicenseSideToggle();
         updateSelectTargetDocumentHint();
-        updateScanHint();
         updateEnterManuallyHint();
     }
 
@@ -386,14 +378,6 @@ public class ScanFragment extends Fragment {
      */
     private void updateSelectTargetDocumentHint() {
         selectTargetDocumentHintContainer.setVisibility(uiState.getSelectTargetDocumentHintVisibility());
-    }
-
-    /**
-     * Update the additional hint to aid the user with the capture process. It reflects
-     * the currently selected document kind and/or side.
-     */
-    private void updateScanHint() {
-        scanHintText.setText(uiState.getScanHint());
     }
 
     /**

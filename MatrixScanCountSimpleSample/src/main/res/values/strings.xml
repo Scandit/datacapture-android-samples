@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">MatrixScanCountSimpleSample</string>
+    <string name="app_title">MatrixScan Count</string>
+    <string name="scan_results">Scan Results</string>
+    <string name="resume_scanning">Resume Scanning</string>
+    <string name="start_new_scanning">Scan Next Order</string>
+    <string name="clear_list">Clear List</string>
+    <string name="multiple_quantity_product_description">Non-unique item %d</string>
+    <string name="product_description">Item %d</string>
+    <string name="quantity">Qty: %d</string>
+    <string name="result_item">%s: %s</string>
+    <string name="results_amount">%d items</string>
+</resources>

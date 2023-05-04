@@ -20,37 +20,46 @@ import android.widget.FrameLayout;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import com.scandit.datacapture.barcode.count.capture.BarcodeCount;
-import com.scandit.datacapture.barcode.count.capture.BarcodeCountListener;
-import com.scandit.datacapture.barcode.count.capture.BarcodeCountSession;
-import com.scandit.datacapture.barcode.count.capture.BarcodeCountSettings;
-import com.scandit.datacapture.barcode.count.ui.view.BarcodeCountView;
-import com.scandit.datacapture.barcode.count.ui.view.BarcodeCountViewListener;
-import com.scandit.datacapture.barcode.count.ui.view.BarcodeCountViewStyle;
-import com.scandit.datacapture.barcode.count.ui.view.BarcodeCountViewUiListener;
-import com.scandit.datacapture.barcode.data.Symbology;
-import com.scandit.datacapture.barcode.tracking.data.TrackedBarcode;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
-import com.scandit.datacapture.core.data.FrameData;
-import com.scandit.datacapture.core.ui.style.Brush;
-
-import java.util.HashSet;
+import com.scandit.datacapture.receivingsample.barcodecount.BarcodeCountPresenter;
+import com.scandit.datacapture.receivingsample.barcodecount.BarcodeCountPresenterActions;
+import com.scandit.datacapture.receivingsample.managers.BarcodeCountCameraManager;
+import com.scandit.datacapture.receivingsample.results.ExtraButtonStyle;
+import com.scandit.datacapture.receivingsample.results.ResultsActivity;
+import com.scandit.datacapture.receivingsample.sparkscan.SparkScanPresenter;
+import com.scandit.datacapture.receivingsample.sparkscan.SparkScanPresenterActions;
 
 public class MainActivity extends CameraPermissionActivity
-    implements BarcodeCountListener, BarcodeCountViewListener,
-        BarcodeCountViewUiListener {
+    implements SparkScanPresenterActions, BarcodeCountPresenterActions {
 
     // Enter your Scandit License key here.
     // Your Scandit License key is available via your Scandit SDK web account.
     public static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
 
-    private BarcodeCount barcodeCount;
-    private DataCaptureContext dataCaptureContext;
+    private BarcodeCountPresenter barcodeCountPresenter;
+    private SparkScanPresenter sparkScanPresenter;
 
-    private boolean navigatingInternally = false;
+    private boolean inBarcodeCountMode = false;
+
+    /**
+     * The launcher to use when starting the result activity clicking the list button
+     */
+    private final ActivityResultLauncher<Intent> listLauncher = registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        result -> {
+            if (result.getResultCode() == ResultsActivity.CLEAR_SESSION) {
+                barcodeCountPresenter.resetSession();
+            }
+        });
+
+    /**
+     * The launcher to use when starting the result activity clicking the exit button
+     */
+    private final ActivityResultLauncher<Intent> exitLauncher = registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        result -> barcodeCountPresenter.resetSession()
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,82 +72,43 @@ public class MainActivity extends CameraPermissionActivity
 
     private void initialize() {
         // Create data capture context using your license key.
-        dataCaptureContext = DataCaptureContext.forLicenseKey(SCANDIT_LICENSE_KEY);
+        DataCaptureContext dataCaptureContext =
+            DataCaptureContext.forLicenseKey(SCANDIT_LICENSE_KEY);
 
-        // Initialize the shared camera manager.
-        CameraManager.getInstance().initialize(dataCaptureContext);
+        // Initialize the camera manager.
+        BarcodeCountCameraManager.getInstance().initialize(dataCaptureContext);
 
-        // The barcode count process is configured through barcode count settings
-        // which are then applied to the barcode count instance that manages barcode count.
-        BarcodeCountSettings barcodeCountSettings = new BarcodeCountSettings();
+        // Initialize the shared container for the modes' views.
+        FrameLayout container = findViewById(R.id.container);
 
-        // The settings instance initially has all types of barcodes (symbologies) disabled.
-        // For the purpose of this sample we enable a very generous set of symbologies.
-        // In your own app ensure that you only enable the symbologies that your app requires
-        // as every additional enabled symbology has an impact on processing times.
-        HashSet<Symbology> symbologies = new HashSet<>();
-        symbologies.add(Symbology.EAN13_UPCA);
-        symbologies.add(Symbology.EAN8);
-        symbologies.add(Symbology.UPCE);
-        symbologies.add(Symbology.CODE39);
-        symbologies.add(Symbology.CODE128);
-        barcodeCountSettings.enableSymbologies(symbologies);
+        // Initialize the presenters which will take care of each mode.
+        sparkScanPresenter =
+            new SparkScanPresenter(this, dataCaptureContext, container, this);
+        barcodeCountPresenter =
+            new BarcodeCountPresenter(this, dataCaptureContext, container, this);
 
-        // Create barcode count and attach to context.
-        barcodeCount = BarcodeCount.forDataCaptureContext(dataCaptureContext, barcodeCountSettings);
-
-        // Initialize the shared barcode manager.
-        BarcodeManager.getInstance().initialize(barcodeCount);
-
-        // To visualize the on-going barcode count process on screen, setup a BarcodeCountView
-        // that renders the camera preview. The view must be connected to the data capture context
-        // and to the barcode count. This is optional, but recommended for better visual feedback.
-        BarcodeCountView barcodeCountView = BarcodeCountView.newInstance(
-                this,
-                dataCaptureContext,
-                barcodeCount,
-                BarcodeCountViewStyle.ICON
-        );
-
-        // Register self as a listener to provide custom brushes and get informed of view events.
-        barcodeCountView.setListener(this);
-
-        // Register self as a listener to get informed of UI events.
-        barcodeCountView.setUiListener(this);
-
-        // Add the BarcodeCountView to the container.
-        FrameLayout container = findViewById(R.id.data_capture_view_container);
-        container.addView(barcodeCountView);
+        // Enable SparkScan initially.
+        sparkScanPresenter.enableSparkScan();
     }
 
     @Override
     protected void onPause() {
-        // Pause camera if the app is going to background,
-        // but keep it on if it goes to result screen.
-        // That way the session is not lost when coming back from results.
-        if (!navigatingInternally) {
-            CameraManager.getInstance().pauseFrameSource();
-
-            // Save current barcodes as additional barcodes.
-            BarcodeManager.getInstance().saveCurrentBarcodesAsAdditionalBarcodes();
+        if (inBarcodeCountMode) {
+            barcodeCountPresenter.onPause();
+        } else {
+            sparkScanPresenter.onPause();
         }
-
-        // Unregister self as listener.
-        barcodeCount.removeListener(this);
-
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        navigatingInternally = false;
-
-        // Register self as a listener to get informed of tracked barcodes.
-        barcodeCount.addListener(this);
-
-        // Enable the mode to start processing frames.
-        barcodeCount.setEnabled(true);
+        if (inBarcodeCountMode) {
+            barcodeCountPresenter.onResume();
+        } else {
+            sparkScanPresenter.onResume();
+        }
 
         // Check for camera permission and request it, if it hasn't yet been granted.
         // Once we have the permission the onCameraPermissionGranted() method will be called.
@@ -146,148 +116,58 @@ public class MainActivity extends CameraPermissionActivity
     }
 
     @Override
+    protected void onDestroy() {
+        sparkScanPresenter.onDestroy();
+        barcodeCountPresenter.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
     public void onCameraPermissionGranted() {
-        CameraManager.getInstance().resumeFrameSource();
+        BarcodeCountCameraManager.getInstance().resumeFrameSource();
     }
 
     @Override
-    public void onObservationStarted(@NonNull BarcodeCount barcodeTracking) {
-        // Not relevant in this sample
+    public void requestCameraPermission() {
+        super.requestCameraPermission();
     }
 
     @Override
-    public void onObservationStopped(@NonNull BarcodeCount barcodeTracking) {
-        // Not relevant in this sample
-    }
-
-    // This function is called whenever objects are updated and it's the right place to react to
-    // the tracking results.
-    @Override
-    public void onSessionUpdated(
-        @NonNull BarcodeCount mode,
-        @NonNull BarcodeCountSession session,
-        @NonNull FrameData data
-    ) {
-        // Not relevant in this sample
+    public void runOnMainThread(Runnable action) {
+        runOnUiThread(action);
     }
 
     @Override
-    public void onScan(
-        @NonNull BarcodeCount mode,
-        @NonNull BarcodeCountSession session,
-        @NonNull FrameData data
-    ) {
-        BarcodeManager.getInstance().updateWithSession(session);
-    }
-
-    @Nullable
-    @Override
-    public Brush brushForRecognizedBarcode(
-            @NonNull BarcodeCountView view, @NonNull TrackedBarcode trackedBarcode) {
-        // No need to return a brush here, BarcodeCountBasicOverlayStyle.ICON style is used
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public Brush brushForUnrecognizedBarcode(
-            @NonNull BarcodeCountView view, @NonNull TrackedBarcode trackedBarcode) {
-        // No need to return a brush here, BarcodeCountBasicOverlayStyle.ICON style is used
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public Brush brushForRecognizedBarcodeNotInList(
-            @NonNull BarcodeCountView view, @NonNull TrackedBarcode trackedBarcode) {
-        // No need to return a brush here, BarcodeCountBasicOverlayStyle.ICON style is used
-        return null;
+    public void switchToBarcodeCount() {
+        sparkScanPresenter.disableSparkScan();
+        barcodeCountPresenter.enableBarcodeCount();
+        inBarcodeCountMode = true;
     }
 
     @Override
-    public void onListButtonTapped(
-        @NonNull BarcodeCountView view
-    ) {
-        navigatingInternally = true;
+    public void switchToSparkScan() {
+        barcodeCountPresenter.disableBarcodeCount();
+        sparkScanPresenter.enableSparkScan();
+        inBarcodeCountMode = false;
+    }
+
+    @Override
+    public void navigateToListScreen() {
         listLauncher.launch(
             ResultsActivity.getIntent(
                 MainActivity.this,
-                BarcodeManager.getInstance().getScanResults(),
-                ResultsActivity.DoneButtonStyle.RESUME
+                ExtraButtonStyle.RESUME
             )
         );
     }
 
-    /**
-     * The launcher to use when starting the result activity clicking the list button
-     */
-    ActivityResultLauncher<Intent> listLauncher = registerForActivityResult(
-        new ActivityResultContracts.StartActivityForResult(),
-        result -> {
-            if (result.getResultCode() == ResultsActivity.CLEAR_SESSION) {
-                resetSession();
-            }
-        });
-
     @Override
-    public void onExitButtonTapped(
-        @NonNull BarcodeCountView view
-    ) {
-        navigatingInternally = true;
+    public void navigateToFinishScreen() {
         exitLauncher.launch(
             ResultsActivity.getIntent(
                 MainActivity.this,
-                BarcodeManager.getInstance().getScanResults(),
-                ResultsActivity.DoneButtonStyle.NEW_SCAN
+                ExtraButtonStyle.NEW_SCAN
             )
         );
-    }
-
-    /**
-     * The launcher to use when starting the result activity clicking the exit button
-     */
-    ActivityResultLauncher<Intent> exitLauncher = registerForActivityResult(
-        new ActivityResultContracts.StartActivityForResult(),
-        result -> resetSession());
-
-    private void resetSession() {
-        BarcodeManager.getInstance().reset();
-        barcodeCount.clearAdditionalBarcodes();
-        barcodeCount.reset();
-    }
-
-    @Override
-    public void onRecognizedBarcodeTapped(
-            @NonNull BarcodeCountView view, @NonNull TrackedBarcode trackedBarcode) {
-        // Not relevant in this sample
-    }
-
-    @Override
-    public void onUnrecognizedBarcodeTapped(
-            @NonNull BarcodeCountView view, @NonNull TrackedBarcode trackedBarcode) {
-        // Not relevant in this sample
-    }
-
-    @Override
-    public void onFilteredBarcodeTapped(
-            @NonNull BarcodeCountView view, @NonNull TrackedBarcode filteredBarcode) {
-        // Not relevant in this sample
-    }
-
-    @Override
-    public void onRecognizedBarcodeNotInListTapped(
-            @NonNull BarcodeCountView view, @NonNull TrackedBarcode trackedBarcode) {
-        // Not relevant in this sample
-    }
-
-    @Override
-    public void onSingleScanButtonTapped(@NonNull BarcodeCountView view) {
-        // Not relevant in this sample
-    }
-
-    @Override
-    protected void onDestroy() {
-        dataCaptureContext.removeMode(barcodeCount);
-        super.onDestroy();
     }
 }

@@ -7,6 +7,7 @@ android {
     compileSdkVersion = sdk.compile
 
     defaultConfig {
+    namespace = "com.scandit.datacapture.gs1parsersample"
         applicationId = "com.scandit.datacapture.gs1parsersample"
         minSdkVersion(sdk.min)
         targetSdkVersion(sdk.target)

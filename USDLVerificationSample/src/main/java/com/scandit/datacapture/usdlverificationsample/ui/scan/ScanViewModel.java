@@ -215,13 +215,6 @@ public class ScanViewModel extends ViewModel {
 
         boolean isUSDriverLicense = capturedId.getIssuingCountryIso() != null &&
                 capturedId.getIssuingCountryIso().equals(US_ISO);
-        boolean shouldScanBackSide = isUSDriverLicense && idBackScanNeeded;
-        int scanHint = getScanHint(!shouldScanBackSide);
-
-        uiState = uiState.toBuilder()
-                .scanHint(scanHint)
-                .build();
-        uiStates.postValue(uiState);
 
         if (!isUSDriverLicense) {
             /*
@@ -237,19 +230,6 @@ public class ScanViewModel extends ViewModel {
              */
             driverLicense = capturedId;
             verifyDriverLicense(capturedId);
-        }
-    }
-
-    /**
-     * Returns the text of the additional hint to help the user with the capture process, depending
-     * on the side of the document that the user currently attempts to capture.
-     */
-    @StringRes
-    private int getScanHint(boolean frontSide) {
-        if (frontSide) {
-            return R.string.scanning_dl_front_side_helper_text;
-        } else {
-            return R.string.scanning_dl_back_side_helper_text;
         }
     }
 

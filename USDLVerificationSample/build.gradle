@@ -5,6 +5,7 @@ plugins {
 android {
     ndkVersion = sdk.ndk
     compileSdkVersion = sdk.compile
+    namespace = "com.scandit.datacapture.usdlverificationsample"
 
     defaultConfig {
         applicationId = "com.scandit.datacapture.usdlverificationsample"

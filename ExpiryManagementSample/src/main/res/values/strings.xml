@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">ExpiryManagementSample</string>
+    <string name="app_title">Expiry Management</string>
+
+    <string name="clear_button">CLEAR LIST</string>
+    <plurals name="results_amount">
+        <item quantity="one">%d item</item>
+        <item quantity="other">%d items</item>
+    </plurals>
+
+    <string name="scan_results">Scan Results</string>
+    <string name="resume_scanning">Resume Scanning</string>
+    <string name="start_new_list">Start new list</string>
+    <string name="quantity">Qty: %d</string>
+    <string name="item_expired">Item is expired</string>
+    <string name="status_mode_enable_message">Expired item filter on</string>
+    <string name="status_mode_disable_message">Expired item filter off</string>
+</resources>

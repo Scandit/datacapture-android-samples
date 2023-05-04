@@ -172,6 +172,7 @@ public class ScanFragment extends Fragment
 
         LifecycleOwner lifecycleOwner = getViewLifecycleOwner();
 
+        viewModel.buildIdCaptureOverlay();
         /*
          * Observe the sequence of desired UI states in order to update the UI.
          */
@@ -180,7 +181,6 @@ public class ScanFragment extends Fragment
         /*
          * Observe the sequences of events in order to navigate to other screens or display dialogs.
          */
-        viewModel.askScanBackSide().observe(lifecycleOwner, this::askScanBackSide);
         viewModel.goToIdNotSupported().observe(lifecycleOwner, this::goToIdNotSupported);
         viewModel.goToResult().observe(lifecycleOwner, this::goToResult);
 
@@ -242,38 +242,6 @@ public class ScanFragment extends Fragment
         if (idCaptureOverlay != null) {
             dataCaptureView.addOverlay(idCaptureOverlay);
         }
-    }
-
-    /**
-     * Whenever it's possible to extract data also from the back side of a document, ask the user
-     * whether they wish to scan one.
-     */
-    private void askScanBackSide(AskScanBackSide event) {
-        CapturedId capturedId = event.getContentIfNotHandled();
-        if (capturedId == null) return;
-
-        new AlertDialog.Builder(requireContext())
-                .setTitle(R.string.alert_scan_back_title)
-                .setMessage(R.string.alert_scan_back_message)
-                .setPositiveButton(R.string.scan, (dialog, which) -> {
-                    /*
-                     * If we continue with scanning the back of the document, the IdCapture settings
-                     * will automatically allow only for this to be scanned, blocking you from
-                     * scanning other front of IDs. The next `onIdCaptured` will contain data from
-                     * both the front and the back scans.
-                     */
-                    viewModel.onBackSideScanAccepted();
-                })
-                .setNegativeButton(R.string.skip, (dialog, which) -> {
-                    dialog.dismiss();
-                    /*
-                     * If we want to skip scanning the back of the document, we have to call
-                     * `IdCapture().reset()` to allow for another front IDs to be scanned.
-                     */
-                    viewModel.onBackSideScanSkipped(capturedId);
-                })
-                .setCancelable(false)
-                .show();
     }
 
     /**

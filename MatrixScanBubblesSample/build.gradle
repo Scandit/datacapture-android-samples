@@ -18,6 +18,7 @@ plugins {
 
 android {
     compileSdkVersion = sdk.compile
+    namespace = "com.scandit.datacapture.matrixscanbubblessample"
 
     defaultConfig {
         applicationId = "com.scandit.datacapture.matrixscanbubblessample"

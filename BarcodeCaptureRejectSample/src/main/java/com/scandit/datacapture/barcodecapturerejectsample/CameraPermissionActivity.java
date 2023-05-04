@@ -16,6 +16,7 @@ package com.scandit.datacapture.barcodecapturerejectsample;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 

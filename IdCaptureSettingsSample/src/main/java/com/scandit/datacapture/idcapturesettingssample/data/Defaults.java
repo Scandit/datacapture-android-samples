@@ -34,6 +34,7 @@ import com.scandit.datacapture.core.common.geometry.MeasureUnit;
 import com.scandit.datacapture.core.source.CameraPosition;
 import com.scandit.datacapture.core.source.VideoResolution;
 import com.scandit.datacapture.core.ui.style.Brush;
+import com.scandit.datacapture.id.data.IdAnonymizationMode;
 import com.scandit.datacapture.id.data.IdDocumentType;
 import com.scandit.datacapture.id.data.IdImageType;
 import com.scandit.datacapture.id.data.SupportedSides;
@@ -53,6 +54,7 @@ public final class Defaults {
     private static final IdDocumentType[] SUPPORTED_DOCUMENTS = IdDocumentType.values();
     private static final SupportedSides[] SUPPORTED_SIDES = SupportedSides.values();
     private static final IdImageType[] SUPPORTED_IMAGES = IdImageType.values();
+    private static final IdAnonymizationMode[] ANONYMIZATION_MODES = IdAnonymizationMode.values();
 
     public static String[] getSupportedDocumentsEntries() {
         return EnumUtils.getEntryNamesTitleCase(SUPPORTED_DOCUMENTS);
@@ -80,6 +82,18 @@ public final class Defaults {
 
     public static String[] getSupportedImagesValues() {
         return EnumUtils.getEntryNames(SUPPORTED_IMAGES);
+    }
+
+    public static IdAnonymizationMode getDefaultAnonymizationMode() {
+        return IdAnonymizationMode.FIELDS_ONLY;
+    }
+
+    public static String[] getAnonymizationModeEntries() {
+        return EnumUtils.getEntryNamesTitleCase(ANONYMIZATION_MODES);
+    }
+
+    public static String[] getAnonymizationModeValues() {
+        return EnumUtils.getEntryNames(ANONYMIZATION_MODES);
     }
 
     // Camera.

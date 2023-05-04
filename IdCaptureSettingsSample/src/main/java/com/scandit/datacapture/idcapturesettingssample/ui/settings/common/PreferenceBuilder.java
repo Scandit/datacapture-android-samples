@@ -159,6 +159,19 @@ public class PreferenceBuilder {
       return preference;
    }
 
+   public static EditTextPreference editText(
+           Context context,
+           String key,
+           String title
+   ) {
+      EditTextPreference preference = new EditTextPreference(context);
+      preference.setIconSpaceReserved(false);
+      preference.setKey(key);
+      preference.setTitle(title);
+      preference.setSummaryProvider(new EditTextSummaryProvider());
+      return preference;
+   }
+
    public static Preference floatWithUnitPreviewPreference(
            Context context,
            String valueKey,
@@ -256,4 +269,13 @@ public class PreferenceBuilder {
             return value;
       }
    }
+
+   private static class EditTextSummaryProvider implements Preference.SummaryProvider<EditTextPreference> {
+
+      @Override
+      public CharSequence provideSummary(EditTextPreference preference) {
+         return preference.getText();
+      }
+   }
+
 }

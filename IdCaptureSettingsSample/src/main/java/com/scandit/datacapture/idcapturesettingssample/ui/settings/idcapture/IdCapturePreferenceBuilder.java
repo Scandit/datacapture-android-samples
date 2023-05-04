@@ -100,5 +100,18 @@ public class IdCapturePreferenceBuilder implements SectionPreferenceBuilder {
                 Defaults.getSupportedImagesValues()
         );
         parent.addPreference(supportedImageSidesPreference);
+
+        /*
+         * DropDown preference to choose anonymization mode
+         */
+        DropDownPreference anonymizationModePreference = PreferenceBuilder.dropDown(
+                context,
+                Keys.ANONYMIZATION_MODE,
+                context.getString(R.string.anonymization_mode_title),
+                Defaults.getAnonymizationModeEntries(),
+                Defaults.getAnonymizationModeValues(),
+                Defaults.getDefaultAnonymizationMode().name()
+        );
+        parent.addPreference(anonymizationModePreference);
     }
 }

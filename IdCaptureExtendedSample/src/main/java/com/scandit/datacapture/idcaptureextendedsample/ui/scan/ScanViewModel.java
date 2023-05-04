@@ -28,7 +28,7 @@ import com.scandit.datacapture.idcaptureextendedsample.data.CameraRepository;
 import com.scandit.datacapture.idcaptureextendedsample.data.CapturedDataType;
 import com.scandit.datacapture.idcaptureextendedsample.data.IdCaptureRepository;
 import com.scandit.datacapture.idcaptureextendedsample.di.Injector;
-import com.scandit.datacapture.idcaptureextendedsample.mappers.ResultMapper;
+import com.scandit.datacapture.idcaptureextendedsample.mappers.IdCaptureResultFactory;
 import com.scandit.datacapture.idcaptureextendedsample.ui.result.CaptureResult;
 
 /**
@@ -91,12 +91,6 @@ public class ScanViewModel extends ViewModel {
     private final MutableLiveData<ScanUiState> uiStates = new MutableLiveData<>();
 
     /**
-     * Events to display the UI that checks whether the user wishes to capture
-     * also the back side of a document.
-     */
-    private final MutableLiveData<AskScanBackSide> askScanBackSide = new MutableLiveData<>();
-
-    /**
      * Events to display the UI that informs the user that the captured ID is not
      * supported by the selected settings.
      */
@@ -141,14 +135,6 @@ public class ScanViewModel extends ViewModel {
      */
     public LiveData<ScanUiState> uiStates() {
         return uiStates;
-    }
-
-    /**
-     * Events to display the UI that checks whether the user wishes to capture
-     * also the back side of a document.
-     */
-    public LiveData<AskScanBackSide> askScanBackSide() {
-        return askScanBackSide;
     }
 
     /**
@@ -201,27 +187,6 @@ public class ScanViewModel extends ViewModel {
     }
 
     /**
-     * Capture also the back side of a personal identification document.
-     */
-    public void onBackSideScanAccepted() {
-        idCaptureRepository.enableIdCapture();
-    }
-
-    /**
-     * Omit the capture of the back side of the document and navigate to the result screen.
-     */
-    public void onBackSideScanSkipped(CapturedId capturedId) {
-        /*
-         * If IdCapture supports the back side of a given document, but the user decides to skip
-         * the capture, it is necessary to reset the IdCapture state.
-         */
-        idCaptureRepository.resetIdCapture();
-
-        final CaptureResult result = ResultMapper.create(capturedId).mapResult();
-        goToResult.postValue(new GoToResult(result));
-    }
-
-    /**
      * The user dismissed `Document not supported` dialog. Continue the capture process.
      */
     public void onIdNotSupportedDismissed() {
@@ -244,6 +209,13 @@ public class ScanViewModel extends ViewModel {
         cameraRepository.turnOffCamera();
     }
 
+    /**
+     * Requests an IdCaptureOverlay to be built.
+     */
+    void buildIdCaptureOverlay() {
+        idCaptureRepository.createIdCaptureOverlay();
+    }
+
     private void onNewIdCaptureOverlay(IdCaptureOverlay overlay) {
         /*
          * Update the UI that aids the user in the ID capture process.
@@ -256,16 +228,13 @@ public class ScanViewModel extends ViewModel {
         CapturedId capturedId = capturedIdEvent.getContentIfNotHandled();
         if (capturedId == null) return;
         /*
-         *  If the captured document type allows to also scan it's back
-         * side, ask the user whether they wish to do so. Otherwise present the data extracted
-         * from the document.
+         * Viz documents support multiple sides scanning.
+         * In case the back side is supported and not yet captured we don't display the result
          */
-        if (capturedId.getCapturedResultType() == CapturedResultType.VIZ_RESULT &&
-                capturedId.getViz().getCapturedSides() == SupportedSides.FRONT_ONLY &&
-                capturedId.getViz().isBackSideCaptureSupported()) {
-            askScanBackSide.postValue(new AskScanBackSide(capturedId));
-        } else {
-            final CaptureResult result = ResultMapper.create(capturedId).mapResult();
+        if (capturedId.getCapturedResultType() != CapturedResultType.VIZ_RESULT ||
+                capturedId.getViz().getCapturedSides() != SupportedSides.FRONT_ONLY ||
+                !capturedId.getViz().isBackSideCaptureSupported()) {
+            final CaptureResult result = IdCaptureResultFactory.extract(capturedId);
             goToResult.postValue(new GoToResult(result));
         }
     }

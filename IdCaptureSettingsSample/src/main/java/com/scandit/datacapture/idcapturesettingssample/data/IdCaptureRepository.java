@@ -130,6 +130,11 @@ public class IdCaptureRepository implements IdCaptureListener {
          * Enable the desired document sides from settings.
          */
         idCaptureSettings.setSupportedSides(settingsRepository.getSupportedSides());
+
+        /*
+         * Set the desired anonymization mode from settings.
+         */
+        idCaptureSettings.setAnonymizationMode(settingsRepository.getAnonymizationMode());
         idCapture = IdCapture.forDataCaptureContext(dataCaptureContext, idCaptureSettings);
         idCapture.addListener(this);
     }
@@ -139,6 +144,12 @@ public class IdCaptureRepository implements IdCaptureListener {
         overlay.setIdLayoutStyle(settingsRepository.getOverlayStyle());
         overlay.setIdLayoutLineStyle(settingsRepository.getOverlayLineStyle());
         overlay.setCapturedBrush(settingsRepository.getCapturedBrush());
+        if (!settingsRepository.getViewfinderFrontText().isEmpty()) {
+            overlay.setFrontSideTextHint(settingsRepository.getViewfinderFrontText());
+        }
+        if (!settingsRepository.getViewfinderBackText().isEmpty()) {
+            overlay.setBackSideTextHint(settingsRepository.getViewfinderBackText());
+        }
         return overlay;
     }
 

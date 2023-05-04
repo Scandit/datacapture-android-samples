@@ -5,6 +5,7 @@ plugins {
 android {
     ndkVersion = sdk.ndk
     compileSdkVersion = sdk.compile
+    namespace = "com.scandit.datacapture.mrzscanneresample"
 
     defaultConfig {
         applicationId = "com.scandit.datacapture.mrzscanneresample"
