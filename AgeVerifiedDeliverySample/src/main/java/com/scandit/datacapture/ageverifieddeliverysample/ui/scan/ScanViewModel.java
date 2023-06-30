@@ -18,6 +18,8 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.DriverLicenseSide.BACK_BARCODE;
 import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.DriverLicenseSide.FRONT_VIZ;
+import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.ScanUiState.INITIAL_DRIVER_LICENSE_SIDE;
+import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.ScanUiState.INITIAL_TARGET_DOCUMENT;
 import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.TargetDocument.DRIVER_LICENSE;
 import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.TargetDocument.MILITARY_ID;
 import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.TargetDocument.PASSPORT;
@@ -27,21 +29,19 @@ import static com.scandit.datacapture.ageverifieddeliverysample.ui.scan.Verifica
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
-import com.scandit.datacapture.ageverifieddeliverysample.R;
 import com.scandit.datacapture.ageverifieddeliverysample.data.CameraRepository;
-import com.scandit.datacapture.ageverifieddeliverysample.data.IdCaptureRepository;
 import com.scandit.datacapture.ageverifieddeliverysample.di.Injector;
 import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.id.capture.IdCapture;
 import com.scandit.datacapture.id.capture.IdCaptureListener;
 import com.scandit.datacapture.id.capture.IdCaptureSession;
+import com.scandit.datacapture.id.capture.IdCaptureSettings;
 import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.DateResult;
 import com.scandit.datacapture.id.data.IdDocumentType;
@@ -80,16 +80,14 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
     private final CameraRepository cameraRepository = Injector.getInstance().getCameraRepository();
 
     /**
-     * The repository to interact with the IdCapture mode. We use our own dependency injection
-     * to obtain it, but you may use your favorite framework, like Dagger or Hilt instead.
+     * Get the current IdCapture.
      */
-    private final IdCaptureRepository idCaptureRepository = Injector.getInstance().getIdCaptureRepository();
+    private final IdCapture idCapture = Injector.getInstance().getIdCapture();
 
-    /**
-     * The observer of IdCapture objects from the lower layer. The IdCapture is recreated every
-     * time a new type of document to capture is selected.
+    /*
+     * IdCaptureOverlay displays the additional UI to guide the user through the capture process.
      */
-    private final Observer<IdCapture> idCapturesObserver = this::onNewIdCapture;
+    private final IdCaptureOverlay overlay = Injector.getInstance().getOverlay();
 
     /**
      * The observer of a single event when the hint that informs the user that they may attempt
@@ -181,17 +179,19 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
         /*
          * Observe the stream of the lower layer and the timer events.
          */
-        idCaptureRepository.idCaptures().observeForever(idCapturesObserver);
         enterManuallyHints.observeForever(enterManuallyHintObserver);
         capturedIds.observeForever(capturedIdsObserver);
         rejectedBarcodes.observeForever(rejectedBarcodesObserver);
 
         /*
-         * Trigger the create of IdCapture for the initial document configuration.
+         * Set up the IdCapture with the initial document configuration.
          */
         IdDocumentType idDocumentType =
-                getSupportedDocument(uiState.getTargetDocument(), uiState.getDriverLicenseSide());
-        idCaptureRepository.recreateIdCapture(idDocumentType);
+                getSupportedDocument(INITIAL_TARGET_DOCUMENT, INITIAL_DRIVER_LICENSE_SIDE);
+        idCapture.addListener(this);
+        updateIdCapture(idDocumentType);
+
+        uiState = uiState.toBuilder().overlay(overlay).build();
 
         /*
          * Post the initial UI state.
@@ -204,7 +204,6 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
         /*
          * Stop observing the streams of the lower layer and the timer events to avoid memory leak.
          */
-        idCaptureRepository.idCaptures().removeObserver(idCapturesObserver);
         enterManuallyHints.removeObserver(enterManuallyHintObserver);
         capturedIds.removeObserver(capturedIdsObserver);
         rejectedBarcodes.removeObserver(rejectedBarcodesObserver);
@@ -262,7 +261,7 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
      * The user toggled the toggle to switch between capturing the barcode at the back side of the recipient's
      * driver's license and OCRing the front side of the document.
      *
-     * Recreate the IdCapture with the new configuration. If the user selected to OCR the front side
+     * Update the IdCapture with the new configuration. If the user selected to OCR the front side
      * of the recipient's driver's license, dismiss the hint to do so.
      *
      * Schedule the hint that informs the user that they may attempt to manually enter
@@ -277,7 +276,7 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
      * Either capturing the barcode at the back side of the recipient's
      * driver's license or OCRing the front side of the document is selected.
      *
-     * Recreate the IdCapture with the new configuration. If the user selected to OCR the front side
+     * Update the IdCapture with the new configuration. If the user selected to OCR the front side
      * of the recipient's driver's license, dismiss the hint to do so.
      *
      * Schedule the hint that informs the user that they may attempt to manually enter
@@ -285,7 +284,7 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
      */
     public void onDriverLicenseSideSelected(DriverLicenseSide side) {
         IdDocumentType documentType = getSupportedDocument(uiState.getTargetDocument(), side);
-        idCaptureRepository.recreateIdCapture(documentType);
+        updateIdCapture(documentType);
 
         ScanUiState.Builder uiStateBuilder = uiState.toBuilder()
                 .driverLicenseSide(side);
@@ -316,12 +315,12 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
     /**
      * The user will attempt to capture the recipient's driver's license.
      *
-     * Recreate the IdCapture with the new configuration.
+     * Update the IdCapture with the new configuration.
      */
     public void onDriverLicenseSelected() {
         DriverLicenseSide side = uiState.getDriverLicenseSide();
         IdDocumentType documentType = getSupportedDocument(DRIVER_LICENSE, side);
-        idCaptureRepository.recreateIdCapture(documentType);
+        updateIdCapture(documentType);
 
         resetScheduledHints();
 
@@ -340,7 +339,7 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
     /**
      * The user will attempt to capture the MRZ of the recipient's passport.
      *
-     * Recreate the IdCapture with the new configuration.
+     * Update the IdCapture with the new configuration.
      *
      * Schedule the hint that informs the user that they may attempt to manually enter
      * the recipient's document data if not yet shown/scheduled.
@@ -349,7 +348,7 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
         DriverLicenseSide side = uiState.getDriverLicenseSide();
 
         IdDocumentType documentType = getSupportedDocument(PASSPORT, side);
-        idCaptureRepository.recreateIdCapture(documentType);
+        updateIdCapture(documentType);
 
         ScanUiState.Builder uiStateBuilder = uiState.toBuilder()
                 .targetDocument(PASSPORT)
@@ -370,7 +369,7 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
      * The user will attempt to capture the barcode of the recipient's U.S. military ID (US
      * Uniformed Services document).
      *
-     * Recreate the IdCapture with the new configuration.
+     * Update the IdCapture with the new configuration.
      *
      * Schedule the hint that informs the user that they may attempt to manually enter
      * the recipient's document data if not yet shown/scheduled.
@@ -379,7 +378,7 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
         DriverLicenseSide side = uiState.getDriverLicenseSide();
 
         IdDocumentType documentType = getSupportedDocument(MILITARY_ID, side);
-        idCaptureRepository.recreateIdCapture(documentType);
+        updateIdCapture(documentType);
 
         ScanUiState.Builder uiStateBuilder = uiState.toBuilder()
                 .targetDocument(MILITARY_ID)
@@ -396,6 +395,24 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
         uiStates.postValue(uiState);
     }
 
+    public void resetIdCaptureState() {
+        IdDocumentType idDocumentType =
+                getSupportedDocument(INITIAL_TARGET_DOCUMENT, INITIAL_DRIVER_LICENSE_SIDE);
+        updateIdCapture(idDocumentType);
+        uiState = ScanUiState.builder().build().toBuilder().overlay(overlay).build();
+        uiStates.postValue(uiState);
+        resumeCapture();
+    }
+
+    /**
+     * Update the IdCapture to extract information from a different document type.
+     */
+    private void updateIdCapture(IdDocumentType newDocumentType) {
+        IdCaptureSettings settings = new IdCaptureSettings();
+        settings.setSupportedDocuments(newDocumentType);
+
+        idCapture.applySettings(settings);
+    }
 
     /**
      * Schedule the hint that informs the user that they may attempt to manually enter
@@ -435,7 +452,7 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
      */
     public void onPopUpDismissed() {
         cameraRepository.turnOnCamera();
-        idCaptureRepository.enableIdCapture();
+        idCapture.setEnabled(true);
     }
 
     /**
@@ -459,10 +476,11 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
     }
 
     /**
-     * Start the camera preview.
+     * Resume ID capture.
      */
-    void turnOnCamera() {
+    void resumeCapture() {
         cameraRepository.turnOnCamera();
+        idCapture.setEnabled(true);
     }
 
     /**
@@ -470,22 +488,6 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
      */
     void turnOffCamera() {
         cameraRepository.turnOffCamera();
-    }
-
-    /**
-     * IdCapture recreated with the current configuration.
-     */
-    private void onNewIdCapture(IdCapture idCapture) {
-        idCapture.addListener(this);
-
-        /*
-         * IdCaptureOverlay displays the additional UI to guide the user through the capture process.
-         */
-        IdCaptureOverlay overlay = IdCaptureOverlay.newInstance(idCapture, null);
-        overlay.setIdLayout(getOverlayLayout(uiState.getTargetDocument()));
-
-        uiState = uiState.toBuilder().overlay(overlay).build();
-        uiStates.postValue(uiState);
     }
 
     /**
@@ -527,7 +529,7 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
     }
 
     private void pauseCapture() {
-        idCaptureRepository.disableIdCapture();
+        idCapture.setEnabled(false);
         cameraRepository.turnOffCamera();
     }
 
@@ -639,7 +641,7 @@ public class ScanViewModel extends ViewModel implements IdCaptureListener {
      * * to enter the data manually otherwise
      */
     private void goToTryAnotherMethod() {
-        idCaptureRepository.disableIdCapture();
+        idCapture.setEnabled(false);
 
         if (isBackOfDriverLicenseExpected()) {
             goToBarcodeNotSupported.postValue(new GoToBarcodeNotSupported());

@@ -12,13 +12,12 @@
  ~ See the License for the specific language governing permissions and
  ~ limitations under the License.
  -->
-
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item>
-        <shape android:shape="oval">
-            <size android:height="16dp" android:width="16dp"/>
-            <solid android:color="@color/white"/>
-        </shape>
-    </item>
-</selector>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/white" />
+    <corners
+        android:bottomLeftRadius="0dp"
+        android:bottomRightRadius="0dp"
+        android:radius="1dp"
+        android:topLeftRadius="16dp"
+        android:topRightRadius="16dp" />
+</shape>

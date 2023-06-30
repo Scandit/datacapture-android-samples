@@ -21,7 +21,7 @@ import com.scandit.datacapture.core.capture.DataCaptureContext;
  * DataCapture components like DataCaptureView or IdCapture.
  */
 public class DataCaptureContextProvider {
-    // Enter your Scandit License key here.
+	// Enter your Scandit License key here.
     // Your Scandit License key is available via your Scandit SDK web account.
     private static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
 

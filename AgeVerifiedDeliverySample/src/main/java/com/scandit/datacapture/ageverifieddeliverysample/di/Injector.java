@@ -16,8 +16,10 @@ package com.scandit.datacapture.ageverifieddeliverysample.di;
 
 import com.scandit.datacapture.ageverifieddeliverysample.data.CameraRepository;
 import com.scandit.datacapture.ageverifieddeliverysample.data.DataCaptureContextProvider;
-import com.scandit.datacapture.ageverifieddeliverysample.data.IdCaptureRepository;
+import com.scandit.datacapture.ageverifieddeliverysample.data.IdCaptureProvider;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
+import com.scandit.datacapture.id.capture.IdCapture;
+import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 
 /**
  * A simple dependency injector. It may be replaced with a one from your favorite DI framework
@@ -51,8 +53,8 @@ public class Injector {
     /**
      * The repository that allows interaction with the IdCapture mode.
      */
-    private final IdCaptureRepository idCaptureRepository =
-            new IdCaptureRepository(dataCaptureContextProvider.getDataCaptureContext());
+    private final IdCaptureProvider idCaptureProvider =
+            new IdCaptureProvider(dataCaptureContextProvider.getDataCaptureContext());
 
     private Injector() {
         // Use `getInstance()`
@@ -66,16 +68,23 @@ public class Injector {
     }
 
     /**
+     * Get the current IdCapture.
+     */
+    public IdCapture getIdCapture() {
+        return idCaptureProvider.getIdCapture();
+    }
+
+    /*
+     * IdCaptureOverlay displays the additional UI to guide the user through the capture process.
+     */
+    public IdCaptureOverlay getOverlay() {
+        return idCaptureProvider.getOverlay();
+    }
+
+    /**
      * Get the repository that allows interaction with the device's camera.
      */
     public CameraRepository getCameraRepository() {
         return cameraRepository;
-    }
-
-    /**
-     * Get the repository that allows interaction with the IdCapture mode.
-     */
-    public IdCaptureRepository getIdCaptureRepository() {
-        return idCaptureRepository;
     }
 }

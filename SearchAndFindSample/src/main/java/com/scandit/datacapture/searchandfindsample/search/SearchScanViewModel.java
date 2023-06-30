@@ -16,21 +16,26 @@ package com.scandit.datacapture.searchandfindsample.search;
 
 import android.os.Handler;
 import android.os.Looper;
+
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModel;
+
 import com.scandit.datacapture.barcode.capture.BarcodeCapture;
 import com.scandit.datacapture.barcode.capture.BarcodeCaptureListener;
 import com.scandit.datacapture.barcode.capture.BarcodeCaptureSession;
 import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.data.FrameData;
+import com.scandit.datacapture.core.source.FrameSource;
+import com.scandit.datacapture.core.source.FrameSourceState;
 import com.scandit.datacapture.searchandfindsample.models.DataCaptureManager;
 import com.scandit.datacapture.searchandfindsample.models.SearchDataCaptureManager;
+
 import org.jetbrains.annotations.NotNull;
 
 public final class SearchScanViewModel extends ViewModel implements BarcodeCaptureListener {
 
-    private SearchDataCaptureManager dataCaptureManager = DataCaptureManager.SEARCH;
+    private final SearchDataCaptureManager dataCaptureManager = DataCaptureManager.SEARCH;
 
     final DataCaptureContext dataCaptureContext = dataCaptureManager.dataCaptureContext;
     final BarcodeCapture barcodeCapture = dataCaptureManager.barcodeCapture;
@@ -89,11 +94,19 @@ public final class SearchScanViewModel extends ViewModel implements BarcodeCaptu
     void resumeScanning() {
         dataCaptureManager.camera().applySettings(BarcodeCapture.createRecommendedCameraSettings());
         dataCaptureContext.addMode(barcodeCapture);
+        FrameSource frameSource = dataCaptureContext.getFrameSource();
+        if (frameSource != null) {
+            frameSource.switchToDesiredState(FrameSourceState.ON, null);
+        }
         barcodeCapture.setEnabled(true);
     }
 
     void pauseScanning() {
         dataCaptureContext.removeMode(barcodeCapture);
+        FrameSource frameSource = dataCaptureContext.getFrameSource();
+        if (frameSource != null) {
+            frameSource.switchToDesiredState(FrameSourceState.OFF, null);
+        }
         barcodeCapture.setEnabled(false);
     }
 
@@ -111,13 +124,16 @@ public final class SearchScanViewModel extends ViewModel implements BarcodeCaptu
             @NotNull BarcodeCapture barcodeCapture,
             @NotNull BarcodeCaptureSession session,
             @NotNull FrameData data
-    ) {}
+    ) {
+    }
 
     @Override
-    public void onObservationStarted(@NotNull BarcodeCapture barcodeCapture) {}
+    public void onObservationStarted(@NotNull BarcodeCapture barcodeCapture) {
+    }
 
     @Override
-    public void onObservationStopped(@NotNull BarcodeCapture barcodeCapture) {}
+    public void onObservationStopped(@NotNull BarcodeCapture barcodeCapture) {
+    }
 
     @Override
     protected void onCleared() {
@@ -128,6 +144,7 @@ public final class SearchScanViewModel extends ViewModel implements BarcodeCaptu
 
     interface Listener {
         void onCodeScanned(String code);
+
         void goToFind(Barcode barcodeToFind);
     }
 }

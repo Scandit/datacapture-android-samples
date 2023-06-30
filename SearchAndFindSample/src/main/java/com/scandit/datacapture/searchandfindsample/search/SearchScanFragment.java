@@ -14,6 +14,8 @@
 
 package com.scandit.datacapture.searchandfindsample.search;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,29 +23,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.dynamicanimation.animation.SpringAnimation;
-import androidx.dynamicanimation.animation.SpringForce;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlayStyle;
-import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
-import com.scandit.datacapture.core.common.geometry.MeasureUnit;
 import com.scandit.datacapture.core.ui.DataCaptureView;
 import com.scandit.datacapture.core.ui.style.Brush;
-import com.scandit.datacapture.core.ui.viewfinder.LaserlineViewfinder;
-import com.scandit.datacapture.core.ui.viewfinder.LaserlineViewfinderStyle;
+import com.scandit.datacapture.core.ui.viewfinder.AimerViewfinder;
 import com.scandit.datacapture.searchandfindsample.CameraPermissionFragment;
 import com.scandit.datacapture.searchandfindsample.R;
 import com.scandit.datacapture.searchandfindsample.find.FindScanFragment;
+
 import org.jetbrains.annotations.NotNull;
 
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-
-public final class SearchScanFragment extends CameraPermissionFragment implements SearchScanViewModel.Listener {
+public final class SearchScanFragment extends CameraPermissionFragment
+        implements SearchScanViewModel.Listener {
 
     public static SearchScanFragment newInstance() {
         return new SearchScanFragment();
@@ -51,11 +52,9 @@ public final class SearchScanFragment extends CameraPermissionFragment implement
 
     private SearchScanViewModel viewModel;
 
-    private SpringAnimation cardTranslationYAnimation;
-
-    private View containerScannedCode;
+    private BottomSheetBehavior<View> behavior;
     private TextView textBarcode;
-    private ImageButton buttonSearch, buttonBack;
+    private ImageButton buttonSearch;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,23 +69,21 @@ public final class SearchScanFragment extends CameraPermissionFragment implement
             @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState
     ) {
-        ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_search, container, false);
+        CoordinatorLayout root =
+                (CoordinatorLayout) inflater.inflate(R.layout.fragment_search, container, false);
         DataCaptureView dataCaptureView = createAndSetupDataCaptureView();
 
         // We put the dataCaptureView in its container.
-        root.addView(dataCaptureView, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+        ViewGroup scannerContainer = root.findViewById(R.id.scanner_container);
+        scannerContainer.addView(dataCaptureView,
+                new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
-        containerScannedCode = root.findViewById(R.id.container_scanned_code);
+        View containerScannedCode = root.findViewById(R.id.container_scanned_code);
+        behavior = BottomSheetBehavior.from(containerScannedCode);
+        behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        behavior.addBottomSheetCallback(sheetCallback);
         textBarcode = root.findViewById(R.id.text_barcode);
         buttonSearch = root.findViewById(R.id.button_search);
-        buttonBack = root.findViewById(R.id.button_back);
-
-        cardTranslationYAnimation = new SpringAnimation(
-                containerScannedCode, SpringAnimation.TRANSLATION_Y
-        );
-        SpringForce spring = new SpringForce();
-        spring.setDampingRatio(SpringForce.DAMPING_RATIO_NO_BOUNCY);
-        cardTranslationYAnimation.setSpring(spring);
 
         return root;
     }
@@ -107,13 +104,11 @@ public final class SearchScanFragment extends CameraPermissionFragment implement
         );
         view.addOverlay(overlay);
 
-        // We add the laser line viewfinder to the overlay.
-        overlay.setViewfinder(new LaserlineViewfinder(LaserlineViewfinderStyle.ANIMATED));
+        // We add the aim viewfinder to the overlay.
+        overlay.setViewfinder(new AimerViewfinder());
 
-        // Adjust the overlay's barcode highlighting to match the new viewfinder styles and improve
-        // the visibility of feedback. With 6.10 we will introduce this visual treatment as a new
-        // style for the overlay.
-        Brush brush = new Brush(Color.TRANSPARENT, Color.WHITE, 3f);
+        // Adjust the overlay's barcode highlighting to display a light green rectangle.
+        Brush brush = new Brush(Color.parseColor("#8028D380"), Color.TRANSPARENT, 0f);
         overlay.setBrush(brush);
         return view;
     }
@@ -126,13 +121,6 @@ public final class SearchScanFragment extends CameraPermissionFragment implement
             @Override
             public void onClick(View v) {
                 viewModel.onSearchClicked();
-            }
-        });
-
-        buttonBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideResult();
             }
         });
     }
@@ -149,6 +137,29 @@ public final class SearchScanFragment extends CameraPermissionFragment implement
     @Override
     public void onCameraPermissionGranted() {
         resumeFrameSource();
+    }
+
+
+    @Override
+    public void onPause() {
+        pauseFrameSource();
+        super.onPause();
+    }
+
+    @Override
+    public void onCodeScanned(String code) {
+        showResult(code);
+    }
+
+
+    @Override
+    public void goToFind(Barcode barcodeToFind) {
+        hideResult();
+        requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, FindScanFragment.newInstance(barcodeToFind))
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .addToBackStack(null)
+                .commit();
     }
 
     private void resumeFrameSource() {
@@ -171,37 +182,29 @@ public final class SearchScanFragment extends CameraPermissionFragment implement
         viewModel.pauseScanning();
     }
 
-    @Override
-    public void onPause() {
-        pauseFrameSource();
-        super.onPause();
-    }
-
-    @Override
-    public void onCodeScanned(String code) {
-        showResult();
+    private void showResult(String code) {
         textBarcode.setText(code);
-    }
-
-    private void showResult() {
-        cardTranslationYAnimation.animateToFinalPosition(0f);
-        buttonSearch.setClickable(true);
-        buttonBack.setVisibility(View.VISIBLE);
+        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     private void hideResult() {
-        cardTranslationYAnimation.animateToFinalPosition(containerScannedCode.getHeight());
-        buttonSearch.setClickable(false);
-        buttonBack.setVisibility(View.GONE);
+        behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
 
-    @Override
-    public void goToFind(Barcode barcodeToFind) {
-        hideResult();
-        requireActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, FindScanFragment.newInstance(barcodeToFind))
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .addToBackStack(null)
-                .commit();
-    }
+    private final BottomSheetBehavior.BottomSheetCallback sheetCallback =
+            new BottomSheetBehavior.BottomSheetCallback() {
+                @Override
+                public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                    if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                        buttonSearch.setClickable(true);
+                    } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                        buttonSearch.setClickable(false);
+                    }
+                }
+
+                @Override
+                public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                    // Nothing to do.
+                }
+            };
 }

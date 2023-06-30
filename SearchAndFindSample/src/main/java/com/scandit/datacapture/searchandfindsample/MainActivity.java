@@ -15,22 +15,22 @@
 package com.scandit.datacapture.searchandfindsample;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.fragment.app.FragmentManager;
+
 import com.scandit.datacapture.searchandfindsample.search.SearchScanFragment;
 
-public final class MainActivity extends AppCompatActivity {
-
-    private MainViewModel viewModel;
+public final class MainActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-
-        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -40,22 +40,14 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        // Switch camera on to start streaming frames.
-        // The camera is started asynchronously and will take some time to completely turn on.
-        viewModel.startFrameSource();
+    protected void onDestroy() {
+        super.onDestroy();
+        getSupportFragmentManager().removeOnBackStackChangedListener(this);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-
-        // Switch camera off to stop streaming frames.
-        // The camera is stopped asynchronously and will take some time to completely turn off.
-        // Until it is completely stopped, it is still possible to receive further results, hence
-        // it's a good idea to first disable the currently added mode as well.
-        viewModel.stopFrameSource();
+    public void onBackStackChanged() {
+        boolean showHomeAsUp = getSupportFragmentManager().getBackStackEntryCount() >= 1;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(showHomeAsUp);
     }
 }

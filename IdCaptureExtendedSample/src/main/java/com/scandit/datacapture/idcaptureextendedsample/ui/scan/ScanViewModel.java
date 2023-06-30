@@ -28,7 +28,7 @@ import com.scandit.datacapture.idcaptureextendedsample.data.CameraRepository;
 import com.scandit.datacapture.idcaptureextendedsample.data.CapturedDataType;
 import com.scandit.datacapture.idcaptureextendedsample.data.IdCaptureRepository;
 import com.scandit.datacapture.idcaptureextendedsample.di.Injector;
-import com.scandit.datacapture.idcaptureextendedsample.mappers.IdCaptureResultFactory;
+import com.scandit.datacapture.idcaptureextendedsample.ui.result.IdCaptureResultFactory;
 import com.scandit.datacapture.idcaptureextendedsample.ui.result.CaptureResult;
 
 /**
@@ -112,7 +112,7 @@ public class ScanViewModel extends ViewModel {
         /*
          * Trigger the create of IdCapture for the initial configuration.
          */
-        idCaptureRepository.createIdCapture(DEFAULT_ID_CAPTURE_MODE);
+        idCaptureRepository.updateIdCapture(DEFAULT_ID_CAPTURE_MODE);
 
         /*
          * Post the initial UI state.
@@ -177,7 +177,7 @@ public class ScanViewModel extends ViewModel {
      * Capture the specified element of personal identification documents.
      */
     private void onModeSelected(CapturedDataType mode) {
-        idCaptureRepository.createIdCapture(mode);
+        idCaptureRepository.updateIdCapture(mode);
 
         uiState = uiState.toBuilder()
                 .mode(mode)
@@ -207,13 +207,6 @@ public class ScanViewModel extends ViewModel {
     void stopIdCapture() {
         idCaptureRepository.disableIdCapture();
         cameraRepository.turnOffCamera();
-    }
-
-    /**
-     * Requests an IdCaptureOverlay to be built.
-     */
-    void buildIdCaptureOverlay() {
-        idCaptureRepository.createIdCaptureOverlay();
     }
 
     private void onNewIdCaptureOverlay(IdCaptureOverlay overlay) {

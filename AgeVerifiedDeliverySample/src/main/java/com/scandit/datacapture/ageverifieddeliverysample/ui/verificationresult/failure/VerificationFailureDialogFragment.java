@@ -14,7 +14,6 @@
 
 package com.scandit.datacapture.ageverifieddeliverysample.ui.verificationresult.failure;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,10 +23,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.scandit.datacapture.ageverifieddeliverysample.R;
-import com.scandit.datacapture.ageverifieddeliverysample.ui.MainActivity;
+import com.scandit.datacapture.ageverifieddeliverysample.ui.scan.ScanViewModel;
 import com.scandit.datacapture.ageverifieddeliverysample.ui.scan.VerificationFailureReason;
 
 /**
@@ -35,6 +35,11 @@ import com.scandit.datacapture.ageverifieddeliverysample.ui.scan.VerificationFai
  * the recipient's document data.
  */
 public class VerificationFailureDialogFragment extends BottomSheetDialogFragment {
+    /**
+     * The ViewModel of the parent fragment.
+     */
+    private ScanViewModel parentViewModel;
+
     /**
      * This fragment arguments' key for the failure reason.
      */
@@ -50,6 +55,16 @@ public class VerificationFailureDialogFragment extends BottomSheetDialogFragment
         fragment.setArguments(args);
 
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        /*
+         * Get a reference to this fragment's parent view model.
+         */
+        parentViewModel = new ViewModelProvider(requireParentFragment()).get(ScanViewModel.class);
     }
 
     @Nullable
@@ -112,8 +127,7 @@ public class VerificationFailureDialogFragment extends BottomSheetDialogFragment
      * Restart the whole capture flow.
      */
     private void restart() {
-        Intent intent = new Intent(requireContext(), MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        requireContext().startActivity(intent);
+        dismiss();
+        parentViewModel.resetIdCaptureState();
     }
 }

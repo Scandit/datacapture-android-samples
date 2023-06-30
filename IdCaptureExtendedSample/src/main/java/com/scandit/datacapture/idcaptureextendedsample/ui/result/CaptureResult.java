@@ -34,19 +34,15 @@ public class CaptureResult implements Parcelable {
     };
 
     private final ArrayList<Entry> entries;
-
-    @Nullable private final byte[] faceImageBytes;
     @Nullable private final byte[] idFrontImageBytes;
     @Nullable private final byte[] idBackImageBytes;
 
     public CaptureResult(
             Collection<Entry> entries,
-            @Nullable byte[] faceImageBytes,
             @Nullable byte[] idFrontImageBytes,
             @Nullable byte[] idBackImageBytes
     ) {
         this.entries = new ArrayList<>(entries);
-        this.faceImageBytes = faceImageBytes;
         this.idFrontImageBytes = idFrontImageBytes;
         this.idBackImageBytes = idBackImageBytes;
     }
@@ -55,10 +51,6 @@ public class CaptureResult implements Parcelable {
         return entries;
     }
 
-    @Nullable
-    public byte[] getFaceImageBytes() {
-        return faceImageBytes;
-    }
     @Nullable
     public byte[] getIdFrontImageBytes() {
         return idFrontImageBytes;
@@ -70,10 +62,6 @@ public class CaptureResult implements Parcelable {
 
     private CaptureResult(Parcel in) {
         entries = in.readArrayList(getClass().getClassLoader());
-
-        int faceImageBytesSize = in.readInt();
-        faceImageBytes = new byte[faceImageBytesSize];
-        in.readByteArray(faceImageBytes);
 
         int idFrontImageBytesSize = in.readInt();
         idFrontImageBytes = new byte[idFrontImageBytesSize];
@@ -88,10 +76,6 @@ public class CaptureResult implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeList(entries);
 
-        if (faceImageBytes != null) {
-            dest.writeInt(faceImageBytes.length);
-            dest.writeByteArray(faceImageBytes);
-        }
         if (idFrontImageBytes != null) {
             dest.writeInt(idFrontImageBytes.length);
             dest.writeByteArray(idFrontImageBytes);

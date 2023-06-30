@@ -56,10 +56,27 @@ public class IdCaptureRepository implements IdCaptureListener {
     /**
      * The current IdCapture.
      */
-    private IdCapture idCapture;
+    private final IdCapture idCapture;
 
+    /**
+     * Create IdCapture configured to extract data from the front & the back of IDs & Driver's
+     * Licenses.
+     *
+     * Additionally create an IdCaptureOverlay. IdCaptureOverlay provides UI to aid the user in the
+     * capture process. It needs to attached to DataCaptureView.
+     */
     public IdCaptureRepository(DataCaptureContext dataCaptureContext) {
         this.dataCaptureContext = dataCaptureContext;
+
+        IdCaptureSettings settings = new IdCaptureSettings();
+        settings.setSupportedDocuments(IdDocumentType.DL_VIZ, IdDocumentType.ID_CARD_VIZ);
+        settings.setSupportedSides(SupportedSides.FRONT_AND_BACK);
+        settings.setShouldPassImageTypeToResult(IdImageType.FACE, true);
+
+        idCapture = IdCapture.forDataCaptureContext(dataCaptureContext, settings);
+        idCapture.addListener(this);
+
+        idCaptureOverlays.postValue(IdCaptureOverlay.newInstance(idCapture, null));
     }
 
     /**
@@ -75,40 +92,6 @@ public class IdCaptureRepository implements IdCaptureListener {
      */
     public LiveData<CapturedIdEvent> capturedIds() {
         return capturedIds;
-    }
-
-    /**
-     * Create IdCapture configured to extract Driver's License data.
-     */
-    public void createIdCapture() {
-        if (idCapture != null) {
-            idCapture.removeListener(this);
-            dataCaptureContext.removeMode(idCapture);
-        }
-
-        idCapture = IdCapture.forDataCaptureContext(dataCaptureContext, getDlVizSettings());
-        idCapture.addListener(this);
-
-        idCaptureOverlays.postValue(createIdCaptureOverlay());
-    }
-
-    /**
-     * Create and returns Id Capture Overlay.
-     */
-    public IdCaptureOverlay createIdCaptureOverlay() {
-        return IdCaptureOverlay.newInstance(idCapture, null);
-    }
-
-    /**
-     * Configure ID capture to capture both the front and the back sides of driver's licenses
-     * and enable the extraction of a photo of the document’s holder.
-     */
-    private IdCaptureSettings getDlVizSettings() {
-        IdCaptureSettings settings = new IdCaptureSettings();
-        settings.setSupportedDocuments(IdDocumentType.DL_VIZ, IdDocumentType.ID_CARD_VIZ);
-        settings.setSupportedSides(SupportedSides.FRONT_AND_BACK);
-        settings.setShouldPassImageTypeToResult(IdImageType.FACE, true);
-        return settings;
     }
 
     /**

@@ -146,6 +146,10 @@ public abstract class IdCaptureResultFactory {
                 return new VizFieldExtractor(capturedId);
             case APEC_BUSINESS_TRAVEL_CARD_MRZ_RESULT:
                 return new ApecBusinessTravelCardMrzFieldExtractor(capturedId);
+            case US_VISA_VIZ_RESULT:
+                return new UsVisaVizFieldExtractor(capturedId);
+            case COMMON_ACCESS_CARD_BARCODE_RESULT:
+                return new CommonAccessCardBarcodeFieldExtractor(capturedId);
             default:
                 throw new AssertionError(
                         "Unsupported result type " + capturedId.getCapturedResultType());

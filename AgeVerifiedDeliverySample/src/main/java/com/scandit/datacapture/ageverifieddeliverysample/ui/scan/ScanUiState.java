@@ -17,9 +17,6 @@ package com.scandit.datacapture.ageverifieddeliverysample.ui.scan;
 import android.view.View;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-
-import com.scandit.datacapture.ageverifieddeliverysample.R;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 
 /**
@@ -35,13 +32,13 @@ class ScanUiState {
     /**
      * The kind of document that the user currently attempts to capture.
      */
-    private TargetDocument targetDocument = TargetDocument.DRIVER_LICENSE;
+    private TargetDocument targetDocument = INITIAL_TARGET_DOCUMENT;
 
     /**
      * The side of the driver's license that the user currently attempts to capture if they attempt
      * to capture a driver's license.
      */
-    private DriverLicenseSide driverLicenseSide = DriverLicenseSide.BACK_BARCODE;
+    private DriverLicenseSide driverLicenseSide = INITIAL_DRIVER_LICENSE_SIDE;
 
     /**
      * Whether the toggle between the driver's license front and back side is displayed.
@@ -126,6 +123,16 @@ class ScanUiState {
     public Builder toBuilder() {
         return new Builder(this);
     }
+
+    /**
+     * The initial selected target document.
+     */
+    public static TargetDocument INITIAL_TARGET_DOCUMENT = TargetDocument.DRIVER_LICENSE;
+
+    /**
+     * The initial selected driver license side.
+     */
+    public static DriverLicenseSide INITIAL_DRIVER_LICENSE_SIDE = DriverLicenseSide.BACK_BARCODE;
 
     /**
      * The builder to create or edit the UI state.

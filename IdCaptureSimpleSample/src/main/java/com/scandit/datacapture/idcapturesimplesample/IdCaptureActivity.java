@@ -33,9 +33,7 @@ import com.scandit.datacapture.id.capture.IdCapture;
 import com.scandit.datacapture.id.capture.IdCaptureListener;
 import com.scandit.datacapture.id.capture.IdCaptureSession;
 import com.scandit.datacapture.id.data.CapturedId;
-import com.scandit.datacapture.id.data.CapturedResultType;
 import com.scandit.datacapture.id.data.DateResult;
-import com.scandit.datacapture.id.data.VizResult;
 import com.scandit.datacapture.id.ui.IdLayoutStyle;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 
@@ -149,16 +147,9 @@ public class IdCaptureActivity extends CameraPermissionActivity
             @NotNull FrameData data
     ) {
         final CapturedId capturedId = session.getNewlyCapturedId();
+        if (capturedId == null) return;
 
-        final String message;
-
-        // The recognized fields of the captured Id can vary based on the capturedResultType.
-        // For other documents only the basic info from CapturedId is returned.
-        if (capturedId.getCapturedResultType() == CapturedResultType.VIZ_RESULT) {
-            message = getDescriptionForViz(capturedId);
-        } else {
-            message = getDescriptionForCapturedId(capturedId);
-        }
+        final String message = getDescriptionForCapturedId(capturedId);
 
         /*
          * Don't capture unnecessarily when the result is displayed.
@@ -203,7 +194,8 @@ public class IdCaptureActivity extends CameraPermissionActivity
          * This callback may be executed on an arbitrary thread. We post to switch back
          * to the main thread.
          */
-        runOnUiThread(() -> showAlert(R.string.error_title, R.string.document_not_supported_message));
+        runOnUiThread(
+                () -> showAlert(R.string.error_title, R.string.document_not_supported_message));
     }
 
     @Override
@@ -265,89 +257,29 @@ public class IdCaptureActivity extends CameraPermissionActivity
         dataCaptureManager.getIdCapture().setEnabled(true);
     }
 
-    private String getDescriptionForViz(CapturedId result) {
-        StringBuilder builder = new StringBuilder();
-
-        appendDescriptionForCapturedId(result, builder);
-
-        VizResult viz = result.getViz();
-
-        appendField(builder, "Issuing Authority: ", viz.getIssuingAuthority());
-        appendField(builder, "Issuing Jurisdiction: ", viz.getIssuingJurisdiction());
-        appendField(builder, "Issuing Jurisdiction ISO: ", viz.getIssuingJurisdictionIso());
-        appendField(builder, "Additional Name Information: ", viz.getAdditionalNameInformation());
-        appendField(builder, "Additional Address Information: ", viz.getAdditionalAddressInformation());
-        appendField(builder, "Place of Birth: ", viz.getPlaceOfBirth());
-        appendField(builder, "Race: ", viz.getRace());
-        appendField(builder, "Religion: ", viz.getReligion());
-        appendField(builder, "Profession: ", viz.getProfession());
-        appendField(builder, "Marital Status: ", viz.getMaritalStatus());
-        appendField(builder, "Residential Status: ", viz.getResidentialStatus());
-        appendField(builder, "Employer: ", viz.getEmployer());
-        appendField(builder, "Personal Id Number: ", viz.getPersonalIdNumber());
-        appendField(builder, "Document Additional Number: ", viz.getDocumentAdditionalNumber());
-
-        return builder.toString();
-    }
-
     private String getDescriptionForCapturedId(CapturedId result) {
         StringBuilder builder = new StringBuilder();
-        appendDescriptionForCapturedId(result, builder);
-        return builder.toString();
-    }
-
-    private void appendDescriptionForCapturedId(CapturedId result, StringBuilder builder) {
-        appendField(builder, "Result Type: ", result.getCapturedResultType().toString());
-        appendField(builder, "Document Type: ", result.getDocumentType().toString());
-        appendField(builder, "First Name: ", result.getFirstName());
-        appendField(builder, "Last Name: ", result.getLastName());
         appendField(builder, "Full Name: ", result.getFullName());
-        appendField(builder, "Sex: ", result.getSex());
         appendField(builder, "Date of Birth: ", result.getDateOfBirth());
-        appendField(builder, "Age: ", result.getAge());
-        appendField(builder, "Nationality: ", result.getNationality());
-        appendField(builder, "Address: ", result.getAddress());
-        appendField(builder, "Issuing Country ISO: ", result.getIssuingCountryIso());
-        appendField(builder, "Issuing Country: ", result.getIssuingCountry());
-        appendField(builder, "Document Number: ", result.getDocumentNumber());
         appendField(builder, "Date of Expiry: ", result.getDateOfExpiry());
-        appendField(builder, "Is Expired: ", String.valueOf(result.isExpired()));
-        appendField(builder, "Date of Issue: ", result.getDateOfIssue());
+        appendField(builder, "Document Number: ", result.getDocumentNumber());
+        appendField(builder, "Nationality: ", result.getNationality());
+        return builder.toString();
     }
 
     private void appendField(StringBuilder builder, String name, String value) {
-        builder.append(name);
-
-        if (TextUtils.isEmpty(value)) {
-            builder.append("<empty>");
-        } else {
+        if (!TextUtils.isEmpty(value)) {
+            builder.append(name);
             builder.append(value);
+            builder.append("\n");
         }
-
-        builder.append("\n");
-    }
-
-    private void appendField(StringBuilder builder, String name, Integer value) {
-        builder.append(name);
-
-        if (value == null) {
-            builder.append("<empty>");
-        } else {
-            builder.append(value);
-        }
-
-        builder.append("\n");
     }
 
     private void appendField(StringBuilder builder, String name, DateResult value) {
-        builder.append(name);
-
-        if (value == null) {
-            builder.append("<empty>");
-        } else {
+        if (value != null) {
+            builder.append(name);
             builder.append(dateFormat.format(value.toDate()));
+            builder.append("\n");
         }
-
-        builder.append("\n");
     }
 }

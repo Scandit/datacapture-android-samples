@@ -51,11 +51,6 @@ public class ResultFragment extends Fragment {
     private ResultUiState uiState;
 
     /*
-     * The image of the captured document's holder face, if any.
-     */
-    private ImageView faceImage;
-
-    /*
      * The image of the front side of the captured document, if relevant.
      */
     private ImageView idFrontImage;
@@ -72,7 +67,7 @@ public class ResultFragment extends Fragment {
 
     /*
      * Store inside a bundle the result data and, if available, the byteArray extracted from the
-     * Face image.
+     * image of the front and the back sides of the document.
      */
     public static ResultFragment create(CaptureResult result) {
         ResultFragment fragment = new ResultFragment();
@@ -106,7 +101,6 @@ public class ResultFragment extends Fragment {
         View root = inflater.inflate(R.layout.result_screen, container, false);
         initToolbar(root);
 
-        faceImage = root.findViewById(R.id.image_face);
         idFrontImage = root.findViewById(R.id.image_id_front);
         idBackImage = root.findViewById(R.id.image_id_back);
 
@@ -148,7 +142,6 @@ public class ResultFragment extends Fragment {
     private void onNewUiState(ResultUiState uiState) {
         this.uiState = uiState;
 
-        updateImage(uiState.getFaceImage(), faceImage);
         updateImage(uiState.getIdFrontImage(), idFrontImage);
         updateImage(uiState.getIdBackImage(), idBackImage);
 

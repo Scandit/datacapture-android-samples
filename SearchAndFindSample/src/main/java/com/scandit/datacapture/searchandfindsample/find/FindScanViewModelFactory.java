@@ -32,6 +32,7 @@ public final class FindScanViewModelFactory extends ViewModelProvider.NewInstanc
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+        //noinspection unchecked
         return (T) new FindScanViewModel(symbology, data);
     }
 }

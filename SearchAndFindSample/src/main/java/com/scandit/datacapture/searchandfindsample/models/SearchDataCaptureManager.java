@@ -39,6 +39,7 @@ public final class SearchDataCaptureManager {
         HashSet<Symbology> enabledSymbologies = new HashSet<>();
         enabledSymbologies.add(Symbology.EAN8);
         enabledSymbologies.add(Symbology.EAN13_UPCA);
+        enabledSymbologies.add(Symbology.UPCE);
         enabledSymbologies.add(Symbology.CODE128);
         enabledSymbologies.add(Symbology.CODE39);
         enabledSymbologies.add(Symbology.DATA_MATRIX);

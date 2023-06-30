@@ -27,12 +27,6 @@ import java.util.List;
  */
 class ResultUiState {
     /*
-     * The image of the captured document's holder face, if any.
-     */
-    @Nullable
-    private Bitmap faceImage;
-
-    /*
      * The image of the front side of the captured document, if relevant.
      */
     @Nullable
@@ -53,14 +47,6 @@ class ResultUiState {
      * Use `builder()` to create this UI state.
      */
     private ResultUiState() { }
-
-    /*
-     * Get the image of the captured document's holder face, if any.
-     */
-    @Nullable
-    public Bitmap getFaceImage() {
-        return faceImage;
-    }
 
     /*
      * Get the image of the front side of the captured document, if any.
@@ -114,15 +100,6 @@ class ResultUiState {
          */
         private Builder(ResultUiState state) {
             this.state = state;
-        }
-
-        /*
-         * The image of the captured document's holder face, if any.
-         */
-        public Builder faceImage(@Nullable Bitmap value) {
-            state.faceImage = value;
-
-            return this;
         }
 
         /*

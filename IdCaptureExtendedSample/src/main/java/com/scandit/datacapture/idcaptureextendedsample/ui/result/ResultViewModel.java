@@ -44,7 +44,6 @@ public class ResultViewModel extends ViewModel {
     public void onResult(CaptureResult result) {
         uiState = uiState.toBuilder()
                 .data(result.getEntries())
-                .faceImage(convertBytesToImage(result.getFaceImageBytes()))
                 .idFrontImage(convertBytesToImage(result.getIdFrontImageBytes()))
                 .idBackImage(convertBytesToImage(result.getIdBackImageBytes()))
                 .build();

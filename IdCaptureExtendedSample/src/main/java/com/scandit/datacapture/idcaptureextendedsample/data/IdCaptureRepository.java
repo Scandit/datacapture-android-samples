@@ -68,10 +68,28 @@ public class IdCaptureRepository implements IdCaptureListener {
     /**
      * The current IdCapture.
      */
-    private IdCapture idCapture;
+    private final IdCapture idCapture;
 
+    /**
+     * Create IdCapture configured to extract data for the specified type of personal identification
+     * documents or their parts.
+     *
+     * In this sample, the user may extract data from:
+     * * barcodes - for example PDF417 present at the back side of US Driver's Licenses,
+     * * Machine Readable Zones (MRZ) - like ones in passports or European IDs,
+     * * human-readable text (VIZ) - like the holder's name or date of birth printed on an ID.
+     *
+     * Additionally create an IdCaptureOverlay. IdCaptureOverlay provides UI to aid the user in the
+     * capture process. It needs to attached to DataCaptureView.
+     */
     public IdCaptureRepository(DataCaptureContext dataCaptureContext) {
         this.dataCaptureContext = dataCaptureContext;
+
+        idCapture = IdCapture.forDataCaptureContext(dataCaptureContext, new IdCaptureSettings());
+        idCapture.addListener(this);
+
+        IdCaptureOverlay overlay = IdCaptureOverlay.newInstance(idCapture, null);
+        idCaptureOverlays.postValue(overlay);
     }
 
     /**
@@ -103,7 +121,7 @@ public class IdCaptureRepository implements IdCaptureListener {
     }
 
     /**
-     * Create IdCapture configured to extract data for the specified type of personal identification
+     * Configure the IdCapture to extract data for the specified type of personal identification
      * documents or their parts.
      *
      * In this sample, the user may extract data from:
@@ -111,24 +129,8 @@ public class IdCaptureRepository implements IdCaptureListener {
      * * Machine Readable Zones (MRZ) - like ones in passports or European IDs,
      * * human-readable text (VIZ) - like the holder's name or date of birth printed on an ID.
      */
-    public void createIdCapture(CapturedDataType type) {
-        if (idCapture != null) {
-            idCapture.removeListener(this);
-            dataCaptureContext.removeMode(idCapture);
-        }
-
-        idCapture = IdCapture.forDataCaptureContext(dataCaptureContext, getSettingsForMode(type));
-        idCapture.addListener(this);
-
-        createIdCaptureOverlay();
-    }
-
-    /**
-     * Create and returns Id Capture Overlay.
-     */
-    public void createIdCaptureOverlay() {
-        IdCaptureOverlay overlay = IdCaptureOverlay.newInstance(idCapture, null);
-        idCaptureOverlays.postValue(overlay);
+    public void updateIdCapture(CapturedDataType type) {
+        idCapture.applySettings(getSettingsForMode(type));
     }
 
     private IdCaptureSettings getSettingsForMode(CapturedDataType type) {

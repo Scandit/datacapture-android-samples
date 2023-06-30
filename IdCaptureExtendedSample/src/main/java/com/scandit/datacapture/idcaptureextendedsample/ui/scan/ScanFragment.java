@@ -172,7 +172,6 @@ public class ScanFragment extends Fragment
 
         LifecycleOwner lifecycleOwner = getViewLifecycleOwner();
 
-        viewModel.buildIdCaptureOverlay();
         /*
          * Observe the sequence of desired UI states in order to update the UI.
          */

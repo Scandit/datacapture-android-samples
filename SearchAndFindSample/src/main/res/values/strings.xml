@@ -12,7 +12,7 @@
  ~ limitations under the License.
  -->
 <resources>
-    <string name="app_name">SearchAndFind</string>
+    <string name="app_name">Search &amp; Find</string>
     <string name="cd_search">Search Barcode</string>
     <string name="cd_back">Go Back</string>
     <string name="searching_barcode">Searching Barcode…</string>

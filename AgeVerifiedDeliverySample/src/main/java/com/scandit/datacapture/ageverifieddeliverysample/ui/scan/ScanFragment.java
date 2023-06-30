@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.CompoundButton;
-import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission;
@@ -146,12 +145,17 @@ public class ScanFragment extends Fragment {
     private TabLayout targetDocumentMenu;
 
     /**
+     * The listener to observe the changes of the document type to capture.
+     */
+    private OnTargetDocumentChangedListener targetDocumentChangedListener;
+
+    /**
      * The launcher to request the user permission to use their device's camera.
      */
     private final ActivityResultLauncher<String> requestCameraPermission =
             registerForActivityResult(new RequestPermission(), isGranted -> {
                 if (isGranted && isResumed()) {
-                    viewModel.turnOnCamera();
+                    viewModel.resumeCapture();
                 }
             });
 
@@ -242,7 +246,8 @@ public class ScanFragment extends Fragment {
          */
         driverLicenseSideToggle.setOnCheckedChangeListener(this::onDriverLicenseSideToggled);
         selectTargetDocumentHintContainer.setOnClickListener(this::onSelectTargetDocumentHintClicked);
-        targetDocumentMenu.addOnTabSelectedListener(new OnTargetDocumentChangedListener());
+        targetDocumentChangedListener = new OnTargetDocumentChangedListener();
+        targetDocumentMenu.addOnTabSelectedListener(targetDocumentChangedListener);
         enterManuallyHint.setOnClickListener(this::onManualEntryClicked);
     }
 
@@ -308,7 +313,7 @@ public class ScanFragment extends Fragment {
          * Once we have the permission start the capture process.
          */
         if (checkSelfPermission(requireContext(), CAMERA) == PERMISSION_GRANTED) {
-            viewModel.turnOnCamera();
+            viewModel.resumeCapture();
         } else {
             requestCameraPermission.launch(CAMERA);
         }
@@ -332,6 +337,7 @@ public class ScanFragment extends Fragment {
 
         updateOverlay();
         updateDriverLicenseSideToggle();
+        resetTargetDocumentTabIfNecessary();
         updateSelectTargetDocumentHint();
         updateEnterManuallyHint();
     }
@@ -370,6 +376,36 @@ public class ScanFragment extends Fragment {
         }
 
         driverLicenseSideToggle.setVisibility(uiState.getDriverLicenseToggleVisibility());
+    }
+
+    /**
+     * Reset the selected target document in the tab layout if necessary. While the tab layout
+     * correctly reflects the selected target document when the user clicks on a tab, we need to
+     * manually reset the selected tab when the ID capture state is reset after the completion of
+     * a capture flow.
+     */
+    private void resetTargetDocumentTabIfNecessary() {
+        int position = targetDocumentMenu.getSelectedTabPosition();
+        TargetDocument selectedTargetDocument;
+
+        if (position == TARGET_DOCUMENT_ITEM_DRIVER_LICENSE) {
+            selectedTargetDocument = TargetDocument.DRIVER_LICENSE;
+        } else if (position == TARGET_DOCUMENT_ITEM_PASSPORT) {
+            selectedTargetDocument = TargetDocument.PASSPORT;
+        } else if (position == TARGET_DOCUMENT_ITEM_MILITARY_ID) {
+            selectedTargetDocument = TargetDocument.MILITARY_ID;
+        } else {
+            throw new AssertionError("Unknown target document at position " + position);
+        }
+
+        if (selectedTargetDocument != uiState.getTargetDocument()) {
+            targetDocumentMenu.removeOnTabSelectedListener(targetDocumentChangedListener);
+            TabLayout.Tab driverLicenseTab = targetDocumentMenu.getTabAt(0);
+            if (driverLicenseTab != null) {
+                driverLicenseTab.select();
+            }
+            targetDocumentMenu.addOnTabSelectedListener(targetDocumentChangedListener);
+        }
     }
 
     /**

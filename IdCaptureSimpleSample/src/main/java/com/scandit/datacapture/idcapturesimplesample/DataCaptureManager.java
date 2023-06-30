@@ -26,7 +26,7 @@ import com.scandit.datacapture.id.data.IdDocumentType;
  * Initializes DataCapture.
  */
 public final class DataCaptureManager {
-    // Enter your Scandit License key here.
+	// Enter your Scandit License key here.
     // Your Scandit License key is available via your Scandit SDK web account.
     private static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
 

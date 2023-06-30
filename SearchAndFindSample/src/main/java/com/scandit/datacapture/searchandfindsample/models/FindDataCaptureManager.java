@@ -15,38 +15,44 @@
 package com.scandit.datacapture.searchandfindsample.models;
 
 import com.scandit.datacapture.barcode.data.Symbology;
-import com.scandit.datacapture.barcode.tracking.capture.BarcodeTracking;
-import com.scandit.datacapture.barcode.tracking.capture.BarcodeTrackingSettings;
+import com.scandit.datacapture.barcode.find.capture.BarcodeFind;
+import com.scandit.datacapture.barcode.find.capture.BarcodeFindItem;
+import com.scandit.datacapture.barcode.find.capture.BarcodeFindItemSearchOptions;
+import com.scandit.datacapture.barcode.find.capture.BarcodeFindSettings;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
-import com.scandit.datacapture.core.source.Camera;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public final class FindDataCaptureManager {
 
     private final DataCaptureManager baseDataCaptureManager = DataCaptureManager.CURRENT;
     public final DataCaptureContext dataCaptureContext = baseDataCaptureManager.dataCaptureContext;
-    public final BarcodeTracking barcodeTracking;
+    public final BarcodeFind barcodeFind;
 
     FindDataCaptureManager() {
-        // Create new barcode tracking mode with default settings.
-        barcodeTracking = BarcodeTracking.forDataCaptureContext(
-                dataCaptureContext, new BarcodeTrackingSettings()
-        );
-        dataCaptureContext.removeMode(barcodeTracking);
+        // Create new barcode find mode with default settings.
+        barcodeFind = new BarcodeFind(new BarcodeFindSettings());
     }
 
     public void setupForSymbology(Symbology symbology) {
-        // The barcode tracking process is configured through barcode tracking settings
-        // which are then applied to the barcode tracking instance that manages barcode tracking.
-        BarcodeTrackingSettings settings = new BarcodeTrackingSettings();
+        // The barcode find process is configured through barcode find settings
+        // which are then applied to the barcode find instance.
+        BarcodeFindSettings settings = new BarcodeFindSettings();
 
         // We enable only the given symbology.
-        settings.enableSymbology(symbology, true);
+        settings.setSymbologyEnabled(symbology, true);
 
-        // We apply the new settings to the barcode tracking.
-        barcodeTracking.applySettings(settings);
+        // We apply the new settings to the barcode find.
+        barcodeFind.applySettings(settings);
     }
 
-    public Camera camera() {
-        return baseDataCaptureManager.camera;
+    public void setupSearchedItems(String data) {
+        Set<BarcodeFindItem> items = new HashSet<>();
+        items.add(new BarcodeFindItem(new BarcodeFindItemSearchOptions(data), null));
+
+        // The BarcodeFind can search a set of items. In this simplified sample, we set only
+        // one items, but for real case we can set several at once.
+        barcodeFind.setItemList(items);
     }
 }

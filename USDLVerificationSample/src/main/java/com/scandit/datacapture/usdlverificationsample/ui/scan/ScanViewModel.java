@@ -123,11 +123,6 @@ public class ScanViewModel extends ViewModel {
         idCaptureRepository.capturedIds().observeForever(capturedIdsObserver);
 
         /*
-         * Trigger the create of IdCapture for the initial configuration.
-         */
-        idCaptureRepository.createIdCapture();
-
-        /*
          * Post the initial UI state.
          */
         uiStates.postValue(uiState);

@@ -28,7 +28,6 @@
 
 package com.scandit.datacapture.ageverifieddeliverysample.ui.verificationresult.success;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,10 +35,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.scandit.datacapture.ageverifieddeliverysample.ui.MainActivity;
 import com.scandit.datacapture.ageverifieddeliverysample.R;
+import com.scandit.datacapture.ageverifieddeliverysample.ui.scan.ScanViewModel;
 
 /**
  * The fragment to display the UI that informs about successful verification of
@@ -47,10 +47,25 @@ import com.scandit.datacapture.ageverifieddeliverysample.R;
  */
 public class VerificationSuccessDialogFragment extends BottomSheetDialogFragment {
     /**
+     * The ViewModel of the parent fragment.
+     */
+    private ScanViewModel parentViewModel;
+
+    /**
      * Create a new instance of this fragment.
      */
     public static VerificationSuccessDialogFragment create() {
         return new VerificationSuccessDialogFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        /*
+         * Get a reference to this fragment's parent view model.
+         */
+        parentViewModel = new ViewModelProvider(requireParentFragment()).get(ScanViewModel.class);
     }
 
     @Nullable
@@ -84,8 +99,7 @@ public class VerificationSuccessDialogFragment extends BottomSheetDialogFragment
      * Restart the whole capture flow.
      */
     private void restart() {
-        Intent intent = new Intent(requireContext(), MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        requireContext().startActivity(intent);
+        dismiss();
+        parentViewModel.resetIdCaptureState();
     }
 }
