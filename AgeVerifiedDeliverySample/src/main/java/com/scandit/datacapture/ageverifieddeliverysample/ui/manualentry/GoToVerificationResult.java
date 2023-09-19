@@ -15,10 +15,10 @@
 package com.scandit.datacapture.ageverifieddeliverysample.ui.manualentry;
 
 import com.scandit.datacapture.ageverifieddeliverysample.ui.Event;
-import com.scandit.datacapture.ageverifieddeliverysample.ui.scan.DocumentData;
+import com.scandit.datacapture.ageverifieddeliverysample.ui.id.DocumentData;
 
 /**
- * An event for the fragment to verify the manually entered data and to display the result.
+ * An event for the fragment to verify the manually entered date of birth and to display the result.
  */
 class GoToVerificationResult extends Event<DocumentData> {
     public GoToVerificationResult(DocumentData content) {

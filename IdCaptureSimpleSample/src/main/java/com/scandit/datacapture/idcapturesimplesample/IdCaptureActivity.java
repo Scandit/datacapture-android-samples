@@ -16,14 +16,19 @@ package com.scandit.datacapture.idcapturesimplesample;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
+import static java.lang.reflect.Modifier.PRIVATE;
+
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.widget.Toolbar;
 
 import com.scandit.datacapture.core.data.FrameData;
@@ -41,25 +46,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.TimeZone;
 
 public class IdCaptureActivity extends CameraPermissionActivity
         implements IdCaptureListener, AlertDialogFragment.Callbacks {
-    private static final String RESULT_FRAGMENT_TAG = "result_fragment";
 
-    private static final DateFormat dateFormat;
+    @VisibleForTesting
+    public static final String RESULT_FRAGMENT_TAG = "result_fragment";
 
-    static {
-        /*
-         * DateResult::toDate() returns dates in UTC. We need to use the same timezone for
-         * formatting, otherwise we may end up with a wrong date displayed if our local timezone
-         * is a day behind/ahead from UTC.
-         */
-        dateFormat = SimpleDateFormat.getDateInstance();
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-    }
+    private static final DateFormat dateFormat = SimpleDateFormat.getDateInstance();
 
-    private DataCaptureManager dataCaptureManager;
+    @VisibleForTesting
+    public DataCaptureManager dataCaptureManager;
     private DataCaptureView view;
     private IdCaptureOverlay overlay;
 
@@ -278,7 +275,7 @@ public class IdCaptureActivity extends CameraPermissionActivity
     private void appendField(StringBuilder builder, String name, DateResult value) {
         if (value != null) {
             builder.append(name);
-            builder.append(dateFormat.format(value.toDate()));
+            builder.append(dateFormat.format(value.getLocalDate()));
             builder.append("\n");
         }
     }

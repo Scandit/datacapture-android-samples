@@ -47,7 +47,7 @@ import com.scandit.datacapture.usdlverificationsample.ui.util.AlertDialogFragmen
 public class ScanFragment extends Fragment implements AlertDialogFragment.Callbacks {
 
     private static final String DL_NOT_SUPPORTED_TAG = "DL_NOT_SUPPORTED";
-    private static final String CLOUD_VERIFICATION_FAILURE_TAG = "CLOUD_VERIFICATION_FAILURE";
+    private static final String BARCODE_VERIFICATION_FAILURE_TAG = "BARCODE_VERIFICATION_FAILURE";
     private static final String RESULT_SCREEN_TAG = "RESULT_SCREEN";
 
     /**
@@ -77,9 +77,9 @@ public class ScanFragment extends Fragment implements AlertDialogFragment.Callba
     private IdCaptureOverlay idCaptureOverlay;
 
     /**
-     * The additional text that indicates whether cloud-based verification is running.
+     * The additional text that indicates whether verification is running.
      */
-    private TextView cloudVerificationIndicatorText;
+    private TextView barcodeVerificationIndicatorText;
 
     /**
      * The launcher to request the user permission to use their device's camera.
@@ -136,7 +136,7 @@ public class ScanFragment extends Fragment implements AlertDialogFragment.Callba
     }
 
     private void initViews(@NonNull View root) {
-        cloudVerificationIndicatorText = root.findViewById(R.id.cloud_verification_indicator_text);
+        barcodeVerificationIndicatorText = root.findViewById(R.id.barcode_verification_indicator_text);
     }
 
     /*
@@ -176,10 +176,10 @@ public class ScanFragment extends Fragment implements AlertDialogFragment.Callba
          */
         viewModel.goToResult().observe(lifecycleOwner, this::goToResult);
         viewModel.goToUnsupportedDriverLicense().observe(lifecycleOwner, this::goToUnsupportedDriverLicense);
-        viewModel.goToCloudVerificationFailure().observe(lifecycleOwner,
-                this::goToCloudVerificationFailure);
+        viewModel.goToBarcodeVerificationFailure().observe(lifecycleOwner,
+                this::goToBarcodeVerificationFailure);
 
-        viewModel.setUpCloudVerificationTaskListeners();
+        viewModel.setUpBarcodeVerificationTaskListeners();
     }
 
     @Override
@@ -218,12 +218,12 @@ public class ScanFragment extends Fragment implements AlertDialogFragment.Callba
     }
 
     /**
-     * Display a message indicating that the Cloud verification is running if it is the case,
+     * Display a message indicating that the verification is running if it is the case,
      * hide it otherwise.
      */
     private void updateVerificationIndicatorVisibility(ScanUiState uiState) {
-        cloudVerificationIndicatorText.setVisibility(
-                uiState.isCloudVerificationRunning() ? View.VISIBLE : View.GONE);
+        barcodeVerificationIndicatorText.setVisibility(
+                uiState.isBarcodeVerificationRunning() ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -263,18 +263,17 @@ public class ScanFragment extends Fragment implements AlertDialogFragment.Callba
     }
 
     /**
-     * Show a dialog that informs the user that the cloud-based verification failed
-     * (network errors, etc.).
+     * Show a dialog that informs the user that the verification failed.
      */
-    private void goToCloudVerificationFailure(GoToCloudVerificationFailure event) {
+    private void goToBarcodeVerificationFailure(GoToBarcodeVerificationFailure event) {
         if (event.getContentIfNotHandled() == null) {
             return;
         }
 
-        if (getChildFragmentManager().findFragmentByTag(CLOUD_VERIFICATION_FAILURE_TAG) == null) {
+        if (getChildFragmentManager().findFragmentByTag(BARCODE_VERIFICATION_FAILURE_TAG) == null) {
             AlertDialogFragment.newInstance(R.string.error,
-                            getString(R.string.scanning_dl_cloud_verification_error))
-                    .show(getChildFragmentManager(), CLOUD_VERIFICATION_FAILURE_TAG);
+                            getString(R.string.scanning_dl_barcode_verification_error))
+                    .show(getChildFragmentManager(), BARCODE_VERIFICATION_FAILURE_TAG);
         }
     }
 

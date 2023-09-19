@@ -14,10 +14,13 @@
 
 package com.scandit.datacapture.usdlverificationsample.data;
 
+import androidx.annotation.VisibleForTesting;
+
 import com.scandit.datacapture.core.capture.DataCaptureContext;
+import com.scandit.datacapture.core.internal.sdk.annotations.Mockable;
 import com.scandit.datacapture.id.data.CapturedId;
-import com.scandit.datacapture.id.verification.aamvacloud.AamvaCloudVerificationTask;
-import com.scandit.datacapture.id.verification.aamvacloud.AamvaCloudVerifier;
+import com.scandit.datacapture.id.verification.aamvabarcode.AamvaBarcodeVerificationTask;
+import com.scandit.datacapture.id.verification.aamvabarcode.AamvaBarcodeVerifier;
 import com.scandit.datacapture.id.verification.aamvavizbarcode.AamvaVizBarcodeComparisonResult;
 import com.scandit.datacapture.id.verification.aamvavizbarcode.AamvaVizBarcodeComparisonVerifier;
 
@@ -27,28 +30,23 @@ import com.scandit.datacapture.id.verification.aamvavizbarcode.AamvaVizBarcodeCo
 public class DriverLicenseVerificationRepository {
 
     /**
-     * The initialized DataCaptureContext.
-     */
-    private DataCaptureContext dataCaptureContext;
-
-    /**
      * The verifier that compares the human-readable data from the front side of the document with
      * the data encoded in the barcode, and signals any suspicious differences.
      */
     private AamvaVizBarcodeComparisonVerifier comparisonVerifier;
 
     /**
-     * The verifier that checks the validity of a Driver's License via a dedicated cloud service.
+     * The verifier that checks the validity of a Driver's License.
      */
-    private AamvaCloudVerifier cloudVerifier;
+    @VisibleForTesting
+    public AamvaBarcodeVerifier barcodeVerifier;
 
     /**
      * Create a new instance of this class.
      */
     public DriverLicenseVerificationRepository(DataCaptureContext dataCaptureContext) {
-        this.dataCaptureContext = dataCaptureContext;
         this.comparisonVerifier = AamvaVizBarcodeComparisonVerifier.create();
-        this.cloudVerifier = AamvaCloudVerifier.create(dataCaptureContext);
+        this.barcodeVerifier = AamvaBarcodeVerifier.create(dataCaptureContext);
     }
 
     /**
@@ -60,10 +58,10 @@ public class DriverLicenseVerificationRepository {
     }
 
     /**
-     * Checks the validity of a Driver's License via a dedicated cloud service. Always returns
+     * Checks the validity of a Driver's License. Always returns
      * an error for expired documents.
      */
-    public AamvaCloudVerificationTask verifyIdOnCloud(CapturedId capturedId) {
-        return cloudVerifier.verify(capturedId);
+    public AamvaBarcodeVerificationTask verifyIdOnBarcode(CapturedId capturedId) {
+        return barcodeVerifier.verify(capturedId);
     }
 }

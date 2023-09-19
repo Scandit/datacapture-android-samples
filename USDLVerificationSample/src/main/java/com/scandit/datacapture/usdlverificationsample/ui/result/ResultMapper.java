@@ -29,7 +29,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  * A helper class to convert the data captured from a driver's license to a result entity that
@@ -37,17 +36,7 @@ import java.util.TimeZone;
  */
 public class ResultMapper {
 
-    protected static final DateFormat dateFormat;
-
-    static {
-        /*
-         * DateResult::toDate() returns dates in UTC. We need to use the same timezone for
-         * formatting, otherwise we may end up with a wrong date displayed if our local timezone
-         * is a day behind/ahead from UTC.
-         */
-        dateFormat = SimpleDateFormat.getDateInstance();
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-    }
+    protected static final DateFormat dateFormat = SimpleDateFormat.getDateInstance();
 
     protected final CapturedId capturedId;
 
@@ -95,6 +84,8 @@ public class ResultMapper {
         addFieldIfNotNull(entries, "Date of Birth", extractField(capturedId.getDateOfBirth()));
         addFieldIfNotNull(entries, "Address", extractField(capturedId.getAddress()));
         addFieldIfNotNull(entries, "Document Number", extractField(capturedId.getDocumentNumber()));
+        addFieldIfNotNull(entries, "Document Additional Number",
+                extractField(capturedId.getDocumentAdditionalNumber()));
         addFieldIfNotNull(entries, "Date of Expiry", extractField(capturedId.getDateOfExpiry()));
         addFieldIfNotNull(entries, "Issuing Country", extractField(capturedId.getIssuingCountry()));
         addFieldIfNotNull(entries, "Date of Issue", extractField(capturedId.getDateOfIssue()));
@@ -134,7 +125,7 @@ public class ResultMapper {
         if (value == null) {
             return null;
         }
-        return dateFormat.format(value.toDate());
+        return dateFormat.format(value.getLocalDate());
     }
 
     /**

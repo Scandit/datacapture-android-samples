@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.ageverifieddeliverysample.util;
+package com.scandit.datacapture.ageverifieddeliverysample.ui.util;
 
 import android.text.Editable;
 import android.text.TextWatcher;

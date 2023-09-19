@@ -12,19 +12,17 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.ageverifieddeliverysample.ui.scan;
+package com.scandit.datacapture.usdlverificationsample.ui.scan;
+
+
+import com.scandit.datacapture.usdlverificationsample.ui.Event;
 
 /**
- * The side of the driver's license that the user may attempt to capture.
+ * An event for the fragment to display the UI that informs the user that the
+ * verification failed.
  */
-enum DriverLicenseSide {
-    /**
-     * OCR the front of the document.
-     */
-    FRONT_VIZ,
-
-    /**
-     * Scan the barcode at the back of the document.
-     */
-    BACK_BARCODE
+class GoToBarcodeVerificationFailure extends Event<Object> {
+    public GoToBarcodeVerificationFailure() {
+        super(new Object());
+    }
 }

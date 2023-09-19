@@ -10,33 +10,31 @@
     android:paddingBottom="32dp">
 
     <TextView
-        android:id="@+id/verification_failure_title"
+        android:id="@+id/age_verification_required_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:layout_marginTop="32dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:textColor="@color/black"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-        android:textStyle="bold"
-        android:text="@string/result_failed_title" />
+        android:textAppearance="@style/Scandit.TextAppearance.BottomSheet.Title"
+        android:text="@string/age_verification_failure_title" />
 
     <TextView
-        android:id="@+id/verification_failure_reason"
+        android:id="@+id/age_verification_failure_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:layout_marginTop="16dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textAppearance="@style/Scandit.TextAppearance.BottomSheet.BodyText"
+        android:text="@string/age_verification_failure_message"
         android:drawablePadding="8dp"
-        app:drawableStartCompat="@drawable/ic_baseline_error_outline_24"
-        tools:text="@string/result_failed_reason_recipient_under_age" />
+        app:drawableStartCompat="@drawable/ic_baseline_error_outline_24"  />
 
     <Button
-        android:id="@+id/refuse_delivery_button"
+        android:id="@+id/refuse_button"
         style="@style/Widget.AppCompat.Button.Colored"
         android:background="@color/black"
         android:layout_width="match_parent"
@@ -45,7 +43,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:text="@string/result_failed_action_refuse_delivery" />
+        android:text="@string/age_verification_failure_refuse_button" />
 
     <Button
         android:id="@+id/retry_button"
@@ -56,6 +54,6 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:text="@string/result_failed_action_retry" />
+        android:text="@string/id_capture_timeout_action_retry" />
 
 </LinearLayout>

@@ -12,6 +12,9 @@
     <string name="supported_sides_title">Supported Sides</string>
     <string name="supported_images_title">Result with Image Types</string>
     <string name="anonymization_mode_title">Anonymization Mode</string>
+    <string name="id_captured_feedback">ID Captured Feedback</string>
+    <string name="id_rejected_feedback">ID Rejected Feedback</string>
+    <string name="id_capture_timeout_feedback">ID Capture Timeout Feedback</string>
 
     <string name="camera_category_title">Camera</string>
     <string name="camera_position_title">Camera Position</string>

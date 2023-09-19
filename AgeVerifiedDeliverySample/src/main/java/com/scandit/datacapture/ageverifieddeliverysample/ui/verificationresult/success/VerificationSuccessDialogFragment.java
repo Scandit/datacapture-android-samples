@@ -39,17 +39,24 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.scandit.datacapture.ageverifieddeliverysample.R;
-import com.scandit.datacapture.ageverifieddeliverysample.ui.scan.ScanViewModel;
+import com.scandit.datacapture.ageverifieddeliverysample.ui.id.IdScanViewModel;
 
 /**
  * The fragment to display the UI that informs about successful verification of
  * the recipient's document data.
  */
 public class VerificationSuccessDialogFragment extends BottomSheetDialogFragment {
+
+    /**
+     * The tag used by the fragment that displays the result of the recipient's document data
+     * verification.
+     */
+    public static final String TAG = "VERIFICATION_SUCCESS_RESULT";
+
     /**
      * The ViewModel of the parent fragment.
      */
-    private ScanViewModel parentViewModel;
+    private IdScanViewModel parentViewModel;
 
     /**
      * Create a new instance of this fragment.
@@ -65,7 +72,7 @@ public class VerificationSuccessDialogFragment extends BottomSheetDialogFragment
         /*
          * Get a reference to this fragment's parent view model.
          */
-        parentViewModel = new ViewModelProvider(requireParentFragment()).get(ScanViewModel.class);
+        parentViewModel = new ViewModelProvider(requireParentFragment()).get(IdScanViewModel.class);
     }
 
     @Nullable
@@ -80,19 +87,11 @@ public class VerificationSuccessDialogFragment extends BottomSheetDialogFragment
          */
         View root = inflater.inflate(R.layout.verification_success_bottom_sheet, container, false);
 
-        root.findViewById(R.id.confirm_delivery_button).setOnClickListener(v -> confirmDelivery());
+        root.findViewById(R.id.confirm_button).setOnClickListener(v -> restart());
 
         setCancelable(false);
 
         return root;
-    }
-
-    /**
-     * Proceed to confirm the delivery. The exact flow is beyond the scope of this sample, so we
-     * just restart it.
-     */
-    private void confirmDelivery() {
-        restart();
     }
 
     /**

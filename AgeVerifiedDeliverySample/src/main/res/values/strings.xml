@@ -1,38 +1,34 @@
 <resources>
     <string name="app_name">Age Verified Delivery Sample</string>
 
-    <string name="toolbar_title">Delivery #0001</string>
+    <string name="id_capture_timeout_dialog_title">Can’t scan?</string>
+    <string name="id_capture_first_timeout_message">Try scanning the other side of the document or a different document.</string>
+    <string name="id_capture_second_timeout_message">Enter data manually or try a different document.</string>
+    <string name="id_capture_timeout_action_enter_manually">Manual entry</string>
+    <string name="id_capture_timeout_action_retry">Retry</string>
 
-    <string name="enter_manually_delayed_hint">Can\'t scan? Enter manually</string>
-    <string name="scan_driver_license">Driver\'s License</string>
-    <string name="scan_passport">Passport</string>
-    <string name="scan_military_id">Military ID</string>
-    <string name="scan_startup_hint">Choose document and start scanning</string>
+    <string name="unsupported_document_dialog_title">Document not supported</string>
+    <string name="unsupported_document_dialog_message">Try scanning the other side of the document or a different document.</string>
 
-    <string name="barcode_not_supported_title">Verification failed</string>
-    <string name="barcode_not_supported_explanation">Barcode cannot be parsed</string>
-    <string name="barcode_not_supported_action_capture_front">Scan front of document</string>
-    <string name="barcode_not_supported_action_retry">Retry</string>
-
-    <string name="id_localized_but_not_captured_title">Verification failed</string>
-    <string name="id_localized_but_not_captured_explanation">Document cannot be parsed</string>
-    <string name="id_localized_but_not_captured_action_enter_manually">Enter manually</string>
-    <string name="id_localized_but_not_captured_action_retry">Retry</string>
-
-    <string name="result_success_title">Verification successful</string>
-    <string name="result_success_confirm_delivery_hint">Confirm delivery to proceed</string>
-    <string name="result_success_action_confirm_delivery">Confirm delivery</string>
-    <string name="result_failed_title">Verification failed</string>
-    <string name="result_failed_reason_document_expired">Document expired</string>
-    <string name="result_failed_reason_recipient_under_age">The recipient is under age</string>
-    <string name="result_failed_action_refuse_delivery">Refuse delivery</string>
-    <string name="result_failed_action_retry">Retry</string>
+    <string name="age_verification_success_title">Verification Successful</string>
+    <string name="age_verification_success_message">Confirm delivery to proceed.</string>
+    <string name="age_verification_success_confirm_button">Confirm delivery</string>
+    <string name="age_verification_failure_title">Verification Failed</string>
+    <string name="age_verification_failure_message">The recipient is underage.</string>
+    <string name="age_verification_failure_expired_message">Document is expired.</string>
+    <string name="age_verification_failure_underage_message">The recipient is underage.</string>
+    <string name="age_verification_failure_refuse_button">Refuse delivery</string>
+    <string name="age_verification_failure_retry_button">Retry</string>
 
     <string name="manual_entry_date_of_birth_label">Date of birth:</string>
+    <string name="manual_entry_date_of_birth_hint">MM/DD/YYYY</string>>
     <string name="manual_entry_full_name_label">Full name:</string>
-    <string name="manual_entry_date_of_expiry_label">Date of expiry:</string>
-    <string name="manual_entry_date_of_birth_hint">MM/DD/YYYY</string>
+    <string name="manual_entry_date_of_expiry_label">Exp. date:</string>
     <string name="manual_entry_full_name_hint">First &amp; last name</string>
     <string name="manual_entry_date_of_expiry_hint">MM/DD/YYYY</string>
     <string name="manual_entry_action_confirm">Confirm</string>
+
+    <string name="required_age_verification_dialog_title">Age Verification Required</string>
+    <string name="required_age_verification_dialog_message">This delivery requires an age verification of the recipient.</string>
+    <string name="scan_id">Scan ID Document</string>
 </resources>

@@ -137,6 +137,7 @@ public class IdCaptureRepository implements IdCaptureListener {
         idCaptureSettings.setAnonymizationMode(settingsRepository.getAnonymizationMode());
         idCapture = IdCapture.forDataCaptureContext(dataCaptureContext, idCaptureSettings);
         idCapture.addListener(this);
+        idCapture.setFeedback(settingsRepository.buildFeedbackFromSettings());
     }
 
     public IdCaptureOverlay buildIdCaptureOverlay() {

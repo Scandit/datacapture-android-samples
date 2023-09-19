@@ -39,20 +39,20 @@ public class CaptureResult implements Parcelable {
 
     private boolean isExpired;
     private boolean isFrontBackComparisonSuccessful;
-    private boolean isCloudVerificationSuccessful;
+    private boolean isBarcodeVerificationSuccessful;
 
     public CaptureResult(
             Collection<Entry> entries,
             @Nullable byte[] faceImageBytes,
             boolean isExpired,
             boolean isFrontBackComparisonSuccessful,
-            boolean isCloudVerificationSuccessful
+            boolean isBarcodeVerificationSuccessful
     ) {
         this.entries = new ArrayList<>(entries);
         this.faceImageBytes = faceImageBytes;
         this.isExpired = isExpired;
         this.isFrontBackComparisonSuccessful = isFrontBackComparisonSuccessful;
-        this.isCloudVerificationSuccessful = isCloudVerificationSuccessful;
+        this.isBarcodeVerificationSuccessful = isBarcodeVerificationSuccessful;
     }
 
     public ArrayList<Entry> getEntries() {
@@ -72,8 +72,8 @@ public class CaptureResult implements Parcelable {
         return isFrontBackComparisonSuccessful;
     }
 
-    public boolean isCloudVerificationSuccessful() {
-        return isCloudVerificationSuccessful;
+    public boolean isBarcodeVerificationSuccessful() {
+        return isBarcodeVerificationSuccessful;
     }
 
     private CaptureResult(Parcel in) {
@@ -84,7 +84,7 @@ public class CaptureResult implements Parcelable {
         in.readByteArray(faceImageBytes);
         isExpired = in.readInt() == 1;
         isFrontBackComparisonSuccessful = in.readInt() == 1;
-        isCloudVerificationSuccessful = in.readInt() == 1;
+        isBarcodeVerificationSuccessful = in.readInt() == 1;
     }
 
     @Override
@@ -97,7 +97,7 @@ public class CaptureResult implements Parcelable {
         }
         dest.writeInt(isExpired ? 1 : 0);
         dest.writeInt(isFrontBackComparisonSuccessful ? 1 : 0);
-        dest.writeInt(isCloudVerificationSuccessful ? 1 : 0);
+        dest.writeInt(isBarcodeVerificationSuccessful ? 1 : 0);
     }
 
     @Override
