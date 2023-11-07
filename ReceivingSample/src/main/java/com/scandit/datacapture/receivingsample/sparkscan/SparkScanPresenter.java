@@ -31,6 +31,7 @@ import com.scandit.datacapture.barcode.spark.capture.SparkScanSettings;
 import com.scandit.datacapture.barcode.spark.capture.SparkScanViewUiListener;
 import com.scandit.datacapture.barcode.spark.feedback.SparkScanViewFeedback;
 import com.scandit.datacapture.barcode.spark.ui.SparkScanCoordinatorLayout;
+import com.scandit.datacapture.barcode.spark.ui.SparkScanScanningMode;
 import com.scandit.datacapture.barcode.spark.ui.SparkScanView;
 import com.scandit.datacapture.barcode.spark.ui.SparkScanViewSettings;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
@@ -216,6 +217,11 @@ public class SparkScanPresenter implements SparkScanListener, SparkScanViewUiLis
     @Override
     public void onBarcodeCountButtonTap(@NonNull SparkScanView view) {
         sparkScanPresenterView.switchToBarcodeCount();
+    }
+
+    @Override
+    public void onScanningModeChange(@NonNull SparkScanScanningMode newScanningMode) {
+        // Not relevant in this sample
     }
 
     private class SparkScanFeedbackCallback implements FeedbackCallback {

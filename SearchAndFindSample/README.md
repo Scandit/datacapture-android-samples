@@ -1,0 +1,36 @@
+# Search & Find using MatrixScan Find
+
+This sample demonstrates the pre-built MatrixScan Find component (Barcode Find API). It shows how to batch scan barcodes using the pre-built component for receiving and counting.
+
+In this sample, single scanning (Barcode Capture API) is implemented to define search criteria by scanning items.  MatrixScan Find can then be launched to find the pre-defined item.
+
+The MatrixScan Find UI incorporates our best practices for usability and has been rigorously tested with target users in real-world scenarios.
+
+## Installation
+
+- Clone this repo locally.
+- Build and run this sample on your mobile device.
+
+## What is MatrixScan Find?
+
+MatrixScan Find is a pre-built component that uses AR overlays to highlight items that match predefined criteria.
+
+![MSFind.png](https://github.com/Scandit/.github/blob/main/images/MSFind%20-%20iOS.png)
+
+## Documentation
+
+MatrixScan Find (Barcode Find API) is a pre-built component of the Scandit Data Capture SDK.  Our SDK is supported on most popular frameworks.
+
+[iOS](https://docs.scandit.com/data-capture-sdk/ios/index.html), [Android,](https://docs.scandit.com/data-capture-sdk/android/index.html) [Web](https://docs.scandit.com/data-capture-sdk/web/index.html), [Cordova](https://docs.scandit.com/data-capture-sdk/cordova/index.html), Xamarin ([iOS](https://docs.scandit.com/data-capture-sdk/xamarin.ios/index.html), [Android](https://docs.scandit.com/data-capture-sdk/xamarin.android/index.html), [Forms](https://docs.scandit.com/data-capture-sdk/xamarin.forms/index.html)), .NET ([iOS](https://docs.scandit.com/data-capture-sdk/dotnet.ios/index.html), [Android](https://docs.scandit.com/data-capture-sdk/dotnet.android/index.html)), [React Native](https://docs.scandit.com/data-capture-sdk/react-native/index.html), [Flutter,](https://docs.scandit.com/data-capture-sdk/flutter/index.html) [Capacitor,](https://docs.scandit.com/data-capture-sdk/capacitor/index.html) [Titanium](https://docs.scandit.com/data-capture-sdk/titanium/index.html)
+
+## Trial Signup
+
+To add MatrixScan Count to your app, sign up for your Scandit Developer Account  and get instant access to your license key: [https://ssl.scandit.com/dashboard/sign-up?p=test](https://ssl.scandit.com/dashboard/sign-up?p=test)
+
+## Support
+
+Our support engineers can be reached at [support@scandit.com](mailto:support@scandit.com).
+
+## License
+
+[Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)

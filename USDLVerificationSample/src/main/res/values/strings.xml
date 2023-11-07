@@ -7,7 +7,7 @@
     <string name="scanning_dl_front_back_comparison_failure">Information on front and back does not match.</string>
     <string name="scanning_dl_barcode_verification_success">Verification checks passed.</string>
     <string name="scanning_dl_barcode_verification_failure">Verification checks failed.</string>
-    <string name="scanning_dl_barcode_verification_error">An error was encountered when trying to connect to the verification service. Please make sure that the device has internet access and your Scandit license key permits verification.</string>
+    <string name="scanning_dl_barcode_verification_error">An error was encountered. Please make sure that your Scandit license key permits barcode verification.</string>
     <string name="scanning_dl_barcode_verification_in_progress">Running verification checks</string>
     <string name="clear">Clear</string>
     <string name="error">Error</string>

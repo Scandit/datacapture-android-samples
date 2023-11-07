@@ -29,6 +29,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
@@ -140,7 +142,8 @@ public class IdScanFragment extends Fragment {
         /*
          * Initialize the layout of this fragment and find all the view it needs to interact with.
          */
-        View root = inflater.inflate(R.layout.scan_fragment, container, false);
+        View root = inflater.inflate(R.layout.id_scan_fragment, container, false);
+        initToolbar(root);
         attachDataCaptureView(root);
 
         return root;
@@ -179,7 +182,11 @@ public class IdScanFragment extends Fragment {
         viewModel.goToSubsequentTimeoutDialog().observe(lifecycleOwner, this::goToSubsequentTimeoutDialog);
         viewModel.goToVerificationFailure().observe(lifecycleOwner, this::goToVerificationFailure);
         viewModel.goToVerificationSuccess().observe(lifecycleOwner, this::goToVerificationSuccess);
-        viewModel.goToBarcodeScanningScreen().observe(lifecycleOwner, this::goToBarcodeScanningScreen);
+        viewModel.goToBarcodeScanningScreen().observe(lifecycleOwner, event -> {
+            if (!event.isHandled()) {
+                goToBarcodeScanningScreen();
+            }
+        });
         viewModel.goToUnsupportedDocument().observe(lifecycleOwner, this::goToUnsupportedDocument);
     }
 
@@ -227,6 +234,18 @@ public class IdScanFragment extends Fragment {
     }
 
     /**
+     * Set up the toolbar and the back navigation.
+     */
+    private void initToolbar(View root) {
+        Toolbar toolbar = root.findViewById(R.id.toolbar);
+        AppCompatActivity activity = (AppCompatActivity) requireActivity();
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setTitle("");
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(v -> goToBarcodeScanningScreen());
+    }
+
+    /**
      * Update the IdCapture UI to aid the user in the capture process. The UI reflects the currently
      * selected document type and/or side.
      */
@@ -250,8 +269,11 @@ public class IdScanFragment extends Fragment {
      * Display the UI to manually enter the recipient's document data.
      */
     private void goToManualEntry(GoToManualEntry event) {
-        if (!event.isHandled() && getChildFragmentManager().findFragmentByTag(ManualEntryDialogFragment.TAG) == null) {
-            ManualEntryDialogFragment.create().show(getChildFragmentManager(), ManualEntryDialogFragment.TAG);
+        if (!event.isHandled() &&
+                getChildFragmentManager().findFragmentByTag(ManualEntryDialogFragment.TAG) ==
+                        null) {
+            ManualEntryDialogFragment.create()
+                    .show(getChildFragmentManager(), ManualEntryDialogFragment.TAG);
         }
     }
 
@@ -307,9 +329,9 @@ public class IdScanFragment extends Fragment {
     /**
      * Navigate to the barcode scanning fragment to capture the barcode of the package.
      */
-    private void goToBarcodeScanningScreen(GoToBarcodeScanning event) {
-        if (!event.isHandled() && requireActivity().getSupportFragmentManager().findFragmentByTag(
-                BarcodeScanFragment.TAG) == null) {
+    private void goToBarcodeScanningScreen() {
+        if (requireActivity().getSupportFragmentManager()
+                .findFragmentByTag(BarcodeScanFragment.TAG) == null) {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(
