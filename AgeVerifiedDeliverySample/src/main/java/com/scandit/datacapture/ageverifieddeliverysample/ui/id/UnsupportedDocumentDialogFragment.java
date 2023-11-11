@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.scandit.datacapture.ageverifieddeliverysample.R;
+import com.scandit.datacapture.ageverifieddeliverysample.ui.barcode.BarcodeScanViewModel;
 
 /**
  * A dialog fragment that informs the user that the document is not supported.

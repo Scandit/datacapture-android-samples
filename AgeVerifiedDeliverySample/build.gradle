@@ -17,8 +17,7 @@ android {
 
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments['useTestStorageService'] = 'true'
-        testInstrumentationRunnerArguments['clearPackageData'] = 'true'
+        testInstrumentationRunnerArguments useTestStorageService: 'true'
     }
 
     compileOptions {
@@ -40,7 +39,6 @@ android {
 
     testOptions {
         animationsDisabled = true
-        execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
 }
 

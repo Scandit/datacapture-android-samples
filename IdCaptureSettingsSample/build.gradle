@@ -1,6 +1,5 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
 }
 
 android {
@@ -16,9 +15,6 @@ android {
         versionName = "1.0"
 
         vectorDrawables.useSupportLibrary = true
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments['useTestStorageService'] = 'true'
-        testInstrumentationRunnerArguments['clearPackageData'] = 'true'
     }
 
     buildTypes {
@@ -37,11 +33,6 @@ android {
     packagingOptions {
         pickFirst("**/*.so")
     }
-
-    testOptions {
-        animationsDisabled = true
-        execution 'ANDROIDX_TEST_ORCHESTRATOR'
-    }
 }
 
 dependencies {
@@ -58,5 +49,4 @@ dependencies {
     implementation("androidx.preference:preference:${versions.androidx_preference}")
 
     implementation("com.squareup.okhttp3:okhttp:${versions.okhttp}")
-
 }

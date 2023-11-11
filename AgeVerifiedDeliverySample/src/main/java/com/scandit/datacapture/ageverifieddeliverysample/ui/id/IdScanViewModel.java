@@ -29,7 +29,6 @@ import com.scandit.datacapture.ageverifieddeliverysample.di.Injector;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.id.capture.IdCapture;
-import com.scandit.datacapture.id.capture.IdCaptureFeedback;
 import com.scandit.datacapture.id.capture.IdCaptureListener;
 import com.scandit.datacapture.id.capture.IdCaptureSession;
 import com.scandit.datacapture.id.data.CapturedId;
@@ -75,11 +74,6 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
      * IdCaptureOverlay displays the additional UI to guide the user through the ID capture process.
      */
     private final IdCaptureOverlay idCaptureOverlay = Injector.getInstance().getIdCaptureOverlay();
-
-    /**
-     * IdCaptureFeedback emits a sound and/or a vibration when a document is captured or rejected.
-     */
-    private final IdCaptureFeedback feedback = Injector.getInstance().getIdCaptureFeedback();
 
     /**
      * The observer of captured document data.
@@ -314,16 +308,12 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
          * The recipient's date of birth is necessary to verify if they are not underage.
          */
         if (isDateOfBirthCaptured(capturedId)) {
-            // Emit the feedback for a captured document.
-            feedback.getIdCaptured().emit();
             /*
              * The callback is executed in the background thread. We post the value to the LiveData
              * in order to return to the UI thread.
              */
             capturedIds.postValue(session.getNewlyCapturedId());
         } else {
-            // Emit the feedback for a rejected document.
-            feedback.getIdRejected().emit();
             // Reject documents that do not include a date of birth.
             goToUnsupportedDocument.postValue(new GoToUnsupportedDocument());
         }
@@ -429,9 +419,6 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
      * * to enter the data manually otherwise
      */
     private void handleIdCaptureTimeout() {
-        // Emit the feedback for an ID capture timeout.
-        feedback.getIdCaptureTimeout().emit();
-
         pauseCapture();
         int timeoutCount = uiState.getTimeoutCount() + 1;
         uiState = uiState.toBuilder()
@@ -479,9 +466,7 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
          */
 
         RejectedId rejectedId = session.getNewlyRejectedId();
-
-        // Emit the feedback for a rejected document.
-        feedback.getIdRejected().emit();
+        pauseCapture();
 
         /*
          * The callback is executed in the background thread. We post the value to the LiveData

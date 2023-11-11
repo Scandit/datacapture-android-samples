@@ -10,52 +10,59 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:background="#F8FAFC"
+        android:background="@android:color/white"
         android:layout_height="match_parent">
-
-        <View
-            android:layout_width="match_parent"
-            android:background="@android:color/white"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="@id/clear_list"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/item_count"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:textSize="13sp"
+            android:textSize="12sp"
             android:textColor="#3D4852"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/result_recycler"
-            app:layout_constraintEnd_toStartOf="@id/clear_list"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="7 items scanned" />
-
-        <Button
-            android:id="@+id/clear_list"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/clear_button"
-            android:textAllCaps="true"
-            android:textSize="13sp"
-            android:textColor="@color/clear_list_text_color"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            tools:text="7 items" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/result_recycler"
             android:layout_width="match_parent"
+            android:background="@android:color/white"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@id/clear_list"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/item_count" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/light_grey"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/result_recycler" />
+
+        <Button
+            android:id="@+id/clear_list"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="28dp"
+            android:background="@drawable/bg_rectangle"
+            android:text="@string/clear_button"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

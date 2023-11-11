@@ -14,10 +14,7 @@
 
 package com.scandit.datacapture.ageverifieddeliverysample.data;
 
-import com.scandit.datacapture.core.common.feedback.Feedback;
-import com.scandit.datacapture.core.common.feedback.Vibration;
 import com.scandit.datacapture.id.capture.IdCapture;
-import com.scandit.datacapture.id.capture.IdCaptureFeedback;
 import com.scandit.datacapture.id.capture.IdCaptureSettings;
 import com.scandit.datacapture.id.data.IdDocumentType;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
@@ -39,18 +36,9 @@ public class IdCaptureProvider {
      */
     private final IdCaptureOverlay overlay;
 
-    /**
-     * IdCaptureFeedback emits a sound and/or a vibration when a document is captured or rejected.
-     */
-    private final IdCaptureFeedback feedback;
-
     public IdCaptureProvider() {
         idCapture = IdCapture.forDataCaptureContext(null, createIdCaptureSettings());
-        // Set an empty Feedback because we want to override the default feedback implemented by
-        // the SDK to reject documents without a date of birth.
-        idCapture.setFeedback(new IdCaptureFeedback());
         overlay = createIdCaptureOverlay();
-        feedback = createIdCaptureFeedback();
     }
 
     /**
@@ -58,13 +46,6 @@ public class IdCaptureProvider {
      */
     public IdCapture getIdCapture() {
         return idCapture;
-    }
-
-    /**
-     * Get the ID capture Feedback.
-     */
-    public IdCaptureFeedback getIdCaptureFeedback() {
-        return feedback;
     }
 
     /**
@@ -78,7 +59,7 @@ public class IdCaptureProvider {
      * Create the IdCapture's settings.
      */
     private IdCaptureSettings createIdCaptureSettings() {
-        IdCaptureSettings settings = new IdCaptureSettings();
+        IdCaptureSettings settings =  new IdCaptureSettings();
         settings.setSupportedDocuments(ID_SUPPORTED_DOCUMENT_TYPES);
         return settings;
     }
@@ -88,18 +69,6 @@ public class IdCaptureProvider {
      */
     private IdCaptureOverlay createIdCaptureOverlay() {
         return IdCaptureOverlay.newInstance(idCapture, null);
-    }
-
-    /**
-     * Create the IdCapture's feedback.
-     */
-    private IdCaptureFeedback createIdCaptureFeedback() {
-        IdCaptureFeedback feedback = IdCaptureFeedback.defaultFeedback();
-        feedback.setIdRejected(new Feedback(
-                Vibration.defaultVibration(),
-                IdCaptureFeedback.defaultFailureSound()
-        ));
-        return feedback;
     }
 
     private static final List<IdDocumentType> ID_SUPPORTED_DOCUMENT_TYPES =

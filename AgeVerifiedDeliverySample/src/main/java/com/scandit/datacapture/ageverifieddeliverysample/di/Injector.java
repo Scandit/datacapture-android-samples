@@ -22,7 +22,6 @@ import com.scandit.datacapture.barcode.capture.BarcodeCapture;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.id.capture.IdCapture;
-import com.scandit.datacapture.id.capture.IdCaptureFeedback;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 
 /**
@@ -102,13 +101,6 @@ public class Injector {
      */
     public IdCaptureOverlay getIdCaptureOverlay() {
         return idCaptureProvider.getOverlay();
-    }
-
-    /**
-     * Get the ID capture Feedback.
-     */
-    public IdCaptureFeedback getIdCaptureFeedback() {
-        return idCaptureProvider.getIdCaptureFeedback();
     }
 
     /**

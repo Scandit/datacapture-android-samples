@@ -17,8 +17,7 @@ android {
 
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments['useTestStorageService'] = 'true'
-        testInstrumentationRunnerArguments['clearPackageData'] = 'true'
+        testInstrumentationRunnerArguments useTestStorageService: 'true'
     }
 
     buildTypes {
@@ -38,7 +37,6 @@ android {
 
     testOptions {
         animationsDisabled = true
-        execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
 }
 
@@ -46,7 +44,6 @@ dependencies {
     api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
     api "com.scandit.datacapture:id:${versions.scandit_sdk_version}"
     api "com.scandit.datacapture:id-backend:${versions.scandit_sdk_version}"
-    api "com.scandit.datacapture:id-aamva-barcode-verification:${versions.scandit_sdk_version}"
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}")
 

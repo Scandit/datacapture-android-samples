@@ -71,9 +71,6 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
 
     private TextView resultCountTextView;
 
-    private RecyclerView resultRecycler;
-    private Button clearButton;
-
     private final ExecutorService backgroundExecutor = Executors.newSingleThreadExecutor();
 
     @Override
@@ -84,22 +81,25 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
         // Initialize spark scan and start the barcode recognition.
         initialize();
 
-        // Set up the button that clears the result list
-        clearButton = findViewById(R.id.clear_list);
-        clearButton.setOnClickListener(view -> clearList());
-
         //Setup RecyclerView for results
-        resultRecycler = findViewById(R.id.result_recycler);
-        resultRecycler.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView recyclerView = findViewById(R.id.result_recycler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         DividerItemDecoration divider =
             new DividerItemDecoration(this, LinearLayoutManager.VERTICAL);
         divider.setDrawable(getDrawable(R.drawable.recycler_divider));
-        resultRecycler.addItemDecoration(divider);
+        recyclerView.addItemDecoration(divider);
 
-        resultRecycler.setAdapter(resultListAdapter);
+        recyclerView.setAdapter(resultListAdapter);
 
         resultCountTextView = findViewById(R.id.item_count);
         setItemCount(0);
+
+        // Set up the button that clears the result list
+        Button clearButton = findViewById(R.id.clear_list);
+        clearButton.setOnClickListener(view -> {
+            clearList();
+        });
+
     }
 
     private void initialize() {
@@ -204,7 +204,7 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
             backgroundExecutor.execute(() -> {
                 Bitmap image = cropBarcode(barcode, data.getImageBuffer().toBitmap());
                 ScanResult result =
-                    new ScanResult(barcode.getData(), barcode.getSymbology().name(), image);
+                        new ScanResult(barcode.getData(), barcode.getSymbology().name(), image);
                 postResult(result);
                 data.release();
             });
@@ -214,8 +214,7 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
     private void postResult(ScanResult result) {
         runOnUiThread(() -> {
             resultListAdapter.addResult(result);
-            setItemCount(resultListAdapter.getItemsScannedCount());
-            resultRecycler.scrollToPosition(0);
+            setItemCount(resultListAdapter.getItemCount());
         });
     }
 
@@ -304,7 +303,6 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
     private void setItemCount(int count) {
         resultCountTextView.setText(
             getResources().getQuantityString(R.plurals.results_amount, count, count));
-        clearButton.setEnabled(count > 0);
     }
 
     private void invalidBarcodeScanned() {

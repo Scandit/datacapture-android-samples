@@ -17,34 +17,16 @@ package com.scandit.datacapture.listbuildingsample.data;
 import android.graphics.Bitmap;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class ScanResult implements Serializable {
 
-    private static final int MAX_IMAGES = 3;
     public final String barcodeData;
     public final String barcodeSymbology;
-    public List<Bitmap> images;
-    public int quantity;
+    public final Bitmap image;
 
     public ScanResult(String barcodeData, String barcodeSymbology, Bitmap image) {
         this.barcodeData = barcodeData;
         this.barcodeSymbology = barcodeSymbology;
-        this.quantity = 1;
-        this.images = new ArrayList<>();
-        this.images.add(image);
-    }
-
-    public void increaseQuantity() {
-        quantity++;
-    }
-
-    public void addImages(List<Bitmap> newImages) {
-        images.addAll(newImages);
-
-        while (images.size() > MAX_IMAGES) {
-            images.remove(0);
-        }
+        this.image = image;
     }
 }
