@@ -55,7 +55,6 @@ public final class Defaults {
     private static final SupportedSides[] SUPPORTED_SIDES = SupportedSides.values();
     private static final IdImageType[] SUPPORTED_IMAGES = IdImageType.values();
     private static final IdAnonymizationMode[] ANONYMIZATION_MODES = IdAnonymizationMode.values();
-    private static final FeedbackType[] FEEDBACK_TYPES = FeedbackType.values();
 
     public static String[] getSupportedDocumentsEntries() {
         return EnumUtils.getEntryNamesTitleCase(SUPPORTED_DOCUMENTS);
@@ -95,14 +94,6 @@ public final class Defaults {
 
     public static String[] getAnonymizationModeValues() {
         return EnumUtils.getEntryNames(ANONYMIZATION_MODES);
-    }
-
-    public static String[] getSupportedFeedbackEntries() {
-        return EnumUtils.getEntryNamesTitleCase(FEEDBACK_TYPES);
-    }
-
-    public static String[] getSupportedFeedbackValues() {
-        return EnumUtils.getEntryNames(FEEDBACK_TYPES);
     }
 
     // Camera.

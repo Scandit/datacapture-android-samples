@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.ageverifieddeliverysample.ui.id;
+package com.scandit.datacapture.ageverifieddeliverysample.ui.scan;
 
 import androidx.annotation.Nullable;
 

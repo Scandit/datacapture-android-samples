@@ -14,12 +14,9 @@
 
 package com.scandit.datacapture.ageverifieddeliverysample.di;
 
-import com.scandit.datacapture.ageverifieddeliverysample.data.BarcodeCaptureProvider;
 import com.scandit.datacapture.ageverifieddeliverysample.data.CameraRepository;
 import com.scandit.datacapture.ageverifieddeliverysample.data.DataCaptureContextProvider;
 import com.scandit.datacapture.ageverifieddeliverysample.data.IdCaptureProvider;
-import com.scandit.datacapture.barcode.capture.BarcodeCapture;
-import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.id.capture.IdCapture;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
@@ -48,28 +45,16 @@ public class Injector {
             new DataCaptureContextProvider();
 
     /**
-     * The repository that allows interaction with the device's camera during ID capture.
+     * The repository that allows interaction with the device's camera.
      */
-    private final CameraRepository idCameraRepository =
-            new CameraRepository(dataCaptureContextProvider.getDataCaptureContext(),
-                    IdCapture.createRecommendedCameraSettings());
+    private final CameraRepository cameraRepository =
+            new CameraRepository(dataCaptureContextProvider.getDataCaptureContext());
 
     /**
      * The repository that allows interaction with the IdCapture mode.
      */
-    private final IdCaptureProvider idCaptureProvider = new IdCaptureProvider();
-
-    /**
-     * The repository that allows interaction with the device's camera during barcode capture.
-     */
-    private final CameraRepository barcodeCameraRepository =
-            new CameraRepository(dataCaptureContextProvider.getDataCaptureContext(),
-                    BarcodeCapture.createRecommendedCameraSettings());
-
-    /**
-     * The repository that allows interaction with the BarcodeCapture mode.
-     */
-    private final BarcodeCaptureProvider barcodeCaptureProvider = new BarcodeCaptureProvider();
+    private final IdCaptureProvider idCaptureProvider =
+            new IdCaptureProvider(dataCaptureContextProvider.getDataCaptureContext());
 
     private Injector() {
         // Use `getInstance()`
@@ -89,39 +74,17 @@ public class Injector {
         return idCaptureProvider.getIdCapture();
     }
 
-    /**
-     * Get the current BarcodeCapture.
+    /*
+     * IdCaptureOverlay displays the additional UI to guide the user through the capture process.
      */
-    public BarcodeCapture getBarcodeCapture() {
-        return barcodeCaptureProvider.getBarcodeCapture();
-    }
-
-    /**
-     * IdCaptureOverlay displays the additional UI to guide the user through the ID capture process.
-     */
-    public IdCaptureOverlay getIdCaptureOverlay() {
+    public IdCaptureOverlay getOverlay() {
         return idCaptureProvider.getOverlay();
     }
 
     /**
-     * BarcodeCaptureOverlay displays the additional UI to guide the user through the barcode
-     * capture process.
+     * Get the repository that allows interaction with the device's camera.
      */
-    public BarcodeCaptureOverlay getBarcodeCaptureOverlay() {
-        return barcodeCaptureProvider.getOverlay();
-    }
-
-    /**
-     * Get the repository that allows interaction with the device's camera during ID capture.
-     */
-    public CameraRepository getIdCameraRepository() {
-        return idCameraRepository;
-    }
-
-    /**
-     * Get the repository that allows interaction with the device's camera during barcode capture.
-     */
-    public CameraRepository getBarcodeCameraRepository() {
-        return barcodeCameraRepository;
+    public CameraRepository getCameraRepository() {
+        return cameraRepository;
     }
 }

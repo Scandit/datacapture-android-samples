@@ -92,7 +92,7 @@ public abstract class IdCaptureResultFactory {
          */
         String dateOfBirth = "";
         if (capturedId.getDateOfBirth() != null) {
-            dateOfBirth = shortDateFormat.format(capturedId.getDateOfBirth().getLocalDate());
+            dateOfBirth = shortDateFormat.format(capturedId.getDateOfBirth().toDate());
         }
 
         /*

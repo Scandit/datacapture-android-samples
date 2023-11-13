@@ -28,11 +28,11 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="16dp"
-        android:hint="@string/manual_entry_date_of_birth_hint"
-        app:layout_constraintBottom_toBottomOf="@id/date_of_birth_label"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/date_of_birth_label"
-        app:layout_constraintTop_toTopOf="@id/date_of_birth_label" />
+        app:layout_constraintStart_toEndOf="@+id/date_of_birth_label"
+        android:hint="@string/manual_entry_date_of_birth_hint"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:layout_width="match_parent"
@@ -82,7 +82,6 @@
         android:background="@color/divider_background"
         app:layout_constraintTop_toBottomOf="@+id/full_name_label" />
 
-
     <TextView
         android:id="@+id/date_of_expiry_label"
         android:layout_width="wrap_content"
@@ -105,16 +104,18 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:layout_marginTop="32dp"
         android:hint="@string/manual_entry_date_of_expiry_hint"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/date_of_expiry_label"
-        app:layout_constraintTop_toTopOf="@id/date_of_expiry_label" />
+        app:layout_constraintStart_toEndOf="@+id/date_of_expiry_label"
+        app:layout_constraintTop_toBottomOf="@+id/full_name_label" />
 
     <Button
         android:id="@+id/confirm_button"
         style="@style/Scandit.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="48dp"
         android:gravity="center"
         android:layout_marginTop="32dp"
         android:layout_marginStart="32dp"
@@ -123,5 +124,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/date_of_expiry_label" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

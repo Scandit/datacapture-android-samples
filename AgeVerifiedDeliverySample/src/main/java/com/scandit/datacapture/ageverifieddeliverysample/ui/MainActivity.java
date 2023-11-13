@@ -14,7 +14,11 @@
 
 package com.scandit.datacapture.ageverifieddeliverysample.ui;
 
+import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.scandit.datacapture.ageverifieddeliverysample.R;
 
@@ -24,5 +28,16 @@ import com.scandit.datacapture.ageverifieddeliverysample.R;
 public class MainActivity extends AppCompatActivity {
     public MainActivity() {
         super(R.layout.main_activity);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.toolbar_title);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 }

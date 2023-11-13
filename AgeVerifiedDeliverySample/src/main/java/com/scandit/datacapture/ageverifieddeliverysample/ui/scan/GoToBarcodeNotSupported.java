@@ -12,17 +12,17 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.ageverifieddeliverysample.ui.id;
+package com.scandit.datacapture.ageverifieddeliverysample.ui.scan;
 
 import com.scandit.datacapture.ageverifieddeliverysample.ui.Event;
-import com.scandit.datacapture.ageverifieddeliverysample.ui.verificationresult.failure.VerificationFailureReason;
 
 /**
- * An event for the fragment to display the UI that informs about failed verification of
- * the recipient's document data.
+ * An event for the fragment to display the UI that informs the user that a given PDF417 barcode
+ * can be captured, but its data cannot be parsed.
  */
-class GoToVerificationFailure extends Event<VerificationFailureReason> {
-    public GoToVerificationFailure(VerificationFailureReason content) {
-        super(content);
+class GoToBarcodeNotSupported extends Event<Object> {
+    public GoToBarcodeNotSupported() {
+        super(new Object());
     }
 }
+

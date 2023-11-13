@@ -18,8 +18,6 @@ import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.source.Camera;
 import com.scandit.datacapture.core.source.CameraSettings;
 import com.scandit.datacapture.core.source.FrameSourceState;
-import com.scandit.datacapture.core.source.TorchListener;
-import com.scandit.datacapture.core.source.TorchState;
 import com.scandit.datacapture.id.capture.IdCapture;
 
 /**
@@ -41,11 +39,6 @@ public class CameraRepository {
      * The DataCaptureContext that the current IdCapture is attached to.
      */
     private final DataCaptureContext dataCaptureContext;
-
-    /**
-     * The listener that is invoked when the torch state changes.
-     */
-    private TorchListener torchListener;
 
     public CameraRepository(
             DataCaptureContext dataCaptureContext,
@@ -84,29 +77,11 @@ public class CameraRepository {
         cameraSettings.setPreferredResolution(settingsRepository.getPreferredResolution());
 
         /*
-         * Clear the torch listener if necessary.
-         */
-        if (camera != null && torchListener != null) {
-            camera.removeTorchListener(torchListener);
-            torchListener = null;
-        }
-
-        /*
          * Set the device's default camera as DataCaptureContext's FrameSource. DataCaptureContext
          * passes the frames from it's FrameSource to the added modes to perform capture or
          * tracking.
          */
         camera = Camera.getCamera(settingsRepository.getCameraPosition(), cameraSettings);
-
-        /*
-         * Synchronize the torch state and the activation status of the torch in the settings.
-         */
-        torchListener = state -> {
-            if (state == TorchState.AUTO) return;
-            settingsRepository.setTorchState(state == TorchState.ON);
-        };
-
-        camera.addTorchListener(torchListener);
 
         /*
          * Apply the desired torch state from the settings.

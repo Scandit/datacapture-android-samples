@@ -1,6 +1,5 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
 }
 
 android {
@@ -16,8 +15,6 @@ android {
         versionName = "1.0"
 
         vectorDrawables.useSupportLibrary = true
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments useTestStorageService: 'true'
     }
 
     compileOptions {
@@ -36,17 +33,12 @@ android {
     packagingOptions {
         pickFirst("**/*.so")
     }
-
-    testOptions {
-        animationsDisabled = true
-    }
 }
 
 dependencies {
     api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
     api "com.scandit.datacapture:id:${versions.scandit_sdk_version}"
     api "com.scandit.datacapture:id-backend:${versions.scandit_sdk_version}"
-    api "com.scandit.datacapture:barcode:${versions.scandit_sdk_version}"
 
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:${versions.desugar}"
 
@@ -57,5 +49,4 @@ dependencies {
     implementation("com.google.android.material:material:${versions.material}")
 
     implementation("com.squareup.okhttp3:okhttp:${versions.okhttp}")
-
 }

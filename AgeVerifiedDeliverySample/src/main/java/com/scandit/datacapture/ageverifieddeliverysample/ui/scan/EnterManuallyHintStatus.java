@@ -12,16 +12,25 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.ageverifieddeliverysample.ui.id;
-
-import com.scandit.datacapture.ageverifieddeliverysample.ui.Event;
+package com.scandit.datacapture.ageverifieddeliverysample.ui.scan;
 
 /**
- * An event for the fragment to display the UI that allows to manually enter the data from
- * the recipient's document.
+ * The status of the hint that informs the user that they may attempt to manually enter
+ * recipient's document data.
  */
-class GoToManualEntry extends Event<Object> {
-    public GoToManualEntry() {
-        super(new Object());
-    }
+enum EnterManuallyHintStatus {
+    /**
+     * This hint is not yet scheduled to be displayed.
+     */
+    NOT_SCHEDULED,
+
+    /**
+     * This hint will appear after a short delay.
+     */
+    SCHEDULED,
+
+    /**
+     * This hint is displayed.
+     */
+    DISPLAYED
 }

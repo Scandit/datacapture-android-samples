@@ -20,7 +20,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.scandit.datacapture.ageverifieddeliverysample.ui.id.DocumentData;
+import com.scandit.datacapture.ageverifieddeliverysample.ui.scan.DocumentData;
 
 import java.time.LocalDate;
 

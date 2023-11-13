@@ -12,15 +12,16 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.ageverifieddeliverysample.ui.barcode;
+package com.scandit.datacapture.ageverifieddeliverysample.ui.scan;
 
 import com.scandit.datacapture.ageverifieddeliverysample.ui.Event;
 
 /**
- * An event to navigate to the ID scanning fragment to capture the ID of the recipient.
+ * An event for the fragment to display the UI that allows to manually enter the data from
+ * the recipient's document.
  */
-public class GoToIdScanning extends Event<Object> {
-    public GoToIdScanning() {
+class GoToManualEntry extends Event<Object> {
+    public GoToManualEntry() {
         super(new Object());
     }
 }

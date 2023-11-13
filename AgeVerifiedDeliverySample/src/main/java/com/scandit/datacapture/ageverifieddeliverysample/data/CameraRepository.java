@@ -16,7 +16,6 @@ package com.scandit.datacapture.ageverifieddeliverysample.data;
 
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.source.Camera;
-import com.scandit.datacapture.core.source.CameraSettings;
 import com.scandit.datacapture.core.source.FrameSourceState;
 import com.scandit.datacapture.id.capture.IdCapture;
 
@@ -29,7 +28,7 @@ public class CameraRepository {
      */
     private final Camera camera;
 
-    public CameraRepository(DataCaptureContext dataCaptureContext, CameraSettings cameraSettings) {
+    public CameraRepository(DataCaptureContext dataCaptureContext) {
         /*
          * Set the device's default camera as DataCaptureContext's FrameSource. DataCaptureContext
          * passes the frames from it's FrameSource to the added modes to perform capture or
@@ -38,7 +37,7 @@ public class CameraRepository {
          * Since we are going to perform IdCapture in this sample, we initiate the camera with
          * the recommended settings for this mode.
          */
-        camera = Camera.getDefaultCamera(cameraSettings);
+        camera = Camera.getDefaultCamera(IdCapture.createRecommendedCameraSettings());
         dataCaptureContext.setFrameSource(camera);
     }
 

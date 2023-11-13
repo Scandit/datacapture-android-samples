@@ -12,14 +12,16 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.ageverifieddeliverysample.ui.id;
+package com.scandit.datacapture.ageverifieddeliverysample.ui.scan;
 
 import com.scandit.datacapture.ageverifieddeliverysample.ui.Event;
 
 /**
- * An event for the fragment to display the UI that informs the user that the document can be
- * captured, but it is not supported.
+ * An event for the fragment to display the UI that informs about failed verification of
+ * the recipient's document data.
  */
-class GoToUnsupportedDocument extends Event<Object> {
-    public GoToUnsupportedDocument() {super(new Object());}
+class GoToVerificationFailure extends Event<VerificationFailureReason> {
+    public GoToVerificationFailure(VerificationFailureReason content) {
+        super(content);
+    }
 }

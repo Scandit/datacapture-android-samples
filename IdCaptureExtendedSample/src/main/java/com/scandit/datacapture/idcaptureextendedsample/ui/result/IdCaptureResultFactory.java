@@ -17,11 +17,14 @@ package com.scandit.datacapture.idcaptureextendedsample.ui.result;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.scandit.datacapture.id.data.CapturedId;
+import com.scandit.datacapture.id.data.CapturedResultType;
 import com.scandit.datacapture.id.data.DateResult;
 import com.scandit.datacapture.id.data.IdImageType;
+import com.scandit.datacapture.idcaptureextendedsample.ui.result.CaptureResult;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -29,10 +32,21 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 public abstract class IdCaptureResultFactory {
 
-    private static final DateFormat dateFormat = SimpleDateFormat.getDateInstance();
+    private static final DateFormat dateFormat;
+
+    static {
+        /*
+         * DateResult::toDate() returns dates in UTC. We need to use the same timezone for
+         * formatting, otherwise we may end up with a wrong date displayed if our local timezone
+         * is a day behind/ahead from UTC.
+         */
+        dateFormat = SimpleDateFormat.getDateInstance();
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
 
     /*
      * Extract all the CapturedId's fields for the full result screen.
@@ -93,7 +107,7 @@ public abstract class IdCaptureResultFactory {
             @Nullable DateResult value
     ) {
         if (value != null) {
-            fields.add(new CaptureResult.Entry(label, dateFormat.format(value.getLocalDate())));
+            fields.add(new CaptureResult.Entry(label, dateFormat.format(value.toDate())));
         }
     }
 

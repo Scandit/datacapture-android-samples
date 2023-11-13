@@ -31,9 +31,9 @@ class ScanUiState {
     private IdCaptureOverlay overlay;
 
     /**
-     * Indicate whether barcode verification is running.
+     * Indicate whether cloud-based verification is running.
      */
-    private boolean isBarcodeVerificationRunning = false;
+    private boolean isCloudVerificationRunning = false;
 
     /**
      * Use `builder()` to create this UI state.
@@ -49,10 +49,10 @@ class ScanUiState {
     }
 
     /**
-     * Indicate whether barcode verification is running.
+     * Indicate whether cloud-based verification is running.
      */
-    public boolean isBarcodeVerificationRunning() {
-        return isBarcodeVerificationRunning;
+    public boolean isCloudVerificationRunning() {
+        return isCloudVerificationRunning;
     }
 
     /**
@@ -95,10 +95,10 @@ class ScanUiState {
         }
 
         /**
-         * Indicate whether barcode verification is running.
+         * Indicate whether cloud-based verification is running.
          */
-        public Builder isBarcodeVerificationRunning(boolean value) {
-            state.isBarcodeVerificationRunning = value;
+        public Builder isCloudVerificationRunning(boolean value) {
+            state.isCloudVerificationRunning = value;
 
             return this;
         }

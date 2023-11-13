@@ -12,16 +12,19 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.ageverifieddeliverysample.ui.barcode;
-
-import com.scandit.datacapture.ageverifieddeliverysample.ui.Event;
+package com.scandit.datacapture.ageverifieddeliverysample.ui.scan;
 
 /**
- * An event for the fragment to display the UI that informs the user that the delivery requires
- * an age verification of the recipient.
+ * A reason for the recipient's document data failed verification.
  */
-public class GoToAgeVerificationRequired extends Event<Object> {
-    public GoToAgeVerificationRequired() {
-        super(new Object());
-    }
+public enum  VerificationFailureReason {
+    /**
+     * The recipient's document expired.
+     */
+    DOCUMENT_EXPIRED,
+
+    /**
+     * The recipient is underage.
+     */
+    HOLDER_UNDERAGE,
 }

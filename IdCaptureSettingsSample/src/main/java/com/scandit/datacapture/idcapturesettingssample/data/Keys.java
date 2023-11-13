@@ -38,9 +38,6 @@ public final class Keys {
     public final static String SUPPORTED_SIDES = "supported_sides";
     public final static String SUPPORTED_DOCUMENTS = "supported_documents";
     public final static String ANONYMIZATION_MODE = "anonymization_mode";
-    public final static String ID_CAPTURED_FEEDBACK = "id_captured_feedback";
-    public final static String ID_REJECTED_FEEDBACK = "id_rejected_feedback";
-    public final static String ID_CAPTURE_TIMEOUT_FEEDBACK = "id_capture_timeout_feedback";
 
     // Camera.
     public final static String CAMERA_POSITION = "camera_position";

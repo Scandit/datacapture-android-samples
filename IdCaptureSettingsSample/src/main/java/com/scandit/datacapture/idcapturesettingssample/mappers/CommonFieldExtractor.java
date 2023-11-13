@@ -47,7 +47,6 @@ public final class CommonFieldExtractor extends FieldExtractor {
         result.add(new CaptureResult.Entry("Issuing Country ISO", extractField(capturedId.getIssuingCountryIso())));
         result.add(new CaptureResult.Entry("Issuing Country", extractField(capturedId.getIssuingCountry())));
         result.add(new CaptureResult.Entry("Document Number", extractField(capturedId.getDocumentNumber())));
-        result.add(new CaptureResult.Entry("Document Additional Number", extractField(capturedId.getDocumentAdditionalNumber())));
         result.add(new CaptureResult.Entry("Date of Expiry", extractField(capturedId.getDateOfExpiry())));
         result.add(new CaptureResult.Entry("Is Expired", extractField(capturedId.isExpired())));
         result.add(new CaptureResult.Entry("Date of Issue", extractField(capturedId.getDateOfIssue())));

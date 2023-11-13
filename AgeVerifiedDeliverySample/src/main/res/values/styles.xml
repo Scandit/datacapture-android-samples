@@ -38,19 +38,6 @@
         <item name="bottomSheetStyle">@style/AppBottomSheetStyle</item>
     </style>
 
-    <style name="Scandit.TextAppearance.BottomSheet" />
-
-    <style name="Scandit.TextAppearance.BottomSheet.Title" parent="TextAppearance.AppCompat.Headline">
-        <item name="android:textColor">@color/nearly_black</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">24sp</item>
-    </style>
-
-    <style name="Scandit.TextAppearance.BottomSheet.BodyText" parent="TextAppearance.AppCompat.Medium">
-        <item name="android:textColor">@color/nearly_black</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
     <style name="AppBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bottom_sheet_shape</item>
     </style>

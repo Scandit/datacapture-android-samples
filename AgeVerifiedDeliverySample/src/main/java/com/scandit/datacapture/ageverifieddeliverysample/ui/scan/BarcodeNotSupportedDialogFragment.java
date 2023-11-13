@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.ageverifieddeliverysample.ui.id;
+package com.scandit.datacapture.ageverifieddeliverysample.ui.scan;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,28 +25,22 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.scandit.datacapture.ageverifieddeliverysample.R;
-import com.scandit.datacapture.ageverifieddeliverysample.ui.barcode.BarcodeScanViewModel;
 
 /**
- * A dialog fragment that informs the user that the document is not supported.
+ * A dialog fragment that informs the user that a given PDF417 barcode
+ * can be captured, but its data cannot be parsed.
  */
-public class UnsupportedDocumentDialogFragment extends BottomSheetDialogFragment {
-
-    /**
-     * The tag used by the fragment that indicates that the document is not supported.
-     */
-    public static final String TAG = "UNSUPPORTED_DOCUMENT_DIALOG";
-
+public class BarcodeNotSupportedDialogFragment extends BottomSheetDialogFragment {
     /**
      * The ViewModel of the parent fragment.
      */
-    private IdScanViewModel parentViewModel;
+    private ScanViewModel parentViewModel;
 
     /**
      * Create an instance of this fragment.
      */
-    public static UnsupportedDocumentDialogFragment create() {
-        return new UnsupportedDocumentDialogFragment();
+    public static BarcodeNotSupportedDialogFragment create() {
+        return new BarcodeNotSupportedDialogFragment();
     }
 
     @Override
@@ -56,7 +50,7 @@ public class UnsupportedDocumentDialogFragment extends BottomSheetDialogFragment
         /*
          * Get a reference to this fragment's parent view model to pass the user's decision.
          */
-        parentViewModel = new ViewModelProvider(requireParentFragment()).get(IdScanViewModel.class);
+        parentViewModel = new ViewModelProvider(requireParentFragment()).get(ScanViewModel.class);
     }
 
     @Nullable
@@ -69,9 +63,10 @@ public class UnsupportedDocumentDialogFragment extends BottomSheetDialogFragment
         /*
          * Initialize the layout of this fragment and find all the view it needs to interact with.
          */
-        View root = inflater.inflate(R.layout.unsupported_document_bottom_sheet, container, false);
+        View root = inflater.inflate(R.layout.barcode_not_supported_bottom_sheet, container, false);
 
-        root.findViewById(R.id.ok_button).setOnClickListener(v -> resumeIdCapture());
+        root.findViewById(R.id.capture_front_button).setOnClickListener(v -> captureFrontOfDocument());
+        root.findViewById(R.id.retry_button).setOnClickListener(v -> retry());
 
         setCancelable(false);
 
@@ -79,10 +74,18 @@ public class UnsupportedDocumentDialogFragment extends BottomSheetDialogFragment
     }
 
     /**
-     * Resume ID document capture.
+     * Proceed to scan the front of a driver's license.
      */
-    private void resumeIdCapture() {
+    private void captureFrontOfDocument() {
         dismiss();
-        parentViewModel.resumeCapture();
+        parentViewModel.onDriverLicenseSideSelected(DriverLicenseSide.FRONT_VIZ);
+    }
+
+    /**
+     * Retry the capture process.
+     */
+    private void retry() {
+        dismiss();
+        parentViewModel.onPopUpDismissed();
     }
 }

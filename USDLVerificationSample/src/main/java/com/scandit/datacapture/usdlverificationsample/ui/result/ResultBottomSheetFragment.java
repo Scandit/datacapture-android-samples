@@ -147,7 +147,7 @@ public class ResultBottomSheetFragment extends BottomSheetDialogFragment {
     }
 
     /**
-     * Display the results for expiration check, front-back verification and barcode
+     * Display the results for expiration check, front-back verification and cloud-based
      * verification.
      */
     private void renderVerificationResult(CaptureResult result) {
@@ -184,19 +184,19 @@ public class ResultBottomSheetFragment extends BottomSheetDialogFragment {
         }
 
         /*
-         * Displays the barcode verification state of the document
+         * Displays the cloud verification state of the document
          */
         if (!result.isExpired()) {
-            VerificationResultItemView barcodeVerificationView =
+            VerificationResultItemView cloudVerificationView =
                     new VerificationResultItemView(getContext());
-            if (result.isBarcodeVerificationSuccessful()) {
-                barcodeVerificationView.setData(successIcon,
-                        R.string.scanning_dl_barcode_verification_success);
-                verificationSuccessLayout.addView(barcodeVerificationView);
+            if (result.isCloudVerificationSuccessful()) {
+                cloudVerificationView.setData(successIcon,
+                        R.string.scanning_dl_cloud_verification_success);
+                verificationSuccessLayout.addView(cloudVerificationView);
             } else {
-                barcodeVerificationView.setData(errorIcon,
-                        R.string.scanning_dl_barcode_verification_failure);
-                verificationErrorLayout.addView(barcodeVerificationView);
+                cloudVerificationView.setData(errorIcon,
+                        R.string.scanning_dl_cloud_verification_failure);
+                verificationErrorLayout.addView(cloudVerificationView);
             }
         }
 

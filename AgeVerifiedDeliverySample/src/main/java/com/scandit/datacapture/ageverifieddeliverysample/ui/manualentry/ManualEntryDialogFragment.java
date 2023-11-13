@@ -14,6 +14,7 @@
 
 package com.scandit.datacapture.ageverifieddeliverysample.ui.manualentry;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.LayoutInflater;
@@ -29,10 +30,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.scandit.datacapture.ageverifieddeliverysample.R;
-import com.scandit.datacapture.ageverifieddeliverysample.ui.id.DocumentData;
-import com.scandit.datacapture.ageverifieddeliverysample.ui.id.IdScanViewModel;
-import com.scandit.datacapture.ageverifieddeliverysample.ui.util.EmptyTextWatcher;
+import com.scandit.datacapture.ageverifieddeliverysample.ui.scan.DocumentData;
+import com.scandit.datacapture.ageverifieddeliverysample.ui.scan.ScanViewModel;
 import com.scandit.datacapture.ageverifieddeliverysample.ui.util.LocalDatePickerDialogFragment;
+import com.scandit.datacapture.ageverifieddeliverysample.util.EmptyTextWatcher;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -43,13 +44,6 @@ import java.time.format.FormatStyle;
  * process failed.
  */
 public class ManualEntryDialogFragment extends BottomSheetDialogFragment {
-
-    /**
-     * The tag used by the fragment where a user may enter the information from the recipient's
-     * document, had the capture process failed.
-     */
-    public static final String TAG = "MANUAL_ENTRY";
-
     /**
      * The tag that the recipient's date of birth and the document's date of expiry picker dialogs
      * use.
@@ -66,7 +60,7 @@ public class ManualEntryDialogFragment extends BottomSheetDialogFragment {
     /**
      * The ViewModel of the parent fragment.
      */
-    private IdScanViewModel parentViewModel;
+    private ScanViewModel parentViewModel;
 
     /**
      * The ViewModel of this fragment.
@@ -114,7 +108,7 @@ public class ManualEntryDialogFragment extends BottomSheetDialogFragment {
          * Get a reference to this fragment's view model and it's parent's view model in order
          * to pass the manually entered data for the verification.
          */
-        parentViewModel = new ViewModelProvider(requireParentFragment()).get(IdScanViewModel.class);
+        parentViewModel = new ViewModelProvider(requireParentFragment()).get(ScanViewModel.class);
         viewModel = new ViewModelProvider(this).get(ManualEntryViewModel.class);
     }
 
@@ -291,6 +285,13 @@ public class ManualEntryDialogFragment extends BottomSheetDialogFragment {
      */
     private void updateConfirmButton() {
         confirmButton.setEnabled(uiState.isConfirmEnabled());
+    }
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+        parentViewModel.onManualEntryDismissed();
     }
 
     /**

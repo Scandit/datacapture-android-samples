@@ -12,19 +12,24 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.ageverifieddeliverysample.ui.verificationresult.failure;
+package com.scandit.datacapture.ageverifieddeliverysample.ui.scan;
 
 /**
- * A reason for the recipient's document data failed verification.
+ * The kind of document that the user may attempt to capture.
  */
-public enum  VerificationFailureReason {
+enum TargetDocument {
     /**
-     * The recipient's document expired.
+     * The recipient's driver's license.
      */
-    DOCUMENT_EXPIRED,
+    DRIVER_LICENSE,
 
     /**
-     * The recipient is underage.
+     * The recipient's passport.
      */
-    HOLDER_UNDERAGE,
+    PASSPORT,
+
+    /**
+     * The recipient's U.S. military ID (US Uniformed Services document).
+     */
+    MILITARY_ID,
 }

@@ -138,6 +138,10 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
         );
 
         // Configure how barcodes are highlighted - apply default brush or create your own.
+        int acceptedBorderColor = getResources().getColor(R.color.barcode_accepted_border);
+        final Brush acceptedBrush = new Brush(Color.TRANSPARENT, acceptedBorderColor, 3f);
+
+        // Modify brush dynamically.
         // Note that modifying a barcode's brush color requires the MatrixScan AR add-on.
         int rejectedBorderColor = getResources().getColor(R.color.barcode_rejected_border);
         final Brush rejectedBrush = new Brush(Color.TRANSPARENT, rejectedBorderColor, 3f);
@@ -149,7 +153,7 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
                     @NonNull TrackedBarcode trackedBarcode
             ) {
                 if (isValidBarcode(trackedBarcode.getBarcode())) {
-                    return overlay.getBrush();
+                    return acceptedBrush;
                 } else {
                     return rejectedBrush;
                 }

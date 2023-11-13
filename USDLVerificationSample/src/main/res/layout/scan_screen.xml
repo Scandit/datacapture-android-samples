@@ -21,18 +21,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/barcode_verification_indicator_text"
+        android:id="@+id/cloud_verification_indicator_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"
-        android:background="@drawable/barcode_verification_indicator_background"
+        android:background="@drawable/cloud_verification_indicator_background"
         android:padding="@dimen/default_padding"
         android:visibility="gone"
         android:textColor="@color/white"
-        android:text="@string/scanning_dl_barcode_verification_in_progress"
+        android:text="@string/scanning_dl_cloud_verification_in_progress"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

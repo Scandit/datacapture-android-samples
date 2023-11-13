@@ -12,13 +12,12 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.ageverifieddeliverysample.ui.timeout;
+package com.scandit.datacapture.ageverifieddeliverysample.ui.scan;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,30 +25,22 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.scandit.datacapture.ageverifieddeliverysample.R;
-import com.scandit.datacapture.ageverifieddeliverysample.ui.id.IdScanViewModel;
 
 /**
  * A dialog fragment that informs the user that a given document is detected, but its data couldn't
- * be extracted so far.
+ * be extracted so far. It offers the user to enter data manually.
  */
-public class IdCaptureFirstTimeoutDialogFragment extends BottomSheetDialogFragment {
-
-    /**
-     * The tag used by the fragment that informs the user that the given ID or MRZ is
-     * detected, but cannot be parsed.
-     */
-    public static final String TAG = "ID_CAPTURE_FIRST_TIMEOUT_DIALOG";
-
+public class IdLocalizedButNotCapturedDialogFragment extends BottomSheetDialogFragment {
     /**
      * The ViewModel of the parent fragment.
      */
-    private IdScanViewModel parentViewModel;
+    private ScanViewModel parentViewModel;
 
     /**
      * Create an instance of this fragment.
      */
-    public static IdCaptureFirstTimeoutDialogFragment create() {
-        return new IdCaptureFirstTimeoutDialogFragment();
+    public static IdLocalizedButNotCapturedDialogFragment create() {
+        return new IdLocalizedButNotCapturedDialogFragment();
     }
 
     @Override
@@ -59,7 +50,7 @@ public class IdCaptureFirstTimeoutDialogFragment extends BottomSheetDialogFragme
         /*
          * Get a reference to this fragment's parent view model to pass the user's decision.
          */
-        parentViewModel = new ViewModelProvider(requireParentFragment()).get(IdScanViewModel.class);
+        parentViewModel = new ViewModelProvider(requireParentFragment()).get(ScanViewModel.class);
     }
 
     @Nullable
@@ -72,10 +63,10 @@ public class IdCaptureFirstTimeoutDialogFragment extends BottomSheetDialogFragme
         /*
          * Initialize the layout of this fragment and find all the view it needs to interact with.
          */
-        View root = inflater.inflate(R.layout.id_capture_first_timeout_bottom_sheet, container, false);
+        View root = inflater.inflate(R.layout.id_localized_but_not_captured_bottom_sheet, container, false);
 
-        Button okButton = root.findViewById(R.id.ok_button);
-        okButton.setOnClickListener(v -> retry());
+        root.findViewById(R.id.enter_manually_button).setOnClickListener(v -> enterManually());
+        root.findViewById(R.id.retry_button).setOnClickListener(v -> retry());
 
         setCancelable(false);
 
@@ -83,10 +74,18 @@ public class IdCaptureFirstTimeoutDialogFragment extends BottomSheetDialogFragme
     }
 
     /**
+     * Proceed to enter the recipient's data manually.
+     */
+    private void enterManually() {
+        dismiss();
+        parentViewModel.onManualEntrySelected();
+    }
+
+    /**
      * Retry the capture process.
      */
     private void retry() {
         dismiss();
-        parentViewModel.resumeCapture();
+        parentViewModel.onManualEntryDismissed();
     }
 }

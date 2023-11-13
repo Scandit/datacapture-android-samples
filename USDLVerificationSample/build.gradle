@@ -1,6 +1,5 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
 }
 
 android {
@@ -16,8 +15,6 @@ android {
         versionName = "1.0"
 
         vectorDrawables.useSupportLibrary = true
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments useTestStorageService: 'true'
     }
 
     buildTypes {
@@ -34,10 +31,6 @@ android {
     packagingOptions {
         pickFirst("**/*.so")
     }
-
-    testOptions {
-        animationsDisabled = true
-    }
 }
 
 dependencies {
@@ -52,5 +45,4 @@ dependencies {
     implementation("com.google.android.material:material:${versions.material}")
 
     implementation("com.squareup.okhttp3:okhttp:${versions.okhttp}")
-
 }

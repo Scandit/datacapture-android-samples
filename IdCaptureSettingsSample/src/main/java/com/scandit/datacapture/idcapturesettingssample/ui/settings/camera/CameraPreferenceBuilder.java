@@ -46,6 +46,7 @@ import android.content.Context;
 
 import androidx.preference.DropDownPreference;
 import androidx.preference.PreferenceGroup;
+import androidx.preference.SeekBarPreference;
 import androidx.preference.SwitchPreferenceCompat;
 
 import com.scandit.datacapture.idcapturesettingssample.R;
