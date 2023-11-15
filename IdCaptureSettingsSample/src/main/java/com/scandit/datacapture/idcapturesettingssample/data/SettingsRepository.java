@@ -21,6 +21,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceDataStore;
 
+import com.scandit.datacapture.core.common.feedback.Feedback;
+import com.scandit.datacapture.core.common.feedback.Sound;
+import com.scandit.datacapture.core.common.feedback.Vibration;
 import com.scandit.datacapture.core.common.geometry.Anchor;
 import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
 import com.scandit.datacapture.core.common.geometry.MeasureUnit;
@@ -30,6 +33,7 @@ import com.scandit.datacapture.core.source.VideoResolution;
 import com.scandit.datacapture.core.ui.gesture.FocusGesture;
 import com.scandit.datacapture.core.ui.gesture.TapToFocus;
 import com.scandit.datacapture.core.ui.style.Brush;
+import com.scandit.datacapture.id.capture.IdCaptureFeedback;
 import com.scandit.datacapture.id.data.IdAnonymizationMode;
 import com.scandit.datacapture.id.data.IdDocumentType;
 import com.scandit.datacapture.id.data.IdImageType;
@@ -189,6 +193,52 @@ public class SettingsRepository extends PreferenceDataStore {
         }
     }
 
+    private Feedback buildFeedbackFromChoice(@Nullable String selected, Vibration vibration, Sound sound) {
+        if (selected == null)
+            return new Feedback(null, null);
+        FeedbackType selectedFeedbackType = FeedbackType.valueOf(selected);
+        switch (selectedFeedbackType) {
+            case NONE:
+                return new Feedback(null, null);
+            case VIBRATION:
+                return new Feedback(vibration, null);
+            case SOUND:
+                return new Feedback(null, sound);
+            case SOUND_AND_VIBRATION:
+                return new Feedback(vibration, sound);
+            default:
+                throw new IllegalArgumentException("Unknown feedback type " + selectedFeedbackType);
+        }
+    }
+
+    public IdCaptureFeedback buildFeedbackFromSettings() {
+        final IdCaptureFeedback defaultFeedback = IdCaptureFeedback.defaultFeedback();
+        IdCaptureFeedback result = new IdCaptureFeedback();
+
+        Feedback idCapturedFeedback = buildFeedbackFromChoice(
+                getString(Keys.ID_CAPTURED_FEEDBACK, null),
+                defaultFeedback.getIdCaptured().getVibration(),
+                defaultFeedback.getIdCaptured().getSound()
+        );
+        result.setIdCaptured(idCapturedFeedback);
+
+        Feedback idRejectedFeedback = buildFeedbackFromChoice(
+                getString(Keys.ID_REJECTED_FEEDBACK, null),
+                Vibration.defaultVibration(),
+                IdCaptureFeedback.defaultFailureSound()
+        );
+        result.setIdRejected(idRejectedFeedback);
+
+        Feedback idCaptureTimeoutFeedback = buildFeedbackFromChoice(
+                getString(Keys.ID_CAPTURE_TIMEOUT_FEEDBACK, null),
+                Vibration.defaultVibration(),
+                IdCaptureFeedback.defaultFailureSound()
+        );
+        result.setIdCaptureTimeout(idCaptureTimeoutFeedback);
+
+        return result;
+    }
+
     /*
      * Retrieves from settings the Camera preferred resolution.
      */
@@ -223,6 +273,13 @@ public class SettingsRepository extends PreferenceDataStore {
         } else {
             return TorchState.OFF;
         }
+    }
+
+    /*
+     * Sets the desired torch state in the settings.
+     */
+    public void setTorchState(boolean torchEnabled) {
+         putBoolean(Keys.TORCH_STATE, torchEnabled);
     }
 
     /*

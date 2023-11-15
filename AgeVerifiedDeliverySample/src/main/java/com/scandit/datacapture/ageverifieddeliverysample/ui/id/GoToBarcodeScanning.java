@@ -12,17 +12,15 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.usdlverificationsample.ui.scan;
+package com.scandit.datacapture.ageverifieddeliverysample.ui.id;
 
-
-import com.scandit.datacapture.usdlverificationsample.ui.Event;
+import com.scandit.datacapture.ageverifieddeliverysample.ui.Event;
 
 /**
- * An event for the fragment to display the UI that informs the user that the cloud-based
- * verification failed (network errors, etc.).
+ * An event to navigate to the ID scanning fragment to capture the ID of the recipient.
  */
-class GoToCloudVerificationFailure extends Event<Object> {
-    public GoToCloudVerificationFailure() {
+public class GoToBarcodeScanning extends Event<Object> {
+    public GoToBarcodeScanning() {
         super(new Object());
     }
 }

@@ -14,6 +14,8 @@
 
 package com.scandit.datacapture.ageverifieddeliverysample.data;
 
+import androidx.annotation.VisibleForTesting;
+
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 
 /**
@@ -23,7 +25,8 @@ import com.scandit.datacapture.core.capture.DataCaptureContext;
 public class DataCaptureContextProvider {
 	// Enter your Scandit License key here.
     // Your Scandit License key is available via your Scandit SDK web account.
-    private static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
+    @VisibleForTesting
+    public static String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
 
     /**
      * The initialized DataCaptureContext.

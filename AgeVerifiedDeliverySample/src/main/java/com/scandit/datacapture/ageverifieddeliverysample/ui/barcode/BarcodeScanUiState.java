@@ -12,54 +12,40 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.usdlverificationsample.ui.scan;
+package com.scandit.datacapture.ageverifieddeliverysample.ui.barcode;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 
-import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
-import com.scandit.datacapture.usdlverificationsample.R;
+import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
 
 /**
- * The state of the UI for the screen where the user may capture an ID document.
+ * The state of the UI for the screen where the user attempts to capture the package's barcode.
  */
-class ScanUiState {
+class BarcodeScanUiState {
     /**
-     * The IdCapture UI to aid the user in the capture process.
+     * The BarcodeCapture UI to aid the user in the capture process.
      */
     @Nullable
-    private IdCaptureOverlay overlay;
-
-    /**
-     * Indicate whether barcode verification is running.
-     */
-    private boolean isBarcodeVerificationRunning = false;
+    private BarcodeCaptureOverlay overlay;
 
     /**
      * Use `builder()` to create this UI state.
      */
-    private ScanUiState() { }
+    private BarcodeScanUiState() { }
 
     /**
-     * Get the IdCapture UI to aid the user in the capture process.
+     * Get the BarcodeCapture UI to aid the user in the capture process.
      */
     @Nullable
-    public IdCaptureOverlay getOverlay() {
+    public BarcodeCaptureOverlay getOverlay() {
         return overlay;
-    }
-
-    /**
-     * Indicate whether barcode verification is running.
-     */
-    public boolean isBarcodeVerificationRunning() {
-        return isBarcodeVerificationRunning;
     }
 
     /**
      * The builder pattern is used to create the initial UI state.
      */
     public static Builder builder() {
-        return new Builder(new ScanUiState());
+        return new Builder(new BarcodeScanUiState());
     }
 
     /**
@@ -76,29 +62,20 @@ class ScanUiState {
         /**
          * The UI state being edited.
          */
-        private final ScanUiState state;
+        private final BarcodeScanUiState state;
 
         /**
          * Create a new builder from the given UI state.
          */
-        private Builder(ScanUiState state) {
+        private Builder(BarcodeScanUiState state) {
             this.state = state;
         }
 
         /**
-         * The IdCapture UI to aid the user in the capture process.
+         * The BarcodeCapture UI to aid the user in the capture process.
          */
-        public Builder overlay(IdCaptureOverlay value) {
+        public Builder overlay(BarcodeCaptureOverlay value) {
             state.overlay = value;
-
-            return this;
-        }
-
-        /**
-         * Indicate whether barcode verification is running.
-         */
-        public Builder isBarcodeVerificationRunning(boolean value) {
-            state.isBarcodeVerificationRunning = value;
 
             return this;
         }
@@ -106,9 +83,8 @@ class ScanUiState {
         /**
          * Create an immutable UI state from this builder.
          */
-        public ScanUiState build() {
+        public BarcodeScanUiState build() {
             return state;
         }
     }
 }
-

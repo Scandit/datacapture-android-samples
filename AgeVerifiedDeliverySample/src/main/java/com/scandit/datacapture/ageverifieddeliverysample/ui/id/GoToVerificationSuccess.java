@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.ageverifieddeliverysample.ui.scan;
+package com.scandit.datacapture.ageverifieddeliverysample.ui.id;
 
 import com.scandit.datacapture.ageverifieddeliverysample.ui.Event;
 

@@ -12,16 +12,6 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.ageverifieddeliverysample.ui.manualentry;
+package com.scandit.datacapture.idcapturesettingssample.data;
 
-import com.scandit.datacapture.ageverifieddeliverysample.ui.Event;
-import com.scandit.datacapture.ageverifieddeliverysample.ui.id.DocumentData;
-
-/**
- * An event for the fragment to verify the manually entered date of birth and to display the result.
- */
-class GoToVerificationResult extends Event<DocumentData> {
-    public GoToVerificationResult(DocumentData content) {
-        super(content);
-    }
-}
+public enum FeedbackType { NONE, VIBRATION, SOUND, SOUND_AND_VIBRATION };

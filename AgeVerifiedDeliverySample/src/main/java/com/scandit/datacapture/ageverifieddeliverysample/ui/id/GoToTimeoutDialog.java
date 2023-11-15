@@ -12,16 +12,14 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.ageverifieddeliverysample.ui.manualentry;
+package com.scandit.datacapture.ageverifieddeliverysample.ui.id;
 
 import com.scandit.datacapture.ageverifieddeliverysample.ui.Event;
-import com.scandit.datacapture.ageverifieddeliverysample.ui.id.DocumentData;
 
 /**
- * An event for the fragment to verify the manually entered date of birth and to display the result.
+ * An event for the fragment to display the UI that informs the user that the given ID or MRZ is
+ * detected, but cannot be parsed.
  */
-class GoToVerificationResult extends Event<DocumentData> {
-    public GoToVerificationResult(DocumentData content) {
-        super(content);
-    }
+class GoToTimeoutDialog extends Event<Object> {
+    public GoToTimeoutDialog() {super(new Object());}
 }

@@ -2,7 +2,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
@@ -10,7 +9,7 @@
     android:paddingBottom="32dp">
 
     <TextView
-        android:id="@+id/age_verification_required_title"
+        android:id="@+id/unsupported_document_dialog_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
@@ -18,10 +17,10 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:textAppearance="@style/Scandit.TextAppearance.BottomSheet.Title"
-        android:text="@string/age_verification_failure_title" />
+        android:text="@string/unsupported_document_dialog_title" />
 
     <TextView
-        android:id="@+id/age_verification_failure_message"
+        android:id="@+id/id_capture_timeout_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
@@ -29,12 +28,12 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:textAppearance="@style/Scandit.TextAppearance.BottomSheet.BodyText"
-        android:text="@string/age_verification_failure_message"
+        android:text="@string/unsupported_document_dialog_message"
         android:drawablePadding="8dp"
-        app:drawableStartCompat="@drawable/ic_baseline_error_outline_24"  />
+        app:drawableStartCompat="@drawable/ic_baseline_error_outline_24" />
 
     <Button
-        android:id="@+id/refuse_button"
+        android:id="@+id/ok_button"
         style="@style/Widget.AppCompat.Button.Colored"
         android:background="@color/black"
         android:layout_width="match_parent"
@@ -43,17 +42,6 @@
         android:layout_marginTop="32dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:text="@string/age_verification_failure_refuse_button" />
-
-    <Button
-        android:id="@+id/retry_button"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:text="@string/id_capture_timeout_action_retry" />
+        android:text="@android:string/ok" />
 
 </LinearLayout>

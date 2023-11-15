@@ -12,16 +12,16 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.ageverifieddeliverysample.ui.scan;
+package com.scandit.datacapture.ageverifieddeliverysample.ui.id;
 
 import com.scandit.datacapture.ageverifieddeliverysample.ui.Event;
 
 /**
- * An event for the fragment to display the UI that informs the user the a given ID or MRZ is
- * detected, but cannot be parsed.
+ * An event for the fragment to display the UI that informs the user another time that a given
+ * ID or MRZ is detected, but cannot be parsed.
  */
-class GoToIdLocalizedButNotCaptured extends Event<Object> {
-    public GoToIdLocalizedButNotCaptured() {
+class GoToSubsequentTimeoutDialog extends Event<Object> {
+    public GoToSubsequentTimeoutDialog() {
         super(new Object());
     }
 }

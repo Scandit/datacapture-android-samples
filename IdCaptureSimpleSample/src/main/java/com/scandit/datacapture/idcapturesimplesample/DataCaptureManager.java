@@ -16,6 +16,8 @@ package com.scandit.datacapture.idcapturesimplesample;
 
 import android.content.Context;
 
+import androidx.annotation.VisibleForTesting;
+
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.source.Camera;
 import com.scandit.datacapture.id.capture.IdCapture;
@@ -28,7 +30,8 @@ import com.scandit.datacapture.id.data.IdDocumentType;
 public final class DataCaptureManager {
 	// Enter your Scandit License key here.
     // Your Scandit License key is available via your Scandit SDK web account.
-    private static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
+    @VisibleForTesting
+    public static String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
 
     private static DataCaptureManager INSTANCE;
 

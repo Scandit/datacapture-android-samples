@@ -25,7 +25,7 @@ import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.CapturedResultType;
 import com.scandit.datacapture.id.data.SupportedSides;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
-import com.scandit.datacapture.id.verification.aamvacloud.AamvaCloudVerificationTask;
+import com.scandit.datacapture.id.verification.aamvabarcode.AamvaBarcodeVerificationTask;
 import com.scandit.datacapture.id.verification.aamvavizbarcode.AamvaVizBarcodeComparisonResult;
 import com.scandit.datacapture.usdlverificationsample.R;
 import com.scandit.datacapture.usdlverificationsample.data.CameraRepository;
@@ -87,10 +87,9 @@ public class ScanViewModel extends ViewModel {
     private final MutableLiveData<GoToUnsupportedDriverLicense> goToUnsupportedDriverLicense = new MutableLiveData<>();
 
     /**
-     * An event to display the UI that informs the user that the cloud-based verification failed
-     * (network errors, etc.).
+     * An event to display the UI that informs the user that the verification failed
      */
-    private final MutableLiveData<GoToCloudVerificationFailure> goToCloudVerificationFailure =
+    private final MutableLiveData<GoToBarcodeVerificationFailure> goToBarcodeVerificationFailure =
             new MutableLiveData<>();
 
     /**
@@ -104,10 +103,10 @@ public class ScanViewModel extends ViewModel {
     private final MutableLiveData<GoToResult> goToResult = new MutableLiveData<>();
 
     /**
-     * The task that runs the cloud-based verification for a given captured driver's license.
+     * The task that runs the verification for a given captured driver's license.
      */
     @Nullable
-    private AamvaCloudVerificationTask cloudVerificationTask;
+    private AamvaBarcodeVerificationTask barcodeVerificationTask;
 
     /**
      * The captured driver's license.
@@ -160,11 +159,10 @@ public class ScanViewModel extends ViewModel {
     }
 
     /**
-     * An event to display the UI that informs the user that the cloud-based verification failed
-     * (network errors, etc.).
+     * An event to display the UI that informs the user that the verification failed
      */
-    public LiveData<GoToCloudVerificationFailure> goToCloudVerificationFailure() {
-        return goToCloudVerificationFailure;
+    public LiveData<GoToBarcodeVerificationFailure> goToBarcodeVerificationFailure() {
+        return goToBarcodeVerificationFailure;
     }
 
     /**
@@ -236,7 +234,7 @@ public class ScanViewModel extends ViewModel {
      *
      * 2. Check if the driver's license is not expired.
      *
-     * 3. If front & back match and the driver's license has not expired, run a cloud-based
+     * 3. If front & back match and the driver's license has not expired, run a
      * verification.
      */
     private void verifyDriverLicense(CapturedId capturedId) {
@@ -247,61 +245,62 @@ public class ScanViewModel extends ViewModel {
         boolean isFrontBackComparisonSuccessful = comparisonResult.getChecksPassed();
 
         /*
-         * If front and back match AND ID is not expired, run cloud-based verification
+         * If front and back match AND ID is not expired, run verification
          */
         if (isFrontBackComparisonSuccessful && !capturedId.isExpired()) {
-            cloudVerificationTask = driverLicenseVerificationRepository.verifyIdOnCloud(capturedId);
-            setIsCloudVerificationRunning(true);
-            setUpCloudVerificationTaskListeners();
+            barcodeVerificationTask = driverLicenseVerificationRepository.verifyIdOnBarcode(capturedId);
+            setIsBarcodeVerificationRunning(true);
+            setUpBarcodeVerificationTaskListeners();
         } else {
             navigateToResult(capturedId, isFrontBackComparisonSuccessful, false);
         }
     }
 
     /**
-     * Set up success and error listeners for the cloud-based verification of the captured
+     * Set up success and error listeners for the verification of the captured
      * driver's license.
      */
-    public void setUpCloudVerificationTaskListeners() {
-        if (cloudVerificationTask == null) {
+    public void setUpBarcodeVerificationTaskListeners() {
+        if (barcodeVerificationTask == null) {
             return;
         }
 
         /*
          * Present the data to the user when the back-end returns its verification result.
          */
-        cloudVerificationTask.doOnVerificationResult(cloudVerificationResult -> {
+        barcodeVerificationTask.doOnVerificationResult(barcodeVerificationResult -> {
             if (driverLicense != null) {
-                boolean checksPassed = cloudVerificationResult.getAllChecksPassed();
+                boolean checksPassed = barcodeVerificationResult.getAllChecksPassed();
                 navigateToResult(driverLicense, true, checksPassed);
-                setIsCloudVerificationRunning(false);
-                cloudVerificationTask = null;
+                setIsBarcodeVerificationRunning(false);
+                barcodeVerificationTask = null;
                 driverLicense = null;
             }
             return null;
         });
 
         /*
-         * If the cloud-based verification fails (network errors, etc.), show an error dialog
-         * to the user.
+         * If the verification fails, show an error dialog to the user.
          */
-        cloudVerificationTask.doOnConnectionFailure(throwable -> {
-            if (driverLicense != null) {
-                goToCloudVerificationFailure.postValue(new GoToCloudVerificationFailure());
-                setIsCloudVerificationRunning(false);
-                cloudVerificationTask = null;
-                driverLicense = null;
-            }
-            return null;
-        });
+        if (barcodeVerificationTask != null) {
+            barcodeVerificationTask.doOnConnectionFailure(throwable -> {
+                if (driverLicense != null) {
+                    goToBarcodeVerificationFailure.postValue(new GoToBarcodeVerificationFailure());
+                    setIsBarcodeVerificationRunning(false);
+                    barcodeVerificationTask = null;
+                    driverLicense = null;
+                }
+                return null;
+            });
+        }
     }
 
     /**
-     * Indicate whether the cloud verification is currently in progress.
+     * Indicate whether the verification is currently in progress.
      */
-    private void setIsCloudVerificationRunning(boolean isCloudVerificationRunning) {
+    private void setIsBarcodeVerificationRunning(boolean isBarcodeVerificationRunning) {
         uiState = uiState.toBuilder()
-                .isCloudVerificationRunning(isCloudVerificationRunning)
+                .isBarcodeVerificationRunning(isBarcodeVerificationRunning)
                 .build();
         uiStates.postValue(uiState);
     }
@@ -313,12 +312,12 @@ public class ScanViewModel extends ViewModel {
     private void navigateToResult(
             CapturedId capturedId,
             boolean isFrontBackComparisonSuccessful,
-            boolean isCloudVerificationSuccessful
+            boolean isBarcodeVerificationSuccessful
     ) {
         final CaptureResult result = new ResultMapper(capturedId).mapResult(
                 capturedId.isExpired(),
                 isFrontBackComparisonSuccessful,
-                isCloudVerificationSuccessful
+                isBarcodeVerificationSuccessful
         );
         goToResult.postValue(new GoToResult(result));
     }

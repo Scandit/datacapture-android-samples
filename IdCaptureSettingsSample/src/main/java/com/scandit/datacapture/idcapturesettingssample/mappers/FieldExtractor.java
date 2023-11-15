@@ -26,21 +26,10 @@ import com.scandit.datacapture.idcapturesettingssample.ui.result.CaptureResult;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.TimeZone;
 
 public abstract class FieldExtractor {
 
-    protected static final DateFormat dateFormat;
-
-    static {
-        /*
-         * DateResult::toDate() returns dates in UTC. We need to use the same timezone for
-         * formatting, otherwise we may end up with a wrong date displayed if our local timezone
-         * is a day behind/ahead from UTC.
-         */
-        dateFormat = SimpleDateFormat.getDateInstance();
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-    }
+    protected static final DateFormat dateFormat = SimpleDateFormat.getDateInstance();
 
     protected final CapturedId capturedId;
 
@@ -82,6 +71,6 @@ public abstract class FieldExtractor {
         if (value == null) {
             return "<empty>";
         }
-        return dateFormat.format(value.toDate());
+        return dateFormat.format(value.getLocalDate());
     }
 }

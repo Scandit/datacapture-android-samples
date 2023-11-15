@@ -14,10 +14,13 @@
 
 package com.scandit.datacapture.ageverifieddeliverysample.data;
 
-import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.id.capture.IdCapture;
 import com.scandit.datacapture.id.capture.IdCaptureSettings;
+import com.scandit.datacapture.id.data.IdDocumentType;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * The provider of the IdCapture-related singletons.
@@ -28,14 +31,14 @@ public class IdCaptureProvider {
      */
     private final IdCapture idCapture;
 
-    /*
+    /**
      * IdCaptureOverlay displays the additional UI to guide the user through the capture process.
      */
     private final IdCaptureOverlay overlay;
 
-    public IdCaptureProvider(DataCaptureContext dataCaptureContext) {
-        idCapture = IdCapture.forDataCaptureContext(dataCaptureContext, new IdCaptureSettings());
-        overlay = IdCaptureOverlay.newInstance(idCapture, null);
+    public IdCaptureProvider() {
+        idCapture = IdCapture.forDataCaptureContext(null, createIdCaptureSettings());
+        overlay = createIdCaptureOverlay();
     }
 
     /**
@@ -45,10 +48,36 @@ public class IdCaptureProvider {
         return idCapture;
     }
 
-    /*
+    /**
      * IdCaptureOverlay displays the additional UI to guide the user through the capture process.
      */
     public IdCaptureOverlay getOverlay() {
         return overlay;
     }
+
+    /**
+     * Create the IdCapture's settings.
+     */
+    private IdCaptureSettings createIdCaptureSettings() {
+        IdCaptureSettings settings =  new IdCaptureSettings();
+        settings.setSupportedDocuments(ID_SUPPORTED_DOCUMENT_TYPES);
+        return settings;
+    }
+
+    /**
+     * Create the IdCapture's overlay.
+     */
+    private IdCaptureOverlay createIdCaptureOverlay() {
+        return IdCaptureOverlay.newInstance(idCapture, null);
+    }
+
+    private static final List<IdDocumentType> ID_SUPPORTED_DOCUMENT_TYPES =
+            Arrays.asList(
+                    IdDocumentType.AAMVA_BARCODE,
+                    IdDocumentType.DL_VIZ,
+                    IdDocumentType.ID_CARD_MRZ,
+                    IdDocumentType.ID_CARD_VIZ,
+                    IdDocumentType.PASSPORT_MRZ,
+                    IdDocumentType.US_US_ID_BARCODE
+            );
 }

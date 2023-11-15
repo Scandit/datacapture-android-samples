@@ -27,23 +27,29 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.scandit.datacapture.ageverifieddeliverysample.R;
-import com.scandit.datacapture.ageverifieddeliverysample.ui.scan.ScanViewModel;
-import com.scandit.datacapture.ageverifieddeliverysample.ui.scan.VerificationFailureReason;
+import com.scandit.datacapture.ageverifieddeliverysample.ui.id.IdScanViewModel;
 
 /**
  * The fragment to display the UI that informs about failed verification of
  * the recipient's document data.
  */
 public class VerificationFailureDialogFragment extends BottomSheetDialogFragment {
+
     /**
-     * The ViewModel of the parent fragment.
+     * The tag used by the fragment that displays the result of the recipient's document data
+     * verification.
      */
-    private ScanViewModel parentViewModel;
+    public static final String TAG = "VERIFICATION_FAILURE_RESULT";
 
     /**
      * This fragment arguments' key for the failure reason.
      */
     private static final String KEY_FAILURE_REASON = "FAILURE_REASON";
+
+    /**
+     * The ViewModel of the parent fragment.
+     */
+    private IdScanViewModel parentViewModel;
 
     /**
      * Create an instance of this fragment with the provided failure reason.
@@ -64,7 +70,7 @@ public class VerificationFailureDialogFragment extends BottomSheetDialogFragment
         /*
          * Get a reference to this fragment's parent view model.
          */
-        parentViewModel = new ViewModelProvider(requireParentFragment()).get(ScanViewModel.class);
+        parentViewModel = new ViewModelProvider(requireParentFragment()).get(IdScanViewModel.class);
     }
 
     @Nullable
@@ -82,10 +88,10 @@ public class VerificationFailureDialogFragment extends BottomSheetDialogFragment
         VerificationFailureReason reason =
                 VerificationFailureReason.valueOf(getArguments().getString(KEY_FAILURE_REASON));
 
-        TextView reasonText = root.findViewById(R.id.verification_failure_reason);
+        TextView reasonText = root.findViewById(R.id.age_verification_failure_message);
         reasonText.setText(getFailureReasonText(reason));
 
-        root.findViewById(R.id.refuse_delivery_button).setOnClickListener(v -> refuseDelivery());
+        root.findViewById(R.id.refuse_button).setOnClickListener(v -> restart());
         root.findViewById(R.id.retry_button).setOnClickListener(v -> retry());
 
         setCancelable(false);
@@ -100,27 +106,12 @@ public class VerificationFailureDialogFragment extends BottomSheetDialogFragment
     private int getFailureReasonText(VerificationFailureReason reason) {
         switch (reason) {
             case DOCUMENT_EXPIRED:
-                return R.string.result_failed_reason_document_expired;
+                return R.string.age_verification_failure_expired_message;
             case HOLDER_UNDERAGE:
-                return R.string.result_failed_reason_recipient_under_age;
+                return R.string.age_verification_failure_underage_message;
             default:
                 throw new AssertionError("Unknown failure reason: " + reason);
         }
-    }
-
-    /**
-     * Proceed to refuse the delivery. The exact flow is beyond the scope of this sample, so we
-     * just restart it.
-     */
-    private void refuseDelivery() {
-        restart();
-    }
-
-    /**
-     * Retry the capture process.
-     */
-    private void retry() {
-        restart();
     }
 
     /**
@@ -129,5 +120,13 @@ public class VerificationFailureDialogFragment extends BottomSheetDialogFragment
     private void restart() {
         dismiss();
         parentViewModel.resetIdCaptureState();
+    }
+
+    /**
+     * Retry the capture process.
+     */
+    private void retry() {
+        dismiss();
+        parentViewModel.resumeCapture();
     }
 }

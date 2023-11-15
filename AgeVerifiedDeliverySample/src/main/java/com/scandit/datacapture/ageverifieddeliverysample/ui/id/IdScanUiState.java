@@ -12,18 +12,15 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.usdlverificationsample.ui.scan;
+package com.scandit.datacapture.ageverifieddeliverysample.ui.id;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
-import com.scandit.datacapture.usdlverificationsample.R;
 
 /**
- * The state of the UI for the screen where the user may capture an ID document.
+ * The state of the UI for the screen where the user attempts to capture the recipient's document.
  */
-class ScanUiState {
+class IdScanUiState {
     /**
      * The IdCapture UI to aid the user in the capture process.
      */
@@ -31,14 +28,14 @@ class ScanUiState {
     private IdCaptureOverlay overlay;
 
     /**
-     * Indicate whether barcode verification is running.
+     * The number of times `onIdCaptureTimedOut` callback has been called.
      */
-    private boolean isBarcodeVerificationRunning = false;
+    private int timeoutCount = 0;
 
     /**
      * Use `builder()` to create this UI state.
      */
-    private ScanUiState() { }
+    private IdScanUiState() { }
 
     /**
      * Get the IdCapture UI to aid the user in the capture process.
@@ -49,17 +46,17 @@ class ScanUiState {
     }
 
     /**
-     * Indicate whether barcode verification is running.
+     * Get the number of times `onIdCaptureTimedOut` callback has been called.
      */
-    public boolean isBarcodeVerificationRunning() {
-        return isBarcodeVerificationRunning;
+    public int getTimeoutCount() {
+        return timeoutCount;
     }
 
     /**
      * The builder pattern is used to create the initial UI state.
      */
     public static Builder builder() {
-        return new Builder(new ScanUiState());
+        return new Builder(new IdScanUiState());
     }
 
     /**
@@ -76,12 +73,12 @@ class ScanUiState {
         /**
          * The UI state being edited.
          */
-        private final ScanUiState state;
+        private final IdScanUiState state;
 
         /**
          * Create a new builder from the given UI state.
          */
-        private Builder(ScanUiState state) {
+        private Builder(IdScanUiState state) {
             this.state = state;
         }
 
@@ -95,10 +92,10 @@ class ScanUiState {
         }
 
         /**
-         * Indicate whether barcode verification is running.
+         * The number of times `onIdCaptureTimedOut` callback has been called.
          */
-        public Builder isBarcodeVerificationRunning(boolean value) {
-            state.isBarcodeVerificationRunning = value;
+        public Builder timeoutCount(int value) {
+            state.timeoutCount = value;
 
             return this;
         }
@@ -106,9 +103,8 @@ class ScanUiState {
         /**
          * Create an immutable UI state from this builder.
          */
-        public ScanUiState build() {
+        public IdScanUiState build() {
             return state;
         }
     }
 }
-
