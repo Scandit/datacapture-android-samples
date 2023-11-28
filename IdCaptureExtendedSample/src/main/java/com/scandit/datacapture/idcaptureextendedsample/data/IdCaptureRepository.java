@@ -25,6 +25,8 @@ import com.scandit.datacapture.id.capture.IdCapture;
 import com.scandit.datacapture.id.capture.IdCaptureListener;
 import com.scandit.datacapture.id.capture.IdCaptureSession;
 import com.scandit.datacapture.id.capture.IdCaptureSettings;
+import com.scandit.datacapture.id.data.CapturedId;
+import com.scandit.datacapture.id.data.CapturedResultType;
 import com.scandit.datacapture.id.data.IdDocumentType;
 import com.scandit.datacapture.id.data.IdImageType;
 import com.scandit.datacapture.id.data.SupportedSides;
@@ -222,6 +224,20 @@ public class IdCaptureRepository implements IdCaptureListener {
             @NotNull IdCaptureSession session,
             @NotNull FrameData data
     ) {
+        CapturedId capturedId = session.getNewlyCapturedId();
+        boolean isCaptureComplete = capturedId != null &&
+                capturedId.getCapturedResultType() != CapturedResultType.VIZ_RESULT ||
+                        capturedId.getViz().getCapturedSides() != SupportedSides.FRONT_ONLY ||
+                        !capturedId.getViz().isBackSideCaptureSupported();
+
+        /*
+         * Disable ID capture if the captured document is complete. It's important to disable ID
+         * capture as soon as possible to avoid capturing other documents while the result is
+         * displayed.
+         */
+        if (isCaptureComplete) {
+            disableIdCapture();
+        }
         /*
          * Implement to handle data captured from personal identification documents or their
          * elements like a barcode or the Machine Readable Zone (MRZ).
@@ -229,7 +245,7 @@ public class IdCaptureRepository implements IdCaptureListener {
          * This callback is executed on the background thread. We post the value to the LiveData
          * in order to return to the UI thread.
          */
-        capturedIds.postValue(new CapturedIdEvent(session.getNewlyCapturedId()));
+        capturedIds.postValue(new CapturedIdEvent(capturedId));
     }
 
     @Override

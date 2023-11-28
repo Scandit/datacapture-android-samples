@@ -116,7 +116,7 @@ public class BarcodeScanFragment extends Fragment {
         /*
          * Initialize the layout of this fragment and find all the view it needs to interact with.
          */
-        View root = inflater.inflate(R.layout.scan_fragment, container, false);
+        View root = inflater.inflate(R.layout.barcode_scan_fragment, container, false);
         attachDataCaptureView(root);
 
         return root;
@@ -221,7 +221,7 @@ public class BarcodeScanFragment extends Fragment {
      * of the recipient.
      */
     private void goToAgeVerificationRequired(GoToAgeVerificationRequired event) {
-        if (!event.isHandled()) {
+        if (event.getContentIfNotHandled() != null) {
             AgeVerificationRequiredDialogFragment.create()
                     .show(getChildFragmentManager(), AgeVerificationRequiredDialogFragment.TAG);
         }

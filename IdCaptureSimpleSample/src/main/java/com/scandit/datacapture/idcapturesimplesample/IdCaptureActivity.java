@@ -16,15 +16,11 @@ package com.scandit.datacapture.idcapturesimplesample;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
-import static java.lang.reflect.Modifier.PRIVATE;
-
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
@@ -57,7 +53,7 @@ public class IdCaptureActivity extends CameraPermissionActivity
 
     @VisibleForTesting
     public DataCaptureManager dataCaptureManager;
-    private DataCaptureView view;
+    private DataCaptureView dataCaptureView;
     private IdCaptureOverlay overlay;
 
     @Override
@@ -79,13 +75,13 @@ public class IdCaptureActivity extends CameraPermissionActivity
          * the camera preview on the screen. Pass your DataCaptureContext to the view's
          * constructor.
          */
-        view = DataCaptureView.newInstance(this, dataCaptureManager.getDataCaptureContext());
+        dataCaptureView = DataCaptureView.newInstance(this, dataCaptureManager.getDataCaptureContext());
         container.addView(
-                view,
+                dataCaptureView,
                 new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
         );
 
-        overlay = IdCaptureOverlay.newInstance(dataCaptureManager.getIdCapture(), view);
+        overlay = IdCaptureOverlay.newInstance(dataCaptureManager.getIdCapture(), null);
         overlay.setIdLayoutStyle(IdLayoutStyle.ROUNDED);
     }
 
@@ -117,6 +113,10 @@ public class IdCaptureActivity extends CameraPermissionActivity
          * Start listening on IdCapture events.
          */
         dataCaptureManager.getIdCapture().addListener(this);
+        /*
+        * Add overlay to data capture view.
+         */
+        dataCaptureView.addOverlay(overlay);
 
         /*
          * Switch the camera on. The camera frames will be sent to TextCapture for processing.
@@ -135,6 +135,7 @@ public class IdCaptureActivity extends CameraPermissionActivity
          */
         dataCaptureManager.getCamera().switchToDesiredState(FrameSourceState.OFF);
         dataCaptureManager.getIdCapture().removeListener(this);
+        dataCaptureView.removeOverlay(overlay);
     }
 
     @Override

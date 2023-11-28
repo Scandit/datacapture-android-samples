@@ -16,13 +16,13 @@ package com.scandit.datacapture.listbuildingsample;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.scandit.datacapture.listbuildingsample.data.ScanResult;
+import com.scandit.datacapture.listbuildingsample.ui.StackedImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +37,12 @@ class ResultListAdapter extends RecyclerView.Adapter<ResultListAdapter.ViewHolde
         @NonNull ViewGroup parent, int viewType
     ) {
         return new ViewHolder(
-            LayoutInflater.from(parent.getContext()).inflate(R.layout.result_item, parent, false)
-        );
+            LayoutInflater.from(parent.getContext()).inflate(R.layout.result_item, parent, false));
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull ViewHolder holder) {
+        holder.clear();
     }
 
     @Override
@@ -46,7 +50,7 @@ class ResultListAdapter extends RecyclerView.Adapter<ResultListAdapter.ViewHolde
         @NonNull ViewHolder holder, int position
     ) {
         ScanResult item = results.get(position);
-        holder.bind(item, position);
+        holder.bind(item);
     }
 
     @Override
@@ -54,38 +58,73 @@ class ResultListAdapter extends RecyclerView.Adapter<ResultListAdapter.ViewHolde
         return results.size();
     }
 
+    public int getItemsScannedCount() {
+        int count = 0;
+
+        for (ScanResult result: results) {
+            count += result.quantity;
+        }
+
+        return count;
+    }
+
     void addResult(ScanResult result) {
-        results.add(result);
-        notifyItemInserted(getItemCount() - 1);
+        for (int i = 0; i < results.size(); i++) {
+            ScanResult next = results.get(i);
+            if (next.barcodeData.equals(result.barcodeData) &&
+                next.barcodeSymbology.equals(result.barcodeSymbology)) {
+                // found an item, increase it's quantity and add its image to the existing list.
+                next.increaseQuantity();
+                next.addImages(result.images);
+
+                // move result to the top of the list
+                results.remove(next);
+                results.add(0, next);
+
+                // notify recyclerview that items have changed
+                notifyDataSetChanged();
+                return;
+            }
+        }
+
+        // no items found, adding to list.
+        results.add(0, result);
+        notifyItemInserted(0);
     }
 
     void clearResults() {
+        int resultSize = results.size();
         results.clear();
-        notifyDataSetChanged();
+        notifyItemRangeRemoved(0, resultSize);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView title;
         private final TextView description;
-        private final ImageView icon;
+        private final TextView qty;
+        private final StackedImageView imageStack;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.title = itemView.findViewById(R.id.item_title);
             this.description = itemView.findViewById(R.id.item_description);
-            this.icon = itemView.findViewById(R.id.item_icon);
+            this.imageStack = itemView.findViewById(R.id.item_image_stack);
+            this.qty = itemView.findViewById(R.id.item_qty);
         }
 
-        public void bind(ScanResult result, int position) {
-            String titleText = itemView.getContext().getString(R.string.item_title, position + 1);
-            title.setText(titleText);
+        public void bind(ScanResult result) {
+            title.setText(result.barcodeData);
+            description.setText(result.barcodeSymbology);
 
-            String desc = itemView.getContext()
-                .getString(R.string.item_description, result.barcodeSymbology, result.barcodeData);
-            description.setText(desc);
+            qty.setText(itemView.getContext().getString(R.string.item_qty, result.quantity));
+            qty.setVisibility(result.quantity > 1 ? View.VISIBLE : View.GONE);
 
-            icon.setImageBitmap(result.image);
+            imageStack.updateStackWith(result.images);
+        }
+
+        public void clear() {
+            imageStack.clearImages();
         }
     }
 }
