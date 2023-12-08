@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="56dp"
+    android:height="56dp"
+    android:viewportWidth="56"
+    android:viewportHeight="56">
+    <path
+        android:fillColor="#2EC1CE"
+        android:pathData="M43,28C43,36.284 36.284,43 28,43C19.716,43 13,36.284 13,28C13,19.716 19.716,13 28,13C36.284,13 43,19.716 43,28Z" />
+    <path
+        android:fillColor="#ffffff"
+        android:pathData="M36.613,21.443C37.204,22.034 37.204,22.992 36.613,23.583L26.579,33.617C26.558,33.642 26.535,33.666 26.511,33.69C25.925,34.276 24.975,34.276 24.389,33.69L19.439,28.74C18.854,28.154 18.854,27.204 19.439,26.618C20.025,26.033 20.975,26.033 21.561,26.618L25.429,30.487L34.473,21.443C35.064,20.852 36.022,20.852 36.613,21.443Z" />
+</vector>
