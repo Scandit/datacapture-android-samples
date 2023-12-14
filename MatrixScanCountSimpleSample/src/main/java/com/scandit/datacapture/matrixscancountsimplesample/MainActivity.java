@@ -34,7 +34,6 @@ import com.scandit.datacapture.barcode.count.ui.view.BarcodeCountViewUiListener;
 import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.tracking.data.TrackedBarcode;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
-import com.scandit.datacapture.core.common.async.Callback;
 import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.core.ui.style.Brush;
 
@@ -120,6 +119,9 @@ public class MainActivity extends CameraPermissionActivity
         // That way the session is not lost when coming back from results.
         if (!navigatingInternally) {
             CameraManager.getInstance().pauseFrameSource();
+
+            // Save current barcodes as additional barcodes.
+            BarcodeManager.getInstance().saveCurrentBarcodesAsAdditionalBarcodes();
         }
 
         // Unregister self as listener.
@@ -131,12 +133,6 @@ public class MainActivity extends CameraPermissionActivity
     @Override
     protected void onResume() {
         super.onResume();
-
-        if (!navigatingInternally) {
-            // Load current barcodes as additional barcodes.
-            BarcodeManager.getInstance().loadAllBarcodesAsAdditionalBarcodes();
-        }
-
         navigatingInternally = false;
 
         // Register self as a listener to get informed of tracked barcodes.
