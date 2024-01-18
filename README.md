@@ -103,10 +103,6 @@ Samples on other frameworks are located at [https://github.com/scandit](https://
 
 The Scandit Data Capture SDK documentation can be found here: [Android](https://docs.scandit.com/data-capture-sdk/android/index.html)
 
-## Sample Barcodes
-
-Once you get the sample up and running, go find some barcodes to scan. Don’t feel like getting up from your desk? Here’s a [handy pdf of barcodes](https://github.com/Scandit/.github/blob/main/images/PrintTheseBarcodes.pdf) you can print out.
-
 ## Trial Signup
 
 To add the Scandit Data Capture SDK to your app, sign up for your Scandit Developer Account  and get instant access to your license key: [https://ssl.scandit.com/dashboard/sign-up?p=test](https://ssl.scandit.com/dashboard/sign-up?p=test)

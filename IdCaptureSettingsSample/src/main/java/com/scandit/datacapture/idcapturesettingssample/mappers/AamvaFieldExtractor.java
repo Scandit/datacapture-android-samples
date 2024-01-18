@@ -56,7 +56,6 @@ public final class AamvaFieldExtractor extends FieldExtractor {
         result.add(new CaptureResult.Entry("Restrictions Code", extractField(aamvaResult.getRestrictionsCode())));
         result.add(new CaptureResult.Entry("Endorsements Code", extractField(aamvaResult.getEndorsementsCode())));
         result.add(new CaptureResult.Entry("Card Revision Date", extractField(aamvaResult.getCardRevisionDate())));
-        result.add(new CaptureResult.Entry("First Name Without Middle Name", extractField(aamvaResult.getFirstNameWithoutMiddleName())));
         result.add(new CaptureResult.Entry("Middle Name", extractField(aamvaResult.getMiddleName())));
         result.add(new CaptureResult.Entry("Driver Name Suffix", extractField(aamvaResult.getDriverNameSuffix())));
         result.add(new CaptureResult.Entry("Driver Name Prefix", extractField(aamvaResult.getDriverNamePrefix())));

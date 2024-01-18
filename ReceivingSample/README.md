@@ -32,10 +32,6 @@ MatrixScan Count (Barcode Count) and SparkScan are APIs of the Scandit Data Capt
 
 To add MatrixScan Count to your app, sign up for your Scandit Developer Account  and get instant access to your license key: [https://ssl.scandit.com/dashboard/sign-up?p=test](https://ssl.scandit.com/dashboard/sign-up?p=test)
 
-## Sample Barcodes
-
-Once you get the sample up and running, go find some barcodes to scan. Don’t feel like getting up from your desk? Here’s a [handy pdf of barcodes](https://github.com/Scandit/.github/blob/main/images/PrintTheseBarcodes.pdf) you can print out.
-
 ## Support
 
 Our support engineers can be reached at [support@scandit.com](mailto:support@scandit.com).
