@@ -55,18 +55,18 @@ public class BarcodeManager {
         additionalBarcodes = session.getAdditionalBarcodes();
     }
 
-    // Save any scanned barcodes as additional barcodes, so they're still scanned
-    // after coming back from background.
-    public void saveCurrentBarcodesAsAdditionalBarcodes() {
-        List<Barcode> barcodesToSave = new ArrayList<>();
+    // Load all scanned barcodes as additional barcodes, so they're still scanned
+    // after a configuration change or coming back from background.
+    public void loadAllBarcodesAsAdditionalBarcodes() {
+        List<Barcode> barcodesToLoad = new ArrayList<>();
 
         for (TrackedBarcode barcode : scannedBarcodes) {
-            barcodesToSave.add(barcode.getBarcode());
+            barcodesToLoad.add(barcode.getBarcode());
         }
 
-        barcodesToSave.addAll(additionalBarcodes);
+        barcodesToLoad.addAll(additionalBarcodes);
         if (barcodeCount.get() != null) {
-            barcodeCount.get().setAdditionalBarcodes(barcodesToSave);
+            barcodeCount.get().setAdditionalBarcodes(barcodesToLoad);
         }
     }
 

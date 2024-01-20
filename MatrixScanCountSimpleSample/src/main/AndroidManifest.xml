@@ -15,8 +15,7 @@
         <activity
             android:name="com.scandit.datacapture.matrixscancountsimplesample.MainActivity"
             android:exported="true"
-            android:label="@string/app_title"
-            android:screenOrientation="userPortrait">
+            android:label="@string/app_title">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -24,7 +23,6 @@
         </activity>
         <activity
             android:name="com.scandit.datacapture.matrixscancountsimplesample.ResultsActivity"
-            android:label="@string/scan_results"
-            android:screenOrientation="userPortrait" />
+            android:label="@string/scan_results" />
     </application>
 </manifest>
