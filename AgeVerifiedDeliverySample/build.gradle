@@ -58,6 +58,4 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:${versions.androidx_constraintlayout}")
     implementation("com.google.android.material:material:${versions.material}")
 
-    implementation("com.squareup.okhttp3:okhttp:${versions.okhttp}")
-
 }

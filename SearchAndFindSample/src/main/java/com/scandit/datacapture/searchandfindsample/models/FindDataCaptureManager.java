@@ -28,11 +28,20 @@ public final class FindDataCaptureManager {
 
     private final DataCaptureManager baseDataCaptureManager = DataCaptureManager.CURRENT;
     public final DataCaptureContext dataCaptureContext = baseDataCaptureManager.dataCaptureContext;
-    public final BarcodeFind barcodeFind;
+    private BarcodeFind barcodeFind;
 
-    FindDataCaptureManager() {
-        // Create new barcode find mode with default settings.
-        barcodeFind = new BarcodeFind(new BarcodeFindSettings());
+    public BarcodeFind getBarcodeFind() {
+        if (barcodeFind == null) {
+            // Create new barcode find mode with default settings.
+            barcodeFind = new BarcodeFind(new BarcodeFindSettings());
+        }
+        return barcodeFind;
+    }
+
+    public void stopScanningSession() {
+        // Stop the scanning session on the BarcodeFind object. This way we can reuse
+        // the BarcodeFind instance for a new scanning session.
+        barcodeFind.stop();
     }
 
     public void setupForSymbology(Symbology symbology) {
@@ -44,7 +53,7 @@ public final class FindDataCaptureManager {
         settings.setSymbologyEnabled(symbology, true);
 
         // We apply the new settings to the barcode find.
-        barcodeFind.applySettings(settings);
+        getBarcodeFind().applySettings(settings);
     }
 
     public void setupSearchedItems(String data) {
@@ -53,6 +62,6 @@ public final class FindDataCaptureManager {
 
         // The BarcodeFind can search a set of items. In this simplified sample, we set only
         // one items, but for real case we can set several at once.
-        barcodeFind.setItemList(items);
+        getBarcodeFind().setItemList(items);
     }
 }

@@ -91,6 +91,33 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/verification_success_layout" />
 
+        <TextView
+            android:id="@+id/license_warning_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_padding_small"
+            android:layout_marginEnd="@dimen/default_padding_small"
+            android:layout_marginTop="@dimen/default_padding_small"
+            android:fontFamily="sans-serif-medium"
+            android:textAlignment="center"
+            android:textColor="@color/grey_id_scanning"
+            android:textSize="@dimen/dl_scanning_result_text_size"
+            android:text="@string/license_does_not_support_highlighting"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/verification_error_layout" />
+
+        <ImageView
+            android:id="@+id/verification_image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:scaleType="centerInside"
+            android:adjustViewBounds="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/license_warning_text"
+            android:padding="@dimen/default_padding_small" />
+
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/user_image"
             android:layout_width="@dimen/user_image_size"
@@ -100,7 +127,7 @@
             android:background="@drawable/bg_circle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/verification_error_layout"
+            app:layout_constraintTop_toBottomOf="@+id/verification_image"
             app:shapeAppearanceOverlay="@style/CircularImage"
             tools:ignore="ContentDescription" />
 

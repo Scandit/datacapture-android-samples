@@ -60,6 +60,8 @@ public final class Keys {
     public final static String CAPTURED_BRUSH = "captured_brush";
     public final static String VIEWFINDER_FRONT_TEXT = "viewfinder_front_text";
     public final static String VIEWFINDER_BACK_TEXT = "viewfinder_back_text";
+    public final static String TEXT_HINT_POSITION = "text_hint_position_text";
+    public final static String SHOW_TEXT_HINTS = "show_text_hint_text";
 
     // Gestures.
     public final static String TAP_TO_FOCUS = "tap_to_focus";

@@ -40,6 +40,7 @@ import com.scandit.datacapture.id.data.IdImageType;
 import com.scandit.datacapture.id.data.SupportedSides;
 import com.scandit.datacapture.id.ui.IdLayoutLineStyle;
 import com.scandit.datacapture.id.ui.IdLayoutStyle;
+import com.scandit.datacapture.id.ui.TextHintPosition;
 import com.scandit.datacapture.idcapturesettingssample.ui.BrushStyle;
 
 import java.util.HashMap;
@@ -346,6 +347,19 @@ public class SettingsRepository extends PreferenceDataStore {
         } else {
             return IdLayoutStyle.valueOf(style);
         }
+    }
+
+    public TextHintPosition getTextHintPosition() {
+        String p = getString(Keys.TEXT_HINT_POSITION, null);
+        if (p == null) {
+            return Defaults.getDefaultTextHintPosition();
+        } else {
+            return TextHintPosition.valueOf(p);
+        }
+    }
+
+    public boolean getShowTextHints() {
+        return getBoolean(Keys.SHOW_TEXT_HINTS, Defaults.getDefaultShowTextHints());
     }
 
     /*

@@ -9,6 +9,7 @@
     <string name="scanning_dl_barcode_verification_failure">Verification checks failed.</string>
     <string name="scanning_dl_barcode_verification_error">An error was encountered. Please make sure that your Scandit license key permits barcode verification.</string>
     <string name="scanning_dl_barcode_verification_in_progress">Running verification checks</string>
+    <string name="license_does_not_support_highlighting">Your license does not support highlighting discrepancies</string>
     <string name="clear">Clear</string>
     <string name="error">Error</string>
     <string name="document_type_driving_license">Driving License</string>

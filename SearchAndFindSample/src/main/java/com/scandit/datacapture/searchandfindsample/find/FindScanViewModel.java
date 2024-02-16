@@ -18,28 +18,28 @@ import androidx.lifecycle.ViewModel;
 
 import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.find.capture.BarcodeFind;
-import com.scandit.datacapture.barcode.find.capture.BarcodeFindItem;
-import com.scandit.datacapture.barcode.find.capture.BarcodeFindItemSearchOptions;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
-import com.scandit.datacapture.searchandfindsample.models.DataCaptureManager;
 import com.scandit.datacapture.searchandfindsample.models.FindDataCaptureManager;
-
-import java.util.HashSet;
-import java.util.Set;
-
 
 public final class FindScanViewModel extends ViewModel {
 
-    private final FindDataCaptureManager dataCaptureManager = DataCaptureManager.FIND;
+    private final FindDataCaptureManager dataCaptureManager = new FindDataCaptureManager();
 
     final DataCaptureContext dataCaptureContext = dataCaptureManager.dataCaptureContext;
-    final BarcodeFind barcodeFind = dataCaptureManager.barcodeFind;
 
     FindScanViewModel(Symbology symbology, String data) {
-
         // We change the barcode tracking settings to enable only the previously scanned symbology.
         dataCaptureManager.setupForSymbology(symbology);
         // We setup the list of searched items.
         dataCaptureManager.setupSearchedItems(data);
+    }
+
+    BarcodeFind getBarcodeFind() {
+        return dataCaptureManager.getBarcodeFind();
+    }
+
+    public void cleanup() {
+        // Stop the scanning session.
+        dataCaptureManager.stopScanningSession();
     }
 }

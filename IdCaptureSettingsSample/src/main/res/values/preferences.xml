@@ -44,4 +44,7 @@
 
     <string name="viewfinder_front_text_title">Viewfinder front text</string>
     <string name="viewfinder_back_text_title">Viewfinder back text</string>
+
+    <string name="text_hint_position_title">Text Hint Position</string>
+    <string name="show_text_hints_title">Show Text Hints</string>
 </resources>

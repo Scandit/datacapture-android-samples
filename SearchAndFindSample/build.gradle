@@ -44,6 +44,4 @@ dependencies {
 
     implementation("androidx.coordinatorlayout:coordinatorlayout:${versions.androidx_coordinatorlayout}")
     implementation("com.google.android.material:material:${versions.android_material}")
-
-    implementation("com.squareup.okhttp3:okhttp:${versions.okhttp}")
 }

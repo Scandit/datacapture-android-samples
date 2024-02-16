@@ -83,7 +83,7 @@ public final class FindScanFragment extends Fragment {
         barcodeFindView = BarcodeFindView.newInstance(
                 root,
                 viewModel.dataCaptureContext,
-                viewModel.barcodeFind,
+                viewModel.getBarcodeFind(),
                 // With the BarcodeFindViewSettings, we can defined haptic and sound feedback,
                 // as well as change the visual feedback for found barcodes.
                 new BarcodeFindViewSettings()
@@ -124,6 +124,12 @@ public final class FindScanFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+
+        if (isRemoving()) {
+            // If the user is leaving the screen, we'll be discarding the scanning mode,
+            // so we perform some cleanup before that.
+            viewModel.cleanup();
+        }
 
         // Pause finding by calling the BarcodeFindView onPause method.
         // Under the hood, it will disable the mode and free resources that are not needed in a

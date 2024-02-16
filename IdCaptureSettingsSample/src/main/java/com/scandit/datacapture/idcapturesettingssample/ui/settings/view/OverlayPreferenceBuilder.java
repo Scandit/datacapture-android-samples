@@ -59,6 +59,7 @@ package com.scandit.datacapture.idcapturesettingssample.ui.settings.view;
 import android.content.Context;
 
 import androidx.preference.DropDownPreference;
+import androidx.preference.SwitchPreferenceCompat;
 import androidx.preference.EditTextPreference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceGroup;
@@ -124,6 +125,27 @@ public class OverlayPreferenceBuilder implements SectionPreferenceBuilder {
                 Defaults.getDefaultCapturedBrushStyle().name()
         );
         overlayCategory.addPreference(capturedBrushPreference);
+
+        /*
+         * DropDown preference to text hint position
+         */
+        DropDownPreference textHintPositionPreference = PreferenceBuilder.dropDown(
+                context,
+                Keys.TEXT_HINT_POSITION,
+                context.getString(R.string.text_hint_position_title),
+                Defaults.getTextHintPositionEntries(),
+                Defaults.getTextHintPositionValues(),
+                Defaults.getDefaultTextHintPosition().name()
+        );
+        overlayCategory.addPreference(textHintPositionPreference);
+
+        SwitchPreferenceCompat showTextHintsSwitch = PreferenceBuilder._switch(
+                context,
+                Keys.SHOW_TEXT_HINTS,
+                context.getString(R.string.show_text_hints_title),
+                Defaults.getDefaultShowTextHints()
+        );
+        overlayCategory.addPreference(showTextHintsSwitch);
 
         EditTextPreference viewfinderFrontTextPreference = PreferenceBuilder.editText(
                 context,

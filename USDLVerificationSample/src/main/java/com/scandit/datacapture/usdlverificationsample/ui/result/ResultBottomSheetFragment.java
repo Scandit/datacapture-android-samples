@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,6 +40,10 @@ public class ResultBottomSheetFragment extends BottomSheetDialogFragment {
 
     private ResultListAdapter adapter;
     private ImageView userImage;
+    private ImageView verificationImage;
+
+    private TextView warningText;
+
     private LinearLayout verificationSuccessLayout;
     private LinearLayout verificationErrorLayout;
 
@@ -84,6 +89,8 @@ public class ResultBottomSheetFragment extends BottomSheetDialogFragment {
 
         RecyclerView recyclerResult = root.findViewById(R.id.scanning_results_recycler_view);
         userImage = root.findViewById(R.id.user_image);
+        verificationImage = root.findViewById(R.id.verification_image);
+        warningText = root.findViewById(R.id.license_warning_text);
         verificationSuccessLayout = root.findViewById(R.id.verification_success_layout);
         verificationErrorLayout = root.findViewById(R.id.verification_error_layout);
         ImageView closeButton = root.findViewById(R.id.close_button);
@@ -131,18 +138,42 @@ public class ResultBottomSheetFragment extends BottomSheetDialogFragment {
         adapter.submitList(result.getEntries());
 
         renderFaceImage(result);
+        renderVerificationImage(result);
+        renderLicenseWarning(result);
 
         renderVerificationResult(result);
     }
 
     /**
-     * Display the the face image extracted from the document.
+     * Display the face image extracted from the document.
      */
     private void renderFaceImage(CaptureResult result) {
         if (result.getFaceImageBytes() != null) {
             userImage.setImageBitmap(convertBytesToImage(result.getFaceImageBytes()));
         } else {
             userImage.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * Display the verification image extracted from the document.
+     */
+    private void renderVerificationImage(CaptureResult result) {
+        if (result.getVerificationImageBytes() != null) {
+            verificationImage.setImageBitmap(convertBytesToImage(result.getVerificationImageBytes()));
+        } else {
+            verificationImage.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * Display the verification license warning text.
+     */
+    private void renderLicenseWarning(CaptureResult result) {
+        if (result.isShownLicenseWarning()) {
+            warningText.setVisibility(View.VISIBLE);
+        } else {
+            warningText.setVisibility(View.GONE);
         }
     }
 

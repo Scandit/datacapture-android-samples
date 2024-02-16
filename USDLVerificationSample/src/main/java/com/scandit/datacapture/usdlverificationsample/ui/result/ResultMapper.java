@@ -50,15 +50,22 @@ public class ResultMapper {
     public CaptureResult mapResult(
             boolean isExpired,
             boolean isFrontBackComparisonSuccessful,
-            boolean isCloudVerificationSuccessful
+            boolean isCloudVerificationSuccessful,
+            @Nullable Bitmap verificationImage,
+            boolean isShownLicenseWarning
     ) {
         /*
-         * Extract and convert the document face image.
+         * Extract and convert the images.
          */
         byte[] faceImageBytes = null;
         Bitmap faceImage = capturedId.getImageBitmapForType(IdImageType.FACE);
         if (faceImage != null) {
             faceImageBytes = convertImageToBytes(faceImage);
+        }
+
+        byte[] verificationImageBytes = null;
+        if (verificationImage != null) {
+            verificationImageBytes = convertImageToBytes(verificationImage);
         }
 
         List<CaptureResult.Entry> entries = getBaseEntries();
@@ -68,7 +75,9 @@ public class ResultMapper {
                 faceImageBytes,
                 isExpired,
                 isFrontBackComparisonSuccessful,
-                isCloudVerificationSuccessful
+                isCloudVerificationSuccessful,
+                verificationImageBytes,
+                isShownLicenseWarning
         );
     }
 

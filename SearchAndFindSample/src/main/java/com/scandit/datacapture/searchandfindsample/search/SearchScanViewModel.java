@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
 
 public final class SearchScanViewModel extends ViewModel implements BarcodeCaptureListener {
 
-    private final SearchDataCaptureManager dataCaptureManager = DataCaptureManager.SEARCH;
+    private final SearchDataCaptureManager dataCaptureManager = new SearchDataCaptureManager();
 
     final DataCaptureContext dataCaptureContext = dataCaptureManager.dataCaptureContext;
     final BarcodeCapture barcodeCapture = dataCaptureManager.barcodeCapture;

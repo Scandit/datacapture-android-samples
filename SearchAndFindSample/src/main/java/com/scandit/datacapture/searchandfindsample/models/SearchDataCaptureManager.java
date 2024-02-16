@@ -32,7 +32,7 @@ public final class SearchDataCaptureManager {
     public final DataCaptureContext dataCaptureContext = baseDataCaptureManager.dataCaptureContext;
     public final BarcodeCapture barcodeCapture;
 
-    SearchDataCaptureManager() {
+    public SearchDataCaptureManager() {
         // The barcode capturing process is configured through barcode capture settings
         // which are then applied to the barcode capture instance that manages barcode recognition.
         BarcodeCaptureSettings settings = new BarcodeCaptureSettings();

@@ -57,6 +57,4 @@ dependencies {
     implementation("com.google.android.material:material:${versions.material}")
     implementation("androidx.preference:preference:${versions.androidx_preference}")
 
-    implementation("com.squareup.okhttp3:okhttp:${versions.okhttp}")
-
 }

@@ -43,6 +43,4 @@ dependencies {
 
     implementation("androidx.appcompat:appcompat:${versions.androidx_appcompat}")
     implementation("com.google.android.material:material:${versions.material}")
-
-    implementation("com.squareup.okhttp3:okhttp:${versions.okhttp}")
 }

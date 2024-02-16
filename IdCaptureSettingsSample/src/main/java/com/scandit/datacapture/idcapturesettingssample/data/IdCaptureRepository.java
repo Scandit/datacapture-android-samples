@@ -143,6 +143,8 @@ public class IdCaptureRepository implements IdCaptureListener {
     public IdCaptureOverlay buildIdCaptureOverlay() {
         IdCaptureOverlay overlay = IdCaptureOverlay.newInstance(idCapture, null);
         overlay.setIdLayoutStyle(settingsRepository.getOverlayStyle());
+        overlay.setTextHintPosition(settingsRepository.getTextHintPosition());
+        overlay.setShowTextHints(settingsRepository.getShowTextHints());
         overlay.setIdLayoutLineStyle(settingsRepository.getOverlayLineStyle());
         overlay.setCapturedBrush(settingsRepository.getCapturedBrush());
         if (!settingsRepository.getViewfinderFrontText().isEmpty()) {

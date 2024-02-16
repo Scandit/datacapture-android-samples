@@ -40,6 +40,7 @@ import com.scandit.datacapture.id.data.IdImageType;
 import com.scandit.datacapture.id.data.SupportedSides;
 import com.scandit.datacapture.id.ui.IdLayoutLineStyle;
 import com.scandit.datacapture.id.ui.IdLayoutStyle;
+import com.scandit.datacapture.id.ui.TextHintPosition;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 import com.scandit.datacapture.idcapturesettingssample.ui.BrushStyle;
 import com.scandit.datacapture.idcapturesettingssample.utils.EnumUtils;
@@ -171,6 +172,8 @@ public final class Defaults {
     // Overlay.
     private static final IdLayoutStyle[] SUPPORTED_OVERLAY_STYLES = IdLayoutStyle.values();
     private static final IdLayoutLineStyle[] SUPPORTED_OVERLAY_LINE_STYLES = IdLayoutLineStyle.values();
+
+    private static final TextHintPosition[] TEXT_HINT_POSITIONS = TextHintPosition.values();
     private static final BrushStyle[] SUPPORTED_OVERLAY_CAPTURED_BRUSHES = BrushStyle.values();
     private static final Brush DEFAULT_CAPTURED_BRUSH = IdCaptureOverlay.DEFAULT_CAPTURED_BRUSH;
 
@@ -190,8 +193,16 @@ public final class Defaults {
         return EnumUtils.getEntryNamesTitleCase(SUPPORTED_OVERLAY_LINE_STYLES);
     }
 
+    public static String[] getTextHintPositionEntries() {
+        return EnumUtils.getEntryNamesTitleCase(TEXT_HINT_POSITIONS);
+    }
+
     public static String[] getSupportedOverlayLineStylesValues() {
         return EnumUtils.getEntryNames(SUPPORTED_OVERLAY_LINE_STYLES);
+    }
+
+    public static String[] getTextHintPositionValues() {
+        return EnumUtils.getEntryNames(TEXT_HINT_POSITIONS);
     }
 
     public static IdLayoutLineStyle getDefaultOverlayLineStyle() {
@@ -208,6 +219,14 @@ public final class Defaults {
 
     public static BrushStyle getDefaultCapturedBrushStyle() {
         return BrushStyle.DEFAULT;
+    }
+
+    public static TextHintPosition getDefaultTextHintPosition() {
+        return TextHintPosition.ABOVE_VIEWFINDER;
+    }
+
+    public static Boolean getDefaultShowTextHints() {
+        return true;
     }
 
     public static Brush getDefaultBrush() {

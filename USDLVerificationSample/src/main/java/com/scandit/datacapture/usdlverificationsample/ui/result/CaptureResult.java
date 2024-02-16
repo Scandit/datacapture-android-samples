@@ -36,23 +36,29 @@ public class CaptureResult implements Parcelable {
     private final ArrayList<Entry> entries;
 
     @Nullable private final byte[] faceImageBytes;
+    @Nullable private final byte[] verificationImageBytes;
 
     private boolean isExpired;
     private boolean isFrontBackComparisonSuccessful;
     private boolean isBarcodeVerificationSuccessful;
+    private boolean isShownLicenseWarning;
 
     public CaptureResult(
             Collection<Entry> entries,
             @Nullable byte[] faceImageBytes,
             boolean isExpired,
             boolean isFrontBackComparisonSuccessful,
-            boolean isBarcodeVerificationSuccessful
+            boolean isBarcodeVerificationSuccessful,
+            @Nullable byte[] verificationImageBytes,
+            boolean isShownLicenseWarning
     ) {
         this.entries = new ArrayList<>(entries);
         this.faceImageBytes = faceImageBytes;
         this.isExpired = isExpired;
         this.isFrontBackComparisonSuccessful = isFrontBackComparisonSuccessful;
         this.isBarcodeVerificationSuccessful = isBarcodeVerificationSuccessful;
+        this.verificationImageBytes = verificationImageBytes;
+        this.isShownLicenseWarning = isShownLicenseWarning;
     }
 
     public ArrayList<Entry> getEntries() {
@@ -62,6 +68,11 @@ public class CaptureResult implements Parcelable {
     @Nullable
     public byte[] getFaceImageBytes() {
         return faceImageBytes;
+    }
+
+    @Nullable
+    public byte[] getVerificationImageBytes() {
+        return verificationImageBytes;
     }
 
     public boolean isExpired() {
@@ -76,6 +87,10 @@ public class CaptureResult implements Parcelable {
         return isBarcodeVerificationSuccessful;
     }
 
+    public boolean isShownLicenseWarning() {
+        return isShownLicenseWarning;
+    }
+
     private CaptureResult(Parcel in) {
         entries = in.readArrayList(getClass().getClassLoader());
 
@@ -85,6 +100,10 @@ public class CaptureResult implements Parcelable {
         isExpired = in.readInt() == 1;
         isFrontBackComparisonSuccessful = in.readInt() == 1;
         isBarcodeVerificationSuccessful = in.readInt() == 1;
+        int verificationImageBytesSize = in.readInt();
+        verificationImageBytes = new byte[verificationImageBytesSize];
+        in.readByteArray(verificationImageBytes);
+        isShownLicenseWarning = in.readInt() == 1;
     }
 
     @Override
@@ -98,6 +117,11 @@ public class CaptureResult implements Parcelable {
         dest.writeInt(isExpired ? 1 : 0);
         dest.writeInt(isFrontBackComparisonSuccessful ? 1 : 0);
         dest.writeInt(isBarcodeVerificationSuccessful ? 1 : 0);
+        if (verificationImageBytes != null) {
+            dest.writeInt(verificationImageBytes.length);
+            dest.writeByteArray(verificationImageBytes);
+        }
+        dest.writeInt(isShownLicenseWarning ? 1 : 0);
     }
 
     @Override

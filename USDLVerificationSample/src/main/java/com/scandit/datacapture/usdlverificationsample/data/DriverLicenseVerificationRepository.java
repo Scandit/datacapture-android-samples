@@ -45,7 +45,7 @@ public class DriverLicenseVerificationRepository {
      * Create a new instance of this class.
      */
     public DriverLicenseVerificationRepository(DataCaptureContext dataCaptureContext) {
-        this.comparisonVerifier = AamvaVizBarcodeComparisonVerifier.create();
+        this.comparisonVerifier = AamvaVizBarcodeComparisonVerifier.create(dataCaptureContext);
         this.barcodeVerifier = AamvaBarcodeVerifier.create(dataCaptureContext);
     }
 
