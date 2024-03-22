@@ -162,13 +162,8 @@ public class ResultsListPresenter {
         );
     }
 
-    // Add a single barcode to the list. As part of the mapping to a ScanResult object,
-    // and call a callback to inform of it in case feedback needs to be emitted.
-    public void addToList(Barcode barcode, FeedbackCallback feedbackCallback) {
-        if (feedbackCallback != null) {
-            feedbackCallback.emitFeedback(barcode);
-        }
-
+    // Add a single barcode to the list.
+    public void addToList(Barcode barcode) {
         ScanResult result = new ScanResult(barcode.getData(), barcode.getSymbology().name());
         resultListAdapter.addResult(result);
         updateListItemCount();
@@ -183,7 +178,7 @@ public class ResultsListPresenter {
         clearList();
         List<Barcode> barcodes = BarcodeManager.getInstance().getAllBarcodes();
         for (Barcode barcode : barcodes) {
-            addToList(barcode, null);
+            addToList(barcode);
         }
     }
 }

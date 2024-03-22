@@ -33,6 +33,7 @@ import android.content.Context;
 import androidx.preference.DropDownPreference;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.PreferenceGroup;
+import androidx.preference.SwitchPreferenceCompat;
 
 import com.scandit.datacapture.idcapturesettingssample.R;
 import com.scandit.datacapture.idcapturesettingssample.data.Defaults;
@@ -77,16 +78,15 @@ public class IdCapturePreferenceBuilder implements SectionPreferenceBuilder {
         parent.addPreference(supportedSidesPreference);
 
         /*
-         * MultiSelection preference to choose which image sides are returned as part of the result.
+         * Switch to enable or disable the face image as part of the result.
          */
-        MultiSelectListPreference supportedImageSidesPreference = PreferenceBuilder.multiSelectList(
-                context,
-                Keys.SUPPORTED_IMAGES,
-                context.getString(R.string.supported_images_title),
-                Defaults.getSupportedImagesEntries(),
-                Defaults.getSupportedImagesValues()
+        SwitchPreferenceCompat faceImageSwitchPreference = PreferenceBuilder._switch(
+            context,
+            Keys.FACE_IMAGE,
+            context.getString(R.string.result_with_face_image_title),
+            Defaults.isFaceImageEnabled()
         );
-        parent.addPreference(supportedImageSidesPreference);
+        parent.addPreference(faceImageSwitchPreference);
 
         /*
          * DropDown preference to choose anonymization mode

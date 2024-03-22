@@ -16,6 +16,7 @@ package com.scandit.datacapture.matrixscancountsimplesample;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -36,6 +37,7 @@ import com.scandit.datacapture.matrixscancountsimplesample.data.ScanDetails;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class ResultsActivity extends AppCompatActivity {
@@ -71,8 +73,13 @@ public class ResultsActivity extends AppCompatActivity {
         );
 
         // Receive results from previous screen and set recycler view items.
-        final ScanDetails[] scanResults =
-            (ScanDetails[]) getIntent().getSerializableExtra(ARG_SCAN_RESULTS);
+        ScanDetails[] scanResults;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            scanResults = getIntent().getSerializableExtra(ARG_SCAN_RESULTS, ScanDetails[].class);
+        } else {
+            scanResults = (ScanDetails[]) getIntent().getSerializableExtra(ARG_SCAN_RESULTS);
+        }
+
         recyclerView.setAdapter(new ScanResultsAdapter(this, scanResults));
 
         Button doneButton = findViewById(R.id.done_button);

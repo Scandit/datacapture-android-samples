@@ -34,6 +34,8 @@ import com.scandit.datacapture.barcode.spark.capture.SparkScan;
 import com.scandit.datacapture.barcode.spark.capture.SparkScanListener;
 import com.scandit.datacapture.barcode.spark.capture.SparkScanSession;
 import com.scandit.datacapture.barcode.spark.capture.SparkScanSettings;
+import com.scandit.datacapture.barcode.spark.feedback.SparkScanBarcodeFeedback;
+import com.scandit.datacapture.barcode.spark.feedback.SparkScanFeedbackDelegate;
 import com.scandit.datacapture.barcode.spark.feedback.SparkScanViewFeedback;
 import com.scandit.datacapture.barcode.spark.ui.SparkScanCoordinatorLayout;
 import com.scandit.datacapture.barcode.spark.ui.SparkScanView;
@@ -50,7 +52,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class MainActivity extends CameraPermissionActivity implements SparkScanListener {
+public class MainActivity extends CameraPermissionActivity implements SparkScanListener, SparkScanFeedbackDelegate {
 
 	// There is a Scandit sample license key set below here.
 	// This license key is enabled for sample evaluation only.
@@ -88,7 +90,7 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
         clearButton = findViewById(R.id.clear_list);
         clearButton.setOnClickListener(view -> clearList());
 
-        //Setup RecyclerView for results
+        // Setup RecyclerView for results
         resultRecycler = findViewById(R.id.result_recycler);
         resultRecycler.setLayoutManager(new LinearLayoutManager(this));
         DividerItemDecoration divider =
@@ -157,6 +159,9 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
         // to the container.
         sparkScanView =
             SparkScanView.newInstance(container, dataCaptureContext, sparkScan, settings);
+
+        // Set the feedback delegate
+        sparkScanView.setFeedbackDelegate(this);
     }
 
     private void clearList() {
@@ -173,6 +178,7 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
     @Override
     protected void onDestroy() {
         sparkScan.removeListener(this);
+        sparkScanView.setFeedbackDelegate(null);
         backgroundExecutor.shutdown();
         super.onDestroy();
     }
@@ -191,9 +197,6 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
     }
 
     private void validBarcodeScanned(Barcode barcode, FrameData data) {
-        // Emit sound and vibration feedback
-        sparkScanView.emitFeedback(new SparkScanViewFeedback.Success());
-
         if (data != null) {
             data.retain();
 
@@ -307,11 +310,15 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
         clearButton.setEnabled(count > 0);
     }
 
-    private void invalidBarcodeScanned() {
-        // Emit sound and vibration feedback
-        sparkScanView.emitFeedback(
-            new SparkScanViewFeedback.Error("This code should not have been scanned",
-                TimeInterval.seconds(60f)));
+    @Nullable
+    @Override
+    public SparkScanBarcodeFeedback getFeedbackForBarcode(@NonNull Barcode barcode) {
+        if (isValidBarcode(barcode)) {
+            return new SparkScanBarcodeFeedback.Success();
+        } else {
+            return new SparkScanBarcodeFeedback.Error("This code should not have been scanned",
+                TimeInterval.seconds(60f));
+        }
     }
 
     @Override
@@ -323,8 +330,6 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
 
         if (isValidBarcode(barcode)) {
             validBarcodeScanned(barcode, data);
-        } else {
-            invalidBarcodeScanned();
         }
     }
 

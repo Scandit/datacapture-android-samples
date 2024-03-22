@@ -156,13 +156,9 @@ public class ResultsListPresenter {
     }
 
     // Add a single barcode to the list. As part of the mapping to a ScanResult object,
-    // check if the item is expired or not, and call a callback to inform of it in case
-    // feedback needs to be emitted.
-    public void addToList(Barcode barcode, FeedbackCallback feedbackCallback) {
+    // check if the item is expired or not.
+    public void addToList(Barcode barcode) {
         boolean isExpired = BarcodeManager.getInstance().isBarcodeDataExpired(barcode.getData());
-        if (feedbackCallback != null) {
-            feedbackCallback.emitFeedback(context, barcode, isExpired);
-        }
 
         ScanResult result = new ScanResult(
             barcode.getData(),
@@ -182,7 +178,7 @@ public class ResultsListPresenter {
         clearList();
         List<Barcode> barcodes = BarcodeManager.getInstance().getAllBarcodes();
         for (Barcode barcode : barcodes) {
-            addToList(barcode, null);
+            addToList(barcode);
         }
     }
 }

@@ -36,7 +36,6 @@ import com.scandit.datacapture.core.source.VideoResolution;
 import com.scandit.datacapture.core.ui.style.Brush;
 import com.scandit.datacapture.id.data.IdAnonymizationMode;
 import com.scandit.datacapture.id.data.IdDocumentType;
-import com.scandit.datacapture.id.data.IdImageType;
 import com.scandit.datacapture.id.data.SupportedSides;
 import com.scandit.datacapture.id.ui.IdLayoutLineStyle;
 import com.scandit.datacapture.id.ui.IdLayoutStyle;
@@ -54,7 +53,6 @@ public final class Defaults {
     // IdCapture.
     private static final IdDocumentType[] SUPPORTED_DOCUMENTS = IdDocumentType.values();
     private static final SupportedSides[] SUPPORTED_SIDES = SupportedSides.values();
-    private static final IdImageType[] SUPPORTED_IMAGES = IdImageType.values();
     private static final IdAnonymizationMode[] ANONYMIZATION_MODES = IdAnonymizationMode.values();
     private static final FeedbackType[] FEEDBACK_TYPES = FeedbackType.values();
 
@@ -78,14 +76,6 @@ public final class Defaults {
         return SupportedSides.FRONT_ONLY;
     }
 
-    public static String[] getSupportedImagesEntries() {
-        return EnumUtils.getEntryNamesTitleCase(SUPPORTED_IMAGES);
-    }
-
-    public static String[] getSupportedImagesValues() {
-        return EnumUtils.getEntryNames(SUPPORTED_IMAGES);
-    }
-
     public static IdAnonymizationMode getDefaultAnonymizationMode() {
         return IdAnonymizationMode.FIELDS_ONLY;
     }
@@ -104,6 +94,10 @@ public final class Defaults {
 
     public static String[] getSupportedFeedbackValues() {
         return EnumUtils.getEntryNames(FEEDBACK_TYPES);
+    }
+
+    public static boolean isFaceImageEnabled() {
+        return false;
     }
 
     // Camera.

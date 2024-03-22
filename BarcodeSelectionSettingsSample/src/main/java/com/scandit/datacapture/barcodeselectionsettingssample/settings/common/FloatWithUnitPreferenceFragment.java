@@ -14,6 +14,11 @@
 
 package com.scandit.datacapture.barcodeselectionsettingssample.settings.common;
 
+import static com.scandit.datacapture.barcodeselectionsettingssample.settings.SharedPrefsConstants.getFloatWithUnitCategoryKey;
+import static com.scandit.datacapture.barcodeselectionsettingssample.settings.SharedPrefsConstants.getFloatWithUnitMeasureUnitKey;
+import static com.scandit.datacapture.barcodeselectionsettingssample.settings.SharedPrefsConstants.getFloatWithUnitNumberKey;
+
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -25,8 +30,6 @@ import androidx.preference.PreferenceScreen;
 import com.scandit.datacapture.barcodeselectionsettingssample.R;
 import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
 import com.scandit.datacapture.core.common.geometry.MeasureUnit;
-
-import static com.scandit.datacapture.barcodeselectionsettingssample.settings.SharedPrefsConstants.*;
 
 public class FloatWithUnitPreferenceFragment extends BasePreferenceFragment {
 
@@ -59,10 +62,13 @@ public class FloatWithUnitPreferenceFragment extends BasePreferenceFragment {
         Bundle args = getArguments();
         this.prefix = args.getString(BUNDLE_KEY_PREFIX);
         this.title = args.getString(BUNDLE_KEY_TITLE);
-        this.defaultValue = new FloatWithUnit(
-                args.getFloat(BUNDLE_KEY_DEFAULT_VALUE),
-                (MeasureUnit) args.getSerializable(BUNDLE_KEY_DEFAULT_UNIT)
-        );
+        MeasureUnit unit;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            unit = args.getSerializable(BUNDLE_KEY_DEFAULT_UNIT, MeasureUnit.class);
+        } else {
+            unit = (MeasureUnit) args.getSerializable(BUNDLE_KEY_DEFAULT_UNIT);
+        }
+        this.defaultValue = new FloatWithUnit(args.getFloat(BUNDLE_KEY_DEFAULT_VALUE), unit);
         super.onCreate(savedInstanceState);
     }
 

@@ -14,6 +14,7 @@
 
 package com.scandit.datacapture.searchandfindsample.find;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -63,7 +64,12 @@ public final class FindScanFragment extends Fragment {
 
         Bundle arguments = getArguments();
         if (viewModelFactory == null && arguments != null) {
-            Symbology symbology = (Symbology) arguments.getSerializable(FIELD_SYMBOLOGY);
+            Symbology symbology;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                symbology = arguments.getSerializable(FIELD_SYMBOLOGY, Symbology.class);
+            } else {
+                symbology = (Symbology) arguments.getSerializable(FIELD_SYMBOLOGY);
+            }
             String data = arguments.getString(FIELD_DATA);
             viewModelFactory = new FindScanViewModelFactory(symbology, data);
         }

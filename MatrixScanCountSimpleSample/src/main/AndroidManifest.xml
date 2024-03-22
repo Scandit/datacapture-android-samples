@@ -15,6 +15,7 @@
         <activity
             android:name="com.scandit.datacapture.matrixscancountsimplesample.MainActivity"
             android:exported="true"
+            android:configChanges="screenSize|orientation"
             android:label="@string/app_title">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

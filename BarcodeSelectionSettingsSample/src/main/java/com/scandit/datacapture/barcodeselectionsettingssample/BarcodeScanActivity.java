@@ -21,6 +21,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -58,7 +60,21 @@ public final class BarcodeScanActivity
     private DataCaptureView dataCaptureView;
     private BarcodeSelectionBasicOverlay overlay;
 
-    private static final int SETTINGS_ACTIVITY_REQUEST_CODE = 100;
+    private final ActivityResultLauncher<Intent> settingsLauncher = registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        result -> {
+            // When returning from the settings screen, update the camera, dataCaptureView, overlay,
+            // barcodeSelection and its settings accordingly.
+            initializeAndSetupCamera();
+            updateBarcodeSelection();
+            dataCaptureManager.setupDataCaptureView(dataCaptureView);
+            if (overlay != null) {
+                dataCaptureView.removeOverlay(overlay);
+            }
+            overlay = dataCaptureManager.createAndSetupBarcodeSelectionBasicOverlay(
+                barcodeSelection, dataCaptureView
+            );
+        });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,29 +202,10 @@ public final class BarcodeScanActivity
             @NonNull @NotNull MenuItem item
     ) {
         if (item.getItemId() == R.id.menu_settings) {
-            startActivityForResult(SettingsActivity.getIntent(this), SETTINGS_ACTIVITY_REQUEST_CODE);
+            settingsLauncher.launch(SettingsActivity.getIntent(this));
             return true;
         } else {
             return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == SETTINGS_ACTIVITY_REQUEST_CODE) {
-            // When returning from the settings screen, update the camera, dataCaptureView, overlay,
-            // barcodeSelection and its settings accordingly.
-            initializeAndSetupCamera();
-            updateBarcodeSelection();
-            dataCaptureManager.setupDataCaptureView(dataCaptureView);
-            if (overlay != null) {
-                dataCaptureView.removeOverlay(overlay);
-            }
-            overlay = dataCaptureManager.createAndSetupBarcodeSelectionBasicOverlay(
-                    barcodeSelection, dataCaptureView
-            );
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 

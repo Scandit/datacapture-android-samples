@@ -19,6 +19,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.tracking.capture.BarcodeTracking;
@@ -48,13 +51,21 @@ public class MatrixScanActivity extends CameraPermissionActivity
 	// If you want to build your own application, get your license key by signing up for a trial at https://ssl.scandit.com/dashboard/sign-up?p=test
     public static final String SCANDIT_LICENSE_KEY = "AbvELRLKNvXhGsHO0zMIIg85n3IiQdKMA2p5yeVDSOSZSZg/BhX401FXc+2UHPun8Rp2LRpw26tYdgnIJlXiLAtmXfjDZNQzZmrZY2R0QaJaXJC34UtcQE12hEpIYhu+AmjA5cROhJN3CHPoHDns+ho12ibrRAoFrAocoBIwCVzuTRHr0U6pmCKoa/Mn3sNPdINHh97m1X9Al9xjh3VOTNimP6ZjrHLVWEJSOdp2QYOnqn5izP1329PVcZhn8gqlGCRh+LJytbKJYI/KIRbMy3bNOyq5kNnr2IlOqaoXRgYdz2IU+jIWw8Cby9XoSB1zkphiYMmlCUqrDzxLUmTAXF4rSWobiM+OxnoImDqISpunJBQz0a5DSeT5Zf0lwwvXQLX4ghkgXozyYYfYvIKsqxJLZoza8g1BFsJ1i3fb0JYP2Ju209OMN2NTJifAu9ZJjQKGWS76Rmr/jre13jCqGgx5SX9F2lA2ZpF2AEb6rmYYmMtL9CPwWvstM+W295WvscH+gCBccZ9q3rxfIsak6cV2T50/2uBWfJJka6kL9UOjMOG3BOGKx+O+KWT/twwvOC+GcvC8s1qMwGNNM6G+/m7fG5Xtl5wtp3QhpzPJbBHSmlkYbxXQx0SpuWBmvxygyKOi3lUzz3gRzOdykWRXzrhiMAp5bb1y6n6g4O2v2TVgzWWF8vwZ6F60ehYDUq7pbusgT4Fl3fV7fYPgLxMMvXKduMmUlWyGv3CWL9LfvoY/hLl7RxoyUryTMmSfRVBcsKs+MWYJGh1iIvWk1UhOChb9IGI2PzUsHz7+OikuYMjKhR8LZZYalXpPiEVfT66yy75M5DODcjXRoFZU";
 
-    public static final int REQUEST_CODE_SCAN_RESULTS = 1;
-
     private Camera camera;
     private BarcodeTracking barcodeTracking;
     private DataCaptureContext dataCaptureContext;
 
     private final HashSet<ScanResult> scanResults = new HashSet<>();
+
+    private final ActivityResultLauncher<Intent> resultsLauncher = registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        result -> {
+            if (result.getResultCode() == ResultsActivity.RESULT_CODE_CLEAN) {
+                synchronized (scanResults) {
+                    scanResults.clear();
+                }
+            }
+        });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +81,13 @@ public class MatrixScanActivity extends CameraPermissionActivity
             public void onClick(View v) {
                 synchronized (scanResults) {
                     // Show new screen displaying a list of all barcodes that have been scanned.
-                    Intent intent = ResultsActivity.getIntent(MatrixScanActivity.this, scanResults);
-                    startActivityForResult(intent, REQUEST_CODE_SCAN_RESULTS);
+                    ScanResult[] resultsArray = new ScanResult[scanResults.size()];
+                    int i = 0;
+                    for (ScanResult result : scanResults) {
+                        resultsArray[i++] = result;
+                    }
+                    Intent intent = ResultsActivity.getIntent(MatrixScanActivity.this, resultsArray);
+                    resultsLauncher.launch(intent);
                 }
             }
         });
@@ -179,17 +195,6 @@ public class MatrixScanActivity extends CameraPermissionActivity
         // The camera is started asynchronously and will take some time to completely turn on.
         barcodeTracking.setEnabled(true);
         camera.switchToDesiredState(FrameSourceState.ON, null);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_SCAN_RESULTS
-                && resultCode == ResultsActivity.RESULT_CODE_CLEAN) {
-            synchronized (scanResults) {
-                scanResults.clear();
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

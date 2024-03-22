@@ -34,7 +34,7 @@ package com.scandit.datacapture.idcapturesettingssample.data;
 public final class Keys {
 
     // IdCapture.
-    public final static String SUPPORTED_IMAGES = "supported_images";
+    public final static String FACE_IMAGE = "face_image";
     public final static String SUPPORTED_SIDES = "supported_sides";
     public final static String SUPPORTED_DOCUMENTS = "supported_documents";
     public final static String ANONYMIZATION_MODE = "anonymization_mode";

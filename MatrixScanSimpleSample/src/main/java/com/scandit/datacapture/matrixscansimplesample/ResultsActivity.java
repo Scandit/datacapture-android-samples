@@ -16,6 +16,7 @@ package com.scandit.datacapture.matrixscansimplesample;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -23,26 +24,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.scandit.datacapture.barcode.data.SymbologyDescription;
 import com.scandit.datacapture.matrixscansimplesample.data.ScanResult;
-
-import java.util.ArrayList;
-import java.util.HashSet;
 
 public class ResultsActivity extends AppCompatActivity {
 
     public static final int RESULT_CODE_CLEAN = 1;
     private static final String ARG_SCAN_RESULTS = "scan-results";
 
-    public static Intent getIntent(Context context, HashSet<ScanResult> scanResults) {
-        return new Intent(context, ResultsActivity.class)
-                .putExtra(ARG_SCAN_RESULTS, scanResults);
+    public static Intent getIntent(Context context, ScanResult[] scanResults) {
+        return new Intent(context, ResultsActivity.class).putExtra(ARG_SCAN_RESULTS, scanResults);
     }
 
     @Override
@@ -54,11 +53,15 @@ public class ResultsActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(
-                new DividerItemDecoration(recyclerView.getContext(), LinearLayoutManager.VERTICAL));
+            new DividerItemDecoration(recyclerView.getContext(), LinearLayoutManager.VERTICAL));
 
         // Receive results from previous screen and set recycler view items.
-        final ArrayList<ScanResult> scanResults = new ArrayList<>(
-                (HashSet<ScanResult>) getIntent().getSerializableExtra(ARG_SCAN_RESULTS));
+        ScanResult[] scanResults;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            scanResults = getIntent().getSerializableExtra(ARG_SCAN_RESULTS, ScanResult[].class);
+        } else {
+            scanResults = (ScanResult[]) getIntent().getSerializableExtra(ARG_SCAN_RESULTS);
+        }
         recyclerView.setAdapter(new ScanResultsAdapter(this, scanResults));
 
         Button doneButton = findViewById(R.id.done_button);
@@ -89,10 +92,10 @@ public class ResultsActivity extends AppCompatActivity {
 
     private static class ScanResultsAdapter extends RecyclerView.Adapter<ViewHolder> {
 
-        private Context context;
-        private ArrayList<ScanResult> items;
+        private final Context context;
+        private final ScanResult[] items;
 
-        ScanResultsAdapter(Context context, ArrayList<ScanResult> items) {
+        ScanResultsAdapter(Context context, ScanResult[] items) {
             this.context = context;
             this.items = items;
         }
@@ -101,23 +104,23 @@ public class ResultsActivity extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             return new ViewHolder(
-                    LayoutInflater.from(context).inflate(R.layout.scan_result_item, parent, false));
+                LayoutInflater.from(context).inflate(R.layout.scan_result_item, parent, false));
         }
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            holder.update(items.get(position));
+            holder.update(items[position]);
         }
 
         @Override
         public int getItemCount() {
-            return items.size();
+            return items.length;
         }
     }
 
     private static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView dataTextView;
-        private TextView typeTextView;
+        private final TextView dataTextView;
+        private final TextView typeTextView;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -128,7 +131,7 @@ public class ResultsActivity extends AppCompatActivity {
         void update(ScanResult scanResult) {
             dataTextView.setText(scanResult.data);
             typeTextView.setText(
-                    SymbologyDescription.create(scanResult.symbology).getReadableName()
+                SymbologyDescription.create(scanResult.symbology).getReadableName()
             );
         }
     }

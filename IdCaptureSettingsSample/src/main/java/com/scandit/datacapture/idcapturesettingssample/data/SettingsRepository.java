@@ -163,10 +163,17 @@ public class SettingsRepository extends PreferenceDataStore {
 
     /*
      * Retrieves from settings whether the given image type should passed to the IdCapture result.
+     * ID front image and ID back image are always enabled.
      */
     public boolean getShouldPassImageForType(IdImageType type) {
-        Set<String> imageTypes = getStringSet(Keys.SUPPORTED_IMAGES, null);
-        return imageTypes.contains(type.name());
+        switch (type) {
+            case FACE: return getBoolean(Keys.FACE_IMAGE, Defaults.isFaceImageEnabled());
+            case ID_FRONT:
+            case ID_BACK:
+                return true;
+            default:
+                throw new AssertionError("Unknown IdImageType: " + type);
+        }
     }
 
     /*

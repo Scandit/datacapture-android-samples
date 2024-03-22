@@ -29,7 +29,8 @@ import com.scandit.datacapture.barcode.spark.capture.SparkScanListener;
 import com.scandit.datacapture.barcode.spark.capture.SparkScanSession;
 import com.scandit.datacapture.barcode.spark.capture.SparkScanSettings;
 import com.scandit.datacapture.barcode.spark.capture.SparkScanViewUiListener;
-import com.scandit.datacapture.barcode.spark.feedback.SparkScanViewFeedback;
+import com.scandit.datacapture.barcode.spark.feedback.SparkScanBarcodeFeedback;
+import com.scandit.datacapture.barcode.spark.feedback.SparkScanFeedbackDelegate;
 import com.scandit.datacapture.barcode.spark.ui.SparkScanCoordinatorLayout;
 import com.scandit.datacapture.barcode.spark.ui.SparkScanScanningMode;
 import com.scandit.datacapture.barcode.spark.ui.SparkScanView;
@@ -40,13 +41,15 @@ import com.scandit.datacapture.core.time.TimeInterval;
 import com.scandit.datacapture.receivingsample.R;
 import com.scandit.datacapture.receivingsample.managers.BarcodeManager;
 import com.scandit.datacapture.receivingsample.results.ExtraButtonStyle;
-import com.scandit.datacapture.receivingsample.results.FeedbackCallback;
 import com.scandit.datacapture.receivingsample.results.ResultsListPresenter;
 
 import java.util.HashSet;
 import java.util.List;
 
-public class SparkScanPresenter implements SparkScanListener, SparkScanViewUiListener {
+public class SparkScanPresenter implements
+    SparkScanListener,
+    SparkScanViewUiListener,
+    SparkScanFeedbackDelegate {
 
     private final FrameLayout container;
     private final SparkScanPresenterActions sparkScanPresenterView;
@@ -54,8 +57,6 @@ public class SparkScanPresenter implements SparkScanListener, SparkScanViewUiLis
     private SparkScan sparkScan;
     private SparkScanView sparkScanView;
     private SparkScanCoordinatorLayout sparkScanLayout;
-
-    private final SparkScanFeedbackCallback feedbackCallback = new SparkScanFeedbackCallback();
 
     private final ResultsListPresenter resultsListPresenter;
 
@@ -115,6 +116,9 @@ public class SparkScanPresenter implements SparkScanListener, SparkScanViewUiLis
 
         // Disable FastFind button
         sparkScanView.setFastFindButtonVisible(false);
+
+        // Set feedback delegate
+        sparkScanView.setFeedbackDelegate(this);
     }
 
     public void disableSparkScan() {
@@ -122,6 +126,7 @@ public class SparkScanPresenter implements SparkScanListener, SparkScanViewUiLis
         // remove all views from the container and all listeners.
         container.removeAllViews();
         sparkScanView.setListener(null);
+        sparkScanView.setFeedbackDelegate(null);
         sparkScan.removeListener(this);
     }
 
@@ -141,6 +146,9 @@ public class SparkScanPresenter implements SparkScanListener, SparkScanViewUiLis
 
         // Refresh the list with any changes from BarcodeCount mode.
         resultsListPresenter.refresh();
+
+        // Set feedback delegate
+        sparkScanView.setFeedbackDelegate(this);
     }
 
     public void onPause() {
@@ -157,7 +165,6 @@ public class SparkScanPresenter implements SparkScanListener, SparkScanViewUiLis
 
     public void cleanupSparkScan() {
         disableSparkScan();
-        sparkScan.removeListener(this);
         sparkScanLayout.removeAllViews();
         sparkScanLayout = null;
         sparkScanView = null;
@@ -184,8 +191,17 @@ public class SparkScanPresenter implements SparkScanListener, SparkScanViewUiLis
 
         if (isValidBarcode(barcode)) {
             validBarcodeScanned(barcode);
+        }
+    }
+
+    @Nullable
+    @Override
+    public SparkScanBarcodeFeedback getFeedbackForBarcode(@NonNull Barcode barcode) {
+        if (isValidBarcode(barcode)) {
+            return new SparkScanBarcodeFeedback.Success();
         } else {
-            invalidBarcodeScanned();
+            return new SparkScanBarcodeFeedback.Error("There was an error scanning the barcode.",
+                TimeInterval.seconds(60f));
         }
     }
 
@@ -197,16 +213,8 @@ public class SparkScanPresenter implements SparkScanListener, SparkScanViewUiLis
         // Add a new valid barcode to the BarcodeManager and to the list presenter.
         sparkScanPresenterView.runOnMainThread(() -> {
             BarcodeManager.getInstance().saveBarcode(barcode);
-            resultsListPresenter.addToList(barcode, feedbackCallback);
+            resultsListPresenter.addToList(barcode);
         });
-    }
-
-    private void invalidBarcodeScanned() {
-        // Emit sound and vibration feedback
-        sparkScanView.emitFeedback(
-            new SparkScanViewFeedback.Error("There was an error scanning the barcode.",
-                TimeInterval.seconds(60f))
-        );
     }
 
     @Override
@@ -222,14 +230,5 @@ public class SparkScanPresenter implements SparkScanListener, SparkScanViewUiLis
     @Override
     public void onScanningModeChange(@NonNull SparkScanScanningMode newScanningMode) {
         // Not relevant in this sample
-    }
-
-    private class SparkScanFeedbackCallback implements FeedbackCallback {
-
-        @Override
-        public void emitFeedback(Barcode barcode) {
-            // Emit sound and vibration feedback
-            sparkScanView.emitFeedback(new SparkScanViewFeedback.Success());
-        }
     }
 }
