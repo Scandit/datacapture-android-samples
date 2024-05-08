@@ -99,6 +99,6 @@ public class VerificationSuccessDialogFragment extends BottomSheetDialogFragment
      */
     private void restart() {
         dismiss();
-        parentViewModel.resetIdCaptureState();
+        parentViewModel.resetScanningFlow();
     }
 }

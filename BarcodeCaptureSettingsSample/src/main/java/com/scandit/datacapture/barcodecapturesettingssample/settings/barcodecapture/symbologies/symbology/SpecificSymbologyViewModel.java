@@ -22,6 +22,7 @@ import com.scandit.datacapture.barcode.data.SymbologyDescription;
 import com.scandit.datacapture.barcodecapturesettingssample.models.SettingsManager;
 import com.scandit.datacapture.core.data.Range;
 
+import java.util.Objects;
 import java.util.Set;
 
 @SuppressWarnings("WeakerAccess")
@@ -32,7 +33,9 @@ public class SpecificSymbologyViewModel extends ViewModel {
     private final SymbologyDescription symbologyDescription;
 
     public SpecificSymbologyViewModel(String symbologyIdentifier) {
-        symbology = SymbologyDescription.symbologyFromIdentifier(symbologyIdentifier);
+        symbology = Objects.requireNonNull(
+            SymbologyDescription.forIdentifier(symbologyIdentifier)
+        ).getSymbology();
         symbologyDescription = SymbologyDescription.create(symbology);
     }
 

@@ -82,15 +82,15 @@ public class SplitViewScanActivity extends CameraPermissionActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_clear:
-                viewModel.clearCurrentResults();
-                return true;
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int selectedItemId = item.getItemId();
+        if (selectedItemId == R.id.action_clear) {
+            viewModel.clearCurrentResults();
+            return true;
+        } else if (selectedItemId == android.R.id.home) {
+            onBackPressed();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

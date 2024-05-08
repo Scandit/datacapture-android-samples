@@ -30,7 +30,9 @@ android {
     }
 
     packagingOptions {
-        pickFirst("**/*.so")
+        jniLibs {
+            pickFirsts += "**/*.so"
+        }
     }
 }
 

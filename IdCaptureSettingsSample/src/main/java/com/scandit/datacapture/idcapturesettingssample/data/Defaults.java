@@ -100,6 +100,11 @@ public final class Defaults {
         return false;
     }
 
+
+    public static boolean shouldRejectVoidedIds() {
+        return false;
+    }
+
     // Camera.
     private final static CameraPosition[] SUPPORTED_POSITIONS = new CameraPosition[] { CameraPosition.WORLD_FACING, CameraPosition.USER_FACING };
     private final static VideoResolution[] SUPPORTED_RESOLUTIONS = VideoResolution.values();

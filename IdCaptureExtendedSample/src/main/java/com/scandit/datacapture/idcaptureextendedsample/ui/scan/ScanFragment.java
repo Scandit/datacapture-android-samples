@@ -276,21 +276,18 @@ public class ScanFragment extends Fragment
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.barcode:
-                viewModel.onCaptureBarcodesSelected();
-
-                return true;
-            case R.id.mrz:
-                viewModel.onCaptureMrzSelected();
-
-                return true;
-            case R.id.viz:
-                viewModel.onCaptureVizSelected();
-
-                return true;
-            default:
-                return false;
+        int selectedItemId = menuItem.getItemId();
+        if (selectedItemId == R.id.barcode) {
+            viewModel.onCaptureBarcodesSelected();
+            return true;
+        } else if (selectedItemId == R.id.mrz) {
+            viewModel.onCaptureMrzSelected();
+            return true;
+        } else if (selectedItemId == R.id.viz) {
+            viewModel.onCaptureVizSelected();
+            return true;
+        } else {
+            return false;
         }
     }
 }

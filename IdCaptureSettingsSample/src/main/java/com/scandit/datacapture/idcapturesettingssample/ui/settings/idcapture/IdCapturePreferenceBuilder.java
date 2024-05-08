@@ -139,5 +139,16 @@ public class IdCapturePreferenceBuilder implements SectionPreferenceBuilder {
                 FeedbackType.NONE.name()
         );
         parent.addPreference(idCaptureTimeoutFeedbackSettings);
+
+        /*
+         * Switch to enable or disable rejecting voided IDs.
+         */
+        SwitchPreferenceCompat rejectVoidedIdsSwitchPreference = PreferenceBuilder._switch(
+                context,
+                Keys.REJECT_VOIDED_IDS,
+                context.getString(R.string.reject_voided_ids),
+                Defaults.shouldRejectVoidedIds()
+        );
+        parent.addPreference(rejectVoidedIdsSwitchPreference);
     }
 }

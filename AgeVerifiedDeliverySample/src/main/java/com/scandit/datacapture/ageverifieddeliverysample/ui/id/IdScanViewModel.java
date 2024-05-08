@@ -260,8 +260,8 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
         return goToUnsupportedDocument;
     }
 
-    public void resetIdCaptureState() {
-        uiState = IdScanUiState.builder().overlay(idCaptureOverlay).build();
+    public void resetScanningFlow() {
+        uiState = IdScanUiState.builder().overlay(null).build();
         uiStates.postValue(uiState);
         resumeCapture();
         goToBarcodeScanningScreen.postValue(new GoToBarcodeScanning());

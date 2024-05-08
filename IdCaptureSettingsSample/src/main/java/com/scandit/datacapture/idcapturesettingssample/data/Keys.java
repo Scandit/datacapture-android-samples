@@ -41,6 +41,7 @@ public final class Keys {
     public final static String ID_CAPTURED_FEEDBACK = "id_captured_feedback";
     public final static String ID_REJECTED_FEEDBACK = "id_rejected_feedback";
     public final static String ID_CAPTURE_TIMEOUT_FEEDBACK = "id_capture_timeout_feedback";
+    public final static String REJECT_VOIDED_IDS = "reject_voided_ids";
 
     // Camera.
     public final static String CAMERA_POSITION = "camera_position";

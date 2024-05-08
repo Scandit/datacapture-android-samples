@@ -201,6 +201,15 @@ public class SettingsRepository extends PreferenceDataStore {
         }
     }
 
+    /*
+     * Retrieves from settings whether voided IDs should be rejected. This feature has been
+     * primarily developed for US Driver’s Licenses, the results might not be accurate when
+     * scanning other document types:
+     */
+    public boolean shouldRejectVoidedIds() {
+        return getBoolean(Keys.REJECT_VOIDED_IDS, Defaults.shouldRejectVoidedIds());
+    }
+
     private Feedback buildFeedbackFromChoice(@Nullable String selected, Vibration vibration, Sound sound) {
         if (selected == null)
             return new Feedback(null, null);

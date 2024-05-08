@@ -242,7 +242,7 @@ public class IdScanFragment extends Fragment {
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setTitle("");
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(v -> goToBarcodeScanningScreen());
+        toolbar.setNavigationOnClickListener(v -> viewModel.resetScanningFlow());
     }
 
     /**

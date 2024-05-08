@@ -38,6 +38,7 @@ public final class CommonFieldExtractor extends FieldExtractor {
         result.add(new CaptureResult.Entry("Document Type", extractField(capturedId.getDocumentType().toString())));
         result.add(new CaptureResult.Entry("First Name", extractField(capturedId.getFirstName())));
         result.add(new CaptureResult.Entry("Last Name", extractField(capturedId.getLastName())));
+        result.add(new CaptureResult.Entry("Secondary Last Name", extractField(capturedId.getSecondaryLastName())));
         result.add(new CaptureResult.Entry("Full Name", extractField(capturedId.getFullName())));
         result.add(new CaptureResult.Entry("Sex", extractField(capturedId.getSex())));
         result.add(new CaptureResult.Entry("Date of Birth", extractField(capturedId.getDateOfBirth())));

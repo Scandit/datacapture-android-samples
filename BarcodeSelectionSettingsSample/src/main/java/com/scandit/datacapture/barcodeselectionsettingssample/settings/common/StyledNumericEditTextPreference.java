@@ -45,24 +45,21 @@ public final class StyledNumericEditTextPreference extends EditTextPreference
         setKey(key);
         setTitle(title);
         this.showDivider = showDivider;
-        setSummaryProvider(new SummaryProvider<EditTextPreference>() {
-            @Override
-            public CharSequence provideSummary(EditTextPreference preference) {
-                String value = preference.getText();
-                try {
-                    float number = Float.parseFloat(value);
-                    if (Float.isInfinite(number) || Float.isNaN(number)) {
-                        value = preference.getContext().getString(R.string.invalid_number);
-                    } else {
-                        value = String.valueOf(number);
-                    }
-                } catch (NumberFormatException e) {
+        setSummaryProvider((SummaryProvider<EditTextPreference>) preference -> {
+            String value = preference.getText();
+            try {
+                float number = Float.parseFloat(value);
+                if (Float.isInfinite(number) || Float.isNaN(number)) {
                     value = preference.getContext().getString(R.string.invalid_number);
-                } catch (NullPointerException e) {
-                    value = preference.getContext().getString(R.string.not_set);
+                } else {
+                    value = String.valueOf(number);
                 }
-                return value;
+            } catch (NumberFormatException e) {
+                value = preference.getContext().getString(R.string.invalid_number);
+            } catch (NullPointerException e) {
+                value = preference.getContext().getString(androidx.preference.R.string.not_set);
             }
+            return value;
         });
         setOnBindEditTextListener(this);
     }

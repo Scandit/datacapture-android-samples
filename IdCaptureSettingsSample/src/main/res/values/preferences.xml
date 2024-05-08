@@ -15,6 +15,7 @@
     <string name="id_captured_feedback">ID Captured Feedback</string>
     <string name="id_rejected_feedback">ID Rejected Feedback</string>
     <string name="id_capture_timeout_feedback">ID Capture Timeout Feedback</string>
+    <string name="reject_voided_ids">Reject voided IDs</string>
 
     <string name="camera_category_title">Camera</string>
     <string name="camera_position_title">Camera Position</string>

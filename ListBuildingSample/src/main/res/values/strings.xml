@@ -9,4 +9,5 @@
         <item quantity="one">%d item scanned</item>
         <item quantity="other">%d items scanned</item>
     </plurals>
+    <string name="wrong_barcode">Wrong barcode</string>
 </resources>

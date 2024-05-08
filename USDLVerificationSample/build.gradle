@@ -31,10 +31,12 @@ android {
         sourceCompatibility = versions.java
         targetCompatibility = versions.java
     }
-
     packagingOptions {
-        pickFirst("**/*.so")
+        jniLibs {
+            pickFirsts += "**/*.so"
+        }
     }
+
 
     testOptions {
         animationsDisabled = true

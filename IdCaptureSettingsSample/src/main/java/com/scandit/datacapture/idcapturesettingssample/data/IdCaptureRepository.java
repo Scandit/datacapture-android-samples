@@ -135,6 +135,8 @@ public class IdCaptureRepository implements IdCaptureListener {
          * Set the desired anonymization mode from settings.
          */
         idCaptureSettings.setAnonymizationMode(settingsRepository.getAnonymizationMode());
+        // Set whether voided IDs should be rejected
+        idCaptureSettings.setRejectVoidedIds(settingsRepository.shouldRejectVoidedIds());
         idCapture = IdCapture.forDataCaptureContext(dataCaptureContext, idCaptureSettings);
         idCapture.addListener(this);
         idCapture.setFeedback(settingsRepository.buildFeedbackFromSettings());
@@ -247,6 +249,7 @@ public class IdCaptureRepository implements IdCaptureListener {
          *   (a) it's a valid document, but its type is not enabled in the settings,
          *   (b) it's a barcode of a correct symbology, but the data is encoded in an unexpected format,
          *   (c) it's Machine Readable Zone (MRZ), but the data is encoded in an unexpected format.
+         *   (d) it's a voided document and rejectVoidedIds is enabled in the settings.
          *
          * This callback is executed on the background thread. We post the value to the LiveData
          * in order to return to the UI thread.
