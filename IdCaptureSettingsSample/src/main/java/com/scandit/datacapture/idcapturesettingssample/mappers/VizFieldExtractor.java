@@ -28,7 +28,11 @@
 
 package com.scandit.datacapture.idcapturesettingssample.mappers;
 
+import androidx.annotation.Nullable;
+
 import com.scandit.datacapture.id.data.CapturedId;
+import com.scandit.datacapture.id.data.DrivingLicenseCategory;
+import com.scandit.datacapture.id.data.DrivingLicenseDetails;
 import com.scandit.datacapture.id.data.VizResult;
 import com.scandit.datacapture.idcapturesettingssample.ui.result.CaptureResult;
 
@@ -65,7 +69,38 @@ public final class VizFieldExtractor extends FieldExtractor {
         result.add(new CaptureResult.Entry("Employer", extractField(vizResult.getEmployer())));
         result.add(new CaptureResult.Entry("Personal Id Number", extractField(vizResult.getPersonalIdNumber())));
         result.add(new CaptureResult.Entry("Document Additional Number", extractField(vizResult.getDocumentAdditionalNumber())));
+        result.add(new CaptureResult.Entry("Blood Type", extractField(vizResult.getBloodType())));
+        result.add(new CaptureResult.Entry("Sponsor", extractField(vizResult.getSponsor())));
+        result.add(new CaptureResult.Entry("Mother's name", extractField(vizResult.getMothersName())));
+        result.add(new CaptureResult.Entry("Father's name", extractField(vizResult.getFathersName())));
+        result.add(new CaptureResult.Entry("Driver's License Details", extractField(vizResult.getDrivingLicenseDetails())));
 
+        return result;
+    }
+
+    private String extractField(@Nullable DrivingLicenseDetails drivingLicenseDetails) {
+        if (drivingLicenseDetails == null) {
+            return "<empty>";
+        }
+        StringBuilder result = new StringBuilder();
+        List<DrivingLicenseCategory> drivingLicenseCategories =
+                drivingLicenseDetails.getDrivingLicenseCategories();
+        for (int i = 0; i < drivingLicenseCategories.size(); i++) {
+            DrivingLicenseCategory category = drivingLicenseCategories.get(i);
+            result.append(extractField(category));
+
+            if (i < drivingLicenseCategories.size() - 1) {
+                result.append("\n\n");
+            }
+        }
+        return result.toString();
+    }
+
+    private String extractField(DrivingLicenseCategory category) {
+        String result = "";
+        result += "Code: " + extractField(category.getCode()) + "\n";
+        result += "Date of Issue: " + extractField(category.getDateOfIssue()) + "\n";
+        result += "Date of Expiry: " + extractField(category.getDateOfExpiry());
         return result;
     }
 }

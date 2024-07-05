@@ -246,9 +246,8 @@ public class ScanViewModel extends ViewModel {
                 driverLicenseVerificationRepository.compareFrontAndBack(capturedId);
         boolean isFrontBackComparisonSuccessful = comparisonResult.getChecksPassed();
         Bitmap frontMismatchImage = comparisonResult.getFrontMismatchImage();
-        boolean isShownLicenseWarning = frontMismatchImage == null &&
-            capturedId.getAamvaBarcode() != null &&
-            !isFrontBackComparisonSuccessful;
+        boolean isShownLicenseWarning = !comparisonResult.getMismatchHighlightingEnabled() &&
+                !isFrontBackComparisonSuccessful;
 
         /*
          * If front and back match AND ID is not expired, run verification

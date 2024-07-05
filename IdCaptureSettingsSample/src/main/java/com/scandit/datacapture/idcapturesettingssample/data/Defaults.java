@@ -100,8 +100,11 @@ public final class Defaults {
         return false;
     }
 
-
     public static boolean shouldRejectVoidedIds() {
+        return false;
+    }
+
+    public static boolean shouldDecodeBackOfEuropeanDrivingLicense() {
         return false;
     }
 

@@ -150,5 +150,17 @@ public class IdCapturePreferenceBuilder implements SectionPreferenceBuilder {
                 Defaults.shouldRejectVoidedIds()
         );
         parent.addPreference(rejectVoidedIdsSwitchPreference);
+
+        /*
+         * Switch to enable or disable the extraction of extra information for the back side of
+         * European driver's licenses.
+         */
+        SwitchPreferenceCompat decodeBackOfEuropeanDrivingLicenseSwitchPreference = PreferenceBuilder._switch(
+                context,
+                Keys.DECODE_BACK_OF_EUROPEAN_DRIVING_LICENSE,
+                context.getString(R.string.decode_back_of_european_driving_license),
+                Defaults.shouldDecodeBackOfEuropeanDrivingLicense()
+        );
+        parent.addPreference(decodeBackOfEuropeanDrivingLicenseSwitchPreference);
     }
 }

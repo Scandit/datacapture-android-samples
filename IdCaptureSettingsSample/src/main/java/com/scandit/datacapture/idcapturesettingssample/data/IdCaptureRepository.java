@@ -137,6 +137,8 @@ public class IdCaptureRepository implements IdCaptureListener {
         idCaptureSettings.setAnonymizationMode(settingsRepository.getAnonymizationMode());
         // Set whether voided IDs should be rejected
         idCaptureSettings.setRejectVoidedIds(settingsRepository.shouldRejectVoidedIds());
+        // Set whether extra information should be extracted from the back side of European driver's licenses
+        idCaptureSettings.setDecodeBackOfEuropeanDrivingLicense(settingsRepository.shouldDecodeBackOfEuropeanDrivingLicense());
         idCapture = IdCapture.forDataCaptureContext(dataCaptureContext, idCaptureSettings);
         idCapture.addListener(this);
         idCapture.setFeedback(settingsRepository.buildFeedbackFromSettings());

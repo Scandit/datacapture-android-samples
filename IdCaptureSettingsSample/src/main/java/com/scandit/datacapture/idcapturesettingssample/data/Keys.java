@@ -42,6 +42,7 @@ public final class Keys {
     public final static String ID_REJECTED_FEEDBACK = "id_rejected_feedback";
     public final static String ID_CAPTURE_TIMEOUT_FEEDBACK = "id_capture_timeout_feedback";
     public final static String REJECT_VOIDED_IDS = "reject_voided_ids";
+    public final static String DECODE_BACK_OF_EUROPEAN_DRIVING_LICENSE = "decode_back_of_european_driving_license";
 
     // Camera.
     public final static String CAMERA_POSITION = "camera_position";

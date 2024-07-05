@@ -30,6 +30,17 @@ android {
     packagingOptions {
         jniLibs {
             pickFirsts += "**/*.so"
+            it.useLegacyPackaging project.hasProperty('extractNativeLibs')
+        }
+    }
+
+    splits {
+        abi {
+            enable project.hasProperty('enableSplit')
+            reset()
+            //noinspection ChromeOsAbiSupport
+            include 'arm64-v8a'
+            universalApk false
         }
     }
 }

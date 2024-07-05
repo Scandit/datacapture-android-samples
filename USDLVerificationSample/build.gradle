@@ -27,16 +27,28 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
+
     compileOptions {
         sourceCompatibility = versions.java
         targetCompatibility = versions.java
     }
+
     packagingOptions {
         jniLibs {
             pickFirsts += "**/*.so"
+            it.useLegacyPackaging project.hasProperty('extractNativeLibs')
         }
     }
 
+    splits {
+        abi {
+            enable project.hasProperty('enableSplit')
+            reset()
+            //noinspection ChromeOsAbiSupport
+            include 'arm64-v8a'
+            universalApk false
+        }
+    }
 
     testOptions {
         animationsDisabled = true

@@ -204,10 +204,18 @@ public class SettingsRepository extends PreferenceDataStore {
     /*
      * Retrieves from settings whether voided IDs should be rejected. This feature has been
      * primarily developed for US Driver’s Licenses, the results might not be accurate when
-     * scanning other document types:
+     * scanning other document types.
      */
     public boolean shouldRejectVoidedIds() {
         return getBoolean(Keys.REJECT_VOIDED_IDS, Defaults.shouldRejectVoidedIds());
+    }
+
+    /*
+     * Retrieves from settings whether extra information should be extracted from the back side
+     * of European driver's licenses.
+     */
+    public boolean shouldDecodeBackOfEuropeanDrivingLicense() {
+        return getBoolean(Keys.DECODE_BACK_OF_EUROPEAN_DRIVING_LICENSE, Defaults.shouldDecodeBackOfEuropeanDrivingLicense());
     }
 
     private Feedback buildFeedbackFromChoice(@Nullable String selected, Vibration vibration, Sound sound) {

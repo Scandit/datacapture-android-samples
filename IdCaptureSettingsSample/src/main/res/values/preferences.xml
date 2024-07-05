@@ -16,6 +16,7 @@
     <string name="id_rejected_feedback">ID Rejected Feedback</string>
     <string name="id_capture_timeout_feedback">ID Capture Timeout Feedback</string>
     <string name="reject_voided_ids">Reject voided IDs</string>
+    <string name="decode_back_of_european_driving_license">Decode back of European driver\'s licenses</string>
 
     <string name="camera_category_title">Camera</string>
     <string name="camera_position_title">Camera Position</string>
