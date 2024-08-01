@@ -87,11 +87,6 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
     private final Observer<CapturedId> capturedIdsObserver = this::processCapturedId;
 
     /**
-     * The observer of rejected ID documents.
-     */
-    private final Observer<RejectedId> rejectedIdsObserver = this::emitRejectedDocument;
-
-    /**
      * The state representing the currently displayed UI.
      */
     private IdScanUiState uiState = IdScanUiState.builder().build();
@@ -154,11 +149,6 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
     private final MutableLiveData<CapturedId> capturedIds = new MutableLiveData<>();
 
     /**
-     * The stream of rejected ID documents.
-     */
-    private final MutableLiveData<RejectedId> rejectedIds = new MutableLiveData<>();
-
-    /**
      * Set up ID capture and attach the mode to the data capture context.
      */
     public void setUpIdCaptureMode() {
@@ -166,7 +156,6 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
          * Observe the stream of the lower layer and the timer events.
          */
         capturedIds.observeForever(capturedIdsObserver);
-        rejectedIds.observeForever(rejectedIdsObserver);
 
         dataCaptureContext.removeAllModes();
         dataCaptureContext.addMode(idCapture);
@@ -195,7 +184,6 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
          * Stop observing the streams of the lower layer and the timer events to avoid memory leak.
          */
         capturedIds.removeObserver(capturedIdsObserver);
-        rejectedIds.removeObserver(rejectedIdsObserver);
     }
 
     /**
@@ -322,11 +310,17 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
              */
             capturedIds.postValue(session.getNewlyCapturedId());
         } else {
-            // Emit the feedback for a rejected document.
-            feedback.getIdRejected().emit();
             // Reject documents that do not include a date of birth.
-            goToUnsupportedDocument.postValue(new GoToUnsupportedDocument());
+            rejectUnsupportedDocument();
         }
+    }
+
+    private void rejectUnsupportedDocument() {
+        // Emit the feedback for a rejected document.
+        feedback.getIdRejected().emit();
+        // Display the UI that informs the user that the document can be captured, but it is
+        // not supported.
+        goToUnsupportedDocument.postValue(new GoToUnsupportedDocument());
     }
 
     private void pauseCapture() {
@@ -364,14 +358,6 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
                 capturedId.getFullName(),
                 expiryDate
         );
-    }
-
-    /**
-     * Display the UI that informs the user that the document can be captured, but it is
-     * not supported.
-     */
-    private void emitRejectedDocument(RejectedId rejectedId) {
-        goToUnsupportedDocument.postValue(new GoToUnsupportedDocument());
     }
 
     /**
@@ -477,17 +463,8 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
          *   (a) it's a valid personal identification document, but not enabled in the settings.
          *   (b) it's a PDF417 barcode, but the data is encoded in an unexpected format.
          */
-
-        RejectedId rejectedId = session.getNewlyRejectedId();
-
-        // Emit the feedback for a rejected document.
-        feedback.getIdRejected().emit();
-
-        /*
-         * The callback is executed in the background thread. We post the value to the LiveData
-         * in order to return to the UI thread.
-         */
-        rejectedIds.postValue(rejectedId);
+        pauseCapture();
+        rejectUnsupportedDocument();
     }
 
     @Override
