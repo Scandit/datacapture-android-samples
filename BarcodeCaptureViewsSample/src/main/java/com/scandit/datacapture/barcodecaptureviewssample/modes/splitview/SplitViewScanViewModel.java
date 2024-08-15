@@ -101,7 +101,7 @@ public class SplitViewScanViewModel extends ViewModel implements BarcodeCaptureL
         barcodeCaptureSettings.setCodeDuplicateFilter(TimeInterval.millis(1000L));
 
         // In order not to pick up barcodes outside of the view finder,
-        // restrict the code location selection to match the laser line's center.
+        // restrict the code location selection to match the aimer's center.
         barcodeCaptureSettings.setLocationSelection(
                 new RadiusLocationSelection(new FloatWithUnit(0f, MeasureUnit.FRACTION))
         );
@@ -192,16 +192,16 @@ public class SplitViewScanViewModel extends ViewModel implements BarcodeCaptureL
             @NonNull BarcodeCaptureSession session,
             @NonNull FrameData data
     ) {
-        if (session.getNewlyRecognizedBarcodes().isEmpty()) return;
+        if (session.getNewlyRecognizedBarcode() == null) return;
 
-        final Barcode firstBarcode = session.getNewlyRecognizedBarcodes().get(0);
+        final Barcode barcode = session.getNewlyRecognizedBarcode();
 
         // This method is invoked on a non-UI thread, so in order to perform UI work,
         // we have to switch to the main thread.
         mainHandler.post(new Runnable() {
             @Override
             public void run() {
-                storeAndNotifyNewBarcode(firstBarcode);
+                storeAndNotifyNewBarcode(barcode);
             }
         });
     }

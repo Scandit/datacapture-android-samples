@@ -30,8 +30,6 @@ import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlayStyle;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.view.overlay.BrushStyle;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.view.overlay.BrushStyleEntry;
-import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.LaserlineDisabledColor;
-import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.LaserlineEnabledColor;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.RectangularDisabledColor;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.RectangularEnabledColor;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.ViewfinderTypeAimer;
@@ -56,16 +54,17 @@ import com.scandit.datacapture.core.source.VideoResolution;
 import com.scandit.datacapture.core.time.TimeInterval;
 import com.scandit.datacapture.core.ui.LogoStyle;
 import com.scandit.datacapture.core.ui.style.Brush;
-import com.scandit.datacapture.core.ui.viewfinder.LaserlineViewfinderStyle;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinder;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderLineStyle;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderStyle;
 import com.scandit.datacapture.core.ui.viewfinder.Viewfinder;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 public class SettingsManager {
@@ -126,17 +125,12 @@ public class SettingsManager {
     private float rectangularViewfinderHeightAspect = 0f;
     private float rectangularViewfinderLongerDimensionAspect = 0f;
     private RectangularViewfinderStyle rectangularViewfinderStyle =
-            RectangularViewfinderStyle.LEGACY;
+            RectangularViewfinderStyle.SQUARE;
     private RectangularViewfinderLineStyle rectangularViewfinderLineStyle =
             RectangularViewfinderLineStyle.LIGHT;
     private float rectangularViewfinderDimming = 0.0f;
     private boolean rectangularViewfinderAnimation = false;
     private boolean rectangularViewfinderLooping = false;
-
-    private FloatWithUnit laserlineViewfinderWidth = new FloatWithUnit(0.75f, MeasureUnit.FRACTION);
-    private LaserlineEnabledColor laserlineViewfinderEnabledColor = LaserlineEnabledColor.DEFAULT;
-    private LaserlineDisabledColor laserlineViewfinderDisabledColor = LaserlineDisabledColor.DEFAULT;
-    private LaserlineViewfinderStyle laserlineViewfinderStyle = LaserlineViewfinderStyle.LEGACY;
 
     private ViewfinderTypeAimer.FrameColor aimerViewfinderFrameColor =
             ViewfinderTypeAimer.FrameColor.DEFAULT;
@@ -176,11 +170,13 @@ public class SettingsManager {
 
         initBrushStyles();
 
+        rectangularViewfinderWidth = new FloatWithUnit(1F, MeasureUnit.FRACTION);
+        rectangularViewfinderHeight = new FloatWithUnit(1F, MeasureUnit.FRACTION);
+
         // Create a temporary RectangularViewfinder instance to get default values for width and height.
-        RectangularViewfinder tempRectangularViewfinder = new RectangularViewfinder(RectangularViewfinderStyle.LEGACY);
-        rectangularViewfinderWidth = tempRectangularViewfinder.getSizeWithUnitAndAspect().getWidthAndHeight().getWidth();
-        rectangularViewfinderHeight = tempRectangularViewfinder.getSizeWithUnitAndAspect().getWidthAndHeight().getHeight();
-        rectangularViewfinderShorterDimension = new FloatWithUnit(1.0f, MeasureUnit.FRACTION);
+        RectangularViewfinder tempRectangularViewfinder = new RectangularViewfinder(RectangularViewfinderStyle.SQUARE);
+        rectangularViewfinderShorterDimension = tempRectangularViewfinder.getSizeWithUnitAndAspect().getShorterDimensionAndAspectRatio().getSize();
+        rectangularViewfinderLongerDimensionAspect = tempRectangularViewfinder.getSizeWithUnitAndAspect().getShorterDimensionAndAspectRatio().getAspect();
     }
 
     /*
@@ -188,9 +184,8 @@ public class SettingsManager {
      * for each BrushStyle a clone of it with different tint.
      */
     private void initBrushStyles() {
-        BarcodeCaptureOverlayStyle[] overlayStyles = BarcodeCaptureOverlayStyle.values();
-        for (int i = 0; i< overlayStyles.length; i++) {// Loop OverlayStyles.
-            BarcodeCaptureOverlayStyle style = BarcodeCaptureOverlayStyle.values()[i];
+        BarcodeCaptureOverlayStyle[] overlayStyles = getUsableOverlayStyles();
+        for (BarcodeCaptureOverlayStyle style : overlayStyles) {// Loop OverlayStyles.
             Brush defaultBrush = BarcodeCaptureOverlay.newInstance(barcodeCapture, null, style).getBrush();
 
             BrushStyle[] brushStyles = BrushStyle.values();
@@ -660,6 +655,16 @@ public class SettingsManager {
         setViewfinder(previousViewfinder);
     }
 
+    public BarcodeCaptureOverlayStyle[] getUsableOverlayStyles() {
+        List<BarcodeCaptureOverlayStyle> result = new ArrayList();
+        for (BarcodeCaptureOverlayStyle value : BarcodeCaptureOverlayStyle.values()) {
+            if (value != BarcodeCaptureOverlayStyle.LEGACY) {
+                result.add(value);
+            }
+        }
+        return result.toArray(new BarcodeCaptureOverlayStyle[]{});
+    }
+
     public BarcodeCaptureOverlayStyle getOverlayStyle() {
         return barcodeCaptureOverlay.getStyle();
     }
@@ -795,42 +800,6 @@ public class SettingsManager {
 
     public void setRectangularViewfinderLoopingEnabled(boolean enabled) {
         this.rectangularViewfinderLooping = enabled;
-    }
-
-    public LaserlineEnabledColor getLaserlineViewfinderEnabledColor() {
-        return laserlineViewfinderEnabledColor;
-    }
-
-    public void setLaserlineViewfinderEnabledColor(
-            LaserlineEnabledColor laserlineViewfinderEnabledColor
-    ) {
-        this.laserlineViewfinderEnabledColor = laserlineViewfinderEnabledColor;
-    }
-
-    public LaserlineDisabledColor getLaserlineViewfinderDisabledColor() {
-        return laserlineViewfinderDisabledColor;
-    }
-
-    public void setLaserlineViewfinderDisabledColor(
-            LaserlineDisabledColor laserlineViewfinderDisabledColor
-    ) {
-        this.laserlineViewfinderDisabledColor = laserlineViewfinderDisabledColor;
-    }
-
-    public FloatWithUnit getLaserlineViewfinderWidth() {
-        return laserlineViewfinderWidth;
-    }
-
-    public void setLaserlineViewfinderWidth(FloatWithUnit laserlineViewfinderWidth) {
-        this.laserlineViewfinderWidth = laserlineViewfinderWidth;
-    }
-
-    public LaserlineViewfinderStyle getLaserlineViewfinderStyle() {
-        return laserlineViewfinderStyle;
-    }
-
-    public void setLaserlineViewfinderStyle(LaserlineViewfinderStyle style) {
-        this.laserlineViewfinderStyle = style;
     }
 
     public ViewfinderTypeAimer.FrameColor getAimerViewfinderFrameColor() {

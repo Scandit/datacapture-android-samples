@@ -104,9 +104,9 @@ public class ScanViewModel extends ViewModel implements BarcodeCaptureListener {
             @NonNull BarcodeCaptureSession session,
             @NonNull FrameData data
     ) {
-        final Barcode firstBarcode = session.getNewlyRecognizedBarcodes().get(0);
+        final Barcode barcode = session.getNewlyRecognizedBarcode();
 
-        if (listener != null && firstBarcode != null) {
+        if (listener != null && barcode != null) {
             // Stop recognizing barcodes for as long as we are displaying the result.
             // There won't be any new results until the capture mode is enabled again.
             // Note that disabling the capture mode does not stop the camera, the camera
@@ -118,7 +118,7 @@ public class ScanViewModel extends ViewModel implements BarcodeCaptureListener {
             mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    listener.onCodeScanned(firstBarcode);
+                    listener.onCodeScanned(barcode);
                 }
             });
         }

@@ -46,7 +46,7 @@ public final class SearchDataCaptureManager {
         settings.enableSymbologies(enabledSymbologies);
 
         // In order not to pick up barcodes outside of the view finder,
-        // restrict the code location selection to match the laser line's center.
+        // restrict the code location selection to match the aimer's center.
         settings.setLocationSelection(
                 new RadiusLocationSelection(new FloatWithUnit(0f, MeasureUnit.FRACTION))
         );

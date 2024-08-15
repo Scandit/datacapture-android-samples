@@ -54,7 +54,7 @@ public final class SouthAfricaDlBarcodeFieldExtractor extends FieldExtractor {
 
     private String extractField(ProfessionalDrivingPermit value) {
         if (value == null) {
-            return "<empty>";
+            return EMPTY_TEXT_VALUE;
         }
         String result = "";
         result += "Codes: " + extractStringFields(value.getCodes()) + "\n";
@@ -64,7 +64,7 @@ public final class SouthAfricaDlBarcodeFieldExtractor extends FieldExtractor {
 
     private String extractIntFields(List<Integer> values) {
         if (values.isEmpty()) {
-            return "<empty>";
+            return EMPTY_TEXT_VALUE;
         }
         StringBuilder result = new StringBuilder();
         for (Integer value : values) {
@@ -83,7 +83,7 @@ public final class SouthAfricaDlBarcodeFieldExtractor extends FieldExtractor {
 
     private String extractField(List<VehicleRestriction> values) {
         if (values.isEmpty()) {
-            return "<empty>";
+            return EMPTY_TEXT_VALUE;
         }
         StringBuilder result = new StringBuilder();
         for (VehicleRestriction restriction : values) {

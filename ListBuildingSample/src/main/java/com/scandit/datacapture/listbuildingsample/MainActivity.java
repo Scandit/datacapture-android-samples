@@ -324,10 +324,9 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
     public void onBarcodeScanned(
         @NonNull SparkScan sparkScan, @NonNull SparkScanSession session, @Nullable FrameData data
     ) {
-        List<Barcode> barcodes = session.getNewlyRecognizedBarcodes();
-        Barcode barcode = barcodes.get(0);
+        Barcode barcode = session.getNewlyRecognizedBarcode();
 
-        if (isValidBarcode(barcode)) {
+        if (barcode != null && isValidBarcode(barcode)) {
             validBarcodeScanned(barcode, data);
         }
     }

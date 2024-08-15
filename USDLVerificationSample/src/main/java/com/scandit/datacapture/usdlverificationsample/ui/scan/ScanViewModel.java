@@ -27,6 +27,7 @@ import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.CapturedResultType;
 import com.scandit.datacapture.id.data.SupportedSides;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
+import com.scandit.datacapture.id.verification.aamvabarcode.AamvaBarcodeVerificationStatus;
 import com.scandit.datacapture.id.verification.aamvabarcode.AamvaBarcodeVerificationTask;
 import com.scandit.datacapture.id.verification.aamvavizbarcode.AamvaVizBarcodeComparisonResult;
 import com.scandit.datacapture.usdlverificationsample.R;
@@ -257,7 +258,7 @@ public class ScanViewModel extends ViewModel {
             setIsBarcodeVerificationRunning(true);
             setUpBarcodeVerificationTaskListeners();
         } else {
-            navigateToResult(capturedId, isFrontBackComparisonSuccessful, false, frontMismatchImage, isShownLicenseWarning);
+            navigateToResult(capturedId, isFrontBackComparisonSuccessful, AamvaBarcodeVerificationStatus.FORGED, frontMismatchImage, isShownLicenseWarning);
         }
     }
 
@@ -275,8 +276,7 @@ public class ScanViewModel extends ViewModel {
          */
         barcodeVerificationTask.doOnVerificationResult(barcodeVerificationResult -> {
             if (driverLicense != null) {
-                boolean checksPassed = barcodeVerificationResult.getAllChecksPassed();
-                navigateToResult(driverLicense, true, checksPassed, null, false);
+                navigateToResult(driverLicense, true, barcodeVerificationResult.getStatus(), null, false);
                 setIsBarcodeVerificationRunning(false);
                 barcodeVerificationTask = null;
                 driverLicense = null;
@@ -317,14 +317,14 @@ public class ScanViewModel extends ViewModel {
     private void navigateToResult(
             CapturedId capturedId,
             boolean isFrontBackComparisonSuccessful,
-            boolean isBarcodeVerificationSuccessful,
+            AamvaBarcodeVerificationStatus aamvaBarcodeVerificationStatus,
             @Nullable Bitmap verificationImage,
             boolean isShownLicenseWarning
     ) {
         final CaptureResult result = new ResultMapper(capturedId).mapResult(
                 capturedId.isExpired(),
                 isFrontBackComparisonSuccessful,
-                isBarcodeVerificationSuccessful,
+                aamvaBarcodeVerificationStatus,
                 verificationImage,
                 isShownLicenseWarning
         );

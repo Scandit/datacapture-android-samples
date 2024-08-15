@@ -213,9 +213,9 @@ public class BarcodeScanActivity
             @NonNull BarcodeCaptureSession session,
             @NonNull FrameData frameData
     ) {
-        if (session.getNewlyRecognizedBarcodes().isEmpty()) return;
+        if (session.getNewlyRecognizedBarcode() == null) return;
 
-        Barcode barcode = session.getNewlyRecognizedBarcodes().get(0);
+        Barcode barcode = session.getNewlyRecognizedBarcode();
 
         // Stop recognizing barcodes for as long as we are displaying the result. There won't be any
         // new results until the capture mode is enabled again. Note that disabling the capture mode

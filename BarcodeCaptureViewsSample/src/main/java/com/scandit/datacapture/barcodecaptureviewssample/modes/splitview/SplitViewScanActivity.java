@@ -32,8 +32,7 @@ import com.scandit.datacapture.barcodecaptureviewssample.R;
 import com.scandit.datacapture.barcodecaptureviewssample.modes.base.CameraPermissionActivity;
 import com.scandit.datacapture.core.ui.DataCaptureView;
 import com.scandit.datacapture.core.ui.style.Brush;
-import com.scandit.datacapture.core.ui.viewfinder.LaserlineViewfinder;
-import com.scandit.datacapture.core.ui.viewfinder.LaserlineViewfinderStyle;
+import com.scandit.datacapture.core.ui.viewfinder.AimerViewfinder;
 
 public class SplitViewScanActivity extends CameraPermissionActivity
         implements SplitViewScanViewModel.Listener {
@@ -106,8 +105,8 @@ public class SplitViewScanActivity extends CameraPermissionActivity
         BarcodeCaptureOverlay overlay =
                 BarcodeCaptureOverlay.newInstance(viewModel.getBarcodeCapture(), view, BarcodeCaptureOverlayStyle.FRAME);
 
-        // We have to add the laser line viewfinder to the overlay.
-        overlay.setViewfinder(new LaserlineViewfinder(LaserlineViewfinderStyle.ANIMATED));
+        // We have to add the aimer viewfinder to the overlay.
+        overlay.setViewfinder(new AimerViewfinder());
 
         // Adjust the overlay's barcode highlighting to match the new viewfinder styles and improve
         // the visibility of feedback. With 6.10 we will introduce this visual treatment as a new

@@ -19,6 +19,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.Nullable;
 
+import com.scandit.datacapture.id.verification.aamvabarcode.AamvaBarcodeVerificationStatus;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -40,7 +42,7 @@ public class CaptureResult implements Parcelable {
 
     private boolean isExpired;
     private boolean isFrontBackComparisonSuccessful;
-    private boolean isBarcodeVerificationSuccessful;
+    private AamvaBarcodeVerificationStatus aamvaBarcodeVerificationStatus;
     private boolean isShownLicenseWarning;
 
     public CaptureResult(
@@ -48,7 +50,7 @@ public class CaptureResult implements Parcelable {
             @Nullable byte[] faceImageBytes,
             boolean isExpired,
             boolean isFrontBackComparisonSuccessful,
-            boolean isBarcodeVerificationSuccessful,
+            AamvaBarcodeVerificationStatus aamvaBarcodeVerificationStatus,
             @Nullable byte[] verificationImageBytes,
             boolean isShownLicenseWarning
     ) {
@@ -56,7 +58,7 @@ public class CaptureResult implements Parcelable {
         this.faceImageBytes = faceImageBytes;
         this.isExpired = isExpired;
         this.isFrontBackComparisonSuccessful = isFrontBackComparisonSuccessful;
-        this.isBarcodeVerificationSuccessful = isBarcodeVerificationSuccessful;
+        this.aamvaBarcodeVerificationStatus = aamvaBarcodeVerificationStatus;
         this.verificationImageBytes = verificationImageBytes;
         this.isShownLicenseWarning = isShownLicenseWarning;
     }
@@ -83,8 +85,8 @@ public class CaptureResult implements Parcelable {
         return isFrontBackComparisonSuccessful;
     }
 
-    public boolean isBarcodeVerificationSuccessful() {
-        return isBarcodeVerificationSuccessful;
+    public AamvaBarcodeVerificationStatus getAamvaBarcodeVerificationStatus() {
+        return aamvaBarcodeVerificationStatus;
     }
 
     public boolean isShownLicenseWarning() {
@@ -99,7 +101,7 @@ public class CaptureResult implements Parcelable {
         in.readByteArray(faceImageBytes);
         isExpired = in.readInt() == 1;
         isFrontBackComparisonSuccessful = in.readInt() == 1;
-        isBarcodeVerificationSuccessful = in.readInt() == 1;
+        aamvaBarcodeVerificationStatus = AamvaBarcodeVerificationStatus.valueOf(in.readString());
         int verificationImageBytesSize = in.readInt();
         verificationImageBytes = new byte[verificationImageBytesSize];
         in.readByteArray(verificationImageBytes);
@@ -116,7 +118,7 @@ public class CaptureResult implements Parcelable {
         }
         dest.writeInt(isExpired ? 1 : 0);
         dest.writeInt(isFrontBackComparisonSuccessful ? 1 : 0);
-        dest.writeInt(isBarcodeVerificationSuccessful ? 1 : 0);
+        dest.writeString(aamvaBarcodeVerificationStatus.toString());
         if (verificationImageBytes != null) {
             dest.writeInt(verificationImageBytes.length);
             dest.writeByteArray(verificationImageBytes);

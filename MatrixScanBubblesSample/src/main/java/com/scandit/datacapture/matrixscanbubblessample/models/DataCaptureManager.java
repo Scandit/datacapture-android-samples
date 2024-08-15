@@ -23,8 +23,6 @@ import com.scandit.datacapture.core.source.Camera;
 import com.scandit.datacapture.core.source.CameraSettings;
 import com.scandit.datacapture.core.source.VideoResolution;
 
-import static com.scandit.datacapture.barcode.tracking.capture.BarcodeTrackingScenario.A;
-
 public final class DataCaptureManager {
 
     public static final DataCaptureManager CURRENT = new DataCaptureManager();
@@ -41,7 +39,7 @@ public final class DataCaptureManager {
         // The barcode tracking process is configured through barcode tracking settings
         // which are then applied to the barcode tracking instance that manages barcode recognition
         // and tracking.
-        BarcodeTrackingSettings barcodeTrackingSettings = BarcodeTrackingSettings.forScenario(A);
+        BarcodeTrackingSettings barcodeTrackingSettings = new BarcodeTrackingSettings();
 
         // The settings instance initially has all types of barcodes (symbologies) disabled.
         // For the purpose of this sample we enable a generous set of symbologies.

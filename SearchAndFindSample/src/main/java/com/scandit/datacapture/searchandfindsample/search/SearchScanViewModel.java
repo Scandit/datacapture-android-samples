@@ -58,9 +58,8 @@ public final class SearchScanViewModel extends ViewModel implements BarcodeCaptu
             @NotNull FrameData data
     ) {
         synchronized (lock) {
-            if (!session.getNewlyRecognizedBarcodes().isEmpty()
-                    && session.getNewlyRecognizedBarcodes().get(0) != null) {
-                lastScannedBarcode = session.getNewlyRecognizedBarcodes().get(0);
+            if (session.getNewlyRecognizedBarcode() != null) {
+                lastScannedBarcode = session.getNewlyRecognizedBarcode();
 
                 String code = lastScannedBarcode.getData() != null ? lastScannedBarcode.getData() : "";
                 // This method is invoked on a non-UI thread, so in order to perform UI work,

@@ -46,7 +46,7 @@ public final class ColombiaDlBarcodeFieldExtractor extends FieldExtractor {
 
     private String extractField(List<String> values) {
         if (values.isEmpty()) {
-            return "<empty>";
+            return EMPTY_TEXT_VALUE;
         }
         StringBuilder result = new StringBuilder();
         for (String value : values) {

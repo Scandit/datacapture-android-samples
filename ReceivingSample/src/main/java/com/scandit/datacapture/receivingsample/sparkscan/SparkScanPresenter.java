@@ -114,8 +114,8 @@ public class SparkScanPresenter implements
         // Enable BarcodeCount button
         sparkScanView.setBarcodeCountButtonVisible(true);
 
-        // Disable FastFind button
-        sparkScanView.setFastFindButtonVisible(false);
+        // Disable BarcodeFind button
+        sparkScanView.setBarcodeFindButtonVisible(false);
 
         // Set feedback delegate
         sparkScanView.setFeedbackDelegate(this);
@@ -186,10 +186,9 @@ public class SparkScanPresenter implements
         @NonNull SparkScanSession session,
         @Nullable FrameData data
     ) {
-        List<Barcode> barcodes = session.getNewlyRecognizedBarcodes();
-        Barcode barcode = barcodes.get(0);
+        Barcode barcode = session.getNewlyRecognizedBarcode();
 
-        if (isValidBarcode(barcode)) {
+        if (barcode != null && isValidBarcode(barcode)) {
             validBarcodeScanned(barcode);
         }
     }
@@ -219,6 +218,11 @@ public class SparkScanPresenter implements
 
     @Override
     public void onFastFindButtonTap(@NonNull SparkScanView view) {
+        // Deprecated
+    }
+
+    @Override
+    public void onBarcodeFindButtonTap(@NonNull SparkScanView view) {
         // Not relevant in this sample
     }
 

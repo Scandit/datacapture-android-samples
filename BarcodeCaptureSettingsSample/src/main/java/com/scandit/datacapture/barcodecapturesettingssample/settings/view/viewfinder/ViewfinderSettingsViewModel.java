@@ -15,11 +15,16 @@
 package com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder;
 
 import com.scandit.datacapture.barcodecapturesettingssample.models.SettingsManager;
-import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.*;
+import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.RectangularDisabledColor;
+import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.RectangularEnabledColor;
+import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.ViewfinderType;
+import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.ViewfinderTypeAimer;
+import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.ViewfinderTypeNone;
+import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.ViewfinderTypeRectangular;
+import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.ViewfinderTypeViewModel;
 import com.scandit.datacapture.barcodecapturesettingssample.utils.SizeSpecification;
 import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
 import com.scandit.datacapture.core.common.geometry.MeasureUnit;
-import com.scandit.datacapture.core.ui.viewfinder.LaserlineViewfinderStyle;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderLineStyle;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderStyle;
 
@@ -32,9 +37,6 @@ public class ViewfinderSettingsViewModel extends ViewfinderTypeViewModel {
         return new ViewfinderType[]{
                 ViewfinderTypeNone.fromCurrentViewFinder(settingsManager.getCurrentViewfinder()),
                 ViewfinderTypeRectangular.fromCurrentViewfinderAndSettings(
-                        settingsManager.getCurrentViewfinder(), settingsManager
-                ),
-                ViewfinderTypeLaserline.fromCurrentViewfinderAndSettings(
                         settingsManager.getCurrentViewfinder(), settingsManager
                 ),
                 ViewfinderTypeAimer.fromCurrentViewfinderAndSettings(
@@ -62,12 +64,6 @@ public class ViewfinderSettingsViewModel extends ViewfinderTypeViewModel {
             settingsManager.setRectangularViewfinderLongerDimensionAspect(casted.getLongerDimensionAspect());
             settingsManager.setRectangularViewfinderStyle(casted.getStyle());
             settingsManager.setRectangularViewfinderLineStyle(casted.getLineStyle());
-        } else if (viewfinderType instanceof ViewfinderTypeLaserline) {
-            ViewfinderTypeLaserline casted = (ViewfinderTypeLaserline) viewfinderType;
-            settingsManager.setLaserlineViewfinderWidth(casted.getWidth());
-            settingsManager.setLaserlineViewfinderEnabledColor(casted.getEnabledColor());
-            settingsManager.setLaserlineViewfinderDisabledColor(casted.getDisabledColor());
-            settingsManager.setLaserlineViewfinderStyle(casted.getStyle());
         } else if (viewfinderType instanceof ViewfinderTypeAimer) {
             ViewfinderTypeAimer casted = (ViewfinderTypeAimer) viewfinderType;
             settingsManager.setAimerViewfinderFrameColor(casted.getFrameColor());
@@ -175,33 +171,6 @@ public class ViewfinderSettingsViewModel extends ViewfinderTypeViewModel {
             setViewfinderType(currentViewfinder);
         }
         settingsManager.setRectangularViewfinderLoopingEnabled(enabled);
-    }
-
-    void setLaserlineViewfinderEnabledColor(LaserlineEnabledColor color) {
-        ViewfinderType currentViewfinder = getCurrentViewfinderType();
-        if (currentViewfinder instanceof ViewfinderTypeLaserline) {
-            ((ViewfinderTypeLaserline) currentViewfinder).setEnabledColor(color);
-            setViewfinderType(currentViewfinder);
-        }
-        settingsManager.setLaserlineViewfinderEnabledColor(color);
-    }
-
-    void setLaserlineViewfinderDisabledColor(LaserlineDisabledColor color) {
-        ViewfinderType currentViewfinder = getCurrentViewfinderType();
-        if (currentViewfinder instanceof ViewfinderTypeLaserline) {
-            ((ViewfinderTypeLaserline) currentViewfinder).setDisabledColor(color);
-            setViewfinderType(currentViewfinder);
-        }
-        settingsManager.setLaserlineViewfinderDisabledColor(color);
-    }
-
-    void setLaserlineViewfinderStyle(LaserlineViewfinderStyle style) {
-        ViewfinderType currentViewfinder = getCurrentViewfinderType();
-        if (currentViewfinder instanceof ViewfinderTypeLaserline) {
-            ((ViewfinderTypeLaserline) currentViewfinder).setStyle(style);
-            currentViewfinder.resetDefaults();
-            setViewfinderType(currentViewfinder);
-        }
     }
 
     void setAimerViewfinderFrameColor(ViewfinderTypeAimer.FrameColor color) {

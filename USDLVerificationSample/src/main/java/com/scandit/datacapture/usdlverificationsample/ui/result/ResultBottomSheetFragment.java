@@ -219,15 +219,24 @@ public class ResultBottomSheetFragment extends BottomSheetDialogFragment {
          */
         if (!result.isExpired()) {
             VerificationResultItemView barcodeVerificationView =
-                    new VerificationResultItemView(getContext());
-            if (result.isBarcodeVerificationSuccessful()) {
-                barcodeVerificationView.setData(successIcon,
+                new VerificationResultItemView(getContext());
+            switch (result.getAamvaBarcodeVerificationStatus()) {
+                case AUTHENTIC:
+                    barcodeVerificationView.setData(successIcon,
                         R.string.scanning_dl_barcode_verification_success);
-                verificationSuccessLayout.addView(barcodeVerificationView);
-            } else {
-                barcodeVerificationView.setData(errorIcon,
+                    verificationSuccessLayout.addView(barcodeVerificationView);
+                    break;
+                case LIKELY_FORGED:
+                    barcodeVerificationView.setData(errorIcon,
+                        R.string.scanning_dl_barcode_verification_uncertain);
+                    verificationErrorLayout.addView(barcodeVerificationView);
+                    break;
+                case FORGED:
+                    barcodeVerificationView.setData(errorIcon,
                         R.string.scanning_dl_barcode_verification_failure);
-                verificationErrorLayout.addView(barcodeVerificationView);
+                    verificationErrorLayout.addView(barcodeVerificationView);
+                    break;
+
             }
         }
 

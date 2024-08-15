@@ -44,12 +44,12 @@ public class BarcodeScanViewModel extends ViewModel
             @NotNull BarcodeCaptureSession session,
             @NotNull FrameData data
     ) {
-        if (!session.getNewlyRecognizedBarcodes().isEmpty()) {
+        if (session.getNewlyRecognizedBarcode() != null) {
             if (!isContinuousScanningEnabled()) {
                 pauseScanning();
             }
             if (listener != null) {
-                Barcode barcode = session.getNewlyRecognizedBarcodes().get(0);
+                Barcode barcode = session.getNewlyRecognizedBarcode();
                 listener.showDialog(barcode);
             }
         }

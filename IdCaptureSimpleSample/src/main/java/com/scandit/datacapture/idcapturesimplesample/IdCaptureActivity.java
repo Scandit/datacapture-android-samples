@@ -35,7 +35,6 @@ import com.scandit.datacapture.id.capture.IdCaptureListener;
 import com.scandit.datacapture.id.capture.IdCaptureSession;
 import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.DateResult;
-import com.scandit.datacapture.id.ui.IdLayoutStyle;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 
 import org.jetbrains.annotations.NotNull;
@@ -82,7 +81,6 @@ public class IdCaptureActivity extends CameraPermissionActivity
         );
 
         overlay = IdCaptureOverlay.newInstance(dataCaptureManager.getIdCapture(), null);
-        overlay.setIdLayoutStyle(IdLayoutStyle.ROUNDED);
     }
 
     @Override

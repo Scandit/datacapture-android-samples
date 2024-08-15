@@ -22,9 +22,7 @@ import androidx.annotation.StringRes;
 
 import com.scandit.datacapture.barcodecapturesettingssample.R;
 import com.scandit.datacapture.barcodecapturesettingssample.models.SettingsManager;
-import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
 import com.scandit.datacapture.core.ui.viewfinder.AimerViewfinder;
-import com.scandit.datacapture.core.ui.viewfinder.LaserlineViewfinder;
 import com.scandit.datacapture.core.ui.viewfinder.Viewfinder;
 
 public class ViewfinderTypeAimer extends ViewfinderType {

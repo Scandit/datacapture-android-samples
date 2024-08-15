@@ -188,9 +188,9 @@ public class GS1ParserActivity
             @NonNull BarcodeCaptureSession session,
             @NonNull FrameData frameData
     ) {
-        if (session.getNewlyRecognizedBarcodes().isEmpty()) return;
+        if (session.getNewlyRecognizedBarcode() == null) return;
 
-        String barcodeData = session.getNewlyRecognizedBarcodes().get(0).getData();
+        String barcodeData = session.getNewlyRecognizedBarcode().getData();
         try {
             final ParsedData parsedData = parser.parseString(barcodeData);
             final String result = new ParsedDataPrettyPrinter(parsedData).getResult();

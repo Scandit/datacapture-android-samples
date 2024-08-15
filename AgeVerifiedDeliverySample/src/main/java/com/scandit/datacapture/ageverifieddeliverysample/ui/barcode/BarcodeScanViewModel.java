@@ -170,9 +170,9 @@ public class BarcodeScanViewModel extends ViewModel implements BarcodeCaptureLis
             @NonNull BarcodeCapture barcodeCapture, @NonNull BarcodeCaptureSession session,
             @NonNull FrameData data
     ) {
-        List<Barcode> barcodes = session.getNewlyRecognizedBarcodes();
+        Barcode barcode = session.getNewlyRecognizedBarcode();
 
-        if (!barcodes.isEmpty()) {
+        if (barcode != null) {
             pauseCapture();
             goToAgeVerificationRequired.postValue(new GoToAgeVerificationRequired());
         }

@@ -47,7 +47,7 @@ public class OverlaySettingsViewModel extends ViewModel {
     }
 
     OverlayStyleEntry[] getOverlayStyles() {
-        BarcodeCaptureOverlayStyle[] availableStyles = BarcodeCaptureOverlayStyle.values();
+        BarcodeCaptureOverlayStyle[] availableStyles = settingsManager.getUsableOverlayStyles();
         OverlayStyleEntry[] styleEntries = new OverlayStyleEntry[availableStyles.length];
         for (int i = 0; i< availableStyles.length; i++) {
             BarcodeCaptureOverlayStyle style = availableStyles[i];

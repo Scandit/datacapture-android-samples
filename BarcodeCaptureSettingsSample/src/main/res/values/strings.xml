@@ -74,7 +74,6 @@
     <string name="y">Y</string>
     <string name="brush">Brush</string>
     <string name="_default">Default</string>
-    <string name="transparent">Transparent</string>
     <string name="red">Red</string>
     <string name="green">Green</string>
     <string name="rectangular">Rectangular</string>
@@ -97,12 +96,10 @@
     <string name="height_aspect">Height Aspect</string>
     <string name="width_aspect">Width Aspect</string>
     <string name="longer_dimension_aspect">Longer Dimension Aspect</string>
-    <string name="enabled_color">Enabled Color</string>
     <string name="disabled_color">Disabled Color</string>
     <string name="frame_color">Frame Color</string>
     <string name="dot_color">Dot Color</string>
     <string name="white">White</string>
-    <string name="laserline">Laserline</string>
     <string name="aimer">Aimer</string>
     <string name="anchor">Anchor</string>
     <string name="zoom_button">Zoom Button</string>

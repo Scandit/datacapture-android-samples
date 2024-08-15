@@ -15,10 +15,9 @@
 package com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type;
 
 import androidx.lifecycle.ViewModel;
+
 import com.scandit.datacapture.barcodecapturesettingssample.models.SettingsManager;
 import com.scandit.datacapture.core.ui.viewfinder.AimerViewfinder;
-import com.scandit.datacapture.core.ui.viewfinder.LaserlineViewfinder;
-import com.scandit.datacapture.core.ui.viewfinder.LaserlineViewfinderStyle;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinder;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderStyle;
 import com.scandit.datacapture.core.ui.viewfinder.Viewfinder;
@@ -32,10 +31,6 @@ public class ViewfinderTypeViewModel extends ViewModel {
         Viewfinder viewfinder = getCurrentViewfinder();
         if (viewfinder instanceof RectangularViewfinder) {
             return ViewfinderTypeRectangular.fromCurrentViewfinderAndSettings(
-                    viewfinder, settingsManager
-            );
-        } else if (viewfinder instanceof LaserlineViewfinder) {
-            return ViewfinderTypeLaserline.fromCurrentViewfinderAndSettings(
                     viewfinder, settingsManager
             );
         } else if (viewfinder instanceof AimerViewfinder) {
@@ -57,10 +52,6 @@ public class ViewfinderTypeViewModel extends ViewModel {
 
     public void updateViewfinder(ViewfinderType viewfinderType) {
         settingsManager.setViewfinder(viewfinderType.buildViewfinder());
-    }
-
-    public LaserlineViewfinderStyle getLaserlineViewfinderStyle() {
-        return settingsManager.getLaserlineViewfinderStyle();
     }
 
     public RectangularViewfinderStyle getRectangularViewfinderStyle() {

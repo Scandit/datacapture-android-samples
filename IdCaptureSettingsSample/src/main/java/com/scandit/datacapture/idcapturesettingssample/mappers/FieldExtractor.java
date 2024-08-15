@@ -33,6 +33,8 @@ public abstract class FieldExtractor {
 
     protected final CapturedId capturedId;
 
+    public static final String EMPTY_TEXT_VALUE = "<empty>";
+
     public FieldExtractor(CapturedId capturedId) {
         this.capturedId = capturedId;
     }
@@ -42,7 +44,7 @@ public abstract class FieldExtractor {
     @NonNull
     protected String extractField(Boolean value) {
         if (value == null) {
-            return "<empty>";
+            return EMPTY_TEXT_VALUE;
         }
 
         return String.valueOf(value);
@@ -61,7 +63,7 @@ public abstract class FieldExtractor {
     @NonNull
     protected String extractField(@Nullable String value) {
         if (TextUtils.isEmpty(value)) {
-            return "<empty>";
+            return EMPTY_TEXT_VALUE;
         }
         return value;
     }
@@ -69,7 +71,7 @@ public abstract class FieldExtractor {
     @NonNull
     protected String extractField(@Nullable DateResult value) {
         if (value == null) {
-            return "<empty>";
+            return EMPTY_TEXT_VALUE;
         }
         return dateFormat.format(value.getLocalDate());
     }

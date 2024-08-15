@@ -17,7 +17,6 @@ package com.scandit.datacapture.inventoryauditsample.models
 import com.scandit.datacapture.barcode.data.Symbology
 import com.scandit.datacapture.barcode.tracking.capture.BarcodeTracking
 import com.scandit.datacapture.barcode.tracking.capture.BarcodeTracking.Companion.forDataCaptureContext
-import com.scandit.datacapture.barcode.tracking.capture.BarcodeTrackingScenario.A
 import com.scandit.datacapture.barcode.tracking.capture.BarcodeTrackingSettings
 import com.scandit.datacapture.core.capture.DataCaptureContext
 import com.scandit.datacapture.core.capture.DataCaptureContext.Companion.forLicenseKey
@@ -38,7 +37,7 @@ object DataCaptureManager {
     init {
         // The barcode tracking process is configured through barcode tracking settings
         // which are then applied to the barcode tracking instance that manages barcode recognition and tracking.
-        val barcodeTrackingSettings = BarcodeTrackingSettings.forScenario(A).apply {
+        val barcodeTrackingSettings = BarcodeTrackingSettings().apply {
             // The settings instance initially has all types of barcodes (symbologies) disabled.
             // For the purpose of this sample we enable a generous set of symbologies.
             // In your own app ensure that you only enable the symbologies that your app requires

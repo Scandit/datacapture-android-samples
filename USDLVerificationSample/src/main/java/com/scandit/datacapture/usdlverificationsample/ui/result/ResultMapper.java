@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.DateResult;
 import com.scandit.datacapture.id.data.IdImageType;
+import com.scandit.datacapture.id.verification.aamvabarcode.AamvaBarcodeVerificationStatus;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -48,11 +49,11 @@ public class ResultMapper {
      * We extract all the CapturedId's fields.
      */
     public CaptureResult mapResult(
-            boolean isExpired,
-            boolean isFrontBackComparisonSuccessful,
-            boolean isCloudVerificationSuccessful,
-            @Nullable Bitmap verificationImage,
-            boolean isShownLicenseWarning
+        boolean isExpired,
+        boolean isFrontBackComparisonSuccessful,
+        AamvaBarcodeVerificationStatus aamvaBarcodeVerificationStatus,
+        @Nullable Bitmap verificationImage,
+        boolean isShownLicenseWarning
     ) {
         /*
          * Extract and convert the images.
@@ -75,7 +76,7 @@ public class ResultMapper {
                 faceImageBytes,
                 isExpired,
                 isFrontBackComparisonSuccessful,
-                isCloudVerificationSuccessful,
+                aamvaBarcodeVerificationStatus,
                 verificationImageBytes,
                 isShownLicenseWarning
         );

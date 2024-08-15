@@ -31,6 +31,7 @@ package com.scandit.datacapture.idcapturesettingssample.mappers;
 import androidx.annotation.Nullable;
 
 import com.scandit.datacapture.id.data.CapturedId;
+import com.scandit.datacapture.id.data.DocumentType;
 import com.scandit.datacapture.id.data.DrivingLicenseCategory;
 import com.scandit.datacapture.id.data.DrivingLicenseDetails;
 import com.scandit.datacapture.id.data.VizResult;
@@ -55,6 +56,10 @@ public final class VizFieldExtractor extends FieldExtractor {
     protected List<CaptureResult.Entry> extract() {
         List<CaptureResult.Entry> result = new ArrayList<>();
 
+        result.add(new CaptureResult.Entry("VIZ First Name", extractField(vizResult.getFirstName())));
+        result.add(new CaptureResult.Entry("VIZ Last Name", extractField(vizResult.getLastName())));
+        result.add(new CaptureResult.Entry("VIZ Secondary Last Name", extractField(vizResult.getSecondaryLastName())));
+        result.add(new CaptureResult.Entry("VIZ Full Name", extractField(vizResult.getFullName())));
         result.add(new CaptureResult.Entry("Issuing Authority", extractField(vizResult.getIssuingAuthority())));
         result.add(new CaptureResult.Entry("Issuing Jurisdiction", extractField(vizResult.getIssuingJurisdiction())));
         result.add(new CaptureResult.Entry("Issuing Jurisdiction ISO", extractField(vizResult.getIssuingJurisdictionIso())));
@@ -73,26 +78,43 @@ public final class VizFieldExtractor extends FieldExtractor {
         result.add(new CaptureResult.Entry("Sponsor", extractField(vizResult.getSponsor())));
         result.add(new CaptureResult.Entry("Mother's name", extractField(vizResult.getMothersName())));
         result.add(new CaptureResult.Entry("Father's name", extractField(vizResult.getFathersName())));
-        result.add(new CaptureResult.Entry("Driver's License Details", extractField(vizResult.getDrivingLicenseDetails())));
+
+        if (capturedId.getDocumentType() == DocumentType.DRIVING_LICENSE) {
+            result.add(new CaptureResult.Entry("Driver's License Details", extractField(vizResult.getDrivingLicenseDetails())));
+        }
 
         return result;
     }
 
     private String extractField(@Nullable DrivingLicenseDetails drivingLicenseDetails) {
         if (drivingLicenseDetails == null) {
-            return "<empty>";
+            return EMPTY_TEXT_VALUE;
         }
+
         StringBuilder result = new StringBuilder();
         List<DrivingLicenseCategory> drivingLicenseCategories =
                 drivingLicenseDetails.getDrivingLicenseCategories();
-        for (int i = 0; i < drivingLicenseCategories.size(); i++) {
-            DrivingLicenseCategory category = drivingLicenseCategories.get(i);
-            result.append(extractField(category));
 
-            if (i < drivingLicenseCategories.size() - 1) {
-                result.append("\n\n");
+        result.append("Categories:\n");
+        if (drivingLicenseCategories.isEmpty()) {
+            result.append(EMPTY_TEXT_VALUE);
+        } else {
+            for (int i = 0; i < drivingLicenseCategories.size(); i++) {
+                DrivingLicenseCategory category = drivingLicenseCategories.get(i);
+                result.append(extractField(category));
+
+                if (i < drivingLicenseCategories.size() - 1) {
+                    result.append("\n\n");
+                }
             }
         }
+
+        result.append("\n\nRestrictions: ");
+        result.append(extractField(drivingLicenseDetails.getRestrictions()));
+
+        result.append("\n\nEndorsements: ");
+        result.append(extractField(drivingLicenseDetails.getEndorsements()));
+
         return result.toString();
     }
 

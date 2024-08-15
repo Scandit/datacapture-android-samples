@@ -302,8 +302,6 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
          * The recipient's date of birth is necessary to verify if they are not underage.
          */
         if (isDateOfBirthCaptured(capturedId)) {
-            // Emit the feedback for a captured document.
-            feedback.getIdCaptured().emit();
             /*
              * The callback is executed in the background thread. We post the value to the LiveData
              * in order to return to the UI thread.
@@ -375,16 +373,20 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
 
     /**
      * Check whether the recipient's document is still valid and verify that they are not underage.
+     * Then emit the feedback
      */
     private void verifyDocumentData(DocumentData data) {
         pauseCapture();
 
         if (isExpired(data)) {
             goToVerificationFailure.postValue(new GoToVerificationFailure(DOCUMENT_EXPIRED));
+            feedback.getIdRejected().emit();
         } else if (isHolderUnderage(data.getDateOfBirth())) {
             goToVerificationFailure.postValue(new GoToVerificationFailure(HOLDER_UNDERAGE));
+            feedback.getIdRejected().emit();
         } else {
             goToVerificationSuccess.postValue(new GoToVerificationSuccess());
+            feedback.getIdCaptured().emit();
         }
     }
 

@@ -191,9 +191,8 @@ public class BarcodeScanActivity
             @NonNull BarcodeCaptureSession session,
             @NonNull FrameData frameData
     ) {
-        if (session.getNewlyRecognizedBarcodes().isEmpty()) return;
-
-        Barcode barcode = session.getNewlyRecognizedBarcodes().get(0);
+        Barcode barcode = session.getNewlyRecognizedBarcode();
+        if (barcode == null) return;
 
         // If the code scanned doesn't start with "09:", we will just ignore it and continue
         // scanning.

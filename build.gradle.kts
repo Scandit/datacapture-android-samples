@@ -1,4 +1,5 @@
 import com.android.build.gradle.BaseExtension
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
@@ -14,13 +15,13 @@ buildscript {
     val versions: Map<String, Any> by extra(
         mapOf(
             // The value of scandit_sdk_version is updated automatically in the prepare-release.py script, please do not edit manually.
-            "scandit_sdk_version" to "6.25.2",
+            "scandit_sdk_version" to "6.26.0",
             "android_gradle" to "8.1.0",
             "android_material" to "1.6.1",
             "androidx_animations" to "1.0.0",
             "androidx_appcompat" to "1.3.1",
             "androidx_cardview" to "1.0.0",
-            "androidx_constraintlayout" to "2.1.2",
+            "androidx_constraintlayout" to "2.1.4",
             "androidx_coordinatorlayout" to "1.2.0",
             "androidx_lifecycle" to "2.3.1",
             "androidx_preference" to "1.1.1",
@@ -33,7 +34,7 @@ buildscript {
             "androidx_test_services" to "1.5.0-alpha01",
             "desugar" to "1.1.5",
             "java" to JavaVersion.VERSION_1_8,
-            "kotlin" to "1.7.21",
+            "kotlin" to "1.8.22",
             "material" to "1.3.0",
             "mockito_android" to "3.12.4",
             "mockito_kotlin_version" to "4.0.0"
@@ -54,6 +55,11 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+    }
+    tasks.withType<KotlinCompile>().configureEach {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
     }
 }
 
