@@ -52,6 +52,7 @@ public final class CommonFieldExtractor extends FieldExtractor {
         result.add(new CaptureResult.Entry("Date of Expiry", extractField(capturedId.getDateOfExpiry())));
         result.add(new CaptureResult.Entry("Is Expired", extractField(capturedId.isExpired())));
         result.add(new CaptureResult.Entry("Date of Issue", extractField(capturedId.getDateOfIssue())));
+        result.add(new CaptureResult.Entry("US REAL ID Status", extractField(capturedId.getUsRealIdStatus().toString())));
 
         return result;
     }

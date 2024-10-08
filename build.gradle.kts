@@ -15,7 +15,7 @@ buildscript {
     val versions: Map<String, Any> by extra(
         mapOf(
             // The value of scandit_sdk_version is updated automatically in the prepare-release.py script, please do not edit manually.
-            "scandit_sdk_version" to "6.27.2",
+            "scandit_sdk_version" to "6.28.0",
             "android_gradle" to "8.1.0",
             "android_material" to "1.6.1",
             "androidx_animations" to "1.0.0",

@@ -67,8 +67,6 @@ ID Scanning Samples demonstrate the features of the ID Capture API and demonstra
 
 **ID Capture Simple Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/IdCaptureSimpleSample))
 
-**MRZ Scanner Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/MRZScannerSample))
-
 **US Drivers’ License Verification Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/USDLVerificationSample))
 
 **ID Capture Settings Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/IdCaptureSettingsSample))

@@ -36,7 +36,7 @@ android {
     packagingOptions {
         jniLibs {
             pickFirsts += "**/*.so"
-            it.useLegacyPackaging project.hasProperty('extractNativeLibs')
+            it.useLegacyPackaging true
         }
     }
 
