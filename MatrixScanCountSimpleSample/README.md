@@ -18,7 +18,7 @@ MatrixScan Count is an out-of-the-box scan and count solution for counting and r
 
 ![MSCount%20-%20iOS.png](https://github.com/Scandit/.github/blob/main/images/MSCount%20-%20iOS.png)
 
-Get started with MatrixScan Count on [iOS](https://docs.scandit.com/data-capture-sdk/ios/get-started-matrixscan.html), [Android](https://docs.scandit.com/data-capture-sdk/android/get-started-matrixscan.html).
+Get started with MatrixScan Count on [iOS](https://docs.scandit.com/sdks/ios/matrixscan-count/intro), [Android](https://docs.scandit.com/sdks/android/matrixscan-count/intro).
 
 ## Documentation
 
