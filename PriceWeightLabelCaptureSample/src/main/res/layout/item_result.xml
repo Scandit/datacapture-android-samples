@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="24dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginEnd="24dp"
+    android:layout_marginBottom="16dp">
+
+    <TextView
+        android:id="@+id/item_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="#3D4852"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="ITEM 1" />
+
+    <TextView
+        android:id="@+id/upc_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:drawablePadding="8dp"
+        android:text="@string/code"
+        android:textColor="#3D4852"
+        app:drawableStartCompat="@drawable/dot_upc"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/item_number" />
+
+    <TextView
+        android:id="@+id/weight_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="#3D4852"
+        android:drawablePadding="8dp"
+        android:text="@string/weight"
+        app:drawableStartCompat="@drawable/dot_weight"
+        app:layout_constraintStart_toStartOf="@+id/upc_label"
+        app:layout_constraintTop_toBottomOf="@+id/upc_label" />
+
+    <TextView
+        android:id="@+id/unit_price_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:drawablePadding="8dp"
+        android:textColor="#3D4852"
+        android:text="@string/unit_price"
+        app:drawableStartCompat="@drawable/dot_unit_price"
+        app:layout_constraintStart_toStartOf="@+id/weight_label"
+        app:layout_constraintTop_toBottomOf="@+id/weight_label" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/label_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="end"
+        app:constraint_referenced_ids="upc_label,weight_label,unit_price_label" />
+
+    <TextView
+        android:id="@+id/upc_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:ellipsize="end"
+        android:textColor="#3D4852"
+        android:lines="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/label_barrier"
+        app:layout_constraintTop_toTopOf="@+id/upc_label"
+        tools:text="123457898" />
+
+    <TextView
+        android:id="@+id/weight_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:textColor="#3D4852"
+        android:lines="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/upc_content"
+        app:layout_constraintTop_toBottomOf="@+id/upc_content"
+        tools:text="3 pounds" />
+
+    <TextView
+        android:id="@+id/unit_price_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="#3D4852"
+        android:ellipsize="end"
+        android:lines="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/upc_content"
+        app:layout_constraintTop_toBottomOf="@+id/weight_content"
+        tools:text="3.45€" />
+
+    <TextView
+        android:id="@+id/quantity_label"
+        android:textColor="#3D4852"
+        android:ellipsize="end"
+        android:lines="1"
+        tools:text="QTY 1"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/label_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="weight_label,unit_price_label,weight_content,unit_price_content" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

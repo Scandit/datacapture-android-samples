@@ -35,21 +35,6 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/indicator" />
-
-        <TextView
-            android:id="@+id/issuing_country_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_padding_large"
-            android:fontFamily="sans-serif-medium"
-            android:textAllCaps="true"
-            android:textColor="@color/id_scanning_issuing_country_text_color"
-            android:textSize="@dimen/dl_scanning_result_text_size"
-            android:text="United States of America"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/document_type_header"
-            tools:ignore="HardcodedText" />
-
         <ImageView
             android:id="@+id/close_button"
             android:layout_width="wrap_content"
@@ -74,7 +59,7 @@
             android:background="@color/id_scanning_verification_success_background_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/issuing_country_header" />
+            app:layout_constraintTop_toBottomOf="@+id/document_type_header" />
 
         <LinearLayout
             android:id="@+id/verification_error_layout"
@@ -91,33 +76,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/verification_success_layout" />
 
-        <TextView
-            android:id="@+id/license_warning_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_padding_small"
-            android:layout_marginEnd="@dimen/default_padding_small"
-            android:layout_marginTop="@dimen/default_padding_small"
-            android:fontFamily="sans-serif-medium"
-            android:textAlignment="center"
-            android:textColor="@color/grey_id_scanning"
-            android:textSize="@dimen/dl_scanning_result_text_size"
-            android:text="@string/license_does_not_support_highlighting"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/verification_error_layout" />
-
-        <ImageView
-            android:id="@+id/verification_image"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:scaleType="centerInside"
-            android:adjustViewBounds="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/license_warning_text"
-            android:padding="@dimen/default_padding_small" />
-
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/user_image"
             android:layout_width="@dimen/user_image_size"
@@ -127,7 +85,7 @@
             android:background="@drawable/bg_circle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/verification_image"
+            app:layout_constraintTop_toBottomOf="@+id/verification_error_layout"
             app:shapeAppearanceOverlay="@style/CircularImage"
             tools:ignore="ContentDescription" />
 

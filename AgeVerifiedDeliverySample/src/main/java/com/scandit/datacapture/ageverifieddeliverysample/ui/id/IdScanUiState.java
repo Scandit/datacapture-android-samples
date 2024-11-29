@@ -28,7 +28,7 @@ class IdScanUiState {
     private IdCaptureOverlay overlay;
 
     /**
-     * The number of times `onIdCaptureTimedOut` callback has been called.
+     * The number of times the capture has timed out.
      */
     private int timeoutCount = 0;
 
@@ -46,7 +46,7 @@ class IdScanUiState {
     }
 
     /**
-     * Get the number of times `onIdCaptureTimedOut` callback has been called.
+     * Get the number of times the capture has timed out.
      */
     public int getTimeoutCount() {
         return timeoutCount;
@@ -92,7 +92,7 @@ class IdScanUiState {
         }
 
         /**
-         * The number of times `onIdCaptureTimedOut` callback has been called.
+         * The number of times the capture has timed out.
          */
         public Builder timeoutCount(int value) {
             state.timeoutCount = value;

@@ -1,5 +1,7 @@
 import com.android.build.gradle.BaseExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.io.FileInputStream
+import java.util.Properties
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
@@ -15,7 +17,7 @@ buildscript {
     val versions: Map<String, Any> by extra(
         mapOf(
             // The value of scandit_sdk_version is updated automatically in the prepare-release.py script, please do not edit manually.
-            "scandit_sdk_version" to "6.28.1",
+            "scandit_sdk_version" to "7.0.0",
             "android_gradle" to "8.1.0",
             "android_material" to "1.6.1",
             "androidx_animations" to "1.0.0",
@@ -78,6 +80,35 @@ subprojects {
             buildTypes {
                 getByName("release") {
                     signingConfig = signingConfigs.getByName("release")
+                }
+            }
+
+            buildFeatures.buildConfig = true
+
+            defaultConfig {
+                val properties = Properties()
+                val secretsPropertiesFile = project.parent!!.file("secrets.properties")
+
+                if (secretsPropertiesFile.exists()) {
+                    properties.load(FileInputStream(secretsPropertiesFile))
+                    val licenseKey = properties.getProperty("SCANDIT_LICENSE_KEY").orEmpty()
+                    buildConfigField(
+                        "String", "SCANDIT_LICENSE_KEY",
+                        "\"$licenseKey\""
+                    )
+
+                    if (licenseKey == "YOUR_SCANDIT_LICENSE_KEY") {
+                        throw GradleException(
+                            "Make sure to set the value of SCANDIT_LICENSE_KEY property to" +
+                                    " your license key in 'secrets.properties' file."
+                        )
+                    }
+                } else {
+                    throw GradleException(
+                        "The file 'secrets.properties' is missing. Make sure " +
+                                "that this file exists at the root of the project and set the" +
+                                "value of SCANDIT_LICENSE_KEY property to your license key."
+                    )
                 }
             }
         }

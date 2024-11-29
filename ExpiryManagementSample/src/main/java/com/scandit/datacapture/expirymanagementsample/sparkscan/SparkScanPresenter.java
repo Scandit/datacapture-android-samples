@@ -35,6 +35,7 @@ import com.scandit.datacapture.barcode.spark.ui.SparkScanCoordinatorLayout;
 import com.scandit.datacapture.barcode.spark.ui.SparkScanScanningMode;
 import com.scandit.datacapture.barcode.spark.ui.SparkScanView;
 import com.scandit.datacapture.barcode.spark.ui.SparkScanViewSettings;
+import com.scandit.datacapture.barcode.spark.ui.SparkScanViewState;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.core.time.TimeInterval;
@@ -217,11 +218,6 @@ public class SparkScanPresenter implements
     }
 
     @Override
-    public void onFastFindButtonTap(@NonNull SparkScanView view) {
-        // Deprecated
-    }
-
-    @Override
     public void onBarcodeFindButtonTap(@NonNull SparkScanView view) {
         // Not relevant in this sample
     }
@@ -232,7 +228,17 @@ public class SparkScanPresenter implements
     }
 
     @Override
+    public void onLabelCaptureButtonTap(@NonNull SparkScanView view) {
+        // Not relevant in this sample
+    }
+
+    @Override
     public void onScanningModeChange(@NonNull SparkScanScanningMode newScanningMode) {
+        // Not relevant in this sample
+    }
+
+    @Override
+    public void onViewStateChanged(@NonNull SparkScanViewState newState) {
         // Not relevant in this sample
     }
 }

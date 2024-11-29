@@ -17,16 +17,18 @@ package com.scandit.datacapture.idcapturesettingssample.data;
 import androidx.annotation.VisibleForTesting;
 
 import com.scandit.datacapture.core.capture.DataCaptureContext;
+import com.scandit.datacapture.idcapturesettingssample.BuildConfig;
 
 /**
  * The provider for DataCaptureContext. DataCaptureContext is used to initialize most of the
  * DataCapture components like DataCaptureView or IdCapture.
  */
 public class DataCaptureContextProvider {
-	// Enter your Scandit License key here.
-    // Your Scandit License key is available via your Scandit SDK web account.
+
+    // Add your license key to `secrets.properties` and it will be automatically added to the BuildConfig field
+    // `BuildConfig.SCANDIT_LICENSE_KEY`
     @VisibleForTesting
-    public static String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
+    public static String SCANDIT_LICENSE_KEY = BuildConfig.SCANDIT_LICENSE_KEY;
 
     /**
      * The initialized DataCaptureContext.

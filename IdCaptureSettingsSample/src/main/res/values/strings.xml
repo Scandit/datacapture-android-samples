@@ -9,8 +9,5 @@
     <string name="captured_result_parametrised">%1$s\n%2$s</string>
 
     <string name="main_settings">Settings</string>
-    <string name="alert_scan_back_title">Back of Document</string>
-    <string name="alert_scan_back_message">This document has additional data on the back of the card.</string>
-    <string name="scan">Scan</string>
-    <string name="skip">Skip</string>
+    <string name="search_action">Search</string>
 </resources>

@@ -26,14 +26,14 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.barcode.data.Symbology;
-import com.scandit.datacapture.barcode.tracking.capture.BarcodeTracking;
-import com.scandit.datacapture.barcode.tracking.capture.BarcodeTrackingListener;
-import com.scandit.datacapture.barcode.tracking.capture.BarcodeTrackingSession;
-import com.scandit.datacapture.barcode.tracking.capture.BarcodeTrackingSettings;
-import com.scandit.datacapture.barcode.tracking.data.TrackedBarcode;
-import com.scandit.datacapture.barcode.tracking.ui.overlay.BarcodeTrackingBasicOverlay;
-import com.scandit.datacapture.barcode.tracking.ui.overlay.BarcodeTrackingBasicOverlayListener;
-import com.scandit.datacapture.barcode.tracking.ui.overlay.BarcodeTrackingBasicOverlayStyle;
+import com.scandit.datacapture.barcode.batch.capture.BarcodeBatch;
+import com.scandit.datacapture.barcode.batch.capture.BarcodeBatchListener;
+import com.scandit.datacapture.barcode.batch.capture.BarcodeBatchSession;
+import com.scandit.datacapture.barcode.batch.capture.BarcodeBatchSettings;
+import com.scandit.datacapture.barcode.batch.data.TrackedBarcode;
+import com.scandit.datacapture.barcode.batch.ui.overlay.BarcodeBatchBasicOverlay;
+import com.scandit.datacapture.barcode.batch.ui.overlay.BarcodeBatchBasicOverlayListener;
+import com.scandit.datacapture.barcode.batch.ui.overlay.BarcodeBatchBasicOverlayStyle;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.core.source.Camera;
@@ -46,14 +46,14 @@ import com.scandit.datacapture.matrixscanrejectsample.data.ScanResult;
 
 import java.util.HashSet;
 
-public class MatrixScanActivity extends CameraPermissionActivity implements BarcodeTrackingListener {
+public class MatrixScanActivity extends CameraPermissionActivity implements BarcodeBatchListener {
 
-	// Enter your Scandit License key here.
-    // Your Scandit License key is available via your Scandit SDK web account.
-    public static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
+    // Add your license key to `secrets.properties` and it will be automatically added to the BuildConfig field
+    // `BuildConfig.SCANDIT_LICENSE_KEY`
+    public static final String SCANDIT_LICENSE_KEY = BuildConfig.SCANDIT_LICENSE_KEY;
 
     private Camera camera;
-    private BarcodeTracking barcodeTracking;
+    private BarcodeBatch barcodeBatch;
     private DataCaptureContext dataCaptureContext;
 
     private final HashSet<ScanResult> scanResults = new HashSet<>();
@@ -100,8 +100,8 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
         // Create data capture context using your license key.
         dataCaptureContext = DataCaptureContext.forLicenseKey(SCANDIT_LICENSE_KEY);
 
-        // Use the recommended camera settings for the BarcodeTracking mode.
-        CameraSettings cameraSettings = BarcodeTracking.createRecommendedCameraSettings();
+        // Use the recommended camera settings for the BarcodeBatch mode.
+        CameraSettings cameraSettings = BarcodeBatch.createRecommendedCameraSettings();
         // Adjust camera settings - set Full HD resolution.
         cameraSettings.setPreferredResolution(VideoResolution.FULL_HD);
         // Use the default camera and set it as the frame source of the context.
@@ -116,9 +116,9 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
                     "Sample depends on a camera, which failed to initialize.");
         }
 
-        // The barcode tracking process is configured through barcode tracking settings
-        // which are then applied to the barcode tracking instance that manages barcode tracking.
-        BarcodeTrackingSettings barcodeTrackingSettings = new BarcodeTrackingSettings();
+        // The barcode tracking process is configured through barcode batch settings
+        // which are then applied to the barcode tracking instance that manages barcode batch.
+        BarcodeBatchSettings barcodeBatchSettings = new BarcodeBatchSettings();
 
         // The settings instance initially has all types of barcodes (symbologies) disabled.
         // For the purpose of this sample we enable a very generous set of symbologies.
@@ -131,35 +131,35 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
         symbologies.add(Symbology.CODE39);
         symbologies.add(Symbology.CODE128);
 
-        barcodeTrackingSettings.enableSymbologies(symbologies);
+        barcodeBatchSettings.enableSymbologies(symbologies);
 
-        // Create barcode tracking and attach to context.
-        barcodeTracking = BarcodeTracking.forDataCaptureContext(dataCaptureContext, barcodeTrackingSettings);
+        // Create barcode batch and attach to context.
+        barcodeBatch = BarcodeBatch.forDataCaptureContext(dataCaptureContext, barcodeBatchSettings);
 
         // Register self as a listener to get informed of tracked barcodes.
-        barcodeTracking.addListener(this);
+        barcodeBatch.addListener(this);
 
         // To visualize the on-going barcode tracking process on screen, setup a data capture view
         // that renders the camera preview. The view must be connected to the data capture context.
         DataCaptureView dataCaptureView = DataCaptureView.newInstance(this, dataCaptureContext);
 
-        // Add a barcode tracking overlay to the data capture view to render the tracked barcodes on
+        // Add a barcode batch overlay to the data capture view to render the tracked barcodes on
         // top of the video preview. This is optional, but recommended for better visual feedback.
-        BarcodeTrackingBasicOverlay overlay = BarcodeTrackingBasicOverlay.newInstance(
-                barcodeTracking,
+        BarcodeBatchBasicOverlay overlay = BarcodeBatchBasicOverlay.newInstance(
+            barcodeBatch,
                 dataCaptureView,
-                BarcodeTrackingBasicOverlayStyle.FRAME
+                BarcodeBatchBasicOverlayStyle.FRAME
         );
 
         // Configure how barcodes are highlighted - apply default brush or create your own.
         // Note that modifying a barcode's brush color requires the MatrixScan AR add-on.
         int rejectedBorderColor = getResources().getColor(R.color.barcode_rejected_border);
         final Brush rejectedBrush = new Brush(Color.TRANSPARENT, rejectedBorderColor, 3f);
-        overlay.setListener(new BarcodeTrackingBasicOverlayListener() {
+        overlay.setListener(new BarcodeBatchBasicOverlayListener() {
             @Override
             @NonNull
             public Brush brushForTrackedBarcode(
-                    @NonNull BarcodeTrackingBasicOverlay overlay,
+                    @NonNull BarcodeBatchBasicOverlay overlay,
                     @NonNull TrackedBarcode trackedBarcode
             ) {
                 if (isValidBarcode(trackedBarcode.getBarcode())) {
@@ -171,7 +171,7 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
 
             @Override
             public void onTrackedBarcodeTapped(
-                    @NonNull BarcodeTrackingBasicOverlay overlay,
+                    @NonNull BarcodeBatchBasicOverlay overlay,
                     @NonNull TrackedBarcode trackedBarcode
             ) {
                 // Handle barcode click if necessary.
@@ -194,7 +194,7 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
         // The camera is stopped asynchronously and will take some time to completely turn off.
         // Until it is completely stopped, it is still possible to receive further results, hence
         // it's a good idea to first disable barcode tracking as well.
-        barcodeTracking.setEnabled(false);
+        barcodeBatch.setEnabled(false);
         camera.switchToDesiredState(FrameSourceState.OFF, null);
     }
 
@@ -215,17 +215,17 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
     private void resumeFrameSource() {
         // Switch camera on to start streaming frames.
         // The camera is started asynchronously and will take some time to completely turn on.
-        barcodeTracking.setEnabled(true);
+        barcodeBatch.setEnabled(true);
         camera.switchToDesiredState(FrameSourceState.ON, null);
     }
 
     @Override
-    public void onObservationStarted(@NonNull BarcodeTracking barcodeTracking) {
+    public void onObservationStarted(@NonNull BarcodeBatch barcodeBatch) {
         // Nothing to do.
     }
 
     @Override
-    public void onObservationStopped(@NonNull BarcodeTracking barcodeTracking) {
+    public void onObservationStopped(@NonNull BarcodeBatch barcodeBatch) {
         // Nothing to do.
     }
 
@@ -233,8 +233,8 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
     // the tracking results.
     @Override
     public void onSessionUpdated(
-            @NonNull BarcodeTracking mode,
-            @NonNull BarcodeTrackingSession session,
+            @NonNull BarcodeBatch mode,
+            @NonNull BarcodeBatchSession session,
             @NonNull FrameData data
     ) {
         synchronized (scanResults) {
@@ -259,7 +259,7 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
 
     @Override
     protected void onDestroy() {
-        dataCaptureContext.removeMode(barcodeTracking);
+        dataCaptureContext.removeMode(barcodeBatch);
         super.onDestroy();
     }
 }

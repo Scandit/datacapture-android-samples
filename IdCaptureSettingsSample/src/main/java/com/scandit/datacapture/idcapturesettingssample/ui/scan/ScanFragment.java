@@ -33,18 +33,15 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.ui.DataCaptureView;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 import com.scandit.datacapture.idcapturesettingssample.R;
-import com.scandit.datacapture.idcapturesettingssample.di.Injector;
 import com.scandit.datacapture.idcapturesettingssample.ui.result.CaptureResult;
 import com.scandit.datacapture.idcapturesettingssample.ui.result.ResultFragment;
 import com.scandit.datacapture.idcapturesettingssample.ui.settings.overview.OverviewSettingsFragment;
@@ -57,11 +54,6 @@ public class ScanFragment extends Fragment {
      */
     private static final String CAPTURE_RESULT_TAG = "CAPTURE_RESULT";
     private static final String SETTINGS_TAG = "SETTINGS";
-
-    /**
-     * DataCaptureContext is necessary to create DataCaptureView.
-     */
-    private DataCaptureContext dataCaptureContext;
 
     /**
      * The view model of this fragment.
@@ -107,13 +99,6 @@ public class ScanFragment extends Fragment {
          * to the settings screen.
          */
         setHasOptionsMenu(true);
-
-        /*
-         * Obtain DataCaptureContext necessary to create DataCaptureView. We use our own
-         * dependency injection to obtain it, but you may use your favorite framework, like
-         * Dagger or Hilt instead.
-         */
-        dataCaptureContext = Injector.getInstance().getDataCaptureContext();
 
         /*
          * Get a reference to this fragment's view model.
@@ -170,7 +155,9 @@ public class ScanFragment extends Fragment {
          * Make sure the back arrow is hidden and the correct title for the fragment is displayed.
          */
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(false);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(false);
+        }
         actionBar.setTitle(R.string.app_readable_name);
     }
 
@@ -212,7 +199,6 @@ public class ScanFragment extends Fragment {
          */
         viewModel.showCapturedResult().observe(lifecycleOwner, this::showCapturedResultFragment);
         viewModel.showCapturedResultToast().observe(lifecycleOwner, this::showCapturedResultText);
-        viewModel.showScanBack().observe(lifecycleOwner, this::showScanBackAlert);
     }
 
     @Override
@@ -298,37 +284,6 @@ public class ScanFragment extends Fragment {
             resultViewTimer = new ShowHideViewTimer(resultView);
             resultViewTimer.start();
         }
-    }
-
-    private void showScanBackAlert(ShowBackScanAvailableEvent event) {
-        CaptureResult result = event.getContentIfNotHandled();
-        if (result == null) return;
-
-        new AlertDialog.Builder(requireContext())
-                .setTitle(R.string.alert_scan_back_title)
-                .setMessage(R.string.alert_scan_back_message)
-                .setPositiveButton(R.string.scan, (dialog, which) -> {
-                    /*
-                     * If we continue with scanning the back of the document, the IdCapture settings
-                     * will automatically allow only for this to be scanned, blocking you from
-                     * scanning other front of IDs. The next `onIdCaptured` will contain data from
-                     * both the front and the back scans.
-                     */
-                    viewModel.enableIdCapture();
-                    dialog.dismiss();
-                })
-                .setNegativeButton(R.string.skip, (dialog, which) -> {
-                    dialog.dismiss();
-                    /*
-                     * If skipping scanning the back of the document, `IdCapture().reset()` needs
-                     * to ba called to allow for another front IDs to be scanned.
-                     */
-                    viewModel.showCapturedResultInSelectedMode(result);
-                    viewModel.resetIdCapture();
-                    viewModel.enableIdCapture();
-                })
-                .setCancelable(false)
-                .show();
     }
 
     private void cancelCurrentResultTimer() {

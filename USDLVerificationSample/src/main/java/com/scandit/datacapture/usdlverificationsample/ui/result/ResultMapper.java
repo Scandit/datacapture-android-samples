@@ -19,9 +19,11 @@ import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
 
+import com.scandit.datacapture.id.capture.IdCaptureRegions;
 import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.DateResult;
-import com.scandit.datacapture.id.data.IdImageType;
+import com.scandit.datacapture.id.data.IdCaptureRegion;
+import com.scandit.datacapture.id.data.IdImages;
 import com.scandit.datacapture.id.verification.aamvabarcode.AamvaBarcodeVerificationStatus;
 
 import java.io.ByteArrayOutputStream;
@@ -39,6 +41,8 @@ public class ResultMapper {
 
     protected static final DateFormat dateFormat = SimpleDateFormat.getDateInstance();
 
+    public static final String EMPTY_TEXT_VALUE = "<empty>";
+
     protected final CapturedId capturedId;
 
     public ResultMapper(CapturedId capturedId) {
@@ -50,23 +54,16 @@ public class ResultMapper {
      */
     public CaptureResult mapResult(
         boolean isExpired,
-        boolean isFrontBackComparisonSuccessful,
-        AamvaBarcodeVerificationStatus aamvaBarcodeVerificationStatus,
-        @Nullable Bitmap verificationImage,
-        boolean isShownLicenseWarning
+        AamvaBarcodeVerificationStatus aamvaBarcodeVerificationStatus
     ) {
         /*
          * Extract and convert the images.
          */
         byte[] faceImageBytes = null;
-        Bitmap faceImage = capturedId.getImageBitmapForType(IdImageType.FACE);
+        IdImages images = capturedId.getImages();
+        Bitmap faceImage = images.getFace();
         if (faceImage != null) {
             faceImageBytes = convertImageToBytes(faceImage);
-        }
-
-        byte[] verificationImageBytes = null;
-        if (verificationImage != null) {
-            verificationImageBytes = convertImageToBytes(verificationImage);
         }
 
         List<CaptureResult.Entry> entries = getBaseEntries();
@@ -75,10 +72,7 @@ public class ResultMapper {
                 entries,
                 faceImageBytes,
                 isExpired,
-                isFrontBackComparisonSuccessful,
-                aamvaBarcodeVerificationStatus,
-                verificationImageBytes,
-                isShownLicenseWarning
+                aamvaBarcodeVerificationStatus
         );
     }
 
@@ -88,41 +82,38 @@ public class ResultMapper {
     private List<CaptureResult.Entry> getBaseEntries() {
         List<CaptureResult.Entry> entries = new ArrayList<>();
 
-        addFieldIfNotNull(entries, "Full Name", extractField(capturedId.getFullName()));
-        addFieldIfNotNull(entries, "Sex", extractField(capturedId.getSex()));
-        addFieldIfNotNull(entries, "Nationality", extractField(capturedId.getNationality()));
-        addFieldIfNotNull(entries, "Date of Birth", extractField(capturedId.getDateOfBirth()));
-        addFieldIfNotNull(entries, "Address", extractField(capturedId.getAddress()));
-        addFieldIfNotNull(entries, "Document Number", extractField(capturedId.getDocumentNumber()));
-        addFieldIfNotNull(entries, "Document Additional Number",
+        addField(entries, "Full Name", extractField(capturedId.getFullName()));
+        addField(entries, "Sex", extractField(capturedId.getSex()));
+        addField(entries, "Nationality", extractField(capturedId.getNationality()));
+        addField(entries, "Date of Birth", extractField(capturedId.getDateOfBirth()));
+        addField(entries, "Address", extractField(capturedId.getAddress()));
+        addField(entries, "Document Number", extractField(capturedId.getDocumentNumber()));
+        addField(entries, "Document Additional Number",
                 extractField(capturedId.getDocumentAdditionalNumber()));
-        addFieldIfNotNull(entries, "Date of Expiry", extractField(capturedId.getDateOfExpiry()));
-        addFieldIfNotNull(entries, "Issuing Country", extractField(capturedId.getIssuingCountry()));
-        addFieldIfNotNull(entries, "Date of Issue", extractField(capturedId.getDateOfIssue()));
+        addField(entries, "Date of Expiry", extractField(capturedId.getDateOfExpiry()));
+        addField(entries, "Issuing Country", IdCaptureRegions.getDescription(capturedId.getIssuingCountry()));
+        addField(entries, "Date of Issue", extractField(capturedId.getDateOfIssue()));
 
         return entries;
     }
 
     /**
-     * Create a result entry and add it to list of entries if the passed value is not null.
+     * Create a result entry and add it to list of entries.
      */
-    protected void addFieldIfNotNull(
+    protected void addField(
             List<CaptureResult.Entry> entries,
             String key,
             @Nullable String value
     ) {
-        if (value != null) {
-            entries.add(new CaptureResult.Entry(key, value));
-        }
+        entries.add(new CaptureResult.Entry(key, value));
     }
 
     /**
      * Extract and return a text value if the field is not empty.
      */
-    @Nullable
     protected String extractField(@Nullable String value) {
         if (TextUtils.isEmpty(value)) {
-            return null;
+            return EMPTY_TEXT_VALUE;
         }
         return value;
     }
@@ -130,12 +121,21 @@ public class ResultMapper {
     /**
      * Extract a date from a DateResult object and format it to a printable value.
      */
-    @Nullable
     protected String extractField(@Nullable DateResult value) {
         if (value == null) {
-            return null;
+            return EMPTY_TEXT_VALUE;
         }
         return dateFormat.format(value.getLocalDate());
+    }
+
+    /**
+     * Extract a region and format it to a printable value.
+     */
+    protected String extractField(@Nullable IdCaptureRegion value) {
+        if (value == null) {
+            return EMPTY_TEXT_VALUE;
+        }
+        return value.toString();
     }
 
     /**

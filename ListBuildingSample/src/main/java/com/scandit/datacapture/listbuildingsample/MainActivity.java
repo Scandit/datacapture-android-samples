@@ -36,7 +36,6 @@ import com.scandit.datacapture.barcode.spark.capture.SparkScanSession;
 import com.scandit.datacapture.barcode.spark.capture.SparkScanSettings;
 import com.scandit.datacapture.barcode.spark.feedback.SparkScanBarcodeFeedback;
 import com.scandit.datacapture.barcode.spark.feedback.SparkScanFeedbackDelegate;
-import com.scandit.datacapture.barcode.spark.feedback.SparkScanViewFeedback;
 import com.scandit.datacapture.barcode.spark.ui.SparkScanCoordinatorLayout;
 import com.scandit.datacapture.barcode.spark.ui.SparkScanView;
 import com.scandit.datacapture.barcode.spark.ui.SparkScanViewSettings;
@@ -54,9 +53,9 @@ import java.util.concurrent.Executors;
 
 public class MainActivity extends CameraPermissionActivity implements SparkScanListener, SparkScanFeedbackDelegate {
 
-	// Enter your Scandit License key here.
-    // Your Scandit License key is available via your Scandit SDK web account.
-    public static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
+    // Add your license key to `secrets.properties` and it will be automatically added to the BuildConfig field
+    // `BuildConfig.SCANDIT_LICENSE_KEY`
+    public static final String SCANDIT_LICENSE_KEY = BuildConfig.SCANDIT_LICENSE_KEY;
 
     private static final float CROPPED_IMAGE_PADDING = 1.2f;
 

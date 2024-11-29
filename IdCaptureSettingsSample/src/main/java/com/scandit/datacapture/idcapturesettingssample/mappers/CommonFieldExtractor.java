@@ -14,6 +14,7 @@
 
 package com.scandit.datacapture.idcapturesettingssample.mappers;
 
+import com.scandit.datacapture.id.capture.IdCaptureRegions;
 import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.idcapturesettingssample.ui.result.CaptureResult;
 
@@ -34,8 +35,8 @@ public final class CommonFieldExtractor extends FieldExtractor {
     protected List<CaptureResult.Entry> extract() {
         List<CaptureResult.Entry> result = new ArrayList<>();
 
-        result.add(new CaptureResult.Entry("Result Types", extractField(capturedId.getCapturedResultTypes().toString())));
-        result.add(new CaptureResult.Entry("Document Type", extractField(capturedId.getDocumentType().toString())));
+        result.add(new CaptureResult.Entry("Document Type", extractField(capturedId.getDocument())));
+        result.add(new CaptureResult.Entry("Subtype", extractSubtype(capturedId.getDocument())));
         result.add(new CaptureResult.Entry("First Name", extractField(capturedId.getFirstName())));
         result.add(new CaptureResult.Entry("Last Name", extractField(capturedId.getLastName())));
         result.add(new CaptureResult.Entry("Secondary Last Name", extractField(capturedId.getSecondaryLastName())));
@@ -46,7 +47,7 @@ public final class CommonFieldExtractor extends FieldExtractor {
         result.add(new CaptureResult.Entry("Nationality", extractField(capturedId.getNationality())));
         result.add(new CaptureResult.Entry("Address", extractField(capturedId.getAddress())));
         result.add(new CaptureResult.Entry("Issuing Country ISO", extractField(capturedId.getIssuingCountryIso())));
-        result.add(new CaptureResult.Entry("Issuing Country", extractField(capturedId.getIssuingCountry())));
+        result.add(new CaptureResult.Entry("Issuing Country", IdCaptureRegions.getDescription(capturedId.getIssuingCountry())));
         result.add(new CaptureResult.Entry("Document Number", extractField(capturedId.getDocumentNumber())));
         result.add(new CaptureResult.Entry("Document Additional Number", extractField(capturedId.getDocumentAdditionalNumber())));
         result.add(new CaptureResult.Entry("Date of Expiry", extractField(capturedId.getDateOfExpiry())));

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:start="24dp"
+        android:end="24dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/divider" />
+            <size android:height="1dp" />
+        </shape>
+    </item>
+</layer-list>

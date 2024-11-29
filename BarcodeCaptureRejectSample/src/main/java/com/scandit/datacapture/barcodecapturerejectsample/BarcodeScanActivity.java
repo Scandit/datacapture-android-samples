@@ -14,12 +14,19 @@
 
 package com.scandit.datacapture.barcodecapturerejectsample;
 
+import static android.content.DialogInterface.OnClickListener;
+
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import com.scandit.datacapture.barcode.capture.*;
+
+import com.scandit.datacapture.barcode.capture.BarcodeCapture;
+import com.scandit.datacapture.barcode.capture.BarcodeCaptureListener;
+import com.scandit.datacapture.barcode.capture.BarcodeCaptureSession;
+import com.scandit.datacapture.barcode.capture.BarcodeCaptureSettings;
 import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.data.SymbologyDescription;
@@ -27,8 +34,6 @@ import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlayStyle;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.common.feedback.Feedback;
-import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
-import com.scandit.datacapture.core.common.geometry.MeasureUnit;
 import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.core.source.Camera;
 import com.scandit.datacapture.core.source.FrameSourceState;
@@ -37,14 +42,12 @@ import com.scandit.datacapture.core.ui.style.Brush;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinder;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderStyle;
 
-import static android.content.DialogInterface.OnClickListener;
-
 public class BarcodeScanActivity
         extends CameraPermissionActivity implements BarcodeCaptureListener {
 
-	// Enter your Scandit License key here.
-    // Your Scandit License key is available via your Scandit SDK web account.
-    public static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
+    // Add your license key to `secrets.properties` and it will be automatically added to the BuildConfig field
+    // `BuildConfig.SCANDIT_LICENSE_KEY`
+    public static final String SCANDIT_LICENSE_KEY = BuildConfig.SCANDIT_LICENSE_KEY;
 
     private DataCaptureContext dataCaptureContext;
     private BarcodeCapture barcodeCapture;

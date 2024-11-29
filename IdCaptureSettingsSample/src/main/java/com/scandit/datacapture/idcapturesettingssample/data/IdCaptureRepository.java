@@ -15,19 +15,22 @@
 package com.scandit.datacapture.idcapturesettingssample.data;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.scandit.datacapture.core.capture.DataCaptureContext;
-import com.scandit.datacapture.core.data.FrameData;
+import com.scandit.datacapture.id.capture.FullDocumentScanner;
 import com.scandit.datacapture.id.capture.IdCapture;
 import com.scandit.datacapture.id.capture.IdCaptureListener;
-import com.scandit.datacapture.id.capture.IdCaptureSession;
+import com.scandit.datacapture.id.capture.IdCaptureScanner;
 import com.scandit.datacapture.id.capture.IdCaptureSettings;
+import com.scandit.datacapture.id.capture.SingleSideScanner;
 import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.IdImageType;
-import com.scandit.datacapture.id.data.SupportedSides;
+import com.scandit.datacapture.id.data.RejectionReason;
+import com.scandit.datacapture.id.data.CapturedSides;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 import com.scandit.datacapture.idcapturesettingssample.ui.scan.ScanResult;
 import com.scandit.datacapture.idcapturesettingssample.ui.scan.ScanResultEvent;
@@ -113,27 +116,21 @@ public class IdCaptureRepository implements IdCaptureListener {
 
         IdCaptureSettings idCaptureSettings = new IdCaptureSettings();
 
-        /*
-         * Enable the desired document types from settings.
-         */
-        idCaptureSettings.setSupportedDocuments(settingsRepository.getSupportedDocuments());
+        // Set the accepted document types from settings
+        idCaptureSettings.setAcceptedDocuments(settingsRepository.getAcceptedDocuments());
+        // Set the rejected document types from settings
+        idCaptureSettings.setRejectedDocuments(settingsRepository.getRejectedDocuments());
 
-        /*
-         * Enable showing the desired image types from the settings.
-         */
+        // Enable showing the desired image types from the settings.
         Arrays.stream(IdImageType.values()).forEach((type) -> {
             idCaptureSettings.setShouldPassImageTypeToResult(type,
                     settingsRepository.getShouldPassImageForType(type));
         });
 
-        /*
-         * Enable the desired document sides from settings.
-         */
-        idCaptureSettings.setSupportedSides(settingsRepository.getSupportedSides());
+        // Set the desired scanner type from settings.
+        idCaptureSettings.setScannerType(buildIdCaptureScanner());
 
-        /*
-         * Set the desired anonymization mode from settings.
-         */
+        // Set the desired anonymization mode from settings.
         idCaptureSettings.setAnonymizationMode(settingsRepository.getAnonymizationMode());
         // Set whether voided IDs should be rejected
         idCaptureSettings.setRejectVoidedIds(settingsRepository.shouldRejectVoidedIds());
@@ -165,11 +162,7 @@ public class IdCaptureRepository implements IdCaptureListener {
      */
     @Override
     @WorkerThread
-    public void onIdCaptured(
-            @NonNull IdCapture mode,
-            @NonNull IdCaptureSession session,
-            @NonNull FrameData data
-    ) {
+    public void onIdCaptured(@NonNull IdCapture mode, @NonNull CapturedId id) {
 
         /*
          * Implement to handle data captured from personal identification documents or their
@@ -178,12 +171,9 @@ public class IdCaptureRepository implements IdCaptureListener {
          * This callback is executed on the background thread. We post the value to the LiveData
          * in order to return to the UI thread.
          */
-        CapturedId capturedId = session.getNewlyCapturedId();
-        boolean needsBackScan = capturedId != null &&
-                settingsRepository.getSupportedSides() == SupportedSides.FRONT_AND_BACK &&
-                capturedId.getViz() != null &&
-                capturedId.getViz().isBackSideCaptureSupported() &&
-                capturedId.getViz().getCapturedSides() == SupportedSides.FRONT_ONLY;
+        boolean needsBackScan =  id.getViz() != null &&
+                id.getViz().isBackSideCaptureSupported() &&
+                id.getViz().getCapturedSides() == CapturedSides.FRONT_ONLY;
 
         /*
          * Scan of the back of the document is enabled, the mode needs to be disabled while the
@@ -198,7 +188,7 @@ public class IdCaptureRepository implements IdCaptureListener {
         scanResults.postValue(
                 new ScanResultEvent(
                         new ScanResult(
-                                capturedId,
+                                id,
                                 settingsRepository.isContinuousScanEnabled(),
                                 needsBackScan
                         )
@@ -212,74 +202,30 @@ public class IdCaptureRepository implements IdCaptureListener {
 
     @Override
     @WorkerThread
-    public void onObservationStarted(@NonNull IdCapture mode) {
-        // Not interested in this callback.
-    }
-
-    @Override
-    @WorkerThread
-    public void onObservationStopped(@NonNull IdCapture mode) {
-        // Not interested in this callback.
-    }
-
-    @Override
-    @WorkerThread
-    public void onIdLocalized(
-            @NonNull IdCapture mode,
-            @NonNull IdCaptureSession session,
-            @NonNull FrameData data
-    ) {
-        /*
-         * Implement to handle a personal identification document or its part localized within
-         * a frame. A document or its part is considered localized when it's detected in a frame,
-         * but its data is not yet extracted.
-         *
-         * In this sample we are not interested in this callback.
-         */
-    }
-
-    @Override
-    @WorkerThread
     public void onIdRejected(
             @NonNull IdCapture mode,
-            @NonNull IdCaptureSession session,
-            @NonNull FrameData data
+            @Nullable CapturedId id,
+            @NonNull RejectionReason reason
     ) {
         /*
          * Implement to handle documents recognized in a frame, but rejected.
          * A document or its part is considered rejected when:
-         *   (a) it's a valid document, but its type is not enabled in the settings,
-         *   (b) it's a barcode of a correct symbology, but the data is encoded in an unexpected format,
-         *   (c) it's Machine Readable Zone (MRZ), but the data is encoded in an unexpected format.
-         *   (d) it's a voided document and rejectVoidedIds is enabled in the settings.
-         *
-         * This callback is executed on the background thread. We post the value to the LiveData
-         * in order to return to the UI thread.
+         *   (a) it's a valid personal identification document, but not enabled in the settings,
+         *   (b) it's a PDF417 barcode or a Machine Readable Zone (MRZ), but the data is encoded in an unexpected format,
+         *   (c) it's a voided document and rejectVoidedIds is enabled in the settings,
+         *   (d) the document has been localized, but could not be captured within a period of time.
          */
     }
 
-    @Override
-    @WorkerThread
-    public void onIdCaptureTimedOut(
-            @NonNull IdCapture mode,
-            @NonNull IdCaptureSession session,
-            @NonNull FrameData data
-    ) {
-        /*
-         * Implement to handle documents that were localized, but could not be captured within a period of time.
-         *
-         * In this sample we are not interested in this callback.
-         */
-    }
-
-    @Override
-    @WorkerThread
-    public void onErrorEncountered(
-            @NonNull IdCapture mode,
-            @NonNull Throwable error,
-            @NonNull IdCaptureSession session,
-            @NonNull FrameData data
-    ) {
-        // Not interested in this callback.
+    private IdCaptureScanner buildIdCaptureScanner() {
+        if (settingsRepository.isFullScannerEnabled()) {
+            return new FullDocumentScanner();
+        } else {
+            return new SingleSideScanner(
+                    settingsRepository.isSingleSideScannerBarcodeEnabled(),
+                    settingsRepository.isSingleSideScannerMrzEnabled(),
+                    settingsRepository.isSingleSideScannerVizEnabled()
+            );
+        }
     }
 }

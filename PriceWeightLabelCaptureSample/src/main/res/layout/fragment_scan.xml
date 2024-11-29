@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:background="@android:color/darker_gray"
+        tools:context=".view.ScanFragment">
+
+        <FrameLayout
+            android:id="@+id/data_capture_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/touch_handler"
+            android:layout_width="match_parent"
+            android:alpha="0"
+            android:elevation="5dp"
+            android:outlineProvider="none"
+            android:layout_height="match_parent"
+            android:background="#66000000"
+            tools:alpha="1" />
+
+        <TextView
+            android:id="@+id/app_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_title"
+            android:layout_marginTop="32dp"
+            android:elevation="6dp"
+            android:textAllCaps="true"
+            android:textSize="19sp"
+            android:textColor="@android:color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/guidance"
+            style="@style/GuidanceText"
+            android:elevation="6dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/infoHint"
+            android:text="@string/fit_label_in_preview"
+            android:layout_marginTop="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/infoHint"
+            style="@style/InfoHintText"
+            android:elevation="6dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:padding="16dp"
+            android:layout_marginTop="62dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/incomplete_data_scanned"
+            tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/fill_missing_info_container"
+        style="?attr/bottomSheetStyle"
+        android:layout_width="match_parent"
+        android:background="@drawable/bg_dialog"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="24dp"
+        android:layout_height="wrap_content"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        tools:visibility="visible">
+
+        <ImageButton
+            android:background="@null"
+            android:src="@drawable/ic_close"
+            android:id="@+id/dismissButton"
+            app:layout_constraintTop_toTopOf="@id/title"
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="48dp"
+            android:layout_height="48dp" />
+
+        <TextView
+            android:layout_marginTop="24dp"
+            android:id="@+id/title"
+            android:text="@string/enter_item_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#3D4852"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/upc_label"
+            android:text="@string/code"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="16dp"
+            android:drawablePadding="8dp"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="#3D4852"
+            app:drawableStartCompat="@drawable/dot_upc"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title" />
+
+        <TextView
+            android:id="@+id/weight_label"
+            android:text="@string/weight"
+            android:labelFor="@+id/weight_editor"
+            android:drawablePadding="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textStyle="bold"
+            android:textColor="#3D4852"
+            app:drawableStartCompat="@drawable/dot_weight"
+            app:layout_constraintBottom_toBottomOf="@+id/weight_editor"
+            app:layout_constraintStart_toStartOf="@+id/upc_label"
+            app:layout_constraintTop_toBottomOf="@+id/upc_label" />
+
+        <TextView
+            android:id="@+id/unit_price_label"
+            android:text="@string/unit_price"
+            android:drawablePadding="8dp"
+            android:layout_width="wrap_content"
+            android:labelFor="@+id/unit_price_editor"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="#3D4852"
+            app:drawableStartCompat="@drawable/dot_unit_price"
+            app:layout_constraintBottom_toBottomOf="@+id/unit_price_editor"
+            app:layout_constraintStart_toStartOf="@+id/weight_label"
+            app:layout_constraintTop_toTopOf="@+id/unit_price_editor" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/label_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="end"
+            app:constraint_referenced_ids="upc_label,weight_label,unit_price_label" />
+
+        <TextView
+            android:id="@+id/upc_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textColor="#3D4852"
+            app:layout_constraintStart_toEndOf="@+id/label_barrier"
+            app:layout_constraintTop_toTopOf="@+id/upc_label"
+            tools:layout_editor_absoluteX="235dp"
+            tools:text="123457898" />
+
+        <EditText
+            android:id="@+id/weight_editor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:layout_marginTop="8dp"
+            android:importantForAutofill="no"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/upc_content"
+            app:layout_constraintTop_toBottomOf="@+id/upc_content"
+            tools:text="Weight" />
+
+        <EditText
+            android:id="@+id/unit_price_editor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:imeOptions="actionDone"
+            android:importantForAutofill="no"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/upc_content"
+            app:layout_constraintTop_toBottomOf="@+id/weight_editor"
+            tools:text="Unit price" />
+
+        <Button
+            android:id="@+id/submit_button"
+            android:text="@string/submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/unit_price_editor" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

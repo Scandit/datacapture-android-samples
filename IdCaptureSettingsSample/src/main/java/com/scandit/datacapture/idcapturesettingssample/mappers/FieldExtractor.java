@@ -19,9 +19,13 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.scandit.datacapture.id.capture.IdCaptureDocument;
+import com.scandit.datacapture.id.capture.RegionSpecific;
 import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.DateResult;
+import com.scandit.datacapture.id.data.RegionSpecificSubtype;
 import com.scandit.datacapture.idcapturesettingssample.ui.result.CaptureResult;
+import com.scandit.datacapture.idcapturesettingssample.utils.StringUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -47,12 +51,7 @@ public abstract class FieldExtractor {
             return EMPTY_TEXT_VALUE;
         }
 
-        return String.valueOf(value);
-    }
-
-    @NonNull
-    protected String extractField(int value) {
-        return String.valueOf(value);
+        return value ? "Yes" : "No";
     }
 
     @NonNull
@@ -74,5 +73,22 @@ public abstract class FieldExtractor {
             return EMPTY_TEXT_VALUE;
         }
         return dateFormat.format(value.getLocalDate());
+    }
+
+    @NonNull
+    protected String extractField(@Nullable IdCaptureDocument value) {
+        if (value == null) {
+            return EMPTY_TEXT_VALUE;
+        }
+        return StringUtils.toNameCase(value.getDocumentType().toString());
+    }
+
+    @NonNull
+    protected String extractSubtype(@Nullable IdCaptureDocument value) {
+        if (!(value instanceof RegionSpecific)) {
+            return EMPTY_TEXT_VALUE;
+        }
+        RegionSpecificSubtype subtype = ((RegionSpecific) value).getSubtype();
+        return StringUtils.toNameCase(subtype.toString());
     }
 }

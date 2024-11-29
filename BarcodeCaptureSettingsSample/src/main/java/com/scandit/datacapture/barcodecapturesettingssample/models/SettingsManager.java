@@ -28,6 +28,7 @@ import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.data.SymbologyDescription;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlayStyle;
+import com.scandit.datacapture.barcodecapturesettingssample.BuildConfig;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.view.overlay.BrushStyle;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.view.overlay.BrushStyleEntry;
 import com.scandit.datacapture.barcodecapturesettingssample.settings.view.viewfinder.type.RectangularDisabledColor;
@@ -68,9 +69,10 @@ import java.util.List;
 import java.util.Map;
 
 public class SettingsManager {
-	// Enter your Scandit License key here.
-    // Your Scandit License key is available via your Scandit SDK web account.
-    private static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
+
+    // Add your license key to `secrets.properties` and it will be automatically added to the BuildConfig field
+    // `BuildConfig.SCANDIT_LICENSE_KEY`
+    public static final String SCANDIT_LICENSE_KEY = BuildConfig.SCANDIT_LICENSE_KEY;
 
     @ColorInt private static final int RED = Color.parseColor("#FFFF0000");
     @ColorInt private static final int GREEN = Color.parseColor("#FF00FF00");
@@ -658,9 +660,7 @@ public class SettingsManager {
     public BarcodeCaptureOverlayStyle[] getUsableOverlayStyles() {
         List<BarcodeCaptureOverlayStyle> result = new ArrayList();
         for (BarcodeCaptureOverlayStyle value : BarcodeCaptureOverlayStyle.values()) {
-            if (value != BarcodeCaptureOverlayStyle.LEGACY) {
                 result.add(value);
-            }
         }
         return result.toArray(new BarcodeCaptureOverlayStyle[]{});
     }

@@ -9,7 +9,7 @@ The MatrixScan Count UI incorporates our best practices for usability and has be
 
 - Clone this repo locally.
 - Sign in to your Developer Account at [ssl.scandit.com](http://ssl.scandit.com) and generate a license key.  If you do not have an account, sign up here: [https://ssl.scandit.com/dashboard/sign-up?p=test](https://ssl.scandit.com/dashboard/sign-up?p=test).
-- Replace the license key in the sample where you see `-- ENTER YOUR SCANDIT LICENSE KEY HERE --`.
+- Open `secrets.properties` and set the value of `SCANDIT_LICENSE_KEY` to your license key in place of the placeholder `YOUR_SCANDIT_LICENSE_KEY`.
 - Build and run this sample on your mobile device.
 
 ## What is MatrixScan Count?
@@ -18,7 +18,7 @@ MatrixScan Count is an out-of-the-box scan and count solution for counting and r
 
 ![MSCount%20-%20iOS.png](https://github.com/Scandit/.github/blob/main/images/MSCount%20-%20iOS.png)
 
-Get started with MatrixScan Count on [iOS](https://docs.scandit.com/sdks/ios/matrixscan-count/intro), [Android](https://docs.scandit.com/sdks/android/matrixscan-count/intro).
+Get started with MatrixScan Count on [iOS](https://docs.scandit.com/data-capture-sdk/ios/get-started-matrixscan.html), [Android](https://docs.scandit.com/data-capture-sdk/android/get-started-matrixscan.html).
 
 ## Documentation
 

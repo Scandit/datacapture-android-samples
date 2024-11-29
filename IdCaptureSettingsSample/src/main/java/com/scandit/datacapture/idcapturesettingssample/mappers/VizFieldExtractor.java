@@ -31,7 +31,6 @@ package com.scandit.datacapture.idcapturesettingssample.mappers;
 import androidx.annotation.Nullable;
 
 import com.scandit.datacapture.id.data.CapturedId;
-import com.scandit.datacapture.id.data.DocumentType;
 import com.scandit.datacapture.id.data.DrivingLicenseCategory;
 import com.scandit.datacapture.id.data.DrivingLicenseDetails;
 import com.scandit.datacapture.id.data.VizResult;
@@ -60,9 +59,6 @@ public final class VizFieldExtractor extends FieldExtractor {
         result.add(new CaptureResult.Entry("VIZ Last Name", extractField(vizResult.getLastName())));
         result.add(new CaptureResult.Entry("VIZ Secondary Last Name", extractField(vizResult.getSecondaryLastName())));
         result.add(new CaptureResult.Entry("VIZ Full Name", extractField(vizResult.getFullName())));
-        result.add(new CaptureResult.Entry("Issuing Authority", extractField(vizResult.getIssuingAuthority())));
-        result.add(new CaptureResult.Entry("Issuing Jurisdiction", extractField(vizResult.getIssuingJurisdiction())));
-        result.add(new CaptureResult.Entry("Issuing Jurisdiction ISO", extractField(vizResult.getIssuingJurisdictionIso())));
         result.add(new CaptureResult.Entry("Additional Name Information", extractField(vizResult.getAdditionalNameInformation())));
         result.add(new CaptureResult.Entry("Additional Address Information", extractField(vizResult.getAdditionalAddressInformation())));
         result.add(new CaptureResult.Entry("Place of Birth", extractField(vizResult.getPlaceOfBirth())));
@@ -72,14 +68,20 @@ public final class VizFieldExtractor extends FieldExtractor {
         result.add(new CaptureResult.Entry("Marital Status", extractField(vizResult.getMaritalStatus())));
         result.add(new CaptureResult.Entry("Residential Status", extractField(vizResult.getResidentialStatus())));
         result.add(new CaptureResult.Entry("Employer", extractField(vizResult.getEmployer())));
-        result.add(new CaptureResult.Entry("Personal Id Number", extractField(vizResult.getPersonalIdNumber())));
-        result.add(new CaptureResult.Entry("Document Additional Number", extractField(vizResult.getDocumentAdditionalNumber())));
+        result.add(new CaptureResult.Entry("Personal ID Number", extractField(vizResult.getPersonalIdNumber())));
+        result.add(new CaptureResult.Entry("Issuing Jurisdiction", extractField(vizResult.getIssuingJurisdiction())));
+        result.add(new CaptureResult.Entry("Issuing Jurisdiction ISO", extractField(vizResult.getIssuingJurisdictionIso())));
+        result.add(new CaptureResult.Entry("Issuing Authority", extractField(vizResult.getIssuingAuthority())));
         result.add(new CaptureResult.Entry("Blood Type", extractField(vizResult.getBloodType())));
         result.add(new CaptureResult.Entry("Sponsor", extractField(vizResult.getSponsor())));
         result.add(new CaptureResult.Entry("Mother's name", extractField(vizResult.getMothersName())));
         result.add(new CaptureResult.Entry("Father's name", extractField(vizResult.getFathersName())));
+        result.add(new CaptureResult.Entry("Captured Sides", vizResult.getCapturedSides().toString()));
+        result.add(new CaptureResult.Entry("Backside Supported", extractField(vizResult.isBackSideCaptureSupported())));
+        result.add(new CaptureResult.Entry("Visa Number", extractField(vizResult.getVisaNumber())));
+        result.add(new CaptureResult.Entry("Passport Number", extractField(vizResult.getPassportNumber())));
 
-        if (capturedId.getDocumentType() == DocumentType.DRIVING_LICENSE) {
+        if (capturedId.getDocument() != null && capturedId.getDocument().isDriverLicense()) {
             result.add(new CaptureResult.Entry("Driver's License Details", extractField(vizResult.getDrivingLicenseDetails())));
         }
 

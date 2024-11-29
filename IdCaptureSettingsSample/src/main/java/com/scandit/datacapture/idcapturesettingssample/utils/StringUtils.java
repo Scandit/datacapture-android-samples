@@ -16,15 +16,25 @@ package com.scandit.datacapture.idcapturesettingssample.utils;
 
 public class StringUtils {
 
-    public static String toTitleCase(String input) {
-        String sanitisedInput = input.trim().replaceAll("_", " ");
-        if (sanitisedInput.isEmpty()) {
-            return sanitisedInput;
-        } else if (sanitisedInput.length() == 1) {
-            return sanitisedInput.toUpperCase();
-        } else {
-            return sanitisedInput.substring(0, 1).toUpperCase()
-                    + sanitisedInput.substring(1).toLowerCase();
+    public static String toNameCase(String input) {
+        if (input.isEmpty()) return input;
+
+        String[] words = input.trim().toLowerCase().split("_");
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i < words.length; i++) {
+            String word = words[i];
+            if (word.length() > 1) {
+                stringBuilder.append(word.substring(0, 1).toUpperCase());
+                stringBuilder.append(word.substring(1));
+            } else if (word.length() == 1) {
+                stringBuilder.append(word.toUpperCase());
+            }
+
+            if (i < words.length - 1) {
+                stringBuilder.append(" ");
+            }
         }
+        return stringBuilder.toString();
     }
 }

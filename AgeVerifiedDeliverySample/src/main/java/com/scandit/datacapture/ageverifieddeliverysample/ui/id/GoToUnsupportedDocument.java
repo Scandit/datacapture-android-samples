@@ -17,8 +17,9 @@ package com.scandit.datacapture.ageverifieddeliverysample.ui.id;
 import com.scandit.datacapture.ageverifieddeliverysample.ui.Event;
 
 /**
- * An event for the fragment to display the UI that informs the user that the document can be
- * captured, but it is not supported.
+ * An event for the fragment to display the UI that informs the user that the document has been
+ * rejected because it is not supported (invalid format, not enabled in the settings or no date
+ * of birth).
  */
 class GoToUnsupportedDocument extends Event<Object> {
     public GoToUnsupportedDocument() {super(new Object());}

@@ -20,13 +20,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.scandit.datacapture.idcaptureextendedsample.R;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -38,10 +37,10 @@ class ResultListAdapter extends ListAdapter<CaptureResult.Entry, ResultListViewH
         submitList(entries);
     }
 
-    @NotNull
+    @NonNull
     @Override
     public ResultListViewHolder onCreateViewHolder(
-        @NotNull ViewGroup parent, int viewType
+        @NonNull ViewGroup parent, int viewType
     ) {
         Context context = parent.getContext();
         return new ResultListViewHolder(
@@ -51,7 +50,7 @@ class ResultListAdapter extends ListAdapter<CaptureResult.Entry, ResultListViewH
 
     @Override
     public void onBindViewHolder(
-        @NotNull ResultListViewHolder holder, int position
+        @NonNull ResultListViewHolder holder, int position
     ) {
         // We want to reverse the results map's order.
         holder.bind(getItem(position));
@@ -60,7 +59,7 @@ class ResultListAdapter extends ListAdapter<CaptureResult.Entry, ResultListViewH
 
 class ResultListViewHolder extends RecyclerView.ViewHolder {
 
-    public ResultListViewHolder(@NotNull View itemView) { super(itemView); }
+    public ResultListViewHolder(@NonNull View itemView) { super(itemView); }
 
     public void bind(CaptureResult.Entry item) {
         ((TextView) itemView.findViewById(R.id.text_value)).setText(item.getValue());
@@ -70,12 +69,12 @@ class ResultListViewHolder extends RecyclerView.ViewHolder {
 
 class ItemCallback extends DiffUtil.ItemCallback<CaptureResult.Entry> {
     @Override
-    public boolean areItemsTheSame(@NotNull CaptureResult.Entry oldItem, @NotNull CaptureResult.Entry newItem) {
+    public boolean areItemsTheSame(@NonNull CaptureResult.Entry oldItem, @NonNull CaptureResult.Entry newItem) {
         return oldItem.getKey().equals(newItem.getKey());
     }
 
     @Override
-    public boolean areContentsTheSame(@NotNull CaptureResult.Entry oldItem, @NotNull CaptureResult.Entry newItem) {
+    public boolean areContentsTheSame(@NonNull CaptureResult.Entry oldItem, @NonNull CaptureResult.Entry newItem) {
         return oldItem.getValue().equals(newItem.getValue());
     }
 }

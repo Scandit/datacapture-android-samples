@@ -14,36 +14,30 @@
 
 package com.scandit.datacapture.usdlverificationsample.ui.scan;
 
-import android.graphics.Bitmap;
-
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.scandit.datacapture.id.data.CapturedId;
-import com.scandit.datacapture.id.data.CapturedResultType;
-import com.scandit.datacapture.id.data.SupportedSides;
+import com.scandit.datacapture.id.data.RejectionReason;
+import com.scandit.datacapture.id.data.CapturedSides;
+import com.scandit.datacapture.id.data.VizResult;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 import com.scandit.datacapture.id.verification.aamvabarcode.AamvaBarcodeVerificationStatus;
 import com.scandit.datacapture.id.verification.aamvabarcode.AamvaBarcodeVerificationTask;
-import com.scandit.datacapture.id.verification.aamvavizbarcode.AamvaVizBarcodeComparisonResult;
-import com.scandit.datacapture.usdlverificationsample.R;
 import com.scandit.datacapture.usdlverificationsample.data.CameraRepository;
 import com.scandit.datacapture.usdlverificationsample.data.DriverLicenseVerificationRepository;
 import com.scandit.datacapture.usdlverificationsample.data.IdCaptureRepository;
 import com.scandit.datacapture.usdlverificationsample.di.Injector;
-import com.scandit.datacapture.usdlverificationsample.ui.result.ResultMapper;
 import com.scandit.datacapture.usdlverificationsample.ui.result.CaptureResult;
+import com.scandit.datacapture.usdlverificationsample.ui.result.ResultMapper;
 
 /**
  * The view model for the screen where the user may capture a Driver's License.
  */
 public class ScanViewModel extends ViewModel {
-    private static final String US_ISO = "USA";
-
     /**
      * The repository to interact with the device's camera. We use our own dependency injection
      * to obtain it, but you may use your favorite framework, like Dagger or Hilt instead.
@@ -79,15 +73,19 @@ public class ScanViewModel extends ViewModel {
     private final Observer<CapturedIdEvent> capturedIdsObserver = this::onIdCaptured;
 
     /**
+     * The observer of rejected documents.
+     */
+    private final Observer<RejectedIdEvent> rejectedIdsObserver = this::onIdRejected;
+
+    /**
      * The state representing the currently displayed UI.
      */
     private ScanUiState uiState = ScanUiState.builder().build();
 
     /**
-     * An event to display the UI that informs the user that the captured driver's license is not
-     * issued in the United States.
+     * An event to display the UI that informs the user that the document has been rejected.
      */
-    private final MutableLiveData<GoToUnsupportedDriverLicense> goToUnsupportedDriverLicense = new MutableLiveData<>();
+    private final MutableLiveData<GoToRejectedDocument> gotToRejectedDocument = new MutableLiveData<>();
 
     /**
      * An event to display the UI that informs the user that the verification failed
@@ -123,6 +121,7 @@ public class ScanViewModel extends ViewModel {
          */
         idCaptureRepository.idCaptureOverlays().observeForever(idCaptureOverlaysObserver);
         idCaptureRepository.capturedIds().observeForever(capturedIdsObserver);
+        idCaptureRepository.rejectedIds().observeForever(rejectedIdsObserver);
 
         /*
          * Post the initial UI state.
@@ -137,6 +136,7 @@ public class ScanViewModel extends ViewModel {
          */
         idCaptureRepository.idCaptureOverlays().removeObserver(idCaptureOverlaysObserver);
         idCaptureRepository.capturedIds().removeObserver(capturedIdsObserver);
+        idCaptureRepository.rejectedIds().removeObserver(rejectedIdsObserver);
     }
 
     /**
@@ -154,11 +154,10 @@ public class ScanViewModel extends ViewModel {
     }
 
     /**
-     * An event to display the UI that informs the user that the captured driver's license is
-     * not issued in the United States.
+     * An event to display the UI that informs the user that the document has been rejected.
      */
-    public LiveData<GoToUnsupportedDriverLicense> goToUnsupportedDriverLicense() {
-        return goToUnsupportedDriverLicense;
+    public LiveData<GoToRejectedDocument> gotToRejectedDocument() {
+        return gotToRejectedDocument;
     }
 
     /**
@@ -193,10 +192,8 @@ public class ScanViewModel extends ViewModel {
     }
 
     /**
-     * Whenever a driver's license is captured, this method checks whether the scanning is complete
-     * and if the license is issued in the United States. If so, the driver's license is verified.
-     *
-     * If the license is not issued in the United States, a dialog is shown to warn the user.
+     * Whenever a US driver's license is captured, this method checks whether the scanning is complete
+     * Then, the driver's license is verified.
      *
      * This method also updates the UI that aids the user in the ID capture process.
      */
@@ -204,29 +201,22 @@ public class ScanViewModel extends ViewModel {
         CapturedId capturedId = capturedIdEvent.getContentIfNotHandled();
         if (capturedId == null) return;
 
-        boolean idBackScanNeeded =
-                capturedId.getCapturedResultType() == CapturedResultType.VIZ_RESULT &&
-                        capturedId.getViz().getCapturedSides() == SupportedSides.FRONT_ONLY &&
-                        capturedId.getViz().isBackSideCaptureSupported();
+        // Store and verify the US driver license.
+        driverLicense = capturedId;
+        verifyDriverLicense(capturedId);
+    }
 
-        boolean isUSDriverLicense = capturedId.getIssuingCountryIso() != null &&
-                capturedId.getIssuingCountryIso().equals(US_ISO);
+    /**
+     * Whenever a document is rejected, this method notifies the UI to show a dialog with the
+     * rejection reason.
+     */
+    private void onIdRejected(RejectedIdEvent rejectedIdEvent) {
+        RejectedId rejectedId = rejectedIdEvent.getContentIfNotHandled();
+        if (rejectedId == null) return;
 
-        if (!isUSDriverLicense) {
-            /*
-             * Warn the user if the document the captured driver's license is not issued in
-             * the United States.
-             */
-            idCaptureRepository.resetIdCapture();
-            stopIdCapture();
-            goToUnsupportedDriverLicense.postValue(new GoToUnsupportedDriverLicense());
-        } else if (!idBackScanNeeded) {
-            /*
-             * If document scanning is complete, store and verify the driver's license.
-             */
-            driverLicense = capturedId;
-            verifyDriverLicense(capturedId);
-        }
+        idCaptureRepository.resetIdCapture();
+        stopIdCapture();
+        gotToRejectedDocument.postValue(new GoToRejectedDocument(rejectedId));
     }
 
     /**
@@ -241,24 +231,20 @@ public class ScanViewModel extends ViewModel {
      * verification.
      */
     private void verifyDriverLicense(CapturedId capturedId) {
+        VizResult viz = capturedId.getViz();
+        if (viz == null || viz.getCapturedSides() != CapturedSides.FRONT_AND_BACK) {
+            return;
+        }
+
         stopIdCapture();
 
-        AamvaVizBarcodeComparisonResult comparisonResult =
-                driverLicenseVerificationRepository.compareFrontAndBack(capturedId);
-        boolean isFrontBackComparisonSuccessful = comparisonResult.getChecksPassed();
-        Bitmap frontMismatchImage = comparisonResult.getFrontMismatchImage();
-        boolean isShownLicenseWarning = !comparisonResult.getMismatchHighlightingEnabled() &&
-                !isFrontBackComparisonSuccessful;
-
-        /*
-         * If front and back match AND ID is not expired, run verification
-         */
-        if (isFrontBackComparisonSuccessful && !capturedId.isExpired()) {
+        // Run the verification if the document is not expired
+        if (capturedId.isExpired()) {
+            navigateToResult(capturedId, AamvaBarcodeVerificationStatus.FORGED);
+        } else {
             barcodeVerificationTask = driverLicenseVerificationRepository.verifyIdOnBarcode(capturedId);
             setIsBarcodeVerificationRunning(true);
             setUpBarcodeVerificationTaskListeners();
-        } else {
-            navigateToResult(capturedId, isFrontBackComparisonSuccessful, AamvaBarcodeVerificationStatus.FORGED, frontMismatchImage, isShownLicenseWarning);
         }
     }
 
@@ -276,7 +262,7 @@ public class ScanViewModel extends ViewModel {
          */
         barcodeVerificationTask.doOnVerificationResult(barcodeVerificationResult -> {
             if (driverLicense != null) {
-                navigateToResult(driverLicense, true, barcodeVerificationResult.getStatus(), null, false);
+                navigateToResult(driverLicense, barcodeVerificationResult.getStatus());
                 setIsBarcodeVerificationRunning(false);
                 barcodeVerificationTask = null;
                 driverLicense = null;
@@ -316,17 +302,11 @@ public class ScanViewModel extends ViewModel {
      */
     private void navigateToResult(
             CapturedId capturedId,
-            boolean isFrontBackComparisonSuccessful,
-            AamvaBarcodeVerificationStatus aamvaBarcodeVerificationStatus,
-            @Nullable Bitmap verificationImage,
-            boolean isShownLicenseWarning
+            AamvaBarcodeVerificationStatus aamvaBarcodeVerificationStatus
     ) {
         final CaptureResult result = new ResultMapper(capturedId).mapResult(
                 capturedId.isExpired(),
-                isFrontBackComparisonSuccessful,
-                aamvaBarcodeVerificationStatus,
-                verificationImage,
-                isShownLicenseWarning
+                aamvaBarcodeVerificationStatus
         );
         goToResult.postValue(new GoToResult(result));
     }

@@ -24,7 +24,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -34,7 +33,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.ui.DataCaptureView;
-import com.scandit.datacapture.id.data.CapturedId;
+import com.scandit.datacapture.id.data.RejectionReason;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 import com.scandit.datacapture.idcaptureextendedsample.R;
 import com.scandit.datacapture.idcaptureextendedsample.di.Injector;
@@ -52,7 +51,7 @@ public class ScanFragment extends Fragment
         AlertDialogFragment.Callbacks,
         BottomNavigationView.OnNavigationItemSelectedListener {
 
-    private static final String ID_NOT_SUPPORTED_TAG = "ID_NOT_SUPPORTED";
+    private static final String REJECTED_DOCUMENT_TAG = "REJECTED_DOCUMENT";
 
     /**
      * DataCaptureContext is necessary to create DataCaptureView.
@@ -180,7 +179,7 @@ public class ScanFragment extends Fragment
         /*
          * Observe the sequences of events in order to navigate to other screens or display dialogs.
          */
-        viewModel.goToIdNotSupported().observe(lifecycleOwner, this::goToIdNotSupported);
+        viewModel.rejectedId().observe(lifecycleOwner, this::showRejectedIdDialog);
         viewModel.goToResult().observe(lifecycleOwner, this::goToResult);
 
         /*
@@ -244,18 +243,18 @@ public class ScanFragment extends Fragment
     }
 
     /**
-     * Show a dialog that informs the user that data from the document cannot be extracted,
-     * for example because this type of document is not enabled in settings or the data
-     * is encoded in an unsupported format.
+     * Show a dialog that informs the user that the ID has been rejected.
      */
-    private void goToIdNotSupported(GoToIdNotSupported event) {
-        if (event.getContentIfNotHandled() == null) {
-            return;
-        }
+    private void showRejectedIdDialog(RejectedIdEvent event) {
+        RejectionReason rejectionReason = event.getContentIfNotHandled();
+        if (rejectionReason == null) return;
 
-        if (getChildFragmentManager().findFragmentByTag(ID_NOT_SUPPORTED_TAG) == null) {
-            AlertDialogFragment.newInstance(R.string.error, getString(R.string.document_not_supported_message))
-                    .show(getChildFragmentManager(), ID_NOT_SUPPORTED_TAG);
+        if (getChildFragmentManager().findFragmentByTag(REJECTED_DOCUMENT_TAG) == null) {
+            int messageId = rejectionReason == RejectionReason.TIMEOUT ?
+                    R.string.rejected_document_timeout_message :
+                    R.string.rejected_document_not_supported_message;
+            AlertDialogFragment.newInstance(R.string.error, getString(messageId))
+                    .show(getChildFragmentManager(), REJECTED_DOCUMENT_TAG);
         }
     }
 

@@ -23,21 +23,19 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.widget.Toolbar;
 
-import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.core.source.FrameSourceState;
 import com.scandit.datacapture.core.ui.DataCaptureView;
 import com.scandit.datacapture.id.capture.IdCapture;
 import com.scandit.datacapture.id.capture.IdCaptureListener;
-import com.scandit.datacapture.id.capture.IdCaptureSession;
 import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.DateResult;
+import com.scandit.datacapture.id.data.RejectionReason;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -67,14 +65,15 @@ public class IdCaptureActivity extends CameraPermissionActivity
 
         ViewGroup container = findViewById(R.id.data_capture_view_container);
 
-        dataCaptureManager = DataCaptureManager.getInstance(this);
+        dataCaptureManager = DataCaptureManager.getInstance();
 
         /*
          * Create a new DataCaptureView and fill the screen with it. DataCaptureView will show
          * the camera preview on the screen. Pass your DataCaptureContext to the view's
          * constructor.
          */
-        dataCaptureView = DataCaptureView.newInstance(this, dataCaptureManager.getDataCaptureContext());
+        dataCaptureView =
+                DataCaptureView.newInstance(this, dataCaptureManager.getDataCaptureContext());
         container.addView(
                 dataCaptureView,
                 new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
@@ -112,7 +111,7 @@ public class IdCaptureActivity extends CameraPermissionActivity
          */
         dataCaptureManager.getIdCapture().addListener(this);
         /*
-        * Add overlay to data capture view.
+         * Add overlay to data capture view.
          */
         dataCaptureView.addOverlay(overlay);
 
@@ -137,15 +136,8 @@ public class IdCaptureActivity extends CameraPermissionActivity
     }
 
     @Override
-    public void onIdCaptured(
-            @NotNull IdCapture mode,
-            @NotNull final IdCaptureSession session,
-            @NotNull FrameData data
-    ) {
-        final CapturedId capturedId = session.getNewlyCapturedId();
-        if (capturedId == null) return;
-
-        final String message = getDescriptionForCapturedId(capturedId);
+    public void onIdCaptured(@NonNull IdCapture mode, @NonNull CapturedId id) {
+        final String message = getDescriptionForCapturedId(id);
 
         /*
          * Don't capture unnecessarily when the result is displayed.
@@ -160,25 +152,19 @@ public class IdCaptureActivity extends CameraPermissionActivity
     }
 
     @Override
-    public void onIdLocalized(
-            @NotNull IdCapture mode,
-            @NotNull IdCaptureSession session,
-            @NotNull FrameData data
-    ) {
-        // In this sample we are not interested in this callback.
-    }
-
-    @Override
     public void onIdRejected(
-            @NotNull IdCapture mode,
-            @NotNull IdCaptureSession session,
-            @NotNull FrameData data
+            @NonNull IdCapture mode,
+            @Nullable CapturedId id,
+            @NonNull RejectionReason reason
     ) {
         /*
          * Implement to handle documents recognized in a frame, but rejected.
-         * A document or its part is considered rejected when (a) it's valid, but not enabled in the settings,
-         * (b) it's a barcode of a correct symbology or a Machine Readable Zone (MRZ),
-         * but the data is encoded in an unexpected/incorrect format.
+         * A document or its part is considered rejected when:
+         *   (a) it's a valid personal identification document, but not enabled in the settings,
+         *   (b) it's a PDF417 barcode or a Machine Readable Zone (MRZ), but the data is encoded
+         * in an unexpected format,
+         *   (c) it's a voided document and rejectVoidedIds is enabled in the settings,
+         *   (d) the document has been localized, but could not be captured within a period of time.
          */
 
         /*
@@ -191,43 +177,9 @@ public class IdCaptureActivity extends CameraPermissionActivity
          * to the main thread.
          */
         runOnUiThread(
-                () -> showAlert(R.string.error_title, R.string.document_not_supported_message));
-    }
-
-    @Override
-    public void onIdCaptureTimedOut(
-            @NonNull IdCapture mode,
-            @NonNull IdCaptureSession session,
-            @NonNull FrameData data
-    ) {
-        /*
-         * Implement to handle documents that were localized, but could not be captured within a period of time.
-         *
-         * In this sample we are not interested in this callback.
-         */
-    }
-
-    @Override
-    public void onErrorEncountered(
-            @NotNull IdCapture mode,
-            @NotNull final Throwable error,
-            @NotNull IdCaptureSession session,
-            @NotNull FrameData data
-    ) {
-        /*
-         * Implement to handle an error encountered during the capture process.
-         * This callback may be executed on an arbitrary thread.
-         */
-    }
-
-    @Override
-    public void onObservationStarted(@NotNull IdCapture mode) {
-        // In this sample we are not interested in this callback.
-    }
-
-    @Override
-    public void onObservationStopped(@NotNull IdCapture mode) {
-        // In this sample we are not interested in this callback.
+                () -> showAlert(R.string.error_title,
+                        reason == RejectionReason.TIMEOUT ? R.string.rejected_document_timeout_message :
+                                R.string.rejected_document_not_supported_message));
     }
 
     private void showAlert(@StringRes int titleRes, @StringRes int messageRes) {
@@ -260,6 +212,10 @@ public class IdCaptureActivity extends CameraPermissionActivity
         appendField(builder, "Date of Expiry: ", result.getDateOfExpiry());
         appendField(builder, "Document Number: ", result.getDocumentNumber());
         appendField(builder, "Nationality: ", result.getNationality());
+        if (result.getDocument() != null) {
+            appendField(builder, "Document Type: ", result.getDocument().getDocumentType().toString());
+        }
+
         return builder.toString();
     }
 

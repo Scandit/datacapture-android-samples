@@ -34,9 +34,9 @@ import com.scandit.datacapture.expirymanagementsample.sparkscan.SparkScanPresent
 public class MainActivity extends CameraPermissionActivity
     implements SparkScanPresenterView, BarcodeCountPresenterView {
 
-	// Enter your Scandit License key here.
-    // Your Scandit License key is available via your Scandit SDK web account.
-    public static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
+    // Add your license key to `secrets.properties` and it will be automatically added to the BuildConfig field
+    // `BuildConfig.SCANDIT_LICENSE_KEY`
+    public static final String SCANDIT_LICENSE_KEY = BuildConfig.SCANDIT_LICENSE_KEY;
 
     private BarcodeCountPresenter barcodeCountPresenter;
     private SparkScanPresenter sparkScanPresenter;
@@ -125,6 +125,7 @@ public class MainActivity extends CameraPermissionActivity
     @Override
     public void switchToBarcodeCount() {
         sparkScanPresenter.disableSparkScan();
+        sparkScanPresenter.onPause();
         barcodeCountPresenter.enableBarcodeCount();
         inBarcodeCountMode = true;
     }
@@ -133,6 +134,7 @@ public class MainActivity extends CameraPermissionActivity
     public void switchToSparkScan() {
         barcodeCountPresenter.disableBarcodeCount();
         sparkScanPresenter.enableSparkScan();
+        sparkScanPresenter.onResume();
         inBarcodeCountMode = false;
     }
 

@@ -37,6 +37,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.ui.DataCaptureView;
+import com.scandit.datacapture.id.data.CapturedId;
+import com.scandit.datacapture.id.data.IdCaptureRegion;
+import com.scandit.datacapture.id.data.RejectionReason;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 import com.scandit.datacapture.usdlverificationsample.R;
 import com.scandit.datacapture.usdlverificationsample.di.Injector;
@@ -46,8 +49,8 @@ import com.scandit.datacapture.usdlverificationsample.ui.util.AlertDialogFragmen
 
 public class ScanFragment extends Fragment implements AlertDialogFragment.Callbacks {
 
-    private static final String DL_NOT_SUPPORTED_TAG = "DL_NOT_SUPPORTED";
     private static final String BARCODE_VERIFICATION_FAILURE_TAG = "BARCODE_VERIFICATION_FAILURE";
+    private static final String REJECTED_DOCUMENT_TAG = "REJECTED_DOCUMENT";
     private static final String RESULT_SCREEN_TAG = "RESULT_SCREEN";
 
     /**
@@ -175,7 +178,7 @@ public class ScanFragment extends Fragment implements AlertDialogFragment.Callba
          * Observe the sequences of events in order to navigate to other screens or display dialogs.
          */
         viewModel.goToResult().observe(lifecycleOwner, this::goToResult);
-        viewModel.goToUnsupportedDriverLicense().observe(lifecycleOwner, this::goToUnsupportedDriverLicense);
+        viewModel.gotToRejectedDocument().observe(lifecycleOwner, this::gotToRejectedDocument);
         viewModel.goToBarcodeVerificationFailure().observe(lifecycleOwner,
                 this::goToBarcodeVerificationFailure);
 
@@ -247,18 +250,27 @@ public class ScanFragment extends Fragment implements AlertDialogFragment.Callba
     }
 
     /**
-     * Show a dialog that informs the user that the captured driver's license is not issued in
-     * the United States.
+     * Show a dialog that informs the user that the document has been rejected.
      */
-    private void goToUnsupportedDriverLicense(GoToUnsupportedDriverLicense event) {
-        if (event.getContentIfNotHandled() == null) {
-            return;
-        }
+    private void gotToRejectedDocument(GoToRejectedDocument event) {
+        RejectedId rejectedId = event.getContentIfNotHandled();
+        if (rejectedId == null) return;
+        RejectionReason reason = rejectedId.getReason();
+        CapturedId id = rejectedId.getId();
 
-        if (getChildFragmentManager().findFragmentByTag(DL_NOT_SUPPORTED_TAG) == null) {
-            AlertDialogFragment.newInstance(R.string.error,
-                            getString(R.string.scanning_dl_not_supported_message))
-                    .show(getChildFragmentManager(), DL_NOT_SUPPORTED_TAG);
+        if (getChildFragmentManager().findFragmentByTag(REJECTED_DOCUMENT_TAG) == null) {
+            int messageId;
+            if (reason == RejectionReason.TIMEOUT) {
+                messageId = R.string.rejected_document_timeout_message;
+            } else if (reason == RejectionReason.NOT_ACCEPTED_DOCUMENT_TYPE &&
+                    id != null && id.getIssuingCountry() != IdCaptureRegion.US) {
+                messageId = R.string.scanning_dl_not_supported_message;
+            } else {
+                messageId = R.string.rejected_document_not_supported_message;
+            }
+
+            AlertDialogFragment.newInstance(R.string.error, getString(messageId))
+                    .show(getChildFragmentManager(), REJECTED_DOCUMENT_TAG);
         }
     }
 

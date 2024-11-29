@@ -14,44 +14,57 @@
 
 package com.scandit.datacapture.idcapturesimplesample;
 
-import android.content.Context;
-
 import androidx.annotation.VisibleForTesting;
 
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.source.Camera;
+import com.scandit.datacapture.id.capture.DriverLicense;
+import com.scandit.datacapture.id.capture.FullDocumentScanner;
 import com.scandit.datacapture.id.capture.IdCapture;
+import com.scandit.datacapture.id.capture.IdCaptureDocument;
 import com.scandit.datacapture.id.capture.IdCaptureSettings;
-import com.scandit.datacapture.id.data.IdDocumentType;
+import com.scandit.datacapture.id.capture.IdCard;
+import com.scandit.datacapture.id.capture.Passport;
+import com.scandit.datacapture.id.data.IdCaptureRegion;
+
+import java.util.Arrays;
+import java.util.List;
 
 /*
  * Initializes DataCapture.
  */
 public final class DataCaptureManager {
-	// Enter your Scandit License key here.
-    // Your Scandit License key is available via your Scandit SDK web account.
+
+    // Add your license key to `secrets.properties` and it will be automatically added to the BuildConfig field
+    // `BuildConfig.SCANDIT_LICENSE_KEY`
     @VisibleForTesting
-    public static String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
+    public static String SCANDIT_LICENSE_KEY = BuildConfig.SCANDIT_LICENSE_KEY;
 
     private static DataCaptureManager INSTANCE;
 
-    private DataCaptureContext dataCaptureContext;
+    private static final List<IdCaptureDocument> ACCEPTED_DOCUMENTS = Arrays.asList(
+            new IdCard(IdCaptureRegion.ANY),
+            new DriverLicense(IdCaptureRegion.ANY),
+            new Passport(IdCaptureRegion.ANY)
+    );
+
+    private final DataCaptureContext dataCaptureContext;
     private Camera camera;
     private IdCapture idCapture;
 
-    public static DataCaptureManager getInstance(Context context) {
+    public static DataCaptureManager getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new DataCaptureManager(context.getApplicationContext());
+            INSTANCE = new DataCaptureManager();
         }
 
         return INSTANCE;
     }
 
-    private DataCaptureManager(Context context) {
+    private DataCaptureManager() {
         /*
          * Create DataCaptureContext using your license key.
          */
-        dataCaptureContext = DataCaptureContext.forLicenseKey(SCANDIT_LICENSE_KEY);
+        dataCaptureContext = DataCaptureContext.forLicenseKey(BuildConfig.SCANDIT_LICENSE_KEY);
 
         initCamera();
         initIdCapture();
@@ -82,11 +95,9 @@ public final class DataCaptureManager {
          */
         IdCaptureSettings settings = new IdCaptureSettings();
 
-        // Recognize national ID cards & driver's licenses.
-        settings.setSupportedDocuments(
-                IdDocumentType.ID_CARD_VIZ,
-                IdDocumentType.DL_VIZ
-        );
+        // Recognize national ID cards, driver's licenses and passports.
+        settings.setAcceptedDocuments(ACCEPTED_DOCUMENTS);
+        settings.setScannerType(new FullDocumentScanner());
 
         idCapture = IdCapture.forDataCaptureContext(dataCaptureContext, settings);
     }

@@ -67,11 +67,6 @@ public class ScanViewModel extends ViewModel {
      */
     private final MutableLiveData<ShowCaptureResultToastEvent> showToastResult = new MutableLiveData<>();
 
-    /**
-     * Events to display a blocking alert notifying that scanning of the document's back is available.
-     */
-    private final MutableLiveData<ShowBackScanAvailableEvent> showScanBack = new MutableLiveData<>();
-
     public ScanViewModel() {
 
         /*
@@ -102,20 +97,6 @@ public class ScanViewModel extends ViewModel {
      */
     public LiveData<ShowCaptureResultToastEvent> showCapturedResultToast() {
         return showToastResult;
-    }
-
-    /**
-     * Events to display the UI with an alert notifying that the back scan is available.
-     */
-    public LiveData<ShowBackScanAvailableEvent> showScanBack() {
-        return showScanBack;
-    }
-
-    /**
-     * Reset the IdCapture. This allows to keep scanning after skipping scanning the back of a document.
-     */
-    public void resetIdCapture() {
-        idCaptureRepository.resetIdCapture();
     }
 
     /**
@@ -201,24 +182,15 @@ public class ScanViewModel extends ViewModel {
         if (scanResult == null) return;
 
         final CaptureResult result = IdCaptureResultFactory.extract(scanResult.getCapturedId());
-
-        if (scanResult.isNeedsBackScan()) {
-            showScanBack.postValue(new ShowBackScanAvailableEvent(result));
-        } else if (!scanResult.isContinuousMode()) {
-            showCaptureResult.postValue(new ShowCaptureResultEvent(result));
-        } else {
-            /*
-             * Display the result in a non-blocking way, so the mode doesn't have to stop scanning.
-             */
-            showToastResult.postValue(new ShowCaptureResultToastEvent(result));
-        }
+        showCapturedResultInSelectedMode(result);
     }
 
     void showCapturedResultInSelectedMode(CaptureResult result) {
-        if (!idCaptureRepository.isContinuousMode()) {
-            showCaptureResult.postValue(new ShowCaptureResultEvent(result));
-        } else {
+        if (idCaptureRepository.isContinuousMode()) {
+            // Display the result in a non-blocking way, so the mode doesn't have to stop scanning.
             showToastResult.postValue(new ShowCaptureResultToastEvent(result));
+        } else {
+            showCaptureResult.postValue(new ShowCaptureResultEvent(result));
         }
     }
 }

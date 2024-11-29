@@ -3,14 +3,13 @@
     <string name="scanning_dl_not_supported_message">Document is not a US driver’s license.</string>
     <string name="scanning_dl_not_expired">Document has not expired.</string>
     <string name="scanning_dl_expired">Document has expired.</string>
-    <string name="scanning_dl_front_back_comparison_success">Information on front and back matches.</string>
-    <string name="scanning_dl_front_back_comparison_failure">Information on front and back does not match.</string>
     <string name="scanning_dl_barcode_verification_success">Document barcode is authentic.</string>
     <string name="scanning_dl_barcode_verification_uncertain">Document barcode is likely forged.</string>
     <string name="scanning_dl_barcode_verification_failure">Document barcode is forged.</string>
     <string name="scanning_dl_barcode_verification_error">An error was encountered. Please make sure that your Scandit license key permits barcode verification.</string>
     <string name="scanning_dl_barcode_verification_in_progress">Running verification checks</string>
-    <string name="license_does_not_support_highlighting">Your license does not support highlighting discrepancies</string>
+    <string name="rejected_document_not_supported_message">Document not supported. Try scanning another document</string>
+    <string name="rejected_document_timeout_message">Document capture failed. Make sure the document is well lit and free of glare. Alternatively, try scanning another document</string>
     <string name="clear">Clear</string>
     <string name="error">Error</string>
     <string name="document_type_driving_license">Driving License</string>

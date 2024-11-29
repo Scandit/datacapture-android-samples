@@ -15,28 +15,39 @@
 package com.scandit.datacapture.usdlverificationsample.data;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.scandit.datacapture.core.capture.DataCaptureContext;
-import com.scandit.datacapture.core.data.FrameData;
+import com.scandit.datacapture.id.capture.DriverLicense;
+import com.scandit.datacapture.id.capture.FullDocumentScanner;
 import com.scandit.datacapture.id.capture.IdCapture;
+import com.scandit.datacapture.id.capture.IdCaptureDocument;
 import com.scandit.datacapture.id.capture.IdCaptureListener;
-import com.scandit.datacapture.id.capture.IdCaptureSession;
 import com.scandit.datacapture.id.capture.IdCaptureSettings;
-import com.scandit.datacapture.id.data.IdDocumentType;
+import com.scandit.datacapture.id.data.CapturedId;
+import com.scandit.datacapture.id.data.IdCaptureRegion;
 import com.scandit.datacapture.id.data.IdImageType;
-import com.scandit.datacapture.id.data.SupportedSides;
+import com.scandit.datacapture.id.data.RejectionReason;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 import com.scandit.datacapture.usdlverificationsample.ui.scan.CapturedIdEvent;
+import com.scandit.datacapture.usdlverificationsample.ui.scan.RejectedId;
+import com.scandit.datacapture.usdlverificationsample.ui.scan.RejectedIdEvent;
 
-import org.jetbrains.annotations.NotNull;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * The repository to interact with the IdCapture mode.
  */
 public class IdCaptureRepository implements IdCaptureListener {
+
+    private static final List<IdCaptureDocument> ACCEPTED_DOCUMENTS = Arrays.asList(
+            new DriverLicense(IdCaptureRegion.US)
+    );
+
     /**
      * The stream of IdCaptureOverlays. IdCaptureOverlay provides UI to aid the user in the
      * capture process. It needs to be attached to a DataCaptureView.
@@ -47,6 +58,11 @@ public class IdCaptureRepository implements IdCaptureListener {
      * The stream of data captured from driver's licenses.
      */
     private final MutableLiveData<CapturedIdEvent> capturedIds = new MutableLiveData<>();
+
+    /**
+     * The stream rejected documents.
+     */
+    private final MutableLiveData<RejectedIdEvent> rejectedIds = new MutableLiveData<>();
 
     /**
      * The DataCaptureContext that the current IdCapture is attached to.
@@ -69,8 +85,8 @@ public class IdCaptureRepository implements IdCaptureListener {
         this.dataCaptureContext = dataCaptureContext;
 
         IdCaptureSettings settings = new IdCaptureSettings();
-        settings.setSupportedDocuments(IdDocumentType.DL_VIZ, IdDocumentType.ID_CARD_VIZ);
-        settings.setSupportedSides(SupportedSides.FRONT_AND_BACK);
+        settings.setAcceptedDocuments(ACCEPTED_DOCUMENTS);
+        settings.setScannerType(new FullDocumentScanner());
         settings.setShouldPassImageTypeToResult(IdImageType.FACE, true);
 
         idCapture = IdCapture.forDataCaptureContext(dataCaptureContext, settings);
@@ -92,6 +108,13 @@ public class IdCaptureRepository implements IdCaptureListener {
      */
     public LiveData<CapturedIdEvent> capturedIds() {
         return capturedIds;
+    }
+
+    /**
+     * The stream of rejected documents.
+     */
+    public LiveData<RejectedIdEvent> rejectedIds() {
+        return rejectedIds;
     }
 
     /**
@@ -121,86 +144,31 @@ public class IdCaptureRepository implements IdCaptureListener {
 
     @Override
     @WorkerThread
-    public void onIdCaptured(
-            @NotNull IdCapture mode,
-            @NotNull IdCaptureSession session,
-            @NotNull FrameData data
-    ) {
+    public void onIdCaptured(@NonNull IdCapture mode, @NonNull CapturedId id) {
         /*
          * Implement to handle data captured from driver's licenses.
          *
          * This callback is executed on the background thread. We post the value to the LiveData
          * in order to return to the UI thread.
          */
-        capturedIds.postValue(new CapturedIdEvent(session.getNewlyCapturedId()));
-    }
-
-    @Override
-    @WorkerThread
-    public void onIdLocalized(
-            @NotNull IdCapture mode,
-            @NotNull IdCaptureSession session,
-            @NotNull FrameData data
-    ) {
-        /*
-         * Implement to handle a driver's license localized within a frame. A driver's license is
-         * considered localized when it's detected in a frame, but its data is not yet extracted.
-         *
-         * In this sample we are not interested in this callback.
-         */
+        capturedIds.postValue(new CapturedIdEvent(id));
     }
 
     @Override
     @WorkerThread
     public void onIdRejected(
-            @NotNull IdCapture mode,
-            @NotNull IdCaptureSession session,
-            @NotNull FrameData data
+            @NonNull IdCapture mode,
+            @Nullable CapturedId id,
+            @NonNull RejectionReason reason
     ) {
         /*
          * Implement to handle documents recognized in a frame, but rejected.
-         * Here, the document is considered rejected when:
-         *   (a) it's not a driver's license,
-         *   (b) the barcode at the back side of a document is encoded in an unexpected format.
-         *
-         * In this sample we are not interested in this callback.
+         * A document or its part is considered rejected when:
+         *   (a) it's a valid personal identification document, but not enabled in the settings,
+         *   (b) it's a PDF417 barcode or a Machine Readable Zone (MRZ), but the data is encoded in an unexpected format,
+         *   (c) it's a voided document and rejectVoidedIds is enabled in the settings,
+         *   (d) the document has been localized, but could not be captured within a period of time.
          */
-    }
-
-    @Override
-    @WorkerThread
-    public void onIdCaptureTimedOut(
-            @NonNull IdCapture mode,
-            @NonNull IdCaptureSession session,
-            @NonNull FrameData data
-    ) {
-        /*
-         * Implement to handle documents that were localized, but could not be captured within a period of time.
-         *
-         * In this sample we are not interested in this callback.
-         */
-    }
-
-    @Override
-    @WorkerThread
-    public void onErrorEncountered(
-            @NotNull IdCapture mode,
-            @NotNull Throwable error,
-            @NotNull IdCaptureSession session,
-            @NotNull FrameData data
-    ) {
-        // In this sample, we are not interested in this callback.
-    }
-
-    @Override
-    @WorkerThread
-    public void onObservationStarted(@NotNull IdCapture mode) {
-        // In this sample, we are not interested in this callback.
-    }
-
-    @Override
-    @WorkerThread
-    public void onObservationStopped(@NotNull IdCapture mode) {
-        // In this sample, we are not interested in this callback.
+        rejectedIds.postValue(new RejectedIdEvent(new RejectedId(id, reason)));
     }
 }

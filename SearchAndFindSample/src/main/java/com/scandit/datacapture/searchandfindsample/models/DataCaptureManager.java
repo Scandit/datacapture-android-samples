@@ -16,12 +16,14 @@ package com.scandit.datacapture.searchandfindsample.models;
 
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.source.Camera;
+import com.scandit.datacapture.searchandfindsample.BuildConfig;
 
 public final class DataCaptureManager {
 
-	// Enter your Scandit License key here.
-    // Your Scandit License key is available via your Scandit SDK web account.
-    private static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
+    // Add your license key to `secrets.properties` and it will be automatically added to the BuildConfig field
+    // `BuildConfig.SCANDIT_LICENSE_KEY`
+    public static final String SCANDIT_LICENSE_KEY = BuildConfig.SCANDIT_LICENSE_KEY;
+
     public static final DataCaptureManager CURRENT = new DataCaptureManager();
 
     final DataCaptureContext dataCaptureContext;

@@ -35,13 +35,15 @@ import com.scandit.datacapture.core.source.CameraPosition;
 import com.scandit.datacapture.core.source.VideoResolution;
 import com.scandit.datacapture.core.ui.style.Brush;
 import com.scandit.datacapture.id.data.IdAnonymizationMode;
-import com.scandit.datacapture.id.data.IdDocumentType;
-import com.scandit.datacapture.id.data.SupportedSides;
+import com.scandit.datacapture.id.data.IdCaptureDocumentType;
+import com.scandit.datacapture.id.data.IdCaptureRegion;
+import com.scandit.datacapture.id.data.RegionSpecificSubtype;
 import com.scandit.datacapture.id.ui.IdLayoutLineStyle;
 import com.scandit.datacapture.id.ui.IdLayoutStyle;
 import com.scandit.datacapture.id.ui.TextHintPosition;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 import com.scandit.datacapture.idcapturesettingssample.ui.BrushStyle;
+import com.scandit.datacapture.idcapturesettingssample.ui.settings.idcapture.documents.DocumentSelectionType;
 import com.scandit.datacapture.idcapturesettingssample.utils.EnumUtils;
 
 /**
@@ -51,37 +53,15 @@ import com.scandit.datacapture.idcapturesettingssample.utils.EnumUtils;
 public final class Defaults {
 
     // IdCapture.
-    private static final IdDocumentType[] SUPPORTED_DOCUMENTS = IdDocumentType.values();
-    private static final SupportedSides[] SUPPORTED_SIDES = SupportedSides.values();
     private static final IdAnonymizationMode[] ANONYMIZATION_MODES = IdAnonymizationMode.values();
     private static final FeedbackType[] FEEDBACK_TYPES = FeedbackType.values();
-
-    public static String[] getSupportedDocumentsEntries() {
-        return EnumUtils.getEntryNamesTitleCase(SUPPORTED_DOCUMENTS);
-    }
-
-    public static String[] getSupportedDocumentsValues() {
-        return EnumUtils.getEntryNames(SUPPORTED_DOCUMENTS);
-    }
-
-    public static String[] getSupportedSidesEntries() {
-        return EnumUtils.getEntryNamesTitleCase(SUPPORTED_SIDES);
-    }
-
-    public static String[] getSupportedSidesValues() {
-        return EnumUtils.getEntryNames(SUPPORTED_SIDES);
-    }
-
-    public static SupportedSides getDefaultSupportedSides() {
-        return SupportedSides.FRONT_ONLY;
-    }
 
     public static IdAnonymizationMode getDefaultAnonymizationMode() {
         return IdAnonymizationMode.FIELDS_ONLY;
     }
 
     public static String[] getAnonymizationModeEntries() {
-        return EnumUtils.getEntryNamesTitleCase(ANONYMIZATION_MODES);
+        return EnumUtils.getEntryNamesNameCase(ANONYMIZATION_MODES);
     }
 
     public static String[] getAnonymizationModeValues() {
@@ -89,7 +69,7 @@ public final class Defaults {
     }
 
     public static String[] getSupportedFeedbackEntries() {
-        return EnumUtils.getEntryNamesTitleCase(FEEDBACK_TYPES);
+        return EnumUtils.getEntryNamesNameCase(FEEDBACK_TYPES);
     }
 
     public static String[] getSupportedFeedbackValues() {
@@ -108,12 +88,25 @@ public final class Defaults {
         return false;
     }
 
+    public static boolean isFullScannerEnabled() {
+        return true;
+    }
+    public static boolean isSingleSideScannerBarcodeEnabled() {
+        return false;
+    }
+    public static boolean isSingleSideScannerMrzEnabled() {
+        return false;
+    }
+    public static boolean isSingleSideScannerVizEnabled() {
+        return false;
+    }
+
     // Camera.
     private final static CameraPosition[] SUPPORTED_POSITIONS = new CameraPosition[] { CameraPosition.WORLD_FACING, CameraPosition.USER_FACING };
     private final static VideoResolution[] SUPPORTED_RESOLUTIONS = VideoResolution.values();
 
     public static String[] getSupportedCameraPositionEntries() {
-        return EnumUtils.getEntryNamesTitleCase(SUPPORTED_POSITIONS);
+        return EnumUtils.getEntryNamesNameCase(SUPPORTED_POSITIONS);
     }
     public static String[] getSupportedCameraPositionValues() {
         return EnumUtils.getEntryNames(SUPPORTED_POSITIONS);
@@ -128,7 +121,7 @@ public final class Defaults {
     }
 
     public static String[] getSupportedResolutionsEntries() {
-        return EnumUtils.getEntryNamesTitleCase(SUPPORTED_RESOLUTIONS);
+        return EnumUtils.getEntryNamesNameCase(SUPPORTED_RESOLUTIONS);
     }
 
     public static String[] getSupportedResolutionsValues() {
@@ -144,7 +137,7 @@ public final class Defaults {
     private final static MeasureUnit[] SUPPORTED_MEASURE_UNITS = MeasureUnit.values();
 
     public static String[] getSupportedLogoAnchorsEntries() {
-        return EnumUtils.getEntryNamesTitleCase(SUPPORTED_LOGO_ANCHORS);
+        return EnumUtils.getEntryNamesNameCase(SUPPORTED_LOGO_ANCHORS);
     }
 
     public static String[] getSupportedLogoAnchorsValues() {
@@ -156,7 +149,7 @@ public final class Defaults {
     }
 
     public static String[] getSupportedMeasureUnitEntries() {
-        return EnumUtils.getEntryNamesTitleCase(SUPPORTED_MEASURE_UNITS);
+        return EnumUtils.getEntryNamesNameCase(SUPPORTED_MEASURE_UNITS);
     }
 
     public static String[] getSupportedMeasureUnitValues() {
@@ -180,7 +173,7 @@ public final class Defaults {
     private static final Brush DEFAULT_CAPTURED_BRUSH = IdCaptureOverlay.DEFAULT_CAPTURED_BRUSH;
 
     public static String[] getSupportedOverlayStylesEntries() {
-        return EnumUtils.getEntryNamesTitleCase(SUPPORTED_OVERLAY_STYLES);
+        return EnumUtils.getEntryNamesNameCase(SUPPORTED_OVERLAY_STYLES);
     }
 
     public static String[] getSupportedOverlayStylesValues() {
@@ -192,11 +185,11 @@ public final class Defaults {
     }
 
     public static String[] getSupportedOverlayLineStylesEntries() {
-        return EnumUtils.getEntryNamesTitleCase(SUPPORTED_OVERLAY_LINE_STYLES);
+        return EnumUtils.getEntryNamesNameCase(SUPPORTED_OVERLAY_LINE_STYLES);
     }
 
     public static String[] getTextHintPositionEntries() {
-        return EnumUtils.getEntryNamesTitleCase(TEXT_HINT_POSITIONS);
+        return EnumUtils.getEntryNamesNameCase(TEXT_HINT_POSITIONS);
     }
 
     public static String[] getSupportedOverlayLineStylesValues() {
@@ -212,7 +205,7 @@ public final class Defaults {
     }
 
     public static String[] getSupportedCapturedBrushEntries() {
-        return EnumUtils.getEntryNamesTitleCase(SUPPORTED_OVERLAY_CAPTURED_BRUSHES);
+        return EnumUtils.getEntryNamesNameCase(SUPPORTED_OVERLAY_CAPTURED_BRUSHES);
     }
 
     public static String[] getSupportedCapturedBrushValues() {
@@ -247,6 +240,18 @@ public final class Defaults {
 
     // Result.
     public static boolean getDefaultContinuousScanEnabled() {
+        return false;
+    }
+
+    public static boolean isDocumentTypeSelectedByDefault(IdCaptureDocumentType documentType, DocumentSelectionType documentSelectionType) {
+        return false;
+    }
+
+    public static boolean isRegionEnabledByDefault(IdCaptureRegion region) {
+        return region == IdCaptureRegion.ANY;
+    }
+
+    public static boolean isSubtypeEnabledByDefault(RegionSpecificSubtype subtype) {
         return false;
     }
 }

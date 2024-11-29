@@ -343,8 +343,8 @@ public class IdScanFragment extends Fragment {
     }
 
     /**
-     * Display the UI that informs the user that the document can be captured, but it is
-     * not supported.
+     * Display the UI that informs the user that the document has been rejected because
+     * it is not supported.
      */
     private void goToUnsupportedDocument(GoToUnsupportedDocument event) {
         if (!event.isHandled() && getChildFragmentManager().findFragmentByTag(

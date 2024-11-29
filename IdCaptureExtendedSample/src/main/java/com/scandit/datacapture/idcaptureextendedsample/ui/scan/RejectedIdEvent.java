@@ -14,11 +14,13 @@
 
 package com.scandit.datacapture.idcaptureextendedsample.ui.scan;
 
-import com.scandit.datacapture.id.data.RejectedId;
+import androidx.annotation.NonNull;
+
+import com.scandit.datacapture.id.data.RejectionReason;
 import com.scandit.datacapture.idcaptureextendedsample.ui.Event;
 
-public class RejectedIdEvent extends Event<RejectedId> {
-    public RejectedIdEvent(RejectedId content) {
+public class RejectedIdEvent extends Event<RejectionReason> {
+    public RejectedIdEvent(@NonNull RejectionReason content) {
         super(content);
     }
 }

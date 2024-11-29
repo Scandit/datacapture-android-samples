@@ -21,7 +21,7 @@ import com.scandit.datacapture.idcapturesettingssample.ui.result.CaptureResult;
  * An event for the fragment to display the non-blocking UI with part of a captured personal
  * identification document data.
  */
-class ShowCaptureResultToastEvent extends Event<CaptureResult> {
+public class ShowCaptureResultToastEvent extends Event<CaptureResult> {
     public ShowCaptureResultToastEvent(CaptureResult content) {
         super(content);
     }

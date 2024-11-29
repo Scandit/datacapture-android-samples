@@ -21,19 +21,11 @@ import com.scandit.datacapture.core.internal.sdk.annotations.Mockable;
 import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.verification.aamvabarcode.AamvaBarcodeVerificationTask;
 import com.scandit.datacapture.id.verification.aamvabarcode.AamvaBarcodeVerifier;
-import com.scandit.datacapture.id.verification.aamvavizbarcode.AamvaVizBarcodeComparisonResult;
-import com.scandit.datacapture.id.verification.aamvavizbarcode.AamvaVizBarcodeComparisonVerifier;
 
 /**
  * The repository to verify Driver's licenses.
  */
 public class DriverLicenseVerificationRepository {
-
-    /**
-     * The verifier that compares the human-readable data from the front side of the document with
-     * the data encoded in the barcode, and signals any suspicious differences.
-     */
-    private AamvaVizBarcodeComparisonVerifier comparisonVerifier;
 
     /**
      * The verifier that checks the validity of a Driver's License.
@@ -45,16 +37,7 @@ public class DriverLicenseVerificationRepository {
      * Create a new instance of this class.
      */
     public DriverLicenseVerificationRepository(DataCaptureContext dataCaptureContext) {
-        this.comparisonVerifier = AamvaVizBarcodeComparisonVerifier.create(dataCaptureContext);
         this.barcodeVerifier = AamvaBarcodeVerifier.create(dataCaptureContext);
-    }
-
-    /**
-     * Compares the human-readable data from the front side of the document with
-     * the data encoded in the barcode, and signals any suspicious differences.
-     */
-    public AamvaVizBarcodeComparisonResult compareFrontAndBack(CapturedId capturedId) {
-        return comparisonVerifier.verify(capturedId);
     }
 
     /**

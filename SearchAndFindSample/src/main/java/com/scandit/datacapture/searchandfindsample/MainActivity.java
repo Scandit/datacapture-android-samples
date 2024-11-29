@@ -34,8 +34,8 @@ public final class MainActivity extends AppCompatActivity implements FragmentMan
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, SearchScanFragment.newInstance())
-                    .commit();
+                .replace(R.id.fragment_container, SearchScanFragment.newInstance())
+                .commit();
         }
     }
 

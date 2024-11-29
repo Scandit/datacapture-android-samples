@@ -22,6 +22,8 @@ import androidx.annotation.Nullable;
 import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.DateResult;
 import com.scandit.datacapture.id.data.IdImageType;
+import com.scandit.datacapture.id.data.IdImages;
+import com.scandit.datacapture.id.data.IdSide;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -46,14 +48,16 @@ public abstract class IdCaptureResultFactory {
         /*
          * Extract and convert the desired document images.
          */
+        IdImages images = capturedId.getImages();
         byte[] idFrontImageBytes = null;
-        Bitmap idFrontImage = capturedId.getImageBitmapForType(IdImageType.ID_FRONT);
+        byte[] idBackImageBytes = null;
+
+        Bitmap idFrontImage = images.getCroppedDocument(IdSide.FRONT);
         if (idFrontImage != null) {
             idFrontImageBytes = convertImageToBytes(idFrontImage);
         }
 
-        byte[] idBackImageBytes = null;
-        Bitmap idBackImage = capturedId.getImageBitmapForType(IdImageType.ID_BACK);
+        Bitmap idBackImage = images.getCroppedDocument(IdSide.BACK);
         if (idBackImage != null) {
             idBackImageBytes = convertImageToBytes(idBackImage);
         }

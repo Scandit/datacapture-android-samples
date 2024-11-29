@@ -20,9 +20,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.scandit.datacapture.id.data.CapturedId;
-import com.scandit.datacapture.id.data.CapturedResultType;
-import com.scandit.datacapture.id.data.RejectedId;
-import com.scandit.datacapture.id.data.SupportedSides;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 import com.scandit.datacapture.idcaptureextendedsample.data.CameraRepository;
 import com.scandit.datacapture.idcaptureextendedsample.data.CapturedDataType;
@@ -70,17 +67,6 @@ public class ScanViewModel extends ViewModel {
     private final Observer<CapturedIdEvent> capturedIdsObserver = this::onIdCaptured;
 
     /**
-     * The observer of information about personal identification documents or their parts that
-     * were detected in a frame, but rejected.
-     *
-     * A document or its part is considered rejected when:
-     *   (a) it's a valid document, but its type is not enabled in the settings,
-     *   (b) it's a barcode of a correct symbology, but the data is encoded in an unexpected format,
-     *   (c) it's Machine Readable Zone (MRZ), but the data is encoded in an unexpected format.
-     */
-    private final Observer<RejectedIdEvent> rejectedIdsObserver = this::onIdRejected;
-
-    /**
      * The state representing the currently displayed UI.
      */
     private ScanUiState uiState = ScanUiState.builder().build();
@@ -89,12 +75,6 @@ public class ScanViewModel extends ViewModel {
      * The stream of UI states.
      */
     private final MutableLiveData<ScanUiState> uiStates = new MutableLiveData<>();
-
-    /**
-     * Events to display the UI that informs the user that the captured ID is not
-     * supported by the selected settings.
-     */
-    private final MutableLiveData<GoToIdNotSupported> goToIdNotSupported = new MutableLiveData<>();
 
     /**
      * Events to display the UI with the result of ID capture.
@@ -107,7 +87,6 @@ public class ScanViewModel extends ViewModel {
          */
         idCaptureRepository.idCaptureOverlays().observeForever(idCaptureOverlaysObserver);
         idCaptureRepository.capturedIds().observeForever(capturedIdsObserver);
-        idCaptureRepository.rejectedIds().observeForever(rejectedIdsObserver);
 
         /*
          * Trigger the create of IdCapture for the initial configuration.
@@ -127,7 +106,6 @@ public class ScanViewModel extends ViewModel {
          */
         idCaptureRepository.idCaptureOverlays().removeObserver(idCaptureOverlaysObserver);
         idCaptureRepository.capturedIds().removeObserver(capturedIdsObserver);
-        idCaptureRepository.rejectedIds().removeObserver(rejectedIdsObserver);
     }
 
     /**
@@ -138,11 +116,10 @@ public class ScanViewModel extends ViewModel {
     }
 
     /**
-     * Events to display the UI that informs the user that the captured ID is not
-     * supported by the selected settings.
+     * Events to display the UI that informs the user that the ID has been rejected.
      */
-    public LiveData<GoToIdNotSupported> goToIdNotSupported() {
-        return goToIdNotSupported;
+    public LiveData<RejectedIdEvent> rejectedId() {
+        return idCaptureRepository.rejectedIds();
     }
 
     /**
@@ -220,30 +197,8 @@ public class ScanViewModel extends ViewModel {
     private void onIdCaptured(CapturedIdEvent capturedIdEvent) {
         CapturedId capturedId = capturedIdEvent.getContentIfNotHandled();
         if (capturedId == null) return;
-        /*
-         * Viz documents support multiple sides scanning.
-         * In case the back side is supported and not yet captured we don't display the result
-         */
-        if (capturedId.getCapturedResultType() != CapturedResultType.VIZ_RESULT ||
-                capturedId.getViz().getCapturedSides() != SupportedSides.FRONT_ONLY ||
-                !capturedId.getViz().isBackSideCaptureSupported()) {
-            final CaptureResult result = IdCaptureResultFactory.extract(capturedId);
-            goToResult.postValue(new GoToResult(result));
-        }
-    }
 
-    private void onIdRejected(RejectedIdEvent rejectedIdEvent) {
-        RejectedId rejectedId = rejectedIdEvent.getContentIfNotHandled();
-        if (rejectedId == null) return;
-        /*
-         * Inform the user that data from a document that they try to
-         * scan cannot be extracted.
-         *
-         * This may happen when:
-         *   (a) it's a valid document, but its type is not enabled in the settings,
-         *   (b) it's a barcode of a correct symbology, but the data is encoded in an unexpected format,
-         *   (c) it's Machine Readable Zone (MRZ), but the data is encoded in an unexpected format.
-         */
-        goToIdNotSupported.postValue(new GoToIdNotSupported());
+        final CaptureResult result = IdCaptureResultFactory.extract(capturedId);
+        goToResult.postValue(new GoToResult(result));
     }
 }

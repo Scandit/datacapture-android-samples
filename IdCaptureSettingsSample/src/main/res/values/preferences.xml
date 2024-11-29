@@ -8,15 +8,26 @@
     <string name="float_with_unit_parametrised">%1$.2f (%2$s)</string>
 
     <string name="id_capture_category_title">ID Capture</string>
-    <string name="supported_documents_title">Supported Documents</string>
-    <string name="supported_sides_title">Supported Sides</string>
     <string name="result_with_face_image_title">Result with Face Image</string>
     <string name="anonymization_mode_title">Anonymization Mode</string>
     <string name="id_captured_feedback">ID Captured Feedback</string>
     <string name="id_rejected_feedback">ID Rejected Feedback</string>
-    <string name="id_capture_timeout_feedback">ID Capture Timeout Feedback</string>
     <string name="reject_voided_ids">Reject voided IDs</string>
     <string name="decode_back_of_european_driving_license">Decode back of European driver\'s licenses</string>
+    <string name="id_capture_scanner_title">Scanner</string>
+    <string name="id_capture_accepted_documents_title">Accepted documents</string>
+    <string name="id_capture_rejected_documents_title">Rejected documents</string>
+    <string name="id_capture_regions_title">Regions</string>
+    <string name="id_capture_subtypes_title">Subtypes</string>
+    <string name="id_capture_any_region">Any region</string>
+    <string name="id_capture_any_subtype">Any subtype</string>
+    <string name="id_capture_subtype_enable_all_title">Enable all</string>
+    <string name="id_capture_subtype_disable_all_title">Disable all</string>
+    <string name="full_scanner">Full Scanner</string>
+    <string name="single_side_scanner">Single Side Scanner</string>
+    <string name="single_side_scanner_barcode">Barcode</string>
+    <string name="single_side_scanner_mrz">Machine Readable Zone</string>
+    <string name="single_side_scanner_viz">Visual Inspection Zone</string>
 
     <string name="camera_category_title">Camera</string>
     <string name="camera_position_title">Camera Position</string>

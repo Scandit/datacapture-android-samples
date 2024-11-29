@@ -79,20 +79,20 @@ public final class FindScanFragment extends Fragment {
     @NotNull
     @Override
     public View onCreateView(
-            @NonNull LayoutInflater inflater,
-            @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState
+        @NonNull LayoutInflater inflater,
+        @Nullable ViewGroup container,
+        @Nullable Bundle savedInstanceState
     ) {
         ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_find, container, false);
 
         // The BarcodeFindView will automatically be added to the root view when created.
         barcodeFindView = BarcodeFindView.newInstance(
-                root,
-                viewModel.dataCaptureContext,
-                viewModel.getBarcodeFind(),
-                // With the BarcodeFindViewSettings, we can defined haptic and sound feedback,
-                // as well as change the visual feedback for found barcodes.
-                new BarcodeFindViewSettings()
+            root,
+            viewModel.dataCaptureContext,
+            viewModel.getBarcodeFind(),
+            // With the BarcodeFindViewSettings, we can defined haptic and sound feedback,
+            // as well as change the visual feedback for found barcodes.
+            new BarcodeFindViewSettings()
         );
 
         return root;

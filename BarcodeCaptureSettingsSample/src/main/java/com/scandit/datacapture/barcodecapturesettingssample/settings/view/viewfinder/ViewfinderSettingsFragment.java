@@ -53,6 +53,7 @@ import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderLineStyle
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderStyle;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ViewfinderSettingsFragment extends NavigationFragment
@@ -553,12 +554,8 @@ public class ViewfinderSettingsFragment extends NavigationFragment
     }
 
     private RectangularViewfinderStyle[] getUsableRectangularViewfinderStyles() {
-        List<RectangularViewfinderStyle> result = new ArrayList();
-        for (RectangularViewfinderStyle value : RectangularViewfinderStyle.values()) {
-            if (value != RectangularViewfinderStyle.LEGACY) {
-                result.add(value);
-            }
-        }
+        List<RectangularViewfinderStyle> result = new ArrayList<>();
+        Collections.addAll(result, RectangularViewfinderStyle.values());
         return result.toArray(new RectangularViewfinderStyle[]{});
     }
 

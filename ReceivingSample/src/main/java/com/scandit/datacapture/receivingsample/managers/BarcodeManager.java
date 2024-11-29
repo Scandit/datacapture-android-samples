@@ -16,7 +16,6 @@ package com.scandit.datacapture.receivingsample.managers;
 
 import com.scandit.datacapture.barcode.count.capture.BarcodeCountSession;
 import com.scandit.datacapture.barcode.data.Barcode;
-import com.scandit.datacapture.barcode.tracking.data.TrackedBarcode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,9 +48,7 @@ public class BarcodeManager {
     // Update lists of barcodes with the contents of the current session.
     public void updateWithSession(BarcodeCountSession session) {
         scannedBarcodes.clear();
-        for (TrackedBarcode trackedBarcode : session.getRecognizedBarcodes().values()) {
-            scannedBarcodes.add(trackedBarcode.getBarcode());
-        }
+        scannedBarcodes.addAll(session.getRecognizedBarcodes());
 
         additionalBarcodes.clear();
         additionalBarcodes.addAll(session.getAdditionalBarcodes());

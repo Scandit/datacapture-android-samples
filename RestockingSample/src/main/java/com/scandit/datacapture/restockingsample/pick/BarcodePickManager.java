@@ -28,6 +28,7 @@ import com.scandit.datacapture.barcode.pick.data.BarcodePickProductProvider;
 import com.scandit.datacapture.barcode.pick.ui.BarcodePickView;
 import com.scandit.datacapture.barcode.pick.ui.BarcodePickViewSettings;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
+import com.scandit.datacapture.restockingsample.BuildConfig;
 import com.scandit.datacapture.restockingsample.products.ProductManager;
 
 import java.util.Set;
@@ -37,13 +38,10 @@ import java.util.Set;
  */
 public class BarcodePickManager {
 
-    /**
-     * There is a Scandit sample license key set below here.
-     * This license key is enabled for sample evaluation only.
-     * If you want to build your own application, get your license key by signing up for a trial
-     * at <a href="https://ssl.scandit.com/dashboard/sign-up?p=test">scandit.com/dashboard/sign-up</a>
-     */
-    private static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
+    // Add your license key to `secrets.properties` and it will be automatically added to the BuildConfig field
+    // `BuildConfig.SCANDIT_LICENSE_KEY`
+    public static final String SCANDIT_LICENSE_KEY = BuildConfig.SCANDIT_LICENSE_KEY;
+
     private static BarcodePickManager sharedInstance;
 
     @NonNull

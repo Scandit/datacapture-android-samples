@@ -38,29 +38,20 @@ public class CaptureResult implements Parcelable {
     private final ArrayList<Entry> entries;
 
     @Nullable private final byte[] faceImageBytes;
-    @Nullable private final byte[] verificationImageBytes;
 
-    private boolean isExpired;
-    private boolean isFrontBackComparisonSuccessful;
-    private AamvaBarcodeVerificationStatus aamvaBarcodeVerificationStatus;
-    private boolean isShownLicenseWarning;
+    private final boolean isExpired;
+    private final AamvaBarcodeVerificationStatus aamvaBarcodeVerificationStatus;
 
     public CaptureResult(
             Collection<Entry> entries,
             @Nullable byte[] faceImageBytes,
             boolean isExpired,
-            boolean isFrontBackComparisonSuccessful,
-            AamvaBarcodeVerificationStatus aamvaBarcodeVerificationStatus,
-            @Nullable byte[] verificationImageBytes,
-            boolean isShownLicenseWarning
+            AamvaBarcodeVerificationStatus aamvaBarcodeVerificationStatus
     ) {
         this.entries = new ArrayList<>(entries);
         this.faceImageBytes = faceImageBytes;
         this.isExpired = isExpired;
-        this.isFrontBackComparisonSuccessful = isFrontBackComparisonSuccessful;
         this.aamvaBarcodeVerificationStatus = aamvaBarcodeVerificationStatus;
-        this.verificationImageBytes = verificationImageBytes;
-        this.isShownLicenseWarning = isShownLicenseWarning;
     }
 
     public ArrayList<Entry> getEntries() {
@@ -72,25 +63,12 @@ public class CaptureResult implements Parcelable {
         return faceImageBytes;
     }
 
-    @Nullable
-    public byte[] getVerificationImageBytes() {
-        return verificationImageBytes;
-    }
-
     public boolean isExpired() {
         return isExpired;
     }
 
-    public boolean isFrontBackComparisonSuccessful() {
-        return isFrontBackComparisonSuccessful;
-    }
-
     public AamvaBarcodeVerificationStatus getAamvaBarcodeVerificationStatus() {
         return aamvaBarcodeVerificationStatus;
-    }
-
-    public boolean isShownLicenseWarning() {
-        return isShownLicenseWarning;
     }
 
     private CaptureResult(Parcel in) {
@@ -100,12 +78,7 @@ public class CaptureResult implements Parcelable {
         faceImageBytes = new byte[faceImageBytesSize];
         in.readByteArray(faceImageBytes);
         isExpired = in.readInt() == 1;
-        isFrontBackComparisonSuccessful = in.readInt() == 1;
         aamvaBarcodeVerificationStatus = AamvaBarcodeVerificationStatus.valueOf(in.readString());
-        int verificationImageBytesSize = in.readInt();
-        verificationImageBytes = new byte[verificationImageBytesSize];
-        in.readByteArray(verificationImageBytes);
-        isShownLicenseWarning = in.readInt() == 1;
     }
 
     @Override
@@ -117,13 +90,7 @@ public class CaptureResult implements Parcelable {
             dest.writeByteArray(faceImageBytes);
         }
         dest.writeInt(isExpired ? 1 : 0);
-        dest.writeInt(isFrontBackComparisonSuccessful ? 1 : 0);
         dest.writeString(aamvaBarcodeVerificationStatus.toString());
-        if (verificationImageBytes != null) {
-            dest.writeInt(verificationImageBytes.length);
-            dest.writeByteArray(verificationImageBytes);
-        }
-        dest.writeInt(isShownLicenseWarning ? 1 : 0);
     }
 
     @Override

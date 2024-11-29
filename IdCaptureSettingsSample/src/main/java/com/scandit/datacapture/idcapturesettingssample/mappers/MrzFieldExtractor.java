@@ -37,11 +37,29 @@ public final class MrzFieldExtractor extends FieldExtractor {
     public List<CaptureResult.Entry> extract() {
         List<CaptureResult.Entry> result = new ArrayList<>();
 
-        result.add(new CaptureResult.Entry("Captured MRZ", extractField(mrzResult.getCapturedMrz().trim())));
         result.add(new CaptureResult.Entry("Document Code", extractField(mrzResult.getDocumentCode())));
-        result.add(new CaptureResult.Entry("Names Are Truncated", extractField(mrzResult.getNamesAreTruncated())));
+        result.add(new CaptureResult.Entry("Names are Truncated", extractField(mrzResult.getNamesAreTruncated())));
         result.add(new CaptureResult.Entry("Optional", extractField(mrzResult.getOptional())));
-        result.add(new CaptureResult.Entry("Optional1", extractField(mrzResult.getOptional1())));
+        result.add(new CaptureResult.Entry("Optional 1", extractField(mrzResult.getOptional1())));
+        result.add(new CaptureResult.Entry("Captured MRZ", extractField(mrzResult.getCapturedMrz().trim())));
+        result.add(new CaptureResult.Entry(
+                "Personal ID Number", extractField(mrzResult.getPersonalIdNumber())));
+        result.add(new CaptureResult.Entry(
+                "Passport Number", extractField(mrzResult.getPassportNumber())));
+        result.add(new CaptureResult.Entry(
+                "Passport Issuer ISO", extractField(mrzResult.getPassportIssuerIso())));
+        result.add(new CaptureResult.Entry(
+                "Passport Date of Expiry", extractField(mrzResult.getPassportDateOfExpiry())));
+        result.add(new CaptureResult.Entry(
+                "Renewal Times", extractField(mrzResult.getRenewalTimes())));
+        result.add(new CaptureResult.Entry("Full Name Simplified Chinese",
+                extractField(mrzResult.getFullNameSimplifiedChinese())));
+        result.add(new CaptureResult.Entry("Omitted Character Count in GBK Name",
+                extractField(mrzResult.getOmittedCharacterCountInGbkName())));
+        result.add(new CaptureResult.Entry(
+                "Omitted Name Count", extractField(mrzResult.getOmittedNameCount())));
+        result.add(new CaptureResult.Entry(
+                "Issuing Authority Code", extractField(mrzResult.getIssuingAuthorityCode())));
 
         return result;
     }

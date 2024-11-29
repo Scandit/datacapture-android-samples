@@ -44,7 +44,7 @@ import com.scandit.datacapture.searchandfindsample.find.FindScanFragment;
 import org.jetbrains.annotations.NotNull;
 
 public final class SearchScanFragment extends CameraPermissionFragment
-        implements SearchScanViewModel.Listener {
+    implements SearchScanViewModel.Listener {
 
     public static SearchScanFragment newInstance() {
         return new SearchScanFragment();
@@ -65,18 +65,18 @@ public final class SearchScanFragment extends CameraPermissionFragment
     @NotNull
     @Override
     public View onCreateView(
-            @NonNull LayoutInflater inflater,
-            @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState
+        @NonNull LayoutInflater inflater,
+        @Nullable ViewGroup container,
+        @Nullable Bundle savedInstanceState
     ) {
         CoordinatorLayout root =
-                (CoordinatorLayout) inflater.inflate(R.layout.fragment_search, container, false);
+            (CoordinatorLayout) inflater.inflate(R.layout.fragment_search, container, false);
         DataCaptureView dataCaptureView = createAndSetupDataCaptureView();
 
         // We put the dataCaptureView in its container.
         ViewGroup scannerContainer = root.findViewById(R.id.scanner_container);
         scannerContainer.addView(dataCaptureView,
-                new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+            new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
         View containerScannedCode = root.findViewById(R.id.container_scanned_code);
         behavior = BottomSheetBehavior.from(containerScannedCode);
@@ -93,14 +93,14 @@ public final class SearchScanFragment extends CameraPermissionFragment
         // setup a data capture view that renders the camera preview.
         // The view must be connected to the data capture context.
         DataCaptureView view = DataCaptureView.newInstance(
-                requireContext(), viewModel.dataCaptureContext
+            requireContext(), viewModel.dataCaptureContext
         );
 
         // Add a barcode capture overlay to the data capture view to set a viewfinder UI.
         BarcodeCaptureOverlay overlay = BarcodeCaptureOverlay.newInstance(
-                viewModel.barcodeCapture,
-                view,
-                BarcodeCaptureOverlayStyle.FRAME
+            viewModel.barcodeCapture,
+            view,
+            BarcodeCaptureOverlayStyle.FRAME
         );
         view.addOverlay(overlay);
 
@@ -156,10 +156,10 @@ public final class SearchScanFragment extends CameraPermissionFragment
     public void goToFind(Barcode barcodeToFind) {
         hideResult();
         requireActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, FindScanFragment.newInstance(barcodeToFind))
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .addToBackStack(null)
-                .commit();
+            .replace(R.id.fragment_container, FindScanFragment.newInstance(barcodeToFind))
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            .addToBackStack(null)
+            .commit();
     }
 
     private void resumeFrameSource() {
@@ -192,19 +192,19 @@ public final class SearchScanFragment extends CameraPermissionFragment
     }
 
     private final BottomSheetBehavior.BottomSheetCallback sheetCallback =
-            new BottomSheetBehavior.BottomSheetCallback() {
-                @Override
-                public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                    if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                        buttonSearch.setClickable(true);
-                    } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                        buttonSearch.setClickable(false);
-                    }
+        new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    buttonSearch.setClickable(true);
+                } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    buttonSearch.setClickable(false);
                 }
+            }
 
-                @Override
-                public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                    // Nothing to do.
-                }
-            };
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                // Nothing to do.
+            }
+        };
 }

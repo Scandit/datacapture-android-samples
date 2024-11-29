@@ -81,8 +81,6 @@ ID Scanning Samples demonstrate the features of the ID Capture API and demonstra
 
 **Barcode Capture Settings Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/BarcodeCaptureSettingsSample))
 
-**Barcode Capture Views Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/BarcodeCaptureViewsSample))
-
 ### MatrixScan AR Samples
 
 **MatrixScan Simple Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/MatrixScanSimpleSample))
@@ -92,6 +90,10 @@ ID Scanning Samples demonstrate the features of the ID Capture API and demonstra
 **MatrixScan Reject Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/MatrixScanRejectSample))
 
 **Inventory Audit Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/InventoryAuditSample))
+
+### Label Capture Samples
+
+**PriceWeightLabelCaptureSample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/PriceWeightLabelCaptureSample))
 
 ## Samples on Other Frameworks
 
@@ -104,6 +106,13 @@ The Scandit Data Capture SDK documentation can be found here: [Android](https://
 ## Sample Barcodes
 
 Once you get the sample up and running, go find some barcodes to scan. Don’t feel like getting up from your desk? Here’s a [handy pdf of barcodes](https://github.com/Scandit/.github/blob/main/images/PrintTheseBarcodes.pdf) you can print out.
+
+## Installation
+
+- Clone this repo locally.
+- Sign in to your Developer Account at [ssl.scandit.com](http://ssl.scandit.com) and generate a license key.  If you do not have an account, sign up here: [https://ssl.scandit.com/dashboard/sign-up?p=test](https://ssl.scandit.com/dashboard/sign-up?p=test).
+- Open `secrets.properties` and set the value of `SCANDIT_LICENSE_KEY` to your license key in place of the placeholder `YOUR_SCANDIT_LICENSE_KEY`.
+- Build and run the desired sample on your mobile device.
 
 ## Trial Signup
 

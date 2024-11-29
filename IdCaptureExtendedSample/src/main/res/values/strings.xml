@@ -7,5 +7,6 @@
     <string name="ok">OK</string>
     <string name="scan_result">Scan Result</string>
     <string name="result_button_resume">Resume</string>
-    <string name="document_not_supported_message">Document not supported</string>
+    <string name="rejected_document_not_supported_message">Document not supported. Try scanning another document</string>
+    <string name="rejected_document_timeout_message">Document capture failed. Make sure the document is well lit and free of glare. Alternatively, try scanning another document</string>
 </resources>

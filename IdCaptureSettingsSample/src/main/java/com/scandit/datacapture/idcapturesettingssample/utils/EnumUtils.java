@@ -17,9 +17,9 @@ package com.scandit.datacapture.idcapturesettingssample.utils;
 import java.util.Arrays;
 
 public class EnumUtils {
-    public static String[] getEntryNamesTitleCase(Enum[] enums) {
+    public static String[] getEntryNamesNameCase(Enum[] enums) {
         return Arrays.stream(getEntryNames(enums))
-                .map(StringUtils::toTitleCase)
+                .map(StringUtils::toNameCase)
                 .toArray(String[]::new);
     }
 

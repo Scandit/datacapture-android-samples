@@ -25,7 +25,7 @@ import com.scandit.datacapture.barcode.count.ui.view.status.BarcodeCountStatusPr
 import com.scandit.datacapture.barcode.count.ui.view.status.BarcodeCountStatusProviderCallback;
 import com.scandit.datacapture.barcode.count.ui.view.status.BarcodeCountStatusResult;
 import com.scandit.datacapture.barcode.count.ui.view.status.BarcodeCountStatusResultSuccess;
-import com.scandit.datacapture.barcode.tracking.data.TrackedBarcode;
+import com.scandit.datacapture.barcode.batch.data.TrackedBarcode;
 import com.scandit.datacapture.expirymanagementsample.R;
 import com.scandit.datacapture.expirymanagementsample.managers.BarcodeManager;
 

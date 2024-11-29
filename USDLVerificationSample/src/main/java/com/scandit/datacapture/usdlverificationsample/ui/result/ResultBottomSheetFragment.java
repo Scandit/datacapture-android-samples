@@ -10,13 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -40,9 +40,6 @@ public class ResultBottomSheetFragment extends BottomSheetDialogFragment {
 
     private ResultListAdapter adapter;
     private ImageView userImage;
-    private ImageView verificationImage;
-
-    private TextView warningText;
 
     private LinearLayout verificationSuccessLayout;
     private LinearLayout verificationErrorLayout;
@@ -89,8 +86,6 @@ public class ResultBottomSheetFragment extends BottomSheetDialogFragment {
 
         RecyclerView recyclerResult = root.findViewById(R.id.scanning_results_recycler_view);
         userImage = root.findViewById(R.id.user_image);
-        verificationImage = root.findViewById(R.id.verification_image);
-        warningText = root.findViewById(R.id.license_warning_text);
         verificationSuccessLayout = root.findViewById(R.id.verification_success_layout);
         verificationErrorLayout = root.findViewById(R.id.verification_error_layout);
         ImageView closeButton = root.findViewById(R.id.close_button);
@@ -103,6 +98,9 @@ public class ResultBottomSheetFragment extends BottomSheetDialogFragment {
          */
         adapter = new ResultListAdapter();
         recyclerResult.setAdapter(adapter);
+        recyclerResult.addItemDecoration(
+                new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
+        );
 
         return root;
     }
@@ -138,9 +136,6 @@ public class ResultBottomSheetFragment extends BottomSheetDialogFragment {
         adapter.submitList(result.getEntries());
 
         renderFaceImage(result);
-        renderVerificationImage(result);
-        renderLicenseWarning(result);
-
         renderVerificationResult(result);
     }
 
@@ -152,28 +147,6 @@ public class ResultBottomSheetFragment extends BottomSheetDialogFragment {
             userImage.setImageBitmap(convertBytesToImage(result.getFaceImageBytes()));
         } else {
             userImage.setVisibility(View.GONE);
-        }
-    }
-
-    /**
-     * Display the verification image extracted from the document.
-     */
-    private void renderVerificationImage(CaptureResult result) {
-        if (result.getVerificationImageBytes() != null) {
-            verificationImage.setImageBitmap(convertBytesToImage(result.getVerificationImageBytes()));
-        } else {
-            verificationImage.setVisibility(View.GONE);
-        }
-    }
-
-    /**
-     * Display the verification license warning text.
-     */
-    private void renderLicenseWarning(CaptureResult result) {
-        if (result.isShownLicenseWarning()) {
-            warningText.setVisibility(View.VISIBLE);
-        } else {
-            warningText.setVisibility(View.GONE);
         }
     }
 
@@ -191,27 +164,13 @@ public class ResultBottomSheetFragment extends BottomSheetDialogFragment {
         /*
          * Displays the expiration state of the document
          */
-        if (result.isFrontBackComparisonSuccessful()) {
-            VerificationResultItemView expirationView = new VerificationResultItemView(getContext());
-            if (result.isExpired()) {
-                expirationView.setData(errorIcon, R.string.scanning_dl_expired);
-                verificationErrorLayout.addView(expirationView);
-            } else {
-                expirationView.setData(successIcon, R.string.scanning_dl_not_expired);
-                verificationSuccessLayout.addView(expirationView);
-            }
-        }
-
-        /*
-         * Displays the front / back comparison state of the document
-         */
-        VerificationResultItemView comparisonView = new VerificationResultItemView(getContext());
-        if (result.isFrontBackComparisonSuccessful()) {
-            comparisonView.setData(successIcon, R.string.scanning_dl_front_back_comparison_success);
-            verificationSuccessLayout.addView(comparisonView);
+        VerificationResultItemView expirationView = new VerificationResultItemView(getContext());
+        if (result.isExpired()) {
+            expirationView.setData(errorIcon, R.string.scanning_dl_expired);
+            verificationErrorLayout.addView(expirationView);
         } else {
-            comparisonView.setData(errorIcon, R.string.scanning_dl_front_back_comparison_failure);
-            verificationErrorLayout.addView(comparisonView);
+            expirationView.setData(successIcon, R.string.scanning_dl_not_expired);
+            verificationSuccessLayout.addView(expirationView);
         }
 
         /*

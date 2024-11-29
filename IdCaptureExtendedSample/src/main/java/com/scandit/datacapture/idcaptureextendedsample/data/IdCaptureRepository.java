@@ -15,31 +15,42 @@
 package com.scandit.datacapture.idcaptureextendedsample.data;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.scandit.datacapture.core.capture.DataCaptureContext;
-import com.scandit.datacapture.core.data.FrameData;
+import com.scandit.datacapture.id.capture.DriverLicense;
 import com.scandit.datacapture.id.capture.IdCapture;
+import com.scandit.datacapture.id.capture.IdCaptureDocument;
 import com.scandit.datacapture.id.capture.IdCaptureListener;
-import com.scandit.datacapture.id.capture.IdCaptureSession;
 import com.scandit.datacapture.id.capture.IdCaptureSettings;
+import com.scandit.datacapture.id.capture.IdCard;
+import com.scandit.datacapture.id.capture.Passport;
+import com.scandit.datacapture.id.capture.SingleSideScanner;
 import com.scandit.datacapture.id.data.CapturedId;
-import com.scandit.datacapture.id.data.CapturedResultType;
-import com.scandit.datacapture.id.data.IdDocumentType;
+import com.scandit.datacapture.id.data.IdCaptureRegion;
 import com.scandit.datacapture.id.data.IdImageType;
-import com.scandit.datacapture.id.data.SupportedSides;
+import com.scandit.datacapture.id.data.RejectionReason;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 import com.scandit.datacapture.idcaptureextendedsample.ui.scan.CapturedIdEvent;
 import com.scandit.datacapture.idcaptureextendedsample.ui.scan.RejectedIdEvent;
 
-import org.jetbrains.annotations.NotNull;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * The repository to interact with the IdCapture mode.
  */
 public class IdCaptureRepository implements IdCaptureListener {
+
+    private static final List<IdCaptureDocument> ACCEPTED_DOCUMENTS = Arrays.asList(
+            new IdCard(IdCaptureRegion.ANY),
+            new DriverLicense(IdCaptureRegion.ANY),
+            new Passport(IdCaptureRegion.ANY)
+    );
+
     /**
      * The stream of IdCaptureOverlays. IdCaptureOverlay provides UI to aid the user in the
      * capture process. It needs to attached to DataCaptureView..
@@ -153,16 +164,9 @@ public class IdCaptureRepository implements IdCaptureListener {
      */
     private IdCaptureSettings getBarcodeSettings() {
         IdCaptureSettings settings = new IdCaptureSettings();
-        settings.setShouldPassImageTypeToResult(IdImageType.FACE, true);
-        settings.setSupportedDocuments(
-                IdDocumentType.AAMVA_BARCODE,
-                IdDocumentType.ARGENTINA_ID_BARCODE,
-                IdDocumentType.COLOMBIA_DL_BARCODE,
-                IdDocumentType.COLOMBIA_ID_BARCODE,
-                IdDocumentType.SOUTH_AFRICA_DL_BARCODE,
-                IdDocumentType.SOUTH_AFRICA_ID_BARCODE,
-                IdDocumentType.US_US_ID_BARCODE
-        );
+        settings.setAcceptedDocuments(ACCEPTED_DOCUMENTS);
+        settings.setScannerType(new SingleSideScanner(true, false, false));
+
         return settings;
     }
 
@@ -171,17 +175,9 @@ public class IdCaptureRepository implements IdCaptureListener {
      */
     private IdCaptureSettings getMrzSettings() {
         IdCaptureSettings settings = new IdCaptureSettings();
-        settings.setSupportedDocuments(
-                IdDocumentType.ID_CARD_MRZ,
-                IdDocumentType.PASSPORT_MRZ,
-                IdDocumentType.VISA_MRZ,
-                IdDocumentType.SWISS_DL_MRZ,
-                IdDocumentType.CHINA_MAINLAND_TRAVEL_PERMIT_MRZ,
-                IdDocumentType.CHINA_EXIT_ENTRY_PERMIT_MRZ,
-                IdDocumentType.CHINA_ONE_WAY_PERMIT_BACK_MRZ,
-                IdDocumentType.CHINA_ONE_WAY_PERMIT_FRONT_MRZ,
-                IdDocumentType.APEC_BUSINESS_TRAVEL_CARD_MRZ
-        );
+        settings.setAcceptedDocuments(ACCEPTED_DOCUMENTS);
+        settings.setScannerType(new SingleSideScanner(false, true, false));
+
         return settings;
     }
 
@@ -191,14 +187,10 @@ public class IdCaptureRepository implements IdCaptureListener {
      */
     private IdCaptureSettings getVizSettings() {
         IdCaptureSettings settings = new IdCaptureSettings();
-        settings.setSupportedSides(SupportedSides.FRONT_AND_BACK);
-        settings.setShouldPassImageTypeToResult(IdImageType.FACE, true);
-        settings.setShouldPassImageTypeToResult(IdImageType.ID_FRONT, true);
-        settings.setShouldPassImageTypeToResult(IdImageType.ID_BACK, true);
-        settings.setSupportedDocuments(
-                IdDocumentType.ID_CARD_VIZ,
-                IdDocumentType.DL_VIZ
-        );
+        settings.setAcceptedDocuments(ACCEPTED_DOCUMENTS);
+        settings.setScannerType(new SingleSideScanner(false, false, true));
+        settings.setShouldPassImageTypeToResult(IdImageType.CROPPED_DOCUMENT, true);
+
         return settings;
     }
 
@@ -219,25 +211,12 @@ public class IdCaptureRepository implements IdCaptureListener {
 
     @Override
     @WorkerThread
-    public void onIdCaptured(
-            @NotNull IdCapture mode,
-            @NotNull IdCaptureSession session,
-            @NotNull FrameData data
-    ) {
-        CapturedId capturedId = session.getNewlyCapturedId();
-        boolean isCaptureComplete = capturedId != null &&
-                capturedId.getCapturedResultType() != CapturedResultType.VIZ_RESULT ||
-                        capturedId.getViz().getCapturedSides() != SupportedSides.FRONT_ONLY ||
-                        !capturedId.getViz().isBackSideCaptureSupported();
-
+    public void onIdCaptured(@NonNull IdCapture mode, @NonNull CapturedId id) {
         /*
-         * Disable ID capture if the captured document is complete. It's important to disable ID
-         * capture as soon as possible to avoid capturing other documents while the result is
-         * displayed.
+         * Disable ID capture. It's important to disable ID capture as soon as possible to avoid
+         * capturing other documents while the result is displayed.
          */
-        if (isCaptureComplete) {
-            disableIdCapture();
-        }
+        disableIdCapture();
         /*
          * Implement to handle data captured from personal identification documents or their
          * elements like a barcode or the Machine Readable Zone (MRZ).
@@ -245,79 +224,33 @@ public class IdCaptureRepository implements IdCaptureListener {
          * This callback is executed on the background thread. We post the value to the LiveData
          * in order to return to the UI thread.
          */
-        capturedIds.postValue(new CapturedIdEvent(capturedId));
-    }
-
-    @Override
-    @WorkerThread
-    public void onIdLocalized(
-            @NotNull IdCapture mode,
-            @NotNull IdCaptureSession session,
-            @NotNull FrameData data
-    ) {
-        /*
-         * Implement to handle a personal identification document or its part localized within
-         * a frame. A document or its part is considered localized when it's detected in a frame,
-         * but its data is not yet extracted.
-         *
-         * In this sample we are not interested in this callback.
-         */
+        capturedIds.postValue(new CapturedIdEvent(id));
     }
 
     @Override
     @WorkerThread
     public void onIdRejected(
-            @NotNull IdCapture mode,
-            @NotNull IdCaptureSession session,
-            @NotNull FrameData data
+            @NonNull IdCapture mode,
+            @Nullable CapturedId id,
+            @NonNull RejectionReason reason
     ) {
+        /*
+         * Disable ID capture. It's important to disable ID capture as soon as possible to avoid
+         * capturing other documents while the rejection dialog is displayed.
+         */
+        disableIdCapture();
+
         /*
          * Implement to handle documents recognized in a frame, but rejected.
          * A document or its part is considered rejected when:
-         *   (a) it's a valid document, but its type is not enabled in the settings,
-         *   (b) it's a barcode of a correct symbology, but the data is encoded in an unexpected format,
-         *   (c) it's Machine Readable Zone (MRZ), but the data is encoded in an unexpected format.
+         *   (a) it's a valid personal identification document, but not enabled in the settings,
+         *   (b) it's a PDF417 barcode or a Machine Readable Zone (MRZ), but the data is encoded in an unexpected format,
+         *   (c) it's a voided document and rejectVoidedIds is enabled in the settings,
+         *   (d) the document has been localized, but could not be captured within a period of time.
          *
          * This callback is executed on the background thread. We post the value to the LiveData
          * in order to return to the UI thread.
          */
-        rejectedIds.postValue(new RejectedIdEvent(session.getNewlyRejectedId()));
-    }
-
-    @Override
-    @WorkerThread
-    public void onIdCaptureTimedOut(
-            @NonNull IdCapture mode,
-            @NonNull IdCaptureSession session,
-            @NonNull FrameData data
-    ) {
-        /*
-         * Implement to handle documents that were localized, but could not be captured within a period of time.
-         *
-         * In this sample we are not interested in this callback.
-         */
-    }
-
-    @Override
-    @WorkerThread
-    public void onErrorEncountered(
-            @NotNull IdCapture mode,
-            @NotNull Throwable error,
-            @NotNull IdCaptureSession session,
-            @NotNull FrameData data
-    ) {
-        // In this sample, we are not interested in this callback.
-    }
-
-    @Override
-    @WorkerThread
-    public void onObservationStarted(@NotNull IdCapture mode) {
-        // In this sample, we are not interested in this callback.
-    }
-
-    @Override
-    @WorkerThread
-    public void onObservationStopped(@NotNull IdCapture mode) {
-        // In this sample, we are not interested in this callback.
+        rejectedIds.postValue(new RejectedIdEvent(reason));
     }
 }

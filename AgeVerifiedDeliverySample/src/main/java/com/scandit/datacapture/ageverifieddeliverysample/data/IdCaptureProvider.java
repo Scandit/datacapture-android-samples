@@ -16,10 +16,15 @@ package com.scandit.datacapture.ageverifieddeliverysample.data;
 
 import com.scandit.datacapture.core.common.feedback.Feedback;
 import com.scandit.datacapture.core.common.feedback.Vibration;
+import com.scandit.datacapture.id.capture.DriverLicense;
 import com.scandit.datacapture.id.capture.IdCapture;
+import com.scandit.datacapture.id.capture.IdCaptureDocument;
 import com.scandit.datacapture.id.capture.IdCaptureFeedback;
 import com.scandit.datacapture.id.capture.IdCaptureSettings;
-import com.scandit.datacapture.id.data.IdDocumentType;
+import com.scandit.datacapture.id.capture.IdCard;
+import com.scandit.datacapture.id.capture.Passport;
+import com.scandit.datacapture.id.capture.SingleSideScanner;
+import com.scandit.datacapture.id.data.IdCaptureRegion;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 
 import java.util.Arrays;
@@ -29,6 +34,13 @@ import java.util.List;
  * The provider of the IdCapture-related singletons.
  */
 public class IdCaptureProvider {
+
+    private static final List<IdCaptureDocument> ACCEPTED_DOCUMENTS = Arrays.asList(
+            new IdCard(IdCaptureRegion.ANY),
+            new DriverLicense(IdCaptureRegion.ANY),
+            new Passport(IdCaptureRegion.ANY)
+    );
+
     /**
      * The current IdCapture.
      */
@@ -79,7 +91,9 @@ public class IdCaptureProvider {
      */
     private IdCaptureSettings createIdCaptureSettings() {
         IdCaptureSettings settings = new IdCaptureSettings();
-        settings.setSupportedDocuments(ID_SUPPORTED_DOCUMENT_TYPES);
+        settings.setAcceptedDocuments(ACCEPTED_DOCUMENTS);
+        settings.setScannerType(new SingleSideScanner(true, true, true));
+
         return settings;
     }
 
@@ -101,14 +115,4 @@ public class IdCaptureProvider {
         ));
         return feedback;
     }
-
-    private static final List<IdDocumentType> ID_SUPPORTED_DOCUMENT_TYPES =
-            Arrays.asList(
-                    IdDocumentType.AAMVA_BARCODE,
-                    IdDocumentType.DL_VIZ,
-                    IdDocumentType.ID_CARD_MRZ,
-                    IdDocumentType.ID_CARD_VIZ,
-                    IdDocumentType.PASSPORT_MRZ,
-                    IdDocumentType.US_US_ID_BARCODE
-            );
 }

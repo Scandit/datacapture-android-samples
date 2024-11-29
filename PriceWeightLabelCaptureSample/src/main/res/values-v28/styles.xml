@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="BolderTextAppearance" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textFontWeight">500</item>
+    </style>
+</resources>

@@ -28,6 +28,11 @@
 
 package com.scandit.datacapture.idcapturesettingssample.data;
 
+import com.scandit.datacapture.id.data.IdCaptureDocumentType;
+import com.scandit.datacapture.id.data.IdCaptureRegion;
+import com.scandit.datacapture.id.data.RegionSpecificSubtype;
+import com.scandit.datacapture.idcapturesettingssample.ui.settings.idcapture.documents.DocumentSelectionType;
+
 /*
  * Class containing programmatically accessible keys.
  */
@@ -35,14 +40,33 @@ public final class Keys {
 
     // IdCapture.
     public final static String FACE_IMAGE = "face_image";
-    public final static String SUPPORTED_SIDES = "supported_sides";
-    public final static String SUPPORTED_DOCUMENTS = "supported_documents";
     public final static String ANONYMIZATION_MODE = "anonymization_mode";
     public final static String ID_CAPTURED_FEEDBACK = "id_captured_feedback";
     public final static String ID_REJECTED_FEEDBACK = "id_rejected_feedback";
-    public final static String ID_CAPTURE_TIMEOUT_FEEDBACK = "id_capture_timeout_feedback";
     public final static String REJECT_VOIDED_IDS = "reject_voided_ids";
     public final static String DECODE_BACK_OF_EUROPEAN_DRIVING_LICENSE = "decode_back_of_european_driving_license";
+    public final static String FULL_SCANNER = "full_scanner";
+    public final static String SINGLE_SIDE_SCANNER_BARCODE = "single_side_scanner_barcode";
+    public final static String SINGLE_SIDE_SCANNER_MRZ = "single_side_scanner_mrz";
+    public final static String SINGLE_SIDE_SCANNER_VIZ = "single_side_scanner_viz";
+
+    public static String getDocumentTypeKey(IdCaptureDocumentType type, DocumentSelectionType documentSelectionType) {
+        return type.name() + "-" + documentSelectionType.name();
+    }
+
+    public static String getDocumentDetailsKey(IdCaptureDocumentType type, DocumentSelectionType documentSelectionType) {
+        return type.name() + "-" + documentSelectionType.name() + "-details";
+    }
+
+    public static String getDocumentRegionKey(IdCaptureDocumentType type, IdCaptureRegion region, DocumentSelectionType documentSelectionType) {
+        return type.name() + "-" + region.name() + "-" + documentSelectionType.name();
+    }
+
+    public static String getSubtypeKey(RegionSpecificSubtype subtype, DocumentSelectionType documentSelectionType) {
+        return subtype.name() + "-" + documentSelectionType.name();
+    }
+    public final static String ID_SUBTYPE_ENABLE_ALL = "id_subtype_enable_all";
+    public final static String ID_SUBTYPE_DISABLE_ALL = "id_subtype_disable_all";
 
     // Camera.
     public final static String CAMERA_POSITION = "camera_position";

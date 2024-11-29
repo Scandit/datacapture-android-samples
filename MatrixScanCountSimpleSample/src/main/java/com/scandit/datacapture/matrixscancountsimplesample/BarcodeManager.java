@@ -17,7 +17,6 @@ package com.scandit.datacapture.matrixscancountsimplesample;
 import com.scandit.datacapture.barcode.count.capture.BarcodeCount;
 import com.scandit.datacapture.barcode.count.capture.BarcodeCountSession;
 import com.scandit.datacapture.barcode.data.Barcode;
-import com.scandit.datacapture.barcode.tracking.data.TrackedBarcode;
 import com.scandit.datacapture.matrixscancountsimplesample.data.ScanDetails;
 
 import java.lang.ref.WeakReference;
@@ -40,7 +39,7 @@ public class BarcodeManager {
         return sharedInstance;
     }
 
-    private Collection<TrackedBarcode> scannedBarcodes = new ArrayList<>();
+    private Collection<Barcode> scannedBarcodes = new ArrayList<>();
     private Collection<Barcode> additionalBarcodes = new ArrayList<>();
 
     private WeakReference<BarcodeCount> barcodeCount;
@@ -51,7 +50,7 @@ public class BarcodeManager {
 
     // Update lists of barcodes with the contents of the current session.
     public void updateWithSession(BarcodeCountSession session) {
-        scannedBarcodes = session.getRecognizedBarcodes().values();
+        scannedBarcodes = session.getRecognizedBarcodes();
         additionalBarcodes = session.getAdditionalBarcodes();
     }
 
@@ -60,10 +59,7 @@ public class BarcodeManager {
     public void loadAllBarcodesAsAdditionalBarcodes() {
         List<Barcode> barcodesToLoad = new ArrayList<>();
 
-        for (TrackedBarcode barcode : scannedBarcodes) {
-            barcodesToLoad.add(barcode.getBarcode());
-        }
-
+        barcodesToLoad.addAll(scannedBarcodes);
         barcodesToLoad.addAll(additionalBarcodes);
         if (barcodeCount.get() != null) {
             barcodeCount.get().setAdditionalBarcodes(barcodesToLoad);
@@ -74,9 +70,9 @@ public class BarcodeManager {
     public HashMap<String, ScanDetails> getScanResults() {
         HashMap<String, ScanDetails> scanResults = new HashMap<>();
 
-        // Add the inner Barcode objects of each scanned TrackedBarcode to the results map.
-        for (TrackedBarcode trackedBarcode : scannedBarcodes) {
-            addBarcodeToResultsMap(trackedBarcode.getBarcode(), scanResults);
+        // Add the scanned Barcode objects to the results map.
+        for (Barcode barcode : scannedBarcodes) {
+            addBarcodeToResultsMap(barcode, scanResults);
         }
 
         // Add the previously saved Barcode objects to the results map.

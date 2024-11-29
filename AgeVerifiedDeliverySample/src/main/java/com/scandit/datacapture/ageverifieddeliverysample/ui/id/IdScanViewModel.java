@@ -18,6 +18,7 @@ import static com.scandit.datacapture.ageverifieddeliverysample.ui.verificationr
 import static com.scandit.datacapture.ageverifieddeliverysample.ui.verificationresult.failure.VerificationFailureReason.HOLDER_UNDERAGE;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -27,17 +28,13 @@ import androidx.lifecycle.ViewModel;
 import com.scandit.datacapture.ageverifieddeliverysample.data.CameraRepository;
 import com.scandit.datacapture.ageverifieddeliverysample.di.Injector;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
-import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.id.capture.IdCapture;
 import com.scandit.datacapture.id.capture.IdCaptureFeedback;
 import com.scandit.datacapture.id.capture.IdCaptureListener;
-import com.scandit.datacapture.id.capture.IdCaptureSession;
 import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.DateResult;
-import com.scandit.datacapture.id.data.RejectedId;
+import com.scandit.datacapture.id.data.RejectionReason;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -102,7 +99,8 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
     private final MutableLiveData<GoToManualEntry> goToManualEntry = new MutableLiveData<>();
 
     /**
-     * Events to display the UI that informs the user that the given ID or MRZ is detected, but cannot
+     * Events to display the UI that informs the user that the given ID or MRZ is detected, but
+     * cannot
      * be parsed.
      */
     private final MutableLiveData<GoToTimeoutDialog> goToFirstTimeoutDialog =
@@ -116,7 +114,8 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
             new MutableLiveData<>();
 
     /**
-     * Events to display the UI that informs the user that the recipient's document data verification failed
+     * Events to display the UI that informs the user that the recipient's document data
+     * verification failed
      * and explains the reason. That UI allows either to retry the capture process or to refuse
      * the delivery entirely.
      */
@@ -124,7 +123,8 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
             new MutableLiveData<>();
 
     /**
-     * Events to display the UI that informs the user that the recipient's document data verification was
+     * Events to display the UI that informs the user that the recipient's document data
+     * verification was
      * successful and allows to proceed with the delivery.
      */
     private final MutableLiveData<GoToVerificationSuccess> goToVerificationSuccess =
@@ -137,8 +137,8 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
             new MutableLiveData<>();
 
     /**
-     * Events to display the UI that informs the user that the document can be captured, but it is
-     * not supported.
+     * Events to display the UI that informs the user that the document has been rejected because
+     * it is not supported.
      */
     private final MutableLiveData<GoToUnsupportedDocument> goToUnsupportedDocument =
             new MutableLiveData<>();
@@ -201,7 +201,8 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
     }
 
     /**
-     * Events to display the UI that informs the user that the given ID or MRZ is detected, but cannot
+     * Events to display the UI that informs the user that the given ID or MRZ is detected, but
+     * cannot
      * be parsed.
      */
     public LiveData<GoToTimeoutDialog> goToFirstTimeoutDialog() {
@@ -217,7 +218,8 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
     }
 
     /**
-     * Events to display the UI that informs the user that the recipient's document data verification failed
+     * Events to display the UI that informs the user that the recipient's document data
+     * verification failed
      * and explains the reason. That UI allows either to retry the capture process or to refuse
      * the delivery entirely.
      */
@@ -226,7 +228,8 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
     }
 
     /**
-     * Events to display the UI that informs the user that the recipient's document data verification was
+     * Events to display the UI that informs the user that the recipient's document data
+     * verification was
      * successful and allows to proceed with the delivery.
      */
     public LiveData<GoToVerificationSuccess> goToVerificationSuccess() {
@@ -241,8 +244,8 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
     }
 
     /**
-     * Events to display the UI that informs the user that the document can be captured, but it is
-     * not supported.
+     * Events to display the UI that informs the user that the document has been rejected because
+     * it is not supported.
      */
     public LiveData<GoToUnsupportedDocument> goToUnsupportedDocument() {
         return goToUnsupportedDocument;
@@ -256,7 +259,8 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
     }
 
     /**
-     * The user will attempt the enter the recipient's document data manually. Display the proper UI.
+     * The user will attempt the enter the recipient's document data manually. Display the proper
+     * UI.
      */
     public void onManualEntrySelected() {
         pauseCapture();
@@ -290,23 +294,18 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
      */
     @Override
     @WorkerThread
-    public void onIdCaptured(
-            @NotNull IdCapture mode,
-            @NotNull IdCaptureSession session,
-            @NotNull FrameData data
-    ) {
-        CapturedId capturedId = session.getNewlyCapturedId();
+    public void onIdCaptured(@NonNull IdCapture mode, @NonNull CapturedId id) {
         pauseCapture();
 
         /*
          * The recipient's date of birth is necessary to verify if they are not underage.
          */
-        if (isDateOfBirthCaptured(capturedId)) {
+        if (isDateOfBirthCaptured(id)) {
             /*
              * The callback is executed in the background thread. We post the value to the LiveData
              * in order to return to the UI thread.
              */
-            capturedIds.postValue(session.getNewlyCapturedId());
+            capturedIds.postValue(id);
         } else {
             // Reject documents that do not include a date of birth.
             rejectUnsupportedDocument();
@@ -316,7 +315,7 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
     private void rejectUnsupportedDocument() {
         // Emit the feedback for a rejected document.
         feedback.getIdRejected().emit();
-        // Display the UI that informs the user that the document can be captured, but it is
+        // Display the UI that informs the user that the document has been rejected because it is
         // not supported.
         goToUnsupportedDocument.postValue(new GoToUnsupportedDocument());
     }
@@ -417,10 +416,6 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
      * * to enter the data manually otherwise
      */
     private void handleIdCaptureTimeout() {
-        // Emit the feedback for an ID capture timeout.
-        feedback.getIdCaptureTimeout().emit();
-
-        pauseCapture();
         int timeoutCount = uiState.getTimeoutCount() + 1;
         uiState = uiState.toBuilder()
                 .timeoutCount(timeoutCount)
@@ -436,69 +431,28 @@ public class IdScanViewModel extends ViewModel implements IdCaptureListener {
         uiStates.postValue(uiState);
     }
 
-    /**
-     * We detected a document, but couldn't extract the data yet. Show a pop-up to inform
-     * the user that they may attempt to try another method of entering the data:
-     * * to capture the front of card if they are trying to capture the barcode
-     * * to enter the data manually otherwise
-     */
-    @Override
-    @WorkerThread
-    public void onIdCaptureTimedOut(
-            @NonNull IdCapture mode,
-            @NonNull IdCaptureSession session,
-            @NonNull FrameData data
-    ) {
-        handleIdCaptureTimeout();
-    }
-
     @Override
     @WorkerThread
     public void onIdRejected(
-            @NotNull IdCapture mode,
-            @NotNull IdCaptureSession session,
-            @NotNull FrameData data
+            @NonNull IdCapture mode,
+            @Nullable CapturedId id,
+            @NonNull RejectionReason reason
     ) {
         /*
          * Implement to handle documents recognized in a frame, but rejected.
          * A document or its part is considered rejected when:
-         *   (a) it's a valid personal identification document, but not enabled in the settings.
-         *   (b) it's a PDF417 barcode, but the data is encoded in an unexpected format.
+         *   (a) it's a valid personal identification document, but not enabled in the settings,
+         *   (b) it's a PDF417 barcode or a Machine Readable Zone (MRZ), but the data is encoded
+         * in an unexpected format,
+         *   (c) it's a voided document and rejectVoidedIds is enabled in the settings,
+         *   (d) the document has been localized, but could not be captured within a period of time.
          */
         pauseCapture();
-        rejectUnsupportedDocument();
-    }
 
-    @Override
-    @WorkerThread
-    public void onIdLocalized(
-            @NotNull IdCapture mode,
-            @NotNull IdCaptureSession session,
-            @NotNull FrameData data
-    ) {
-        // Not interested in this callback.
-    }
-
-    @Override
-    @WorkerThread
-    public void onErrorEncountered(
-            @NotNull IdCapture mode,
-            @NotNull Throwable error,
-            @NotNull IdCaptureSession session,
-            @NotNull FrameData data
-    ) {
-        // Not interested in this callback.
-    }
-
-    @Override
-    @WorkerThread
-    public void onObservationStarted(@NotNull IdCapture mode) {
-        // Not interested in this callback.
-    }
-
-    @Override
-    @WorkerThread
-    public void onObservationStopped(@NotNull IdCapture mode) {
-        // Not interested in this callback.
+        if (reason == RejectionReason.TIMEOUT) {
+            handleIdCaptureTimeout();
+        } else {
+            rejectUnsupportedDocument();
+        }
     }
 }

@@ -18,6 +18,7 @@ import android.content.Context;
 import android.text.InputFilter;
 import android.text.InputType;
 
+import androidx.preference.CheckBoxPreference;
 import androidx.preference.DropDownPreference;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
@@ -58,6 +59,20 @@ public class PreferenceBuilder {
            boolean defaultValue
    ) {
       SwitchPreferenceCompat preference = new SwitchPreferenceCompat(context);
+      preference.setIconSpaceReserved(false);
+      preference.setKey(key);
+      preference.setTitle(title);
+      preference.setDefaultValue(defaultValue);
+      return preference;
+   }
+
+   public static CheckBoxPreference checkbox(
+           Context context,
+           String key,
+           String title,
+           boolean defaultValue
+   ) {
+      CheckBoxPreference preference = new CheckBoxPreference(context);
       preference.setIconSpaceReserved(false);
       preference.setKey(key);
       preference.setTitle(title);
@@ -239,7 +254,7 @@ public class PreferenceBuilder {
       @Override
       public CharSequence provideSummary(MultiSelectListPreference preference) {
          Set<String> values = preference.getValues()
-                 .stream().map(StringUtils::toTitleCase).collect(Collectors.toSet());
+                 .stream().map(StringUtils::toNameCase).collect(Collectors.toSet());
 
          if (values.isEmpty()) {
             return preference.getContext().getString(R.string.settings_value_none);

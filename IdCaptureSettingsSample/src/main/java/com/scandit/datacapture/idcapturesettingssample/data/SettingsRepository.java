@@ -33,20 +33,32 @@ import com.scandit.datacapture.core.source.VideoResolution;
 import com.scandit.datacapture.core.ui.gesture.FocusGesture;
 import com.scandit.datacapture.core.ui.gesture.TapToFocus;
 import com.scandit.datacapture.core.ui.style.Brush;
+import com.scandit.datacapture.id.capture.DriverLicense;
+import com.scandit.datacapture.id.capture.HealthInsuranceCard;
+import com.scandit.datacapture.id.capture.IdCaptureDocument;
 import com.scandit.datacapture.id.capture.IdCaptureFeedback;
+import com.scandit.datacapture.id.capture.IdCard;
+import com.scandit.datacapture.id.capture.Passport;
+import com.scandit.datacapture.id.capture.RegionSpecific;
+import com.scandit.datacapture.id.capture.ResidencePermit;
+import com.scandit.datacapture.id.capture.VisaIcao;
 import com.scandit.datacapture.id.data.IdAnonymizationMode;
-import com.scandit.datacapture.id.data.IdDocumentType;
+import com.scandit.datacapture.id.data.IdCaptureDocumentType;
+import com.scandit.datacapture.id.data.IdCaptureRegion;
 import com.scandit.datacapture.id.data.IdImageType;
-import com.scandit.datacapture.id.data.SupportedSides;
+import com.scandit.datacapture.id.data.RegionSpecificSubtype;
 import com.scandit.datacapture.id.ui.IdLayoutLineStyle;
 import com.scandit.datacapture.id.ui.IdLayoutStyle;
 import com.scandit.datacapture.id.ui.TextHintPosition;
 import com.scandit.datacapture.idcapturesettingssample.ui.BrushStyle;
+import com.scandit.datacapture.idcapturesettingssample.ui.settings.idcapture.documents.DocumentSelectionPreferenceUtils;
+import com.scandit.datacapture.idcapturesettingssample.ui.settings.idcapture.documents.DocumentSelectionType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * The repository to store and retrieve settings. For this sample, the preference values are stored
@@ -54,8 +66,10 @@ import java.util.stream.Collectors;
  */
 public class SettingsRepository extends PreferenceDataStore {
 
-    @ColorInt private static final int RED = Color.parseColor("#FFFF0000");
-    @ColorInt private static final int GREEN = Color.parseColor("#FF00FF00");
+    @ColorInt
+    private static final int RED = Color.parseColor("#FFFF0000");
+    @ColorInt
+    private static final int GREEN = Color.parseColor("#FF00FF00");
 
     private final HashMap<String, Object> entries = new HashMap<>();
 
@@ -152,13 +166,74 @@ public class SettingsRepository extends PreferenceDataStore {
     }
 
     /*
-     * Retrieves from settings the supported documents for IdCapture that have been enabled.
+     * Retrieves from settings the selected accepted documents.
      */
-    public Set<IdDocumentType> getSupportedDocuments() {
-        Set<String> documentEntries = getStringSet(Keys.SUPPORTED_DOCUMENTS, null);
-        return documentEntries.stream()
-                .map(IdDocumentType::valueOf)
-                .collect(Collectors.toSet());
+    public List<IdCaptureDocument> getAcceptedDocuments() {
+        return getSelectedDocuments(DocumentSelectionType.ACCEPTED);
+    }
+
+    /*
+     * Retrieves from settings the selected rejected documents.
+     */
+    public List<IdCaptureDocument> getRejectedDocuments() {
+        return getSelectedDocuments(DocumentSelectionType.REJECTED);
+    }
+
+    /*
+     * Retrieves from settings the selected documents with the specified DocumentSelectionType.
+     */
+    private List<IdCaptureDocument> getSelectedDocuments(
+            DocumentSelectionType documentSelectionType) {
+        List<IdCaptureDocument> selectedDocuments = new ArrayList<>();
+        List<IdCaptureDocumentType> selectedDocumentTypes =
+                DocumentSelectionPreferenceUtils.getSelectedDocumentTypes(this,
+                        documentSelectionType);
+
+        for (IdCaptureDocumentType documentType : selectedDocumentTypes) {
+            if (documentType == IdCaptureDocumentType.REGION_SPECIFIC) {
+                List<RegionSpecificSubtype> selectedSubtypes =
+                        DocumentSelectionPreferenceUtils.getSelectedSubtypes(this,
+                                documentSelectionType);
+
+                for (RegionSpecificSubtype subtype : selectedSubtypes) {
+                    selectedDocuments.add(new RegionSpecific(subtype));
+                }
+            } else {
+                List<IdCaptureRegion> selectedRegions =
+                        DocumentSelectionPreferenceUtils.getSelectedRegions(this,
+                                documentType, documentSelectionType);
+
+                for (IdCaptureRegion region : selectedRegions) {
+                    IdCaptureDocument document = createDocument(documentType, region);
+
+                    if (document != null) {
+                        selectedDocuments.add(document);
+                    }
+                }
+            }
+        }
+
+        return selectedDocuments;
+    }
+
+    // Creates an IdCaptureDocument from a document type and a region.
+    private IdCaptureDocument createDocument(IdCaptureDocumentType documentType, IdCaptureRegion region) {
+        switch (documentType) {
+            case ID_CARD:
+                return new IdCard(region);
+            case DRIVER_LICENSE:
+                return new DriverLicense(region);
+            case PASSPORT:
+                return new Passport(region);
+            case VISA_ICAO:
+                return new VisaIcao(region);
+            case RESIDENCE_PERMIT:
+                return new ResidencePermit(region);
+            case HEALTH_INSURANCE_CARD:
+                return new HealthInsuranceCard(region);
+            default:
+                return null;
+        }
     }
 
     /*
@@ -167,25 +242,36 @@ public class SettingsRepository extends PreferenceDataStore {
      */
     public boolean getShouldPassImageForType(IdImageType type) {
         switch (type) {
-            case FACE: return getBoolean(Keys.FACE_IMAGE, Defaults.isFaceImageEnabled());
-            case ID_FRONT:
-            case ID_BACK:
+            case FACE:
+                return getBoolean(Keys.FACE_IMAGE, Defaults.isFaceImageEnabled());
+            case CROPPED_DOCUMENT:
                 return true;
             default:
-                throw new AssertionError("Unknown IdImageType: " + type);
+                return false;
         }
     }
 
-    /*
-     * Retrieves from settings whether the given  type should passed to the IdCapture result.
-     */
-    public SupportedSides getSupportedSides() {
-        String supportedSides = getString(Keys.SUPPORTED_SIDES, null);
-        if (supportedSides == null) {
-            return Defaults.getDefaultSupportedSides();
-        } else {
-            return SupportedSides.valueOf(supportedSides);
-        }
+    // Retrieves from settings whether the full scanner is enabled.
+    public boolean isFullScannerEnabled() {
+        return getBoolean(Keys.FULL_SCANNER, Defaults.isFullScannerEnabled());
+    }
+
+    // Retrieves from settings whether barcode scanning is enabled in single side scanner.
+    public boolean isSingleSideScannerBarcodeEnabled() {
+        return getBoolean(Keys.SINGLE_SIDE_SCANNER_BARCODE,
+                Defaults.isSingleSideScannerBarcodeEnabled());
+    }
+
+    // Retrieves from settings whether Machine Readable Zone scanning is enabled in single side
+    // scanner.
+    public boolean isSingleSideScannerMrzEnabled() {
+        return getBoolean(Keys.SINGLE_SIDE_SCANNER_MRZ, Defaults.isSingleSideScannerMrzEnabled());
+    }
+
+    // Retrieves from settings whether Visual Inspection Zone scanning is enabled in single side
+    // scanner.
+    public boolean isSingleSideScannerVizEnabled() {
+        return getBoolean(Keys.SINGLE_SIDE_SCANNER_VIZ, Defaults.isSingleSideScannerVizEnabled());
     }
 
     /*
@@ -215,10 +301,12 @@ public class SettingsRepository extends PreferenceDataStore {
      * of European driver's licenses.
      */
     public boolean shouldDecodeBackOfEuropeanDrivingLicense() {
-        return getBoolean(Keys.DECODE_BACK_OF_EUROPEAN_DRIVING_LICENSE, Defaults.shouldDecodeBackOfEuropeanDrivingLicense());
+        return getBoolean(Keys.DECODE_BACK_OF_EUROPEAN_DRIVING_LICENSE,
+                Defaults.shouldDecodeBackOfEuropeanDrivingLicense());
     }
 
-    private Feedback buildFeedbackFromChoice(@Nullable String selected, Vibration vibration, Sound sound) {
+    private Feedback buildFeedbackFromChoice(@Nullable String selected, Vibration vibration,
+                                             Sound sound) {
         if (selected == null)
             return new Feedback(null, null);
         FeedbackType selectedFeedbackType = FeedbackType.valueOf(selected);
@@ -253,13 +341,6 @@ public class SettingsRepository extends PreferenceDataStore {
                 IdCaptureFeedback.defaultFailureSound()
         );
         result.setIdRejected(idRejectedFeedback);
-
-        Feedback idCaptureTimeoutFeedback = buildFeedbackFromChoice(
-                getString(Keys.ID_CAPTURE_TIMEOUT_FEEDBACK, null),
-                Vibration.defaultVibration(),
-                IdCaptureFeedback.defaultFailureSound()
-        );
-        result.setIdCaptureTimeout(idCaptureTimeoutFeedback);
 
         return result;
     }
@@ -304,7 +385,7 @@ public class SettingsRepository extends PreferenceDataStore {
      * Sets the desired torch state in the settings.
      */
     public void setTorchState(boolean torchEnabled) {
-         putBoolean(Keys.TORCH_STATE, torchEnabled);
+        putBoolean(Keys.TORCH_STATE, torchEnabled);
     }
 
     /*
@@ -433,7 +514,8 @@ public class SettingsRepository extends PreferenceDataStore {
      * Retrieves from settings the focus gesture.
      */
     public FocusGesture getFocusGesture() {
-        boolean tapToFocusEnabled = getBoolean(Keys.TAP_TO_FOCUS, Defaults.getDefaultTapToFocusEnabled());
+        boolean tapToFocusEnabled =
+                getBoolean(Keys.TAP_TO_FOCUS, Defaults.getDefaultTapToFocusEnabled());
         if (tapToFocusEnabled) {
             return new TapToFocus();
         } else {

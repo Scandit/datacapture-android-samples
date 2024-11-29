@@ -30,10 +30,6 @@ import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.data.FrameData;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-
 /**
  * The view model for the screen where the user may capture the recipient's barcode.
  */
@@ -189,13 +185,13 @@ public class BarcodeScanViewModel extends ViewModel implements BarcodeCaptureLis
 
     @Override
     @WorkerThread
-    public void onObservationStarted(@NotNull BarcodeCapture mode) {
+    public void onObservationStarted(@NonNull BarcodeCapture mode) {
         // Not interested in this callback.
     }
 
     @Override
     @WorkerThread
-    public void onObservationStopped(@NotNull BarcodeCapture mode) {
+    public void onObservationStopped(@NonNull BarcodeCapture mode) {
         // Not interested in this callback.
     }
 }

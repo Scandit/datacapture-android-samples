@@ -27,7 +27,6 @@ import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlayStyle;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.data.FrameData;
-import com.scandit.datacapture.core.internal.module.source.NativeVideoAspectRatio;
 import com.scandit.datacapture.core.source.Camera;
 import com.scandit.datacapture.core.source.FrameSourceState;
 import com.scandit.datacapture.core.ui.DataCaptureView;
@@ -43,9 +42,9 @@ import static android.content.DialogInterface.OnClickListener;
 public class BarcodeScanActivity
         extends CameraPermissionActivity implements BarcodeCaptureListener {
 
-	// Enter your Scandit License key here.
-    // Your Scandit License key is available via your Scandit SDK web account.
-    public static final String SCANDIT_LICENSE_KEY = "-- ENTER YOUR SCANDIT LICENSE KEY HERE --";
+    // Add your license key to `secrets.properties` and it will be automatically added to the BuildConfig field
+    // `BuildConfig.SCANDIT_LICENSE_KEY`
+    public static final String SCANDIT_LICENSE_KEY = BuildConfig.SCANDIT_LICENSE_KEY;
 
     private DataCaptureContext dataCaptureContext;
     private BarcodeCapture barcodeCapture;
