@@ -89,7 +89,7 @@ public final class Defaults {
     }
 
     public static boolean isFullScannerEnabled() {
-        return true;
+        return false;
     }
     public static boolean isSingleSideScannerBarcodeEnabled() {
         return false;
