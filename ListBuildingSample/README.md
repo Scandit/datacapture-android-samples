@@ -17,7 +17,7 @@ The SparkScan UI incorporates our best practices for usability and has been rigo
 
 SparkScan is a camera-based solution for high-speed single scanning and scan-intensive workflows. It includes an out-of-the-box UI optimized for an efficient and frictionless worker experience.
 
-![SparkScan.png](https://github.com/Scandit/.github/blob/main/images/SparkScan%20-%20iOS.png)
+![SparkScan.png](https://github.com/Scandit/.github/blob/main/images/SparkScan.png)
 
 ## Documentation
 
