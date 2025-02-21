@@ -19,6 +19,9 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static androidx.core.content.ContextCompat.checkSelfPermission;
 
+import static com.scandit.datacapture.ageverifieddeliverysample.ui.verificationresult.failure.VerificationFailureReason.DOCUMENT_EXPIRED;
+import static com.scandit.datacapture.ageverifieddeliverysample.ui.verificationresult.failure.VerificationFailureReason.HOLDER_UNDERAGE;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,14 +41,13 @@ import androidx.lifecycle.ViewModelProvider;
 import com.scandit.datacapture.ageverifieddeliverysample.R;
 import com.scandit.datacapture.ageverifieddeliverysample.di.Injector;
 import com.scandit.datacapture.ageverifieddeliverysample.ui.barcode.BarcodeScanFragment;
-import com.scandit.datacapture.ageverifieddeliverysample.ui.manualentry.ManualEntryDialogFragment;
-import com.scandit.datacapture.ageverifieddeliverysample.ui.timeout.IdCaptureFirstTimeoutDialogFragment;
-import com.scandit.datacapture.ageverifieddeliverysample.ui.timeout.IdCaptureSubsequentTimeoutDialogFragment;
+import com.scandit.datacapture.ageverifieddeliverysample.ui.timeout.IdCaptureTimeoutDialogFragment;
 import com.scandit.datacapture.ageverifieddeliverysample.ui.verificationresult.failure.VerificationFailureDialogFragment;
 import com.scandit.datacapture.ageverifieddeliverysample.ui.verificationresult.failure.VerificationFailureReason;
 import com.scandit.datacapture.ageverifieddeliverysample.ui.verificationresult.success.VerificationSuccessDialogFragment;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.ui.DataCaptureView;
+import com.scandit.datacapture.id.data.RejectionReason;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 
 /**
@@ -177,17 +179,13 @@ public class IdScanFragment extends Fragment {
         /*
          * Observe the sequences of events in order to navigate to other screens or display dialogs.
          */
-        viewModel.goToManualEntry().observe(lifecycleOwner, this::goToManualEntry);
-        viewModel.goToFirstTimeoutDialog().observe(lifecycleOwner, this::goToFirstTimeoutDialog);
-        viewModel.goToSubsequentTimeoutDialog().observe(lifecycleOwner, this::goToSubsequentTimeoutDialog);
-        viewModel.goToVerificationFailure().observe(lifecycleOwner, this::goToVerificationFailure);
+        viewModel.goToRejectedDocumentDialog().observe(lifecycleOwner, this::goToRejectedDocumentDialog);
         viewModel.goToVerificationSuccess().observe(lifecycleOwner, this::goToVerificationSuccess);
         viewModel.goToBarcodeScanningScreen().observe(lifecycleOwner, event -> {
             if (!event.isHandled()) {
                 goToBarcodeScanningScreen();
             }
         });
-        viewModel.goToUnsupportedDocument().observe(lifecycleOwner, this::goToUnsupportedDocument);
     }
 
     @Override
@@ -219,7 +217,6 @@ public class IdScanFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
 
-        viewModel.removeIdCaptureMode();
         dataCaptureView = null;
         idCaptureOverlay = null;
     }
@@ -266,51 +263,25 @@ public class IdScanFragment extends Fragment {
     }
 
     /**
-     * Display the UI to manually enter the recipient's document data.
+     * Display the UI that informs the user that the given ID has been rejected.
      */
-    private void goToManualEntry(GoToManualEntry event) {
-        if (!event.isHandled() &&
-                getChildFragmentManager().findFragmentByTag(ManualEntryDialogFragment.TAG) ==
-                        null) {
-            ManualEntryDialogFragment.create()
-                    .show(getChildFragmentManager(), ManualEntryDialogFragment.TAG);
-        }
-    }
+    private void goToRejectedDocumentDialog(GoToRejectedDocumentDialog event) {
+        RejectionReason reason = event.getContentIfNotHandled();
 
-    /**
-     * Display the UI that informs the user that the given ID or MRZ is detected, but cannot be parsed.
-     */
-    private void goToFirstTimeoutDialog(GoToTimeoutDialog event) {
-        if (!event.isHandled() && getChildFragmentManager().findFragmentByTag(
-                IdCaptureFirstTimeoutDialogFragment.TAG) == null) {
-            IdCaptureFirstTimeoutDialogFragment.create()
-                    .show(getChildFragmentManager(), IdCaptureFirstTimeoutDialogFragment.TAG);
-        }
-    }
-
-    /**
-     * Display the UI that informs the user another time that the given ID or MRZ is detected,
-     * but cannot be parsed.
-     */
-    private void goToSubsequentTimeoutDialog(GoToSubsequentTimeoutDialog event) {
-        if (!event.isHandled() && getChildFragmentManager().findFragmentByTag(
-                IdCaptureSubsequentTimeoutDialogFragment.TAG) == null) {
-            IdCaptureSubsequentTimeoutDialogFragment.create()
-                    .show(getChildFragmentManager(), IdCaptureSubsequentTimeoutDialogFragment.TAG);
-
-        }
-    }
-
-    /**
-     * Display the UI that informs the user that the recipient's document data verification failed.
-     */
-    private void goToVerificationFailure(GoToVerificationFailure event) {
-        VerificationFailureReason reason = event.getContentIfNotHandled();
-
-        if (reason != null && getChildFragmentManager().findFragmentByTag(
-                VerificationFailureDialogFragment.TAG) == null) {
-            VerificationFailureDialogFragment.create(reason)
-                    .show(getChildFragmentManager(), VerificationFailureDialogFragment.TAG);
+        if (reason != null) {
+            switch (reason) {
+                case DOCUMENT_EXPIRED:
+                    goToVerificationFailure(DOCUMENT_EXPIRED);
+                    break;
+                case HOLDER_UNDERAGE:
+                    goToVerificationFailure(HOLDER_UNDERAGE);
+                    break;
+                case TIMEOUT:
+                    goToTimeoutDialog();
+                    break;
+                default:
+                    goToUnsupportedDocument();
+            }
         }
     }
 
@@ -343,12 +314,31 @@ public class IdScanFragment extends Fragment {
     }
 
     /**
+     * Display the UI that informs the user that the recipient's document data verification failed.
+     */
+    private void goToVerificationFailure(VerificationFailureReason reason) {
+        if (getChildFragmentManager().findFragmentByTag(VerificationFailureDialogFragment.TAG) == null) {
+            VerificationFailureDialogFragment.create(reason)
+                    .show(getChildFragmentManager(), VerificationFailureDialogFragment.TAG);
+        }
+    }
+
+    /**
+     * Display the UI that informs the user that the given ID or MRZ is detected, but cannot be parsed.
+     */
+    private void goToTimeoutDialog() {
+        if (getChildFragmentManager().findFragmentByTag(IdCaptureTimeoutDialogFragment.TAG) == null) {
+            IdCaptureTimeoutDialogFragment.create()
+                    .show(getChildFragmentManager(), IdCaptureTimeoutDialogFragment.TAG);
+        }
+    }
+
+    /**
      * Display the UI that informs the user that the document has been rejected because
      * it is not supported.
      */
-    private void goToUnsupportedDocument(GoToUnsupportedDocument event) {
-        if (!event.isHandled() && getChildFragmentManager().findFragmentByTag(
-                UnsupportedDocumentDialogFragment.TAG) == null) {
+    private void goToUnsupportedDocument() {
+        if (getChildFragmentManager().findFragmentByTag(UnsupportedDocumentDialogFragment.TAG) == null) {
             UnsupportedDocumentDialogFragment.create()
                     .show(getChildFragmentManager(), UnsupportedDocumentDialogFragment.TAG);
         }

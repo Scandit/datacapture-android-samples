@@ -138,6 +138,27 @@ public class SettingsRepository extends PreferenceDataStore {
         }
     }
 
+    public @Nullable Integer getNullableInteger(String key, @Nullable Integer defValue) {
+        if (!entries.containsKey(key)) {
+            return defValue;
+        }
+
+        String stringValue = getString(key, defValue != null ? defValue.toString() : null);
+
+        Integer integerValue;
+        if (stringValue != null) {
+            try {
+                integerValue = Integer.parseInt(stringValue);
+            } catch (Exception e) {
+                integerValue = null;
+            }
+        } else {
+            integerValue = null;
+        }
+
+        return integerValue;
+    }
+
     @Override
     public long getLong(String key, long defValue) {
         if (entries.containsKey(key)) {
@@ -288,6 +309,15 @@ public class SettingsRepository extends PreferenceDataStore {
     }
 
     /*
+     * Retrieves from settings whether extra information should be extracted from the back side
+     * of European driver's licenses.
+     */
+    public boolean shouldDecodeBackOfEuropeanDrivingLicense() {
+        return getBoolean(Keys.DECODE_BACK_OF_EUROPEAN_DRIVING_LICENSE,
+                Defaults.shouldDecodeBackOfEuropeanDrivingLicense());
+    }
+
+    /*
      * Retrieves from settings whether voided IDs should be rejected. This feature has been
      * primarily developed for US Driver’s Licenses, the results might not be accurate when
      * scanning other document types.
@@ -297,12 +327,47 @@ public class SettingsRepository extends PreferenceDataStore {
     }
 
     /*
-     * Retrieves from settings whether extra information should be extracted from the back side
-     * of European driver's licenses.
+     * Retrieves from settings whether expired IDs should be rejected.
      */
-    public boolean shouldDecodeBackOfEuropeanDrivingLicense() {
-        return getBoolean(Keys.DECODE_BACK_OF_EUROPEAN_DRIVING_LICENSE,
-                Defaults.shouldDecodeBackOfEuropeanDrivingLicense());
+    public boolean shouldRejectExpiredIds() {
+        return getBoolean(Keys.REJECT_EXPIRED_IDS, Defaults.shouldRejectExpiredIds());
+    }
+
+    /*
+     * Retrieves from settings whether IDs expiring within the specified number of days
+     * should be rejected.
+     */
+    public @Nullable Integer shouldRejectIdsExpiringInDays() {
+        return getNullableInteger(Keys.REJECT_IDS_EXPIRING_IN_DAYS, Defaults.shouldRejectIdsExpiringInDays());
+    }
+
+    /*
+     * Retrieves from settings whether not Real ID compliant should be rejected.
+     */
+    public boolean shouldRejectNotRealIdCompliant() {
+        return getBoolean(Keys.REJECT_NOT_REAL_ID_COMPLIANT, Defaults.shouldRejectNotRealIdCompliant());
+    }
+
+    /*
+     * Retrieves from settings whether forged AAMVA barcodes should be rejected.
+     */
+    public boolean shouldRejectForgedAamvaBarcodes() {
+        return getBoolean(Keys.REJECT_FORGED_AAMVA_BARCODES, Defaults.shouldRejectForgedAamvaBarcodes());
+    }
+
+    /*
+     * Retrieves from settings whether IDs with inconsistent data should be rejected.
+     */
+    public boolean shouldRejectInconsistentData() {
+        return getBoolean(Keys.REJECT_INCONSISTENT_DATA, Defaults.shouldRejectInconsistentData());
+    }
+
+    /*
+     * Retrieves from settings whether IDs whose holder is below the specified age
+     * should be rejected.
+     */
+    public @Nullable Integer shouldRejectHolderBelowAge() {
+        return getNullableInteger(Keys.REJECT_HOLDER_BELOW_AGE, Defaults.shouldRejectHolderBelowAge());
     }
 
     private Feedback buildFeedbackFromChoice(@Nullable String selected, Vibration vibration,

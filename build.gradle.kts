@@ -6,8 +6,9 @@ import java.util.Properties
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    val sdk: Map<String, Int> by extra(
+    val sdk: Map<String, Any> by extra(
         mapOf(
+            "ndk" to "27.0.12077973",
             "min" to 23,
             "target" to 33,
             "compile" to 33
@@ -16,9 +17,9 @@ buildscript {
 
     val versions: Map<String, Any> by extra(
         mapOf(
-            // The value of scandit_sdk_version is updated automatically in the prepare-release.py script, please do not edit manually.
-            "scandit_sdk_version" to "7.0.2",
-            "android_gradle" to "8.1.0",
+            // The value of scandit_sdk_version is updated automatically in the bump_sdc_version.py script, please do not edit manually.
+            "scandit_sdk_version" to "7.1.0",
+            "android_gradle" to "8.5.1",
             "android_material" to "1.6.1",
             "androidx_animations" to "1.0.0",
             "androidx_appcompat" to "1.3.1",
@@ -88,29 +89,28 @@ subprojects {
             defaultConfig {
                 val properties = Properties()
                 val secretsPropertiesFile = project.parent!!.file("secrets.properties")
+                val licenseKey = getLicenseKey(secretsPropertiesFile, properties)
 
-                if (secretsPropertiesFile.exists()) {
-                    properties.load(FileInputStream(secretsPropertiesFile))
-                    val licenseKey = properties.getProperty("SCANDIT_LICENSE_KEY").orEmpty()
-                    buildConfigField(
-                        "String", "SCANDIT_LICENSE_KEY",
-                        "\"$licenseKey\""
-                    )
+                buildConfigField(
+                    "String", "SCANDIT_LICENSE_KEY",
+                    "\"$licenseKey\""
+                )
 
-                    if (licenseKey == "YOUR_SCANDIT_LICENSE_KEY") {
-                        throw GradleException(
-                            "Make sure to set the value of SCANDIT_LICENSE_KEY property to" +
-                                    " your license key in 'secrets.properties' file."
-                        )
-                    }
-                } else {
+                if (licenseKey == "YOUR_SCANDIT_LICENSE_KEY") {
                     throw GradleException(
-                        "The file 'secrets.properties' is missing. Make sure " +
-                                "that this file exists at the root of the project and set the" +
-                                "value of SCANDIT_LICENSE_KEY property to your license key."
+                        "Make sure to set the value of SCANDIT_LICENSE_KEY property to" +
+                                " your license key in 'secrets.properties' file."
                     )
                 }
             }
         }
     }
 }
+
+fun getLicenseKey(secretsPropertiesFile: File, properties: Properties) =
+    if (secretsPropertiesFile.exists()) {
+        properties.load(FileInputStream(secretsPropertiesFile))
+        properties.getProperty("SCANDIT_LICENSE_KEY").orEmpty()
+    } else {
+        ""
+    }

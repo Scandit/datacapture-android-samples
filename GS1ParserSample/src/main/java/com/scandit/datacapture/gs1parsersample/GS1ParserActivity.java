@@ -139,7 +139,7 @@ public class GS1ParserActivity
     @Override
     protected void onDestroy() {
         barcodeCapture.removeListener(this);
-        dataCaptureContext.removeMode(barcodeCapture);
+        dataCaptureContext.removeCurrentMode();
         super.onDestroy();
     }
 

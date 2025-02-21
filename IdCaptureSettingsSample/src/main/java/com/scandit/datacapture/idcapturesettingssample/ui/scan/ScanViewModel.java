@@ -22,6 +22,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.scandit.datacapture.core.ui.DataCaptureView;
+import com.scandit.datacapture.id.data.RejectionReason;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 import com.scandit.datacapture.idcapturesettingssample.data.CameraRepository;
 import com.scandit.datacapture.idcapturesettingssample.data.DataCaptureViewRepository;
@@ -56,10 +57,20 @@ public class ScanViewModel extends ViewModel {
     private final Observer<ScanResultEvent> scanResultsObserver = this::displayCapturedResult;
 
     /**
+     * The observer of captured document data.
+     */
+    private final Observer<RejectedIdEvent> rejectedIdsObserver = this::displayRejectedId;
+
+    /**
      * Events to display the UI with the details of a captured personal
      * identification document data.
      */
     private final MutableLiveData<ShowCaptureResultEvent> showCaptureResult = new MutableLiveData<>();
+
+    /**
+     * Events to display the UI with the rejection reason.
+     */
+    private final MutableLiveData<ShowRejectionReasonEvent> showRejectionReason = new MutableLiveData<>();
 
     /**
      * Events to display a non-blocking UI with some of the captured personal
@@ -67,12 +78,18 @@ public class ScanViewModel extends ViewModel {
      */
     private final MutableLiveData<ShowCaptureResultToastEvent> showToastResult = new MutableLiveData<>();
 
+    /**
+     * Events to display a non-blocking UI with the rejection reason.
+     */
+    private final MutableLiveData<ShowRejectionReasonToastEvent> showRejectionReasonToast = new MutableLiveData<>();
+
     public ScanViewModel() {
 
         /*
          * Observe the results stream and forward it to the fragment.
          */
         idCaptureRepository.scanResults().observeForever(scanResultsObserver);
+        idCaptureRepository.rejectedIds().observeForever(rejectedIdsObserver);
     }
 
     @Override
@@ -81,6 +98,7 @@ public class ScanViewModel extends ViewModel {
          * Stop observing the streams of the lower layer and the timer events to avoid memory leak.
          */
         idCaptureRepository.scanResults().removeObserver(scanResultsObserver);
+        idCaptureRepository.rejectedIds().removeObserver(rejectedIdsObserver);
     }
 
     /**
@@ -97,6 +115,20 @@ public class ScanViewModel extends ViewModel {
      */
     public LiveData<ShowCaptureResultToastEvent> showCapturedResultToast() {
         return showToastResult;
+    }
+
+    /**
+     * Events to display the UI with the rejection reason.
+     */
+    public LiveData<ShowRejectionReasonEvent> showRejectionReason() {
+        return showRejectionReason;
+    }
+
+    /**
+     * Events to display the UI with a Toast containing the rejection reason.
+     */
+    public LiveData<ShowRejectionReasonToastEvent> showRejectionReasonToast() {
+        return showRejectionReasonToast;
     }
 
     /**
@@ -191,6 +223,22 @@ public class ScanViewModel extends ViewModel {
             showToastResult.postValue(new ShowCaptureResultToastEvent(result));
         } else {
             showCaptureResult.postValue(new ShowCaptureResultEvent(result));
+        }
+    }
+
+    /**
+     * Display the UI with the rejection reason.
+     */
+    private void displayRejectedId(RejectedIdEvent event) {
+        RejectionReason reason = event.getContentIfNotHandled();
+
+        if (reason == null) return;
+
+        if (idCaptureRepository.isContinuousMode()) {
+            // Display the result in a non-blocking way, so the mode doesn't have to stop scanning.
+            showRejectionReasonToast.postValue(new ShowRejectionReasonToastEvent(reason));
+        } else {
+            showRejectionReason.postValue(new ShowRejectionReasonEvent(reason));
         }
     }
 }

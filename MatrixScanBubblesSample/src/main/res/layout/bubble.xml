@@ -13,8 +13,7 @@
  ~ limitations under the License.
  -->
 
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:visibility="invisible"
@@ -27,57 +26,56 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/image_stock_count"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/stock_count_with_background"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/shelf_container"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="vertical"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
             android:visibility="gone"
-            app:layout_constraintTop_toTopOf="@+id/image_stock_count"
-            app:layout_constraintBottom_toBottomOf="@+id/image_stock_count"
-            app:layout_constraintStart_toEndOf="@+id/image_stock_count"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:visibility="visible">
+            tools:visibility="visible"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
 
             <TextView
                 android:id="@+id/text_shelf_data_label"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/report_stock_count"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:gravity="center_horizontal" />
 
             <TextView
                 android:id="@+id/text_shelf_data"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="11sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                tools:text="Sheld: 8 Back room: 23"/>
+                tools:text="Shelf: 8 Back room: 23"
+                android:gravity="center_horizontal" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/text_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
             android:visibility="gone"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            app:layout_constraintTop_toTopOf="@+id/image_stock_count"
-            app:layout_constraintBottom_toBottomOf="@+id/image_stock_count"
-            app:layout_constraintStart_toEndOf="@+id/image_stock_count"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="8dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

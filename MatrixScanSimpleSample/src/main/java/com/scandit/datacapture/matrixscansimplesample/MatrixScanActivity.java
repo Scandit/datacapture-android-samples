@@ -214,7 +214,7 @@ public class MatrixScanActivity extends CameraPermissionActivity
 
     @Override
     protected void onDestroy() {
-        dataCaptureContext.removeMode(barcodeBatch);
+        dataCaptureContext.removeCurrentMode();
         super.onDestroy();
     }
 }

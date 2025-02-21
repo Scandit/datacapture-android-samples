@@ -33,6 +33,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -40,12 +41,14 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.scandit.datacapture.core.ui.DataCaptureView;
+import com.scandit.datacapture.id.data.RejectionReason;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 import com.scandit.datacapture.idcapturesettingssample.R;
 import com.scandit.datacapture.idcapturesettingssample.ui.result.CaptureResult;
 import com.scandit.datacapture.idcapturesettingssample.ui.result.ResultFragment;
 import com.scandit.datacapture.idcapturesettingssample.ui.settings.overview.OverviewSettingsFragment;
 import com.scandit.datacapture.idcapturesettingssample.utils.ShowHideViewTimer;
+import com.scandit.datacapture.idcapturesettingssample.utils.StringUtils;
 
 public class ScanFragment extends Fragment {
     /**
@@ -198,7 +201,9 @@ public class ScanFragment extends Fragment {
          * Observe the sequences of events in order to navigate to other screens or display dialogs.
          */
         viewModel.showCapturedResult().observe(lifecycleOwner, this::showCapturedResultFragment);
-        viewModel.showCapturedResultToast().observe(lifecycleOwner, this::showCapturedResultText);
+        viewModel.showCapturedResultToast().observe(lifecycleOwner, this::showCapturedResultToast);
+        viewModel.showRejectionReason().observe(lifecycleOwner, this::showRejectionReasonDialog);
+        viewModel.showRejectionReasonToast().observe(lifecycleOwner, this::showRejectionReasonToast);
     }
 
     @Override
@@ -258,32 +263,62 @@ public class ScanFragment extends Fragment {
         }
     }
 
-    private void showCapturedResultText(ShowCaptureResultToastEvent event) {
+    private void showCapturedResultToast(ShowCaptureResultToastEvent event) {
         CaptureResult result = event.getContentIfNotHandled();
 
 
         if (result != null) {
-            /*
-             * Stop the previous timer.
-             */
-            cancelCurrentResultTimer();
-
-            /*
-             * Update the result.
-             */
-            resultView.setText(
-                    getString(
-                            R.string.captured_result_parametrised,
-                            result.getFullname(),
-                            result.getDateOfBirth()
-                    )
-            );
-            /*
-             * Start over the disappearance countdown.
-             */
-            resultViewTimer = new ShowHideViewTimer(resultView);
-            resultViewTimer.start();
+            showToast(getString(
+                    R.string.captured_result_parametrised,
+                    result.getFullname(),
+                    result.getDateOfBirth()
+            ));
         }
+    }
+
+    private void showRejectionReasonDialog(ShowRejectionReasonEvent event) {
+        RejectionReason reason = event.getContentIfNotHandled();
+
+        if (reason != null && requireActivity().getSupportFragmentManager().findFragmentByTag(CAPTURE_RESULT_TAG) == null) {
+            new AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.document_rejected_title)
+                    .setMessage(getRejectionReasonName(reason))
+                    .setCancelable(false)
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                        viewModel.enableIdCapture();
+                        dialog.dismiss();
+                    }).show();
+        }
+    }
+
+    private void showRejectionReasonToast(ShowRejectionReasonToastEvent event) {
+        RejectionReason reason = event.getContentIfNotHandled();
+
+        if (reason != null) {
+            showToast(getRejectionReasonName(reason));
+        }
+    }
+
+    @NonNull
+    private static String getRejectionReasonName(RejectionReason reason) {
+        return StringUtils.toNameCase(reason.name());
+    }
+
+    private void showToast(String text) {
+        /*
+         * Stop the previous timer.
+         */
+        cancelCurrentResultTimer();
+
+        /*
+         * Update the result.
+         */
+        resultView.setText(text);
+        /*
+         * Start over the disappearance countdown.
+         */
+        resultViewTimer = new ShowHideViewTimer(resultView);
+        resultViewTimer.start();
     }
 
     private void cancelCurrentResultTimer() {

@@ -63,6 +63,7 @@ dependencies {
     api "com.scandit.datacapture:id-backend:${versions.scandit_sdk_version}"
     api "com.scandit.datacapture:id-voided-detection-models:${versions.scandit_sdk_version}"
     api "com.scandit.datacapture:id-europe-driving-license-models:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:id-aamva-barcode-verification:${versions.scandit_sdk_version}"
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${versions.desugar}")
 

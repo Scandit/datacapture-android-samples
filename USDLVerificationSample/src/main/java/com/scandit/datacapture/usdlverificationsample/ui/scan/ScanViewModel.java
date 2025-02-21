@@ -14,6 +14,8 @@
 
 package com.scandit.datacapture.usdlverificationsample.ui.scan;
 
+import android.graphics.Bitmap;
+
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -21,10 +23,10 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.scandit.datacapture.id.data.CapturedId;
-import com.scandit.datacapture.id.data.RejectionReason;
 import com.scandit.datacapture.id.data.CapturedSides;
 import com.scandit.datacapture.id.data.VizResult;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
+import com.scandit.datacapture.id.verification.DataConsistencyResult;
 import com.scandit.datacapture.id.verification.aamvabarcode.AamvaBarcodeVerificationStatus;
 import com.scandit.datacapture.id.verification.aamvabarcode.AamvaBarcodeVerificationTask;
 import com.scandit.datacapture.usdlverificationsample.data.CameraRepository;
@@ -238,9 +240,14 @@ public class ScanViewModel extends ViewModel {
 
         stopIdCapture();
 
-        // Run the verification if the document is not expired
-        if (capturedId.isExpired()) {
-            navigateToResult(capturedId, AamvaBarcodeVerificationStatus.FORGED);
+        DataConsistencyResult dataConsistencyResult =
+                driverLicenseVerificationRepository.verifyDataConsistency(capturedId);
+
+        if (dataConsistencyResult != null && !dataConsistencyResult.getAllChecksPassed()) {
+            Bitmap frontReviewImage = dataConsistencyResult.getFrontReviewImage();
+            navigateToResult(capturedId, false, AamvaBarcodeVerificationStatus.FORGED, frontReviewImage);
+        } else if (capturedId.isExpired()) { // Run AAMVA Barcode verification if the document is not expired
+            navigateToResult(capturedId, true, AamvaBarcodeVerificationStatus.FORGED, null);
         } else {
             barcodeVerificationTask = driverLicenseVerificationRepository.verifyIdOnBarcode(capturedId);
             setIsBarcodeVerificationRunning(true);
@@ -262,7 +269,7 @@ public class ScanViewModel extends ViewModel {
          */
         barcodeVerificationTask.doOnVerificationResult(barcodeVerificationResult -> {
             if (driverLicense != null) {
-                navigateToResult(driverLicense, barcodeVerificationResult.getStatus());
+                navigateToResult(driverLicense, true, barcodeVerificationResult.getStatus(), null);
                 setIsBarcodeVerificationRunning(false);
                 barcodeVerificationTask = null;
                 driverLicense = null;
@@ -302,11 +309,15 @@ public class ScanViewModel extends ViewModel {
      */
     private void navigateToResult(
             CapturedId capturedId,
-            AamvaBarcodeVerificationStatus aamvaBarcodeVerificationStatus
-    ) {
+            boolean hasConsistentData,
+            AamvaBarcodeVerificationStatus aamvaBarcodeVerificationStatus,
+            @Nullable Bitmap frontReviewImage
+        ) {
         final CaptureResult result = new ResultMapper(capturedId).mapResult(
                 capturedId.isExpired(),
-                aamvaBarcodeVerificationStatus
+                hasConsistentData,
+                aamvaBarcodeVerificationStatus,
+                frontReviewImage
         );
         goToResult.postValue(new GoToResult(result));
     }

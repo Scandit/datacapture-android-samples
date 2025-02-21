@@ -158,7 +158,7 @@ public final class BarcodeScanActivity
         // It is good practice to properly disable and remove the mode.
         barcodeSelection.setEnabled(false);
         barcodeSelection.removeListener(this);
-        dataCaptureContext.removeMode(barcodeSelection);
+        dataCaptureContext.removeCurrentMode();
         super.onDestroy();
     }
 

@@ -54,7 +54,9 @@ public class ResultMapper {
      */
     public CaptureResult mapResult(
         boolean isExpired,
-        AamvaBarcodeVerificationStatus aamvaBarcodeVerificationStatus
+        boolean hasConsistentData,
+        AamvaBarcodeVerificationStatus aamvaBarcodeVerificationStatus,
+        @Nullable Bitmap frontReviewImage
     ) {
         /*
          * Extract and convert the images.
@@ -66,13 +68,20 @@ public class ResultMapper {
             faceImageBytes = convertImageToBytes(faceImage);
         }
 
+        byte[] frontReviewImageBytes = null;
+        if (frontReviewImage != null) {
+            frontReviewImageBytes = convertImageToBytes(frontReviewImage);
+        }
+
         List<CaptureResult.Entry> entries = getBaseEntries();
 
         return new CaptureResult(
                 entries,
                 faceImageBytes,
                 isExpired,
-                aamvaBarcodeVerificationStatus
+                hasConsistentData,
+                aamvaBarcodeVerificationStatus,
+                frontReviewImageBytes
         );
     }
 
@@ -83,7 +92,7 @@ public class ResultMapper {
         List<CaptureResult.Entry> entries = new ArrayList<>();
 
         addField(entries, "Full Name", extractField(capturedId.getFullName()));
-        addField(entries, "Sex", extractField(capturedId.getSex()));
+        addField(entries, "Sex", extractField(capturedId.getSexType().toString()));
         addField(entries, "Nationality", extractField(capturedId.getNationality()));
         addField(entries, "Date of Birth", extractField(capturedId.getDateOfBirth()));
         addField(entries, "Address", extractField(capturedId.getAddress()));

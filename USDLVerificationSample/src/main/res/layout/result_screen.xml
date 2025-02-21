@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nestedScrollView"
@@ -29,12 +28,13 @@
             android:layout_marginStart="@dimen/default_padding_large"
             android:layout_marginTop="@dimen/default_padding_large"
             android:fontFamily="sans-serif"
+            android:text="@string/document_type_driving_license"
             android:textColor="@color/black"
             android:textSize="24sp"
-            android:text="@string/document_type_driving_license"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/indicator" />
+
         <ImageView
             android:id="@+id/close_button"
             android:layout_width="wrap_content"
@@ -53,10 +53,10 @@
             android:layout_marginStart="@dimen/default_padding_large"
             android:layout_marginTop="@dimen/default_padding_large"
             android:layout_marginEnd="@dimen/default_padding_large"
-            android:paddingVertical="@dimen/default_padding_small"
-            android:orientation="vertical"
-            android:visibility="gone"
             android:background="@color/id_scanning_verification_success_background_color"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/default_padding_small"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/document_type_header" />
@@ -81,13 +81,25 @@
             android:layout_width="@dimen/user_image_size"
             android:layout_height="@dimen/user_image_size"
             android:layout_marginTop="@dimen/default_padding_large"
-            android:scaleType="centerCrop"
             android:background="@drawable/bg_circle"
+            android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/verification_error_layout"
             app:shapeAppearanceOverlay="@style/CircularImage"
             tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/front_review_image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding_large"
+            android:adjustViewBounds="true"
+            android:padding="@dimen/default_padding_small"
+            android:scaleType="centerInside"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/user_image" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/scanning_results_recycler_view"
@@ -99,7 +111,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/user_image"
+            app:layout_constraintTop_toBottomOf="@+id/front_review_image"
             tools:itemCount="4"
             tools:listitem="@layout/result_list_item" />
     </androidx.constraintlayout.widget.ConstraintLayout>

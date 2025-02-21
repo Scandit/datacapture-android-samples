@@ -83,8 +83,8 @@ public class BarcodeScanViewModel extends ViewModel implements BarcodeCaptureLis
      * Set up Barcode capture and attach the mode to the data capture context.
      */
     public void setUpBarcodeCaptureMode() {
-        dataCaptureContext.removeAllModes();
-        dataCaptureContext.addMode(barcodeCapture);
+        dataCaptureContext.removeCurrentMode();
+        dataCaptureContext.setMode(barcodeCapture);
         /*
          * Set up the BarcodeCapture with the initial document configuration.
          */
@@ -95,13 +95,6 @@ public class BarcodeScanViewModel extends ViewModel implements BarcodeCaptureLis
          * Post the initial UI state.
          */
         uiStates.postValue(uiState);
-    }
-
-    /**
-     * Detach the mode from the data capture context.
-     */
-    public void removeBarcodeCaptureMode() {
-        dataCaptureContext.removeMode(barcodeCapture);
     }
 
     /**

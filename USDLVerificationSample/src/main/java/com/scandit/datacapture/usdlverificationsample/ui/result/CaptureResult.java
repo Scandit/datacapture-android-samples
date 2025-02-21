@@ -39,19 +39,28 @@ public class CaptureResult implements Parcelable {
 
     @Nullable private final byte[] faceImageBytes;
 
+    @Nullable private final byte[] frontReviewImageImageBytes;
+
     private final boolean isExpired;
+
+    private final boolean hasConsistentData;
+
     private final AamvaBarcodeVerificationStatus aamvaBarcodeVerificationStatus;
 
     public CaptureResult(
             Collection<Entry> entries,
             @Nullable byte[] faceImageBytes,
             boolean isExpired,
-            AamvaBarcodeVerificationStatus aamvaBarcodeVerificationStatus
+            boolean hasConsistentData,
+            AamvaBarcodeVerificationStatus aamvaBarcodeVerificationStatus,
+            @Nullable byte[] frontReviewImageImageBytes
     ) {
         this.entries = new ArrayList<>(entries);
         this.faceImageBytes = faceImageBytes;
         this.isExpired = isExpired;
+        this.hasConsistentData = hasConsistentData;
         this.aamvaBarcodeVerificationStatus = aamvaBarcodeVerificationStatus;
+        this.frontReviewImageImageBytes = frontReviewImageImageBytes;
     }
 
     public ArrayList<Entry> getEntries() {
@@ -67,8 +76,17 @@ public class CaptureResult implements Parcelable {
         return isExpired;
     }
 
+    public boolean hasConsistentData() {
+        return hasConsistentData;
+    }
+
     public AamvaBarcodeVerificationStatus getAamvaBarcodeVerificationStatus() {
         return aamvaBarcodeVerificationStatus;
+    }
+
+    @Nullable
+    public byte[] getFrontReviewImageImageBytes() {
+        return frontReviewImageImageBytes;
     }
 
     private CaptureResult(Parcel in) {
@@ -78,7 +96,10 @@ public class CaptureResult implements Parcelable {
         faceImageBytes = new byte[faceImageBytesSize];
         in.readByteArray(faceImageBytes);
         isExpired = in.readInt() == 1;
+        hasConsistentData = in.readInt() == 1;
         aamvaBarcodeVerificationStatus = AamvaBarcodeVerificationStatus.valueOf(in.readString());
+        int frontReviewImageImageBytesSize = in.readInt();
+        frontReviewImageImageBytes = new byte[frontReviewImageImageBytesSize];
     }
 
     @Override
@@ -90,7 +111,12 @@ public class CaptureResult implements Parcelable {
             dest.writeByteArray(faceImageBytes);
         }
         dest.writeInt(isExpired ? 1 : 0);
+        dest.writeInt(hasConsistentData ? 1 : 0);
         dest.writeString(aamvaBarcodeVerificationStatus.toString());
+        if (frontReviewImageImageBytes != null) {
+            dest.writeInt(frontReviewImageImageBytes.length);
+            dest.writeByteArray(frontReviewImageImageBytes);
+        }
     }
 
     @Override

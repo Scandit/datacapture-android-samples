@@ -58,7 +58,7 @@ public final class FindDataCaptureManager {
 
     public void setupSearchedItems(String data) {
         Set<BarcodeFindItem> items = new HashSet<>();
-        items.add(new BarcodeFindItem(new BarcodeFindItemSearchOptions(data), null));
+        items.add(new BarcodeFindItem(new BarcodeFindItemSearchOptions(data, null), null));
 
         // The BarcodeFind can search a set of items. In this simplified sample, we set only
         // one items, but for real case we can set several at once.

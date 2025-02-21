@@ -92,7 +92,7 @@ public final class SearchScanViewModel extends ViewModel implements BarcodeCaptu
 
     void resumeScanning() {
         dataCaptureManager.camera().applySettings(BarcodeCapture.createRecommendedCameraSettings());
-        dataCaptureContext.addMode(barcodeCapture);
+        dataCaptureContext.setMode(barcodeCapture);
         FrameSource frameSource = dataCaptureContext.getFrameSource();
         if (frameSource != null) {
             frameSource.switchToDesiredState(FrameSourceState.ON, null);
@@ -101,7 +101,7 @@ public final class SearchScanViewModel extends ViewModel implements BarcodeCaptu
     }
 
     void pauseScanning() {
-        dataCaptureContext.removeMode(barcodeCapture);
+        dataCaptureContext.removeCurrentMode();
         FrameSource frameSource = dataCaptureContext.getFrameSource();
         if (frameSource != null) {
             frameSource.switchToDesiredState(FrameSourceState.OFF, null);

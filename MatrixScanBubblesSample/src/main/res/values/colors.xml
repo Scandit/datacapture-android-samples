@@ -17,7 +17,5 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="scanditBlue">#FF2EC1CE</color>
-    <color name="teal">#429B92</color>
     <color name="gray">#D8D9DA</color>
 </resources>

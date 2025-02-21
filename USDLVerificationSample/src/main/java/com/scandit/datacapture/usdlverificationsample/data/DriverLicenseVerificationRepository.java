@@ -14,11 +14,13 @@
 
 package com.scandit.datacapture.usdlverificationsample.data;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 import com.scandit.datacapture.core.capture.DataCaptureContext;
-import com.scandit.datacapture.core.internal.sdk.annotations.Mockable;
 import com.scandit.datacapture.id.data.CapturedId;
+import com.scandit.datacapture.id.verification.DataConsistencyResult;
+import com.scandit.datacapture.id.verification.DataConsistencyVerifier;
 import com.scandit.datacapture.id.verification.aamvabarcode.AamvaBarcodeVerificationTask;
 import com.scandit.datacapture.id.verification.aamvabarcode.AamvaBarcodeVerifier;
 
@@ -26,6 +28,12 @@ import com.scandit.datacapture.id.verification.aamvabarcode.AamvaBarcodeVerifier
  * The repository to verify Driver's licenses.
  */
 public class DriverLicenseVerificationRepository {
+
+    /**
+     * The verifier that compares the human-readable data from the front side of the document with
+     * the data encoded in the barcode, and signals any suspicious differences.
+     */
+    private DataConsistencyVerifier dataConsistencyVerifier;
 
     /**
      * The verifier that checks the validity of a Driver's License.
@@ -37,7 +45,16 @@ public class DriverLicenseVerificationRepository {
      * Create a new instance of this class.
      */
     public DriverLicenseVerificationRepository(DataCaptureContext dataCaptureContext) {
+        this.dataConsistencyVerifier = DataConsistencyVerifier.create(dataCaptureContext);
         this.barcodeVerifier = AamvaBarcodeVerifier.create(dataCaptureContext);
+    }
+
+    /**
+     * Compares the human-readable data from the front side of the document with
+     * the data encoded in the barcode, and signals any suspicious differences.
+     */
+    public @Nullable DataConsistencyResult verifyDataConsistency(CapturedId capturedId) {
+        return dataConsistencyVerifier.verify(capturedId);
     }
 
     /**

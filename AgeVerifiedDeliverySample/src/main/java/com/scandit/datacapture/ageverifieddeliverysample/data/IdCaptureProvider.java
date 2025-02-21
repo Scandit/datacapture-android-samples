@@ -35,6 +35,11 @@ import java.util.List;
  */
 public class IdCaptureProvider {
 
+    /**
+     * The legal age in the US.
+     */
+    private static final int LEGAL_AGE = 21;
+
     private static final List<IdCaptureDocument> ACCEPTED_DOCUMENTS = Arrays.asList(
             new IdCard(IdCaptureRegion.ANY),
             new DriverLicense(IdCaptureRegion.ANY),
@@ -93,6 +98,8 @@ public class IdCaptureProvider {
         IdCaptureSettings settings = new IdCaptureSettings();
         settings.setAcceptedDocuments(ACCEPTED_DOCUMENTS);
         settings.setScannerType(new SingleSideScanner(true, true, true));
+        settings.setRejectExpiredIds(true);
+        settings.setRejectHolderBelowAge(LEGAL_AGE);
 
         return settings;
     }

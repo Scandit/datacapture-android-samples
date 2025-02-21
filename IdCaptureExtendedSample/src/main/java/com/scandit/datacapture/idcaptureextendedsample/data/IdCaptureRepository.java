@@ -245,7 +245,7 @@ public class IdCaptureRepository implements IdCaptureListener {
          * A document or its part is considered rejected when:
          *   (a) it's a valid personal identification document, but not enabled in the settings,
          *   (b) it's a PDF417 barcode or a Machine Readable Zone (MRZ), but the data is encoded in an unexpected format,
-         *   (c) it's a voided document and rejectVoidedIds is enabled in the settings,
+         *   (c) the document meets the conditions of a rejection rule enabled in the settings,
          *   (d) the document has been localized, but could not be captured within a period of time.
          *
          * This callback is executed on the background thread. We post the value to the LiveData

@@ -12,8 +12,14 @@
     <string name="anonymization_mode_title">Anonymization Mode</string>
     <string name="id_captured_feedback">ID Captured Feedback</string>
     <string name="id_rejected_feedback">ID Rejected Feedback</string>
-    <string name="reject_voided_ids">Reject voided IDs</string>
     <string name="decode_back_of_european_driving_license">Decode back of European driver\'s licenses</string>
+    <string name="reject_voided_ids">Reject voided IDs</string>
+    <string name="reject_expired_ids">Reject expired IDs</string>
+    <string name="reject_ids_expiring_in_days">Reject IDs expiring in x days</string>
+    <string name="reject_not_real_id_compliant">Reject not Real ID Compliant</string>
+    <string name="reject_forged_aamva_barcodes">Reject forged AAMVA Barcodes</string>
+    <string name="reject_inconsistent_data">Reject inconsistent data</string>
+    <string name="reject_holder_below_age">Reject holder below age</string>
     <string name="id_capture_scanner_title">Scanner</string>
     <string name="id_capture_accepted_documents_title">Accepted documents</string>
     <string name="id_capture_rejected_documents_title">Rejected documents</string>

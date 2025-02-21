@@ -3,6 +3,8 @@
     <string name="scanning_dl_not_supported_message">Document is not a US driver’s license.</string>
     <string name="scanning_dl_not_expired">Document has not expired.</string>
     <string name="scanning_dl_expired">Document has expired.</string>
+    <string name="scanning_dl_data_consistency_success">Information on front and back matches.</string>
+    <string name="scanning_dl_front_data_consistency_failure">Information on front and back does not match.</string>
     <string name="scanning_dl_barcode_verification_success">Document barcode is authentic.</string>
     <string name="scanning_dl_barcode_verification_uncertain">Document barcode is likely forged.</string>
     <string name="scanning_dl_barcode_verification_failure">Document barcode is forged.</string>

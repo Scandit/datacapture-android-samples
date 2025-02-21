@@ -43,8 +43,14 @@ public final class Keys {
     public final static String ANONYMIZATION_MODE = "anonymization_mode";
     public final static String ID_CAPTURED_FEEDBACK = "id_captured_feedback";
     public final static String ID_REJECTED_FEEDBACK = "id_rejected_feedback";
-    public final static String REJECT_VOIDED_IDS = "reject_voided_ids";
     public final static String DECODE_BACK_OF_EUROPEAN_DRIVING_LICENSE = "decode_back_of_european_driving_license";
+    public final static String REJECT_VOIDED_IDS = "reject_voided_ids";
+    public final static String REJECT_EXPIRED_IDS = "reject_expired_ids";
+    public final static String REJECT_IDS_EXPIRING_IN_DAYS = "reject_ids_expiring_in_days";
+    public final static String REJECT_NOT_REAL_ID_COMPLIANT = "reject_not_real_id_compliant";
+    public final static String REJECT_FORGED_AAMVA_BARCODES = "reject_forged_aamva_barcodes";
+    public final static String REJECT_INCONSISTENT_DATA = "reject_inconsistent_data";
+    public final static String REJECT_HOLDER_BELOW_AGE = "reject_holder_below_age";
     public final static String FULL_SCANNER = "full_scanner";
     public final static String SINGLE_SIDE_SCANNER_BARCODE = "single_side_scanner_barcode";
     public final static String SINGLE_SIDE_SCANNER_MRZ = "single_side_scanner_mrz";

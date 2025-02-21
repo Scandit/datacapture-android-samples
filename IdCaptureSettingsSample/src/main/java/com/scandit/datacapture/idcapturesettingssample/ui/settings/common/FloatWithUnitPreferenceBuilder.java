@@ -88,7 +88,7 @@ public class FloatWithUnitPreferenceBuilder {
         /*
          * Preference for the point's value.
          */
-        EditTextPreference valuePreference = PreferenceBuilder.numericEditText(
+        EditTextPreference valuePreference = PreferenceBuilder.floatEditText(
                 context,
                 valueKey,
                 context.getString(R.string.value),

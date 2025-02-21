@@ -28,11 +28,6 @@ class IdScanUiState {
     private IdCaptureOverlay overlay;
 
     /**
-     * The number of times the capture has timed out.
-     */
-    private int timeoutCount = 0;
-
-    /**
      * Use `builder()` to create this UI state.
      */
     private IdScanUiState() { }
@@ -43,13 +38,6 @@ class IdScanUiState {
     @Nullable
     public IdCaptureOverlay getOverlay() {
         return overlay;
-    }
-
-    /**
-     * Get the number of times the capture has timed out.
-     */
-    public int getTimeoutCount() {
-        return timeoutCount;
     }
 
     /**
@@ -87,15 +75,6 @@ class IdScanUiState {
          */
         public Builder overlay(IdCaptureOverlay value) {
             state.overlay = value;
-
-            return this;
-        }
-
-        /**
-         * The number of times the capture has timed out.
-         */
-        public Builder timeoutCount(int value) {
-            state.timeoutCount = value;
 
             return this;
         }

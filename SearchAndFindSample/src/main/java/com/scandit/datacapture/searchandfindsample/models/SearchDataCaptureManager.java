@@ -57,7 +57,7 @@ public final class SearchDataCaptureManager {
 
         // Create new barcode capture mode with the settings from above.
         barcodeCapture = BarcodeCapture.forDataCaptureContext(dataCaptureContext, settings);
-        dataCaptureContext.removeMode(barcodeCapture);
+        dataCaptureContext.removeCurrentMode();
     }
 
     public Camera camera() {

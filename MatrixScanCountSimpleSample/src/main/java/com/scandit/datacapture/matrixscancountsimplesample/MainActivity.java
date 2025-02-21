@@ -234,7 +234,7 @@ public class MainActivity extends CameraPermissionActivity
 
     @Override
     protected void onDestroy() {
-        dataCaptureContext.removeMode(barcodeCount);
+        dataCaptureContext.removeCurrentMode();
         super.onDestroy();
     }
 }

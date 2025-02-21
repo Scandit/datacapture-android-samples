@@ -3,8 +3,6 @@
 
     <string name="id_capture_timeout_dialog_title">Can’t scan?</string>
     <string name="id_capture_first_timeout_message">Try scanning the other side of the document or a different document.</string>
-    <string name="id_capture_second_timeout_message">Enter data manually or try a different document.</string>
-    <string name="id_capture_timeout_action_enter_manually">Manual entry</string>
     <string name="id_capture_timeout_action_retry">Retry</string>
 
     <string name="unsupported_document_dialog_title">Document not supported</string>

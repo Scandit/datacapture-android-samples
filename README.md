@@ -95,6 +95,10 @@ ID Scanning Samples demonstrate the features of the ID Capture API and demonstra
 
 **PriceWeightLabelCaptureSample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/PriceWeightLabelCaptureSample))
 
+### MatrixScan Check Samples
+
+**MatrixScan Check Simple Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/MatrixScanCheckSimpleSample))
+
 ## Samples on Other Frameworks
 
 Samples on other frameworks are located at [https://github.com/scandit](https://github.com/scandit).

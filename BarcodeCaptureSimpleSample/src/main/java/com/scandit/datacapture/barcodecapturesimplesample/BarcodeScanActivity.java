@@ -26,6 +26,7 @@ import com.scandit.datacapture.barcode.data.SymbologyDescription;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlayStyle;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
+import com.scandit.datacapture.core.common.feedback.Feedback;
 import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.core.source.Camera;
 import com.scandit.datacapture.core.source.FrameSourceState;
@@ -50,6 +51,8 @@ public class BarcodeScanActivity
     private BarcodeCapture barcodeCapture;
     private Camera camera;
     private DataCaptureView dataCaptureView;
+    private BarcodeCaptureOverlay overlay;
+    private Feedback feedback = Feedback.defaultFeedback(); // Used when emitting feedback manually.
 
     private AlertDialog dialog;
 
@@ -113,6 +116,13 @@ public class BarcodeScanActivity
         // Create new barcode capture mode with the settings from above.
         barcodeCapture = BarcodeCapture.forDataCaptureContext(dataCaptureContext, barcodeCaptureSettings);
 
+        // By default, every time a barcode is scanned, a sound (if not in silent mode) and a
+        // vibration are played.
+        // Uncomment the following line to set a success feedback without sound and vibration.
+//        barcodeCapture.getFeedback().setSuccess(new Feedback());
+        // Uncomment this line to set a feedback that can be triggered programmatically.
+//        feedback = Feedback.defaultFeedback();
+
         // Register self as a listener to get informed whenever a new barcode got recognized.
         barcodeCapture.addListener(this);
 
@@ -123,11 +133,13 @@ public class BarcodeScanActivity
         // Add a barcode capture overlay to the data capture view to render the location of captured
         // barcodes on top of the video preview.
         // This is optional, but recommended for better visual feedback.
-        BarcodeCaptureOverlay overlay = BarcodeCaptureOverlay.newInstance(
+        overlay = BarcodeCaptureOverlay.newInstance(
                 barcodeCapture,
                 dataCaptureView,
                 BarcodeCaptureOverlayStyle.FRAME
         );
+
+        // Add a square viewfinder as we are only scanning square QR codes.
         overlay.setViewfinder(new RectangularViewfinder(RectangularViewfinderStyle.SQUARE));
 
         // Adjust the overlay's barcode highlighting to match the new viewfinder styles and improve
@@ -148,7 +160,7 @@ public class BarcodeScanActivity
     @Override
     protected void onDestroy() {
         barcodeCapture.removeListener(this);
-        dataCaptureContext.removeMode(barcodeCapture);
+        dataCaptureContext.removeCurrentMode();
         super.onDestroy();
     }
 
@@ -216,14 +228,34 @@ public class BarcodeScanActivity
 
         Barcode barcode = session.getNewlyRecognizedBarcode();
 
+        // Use the following code to reject barcodes.
+        // By uncommenting the following lines, barcodes not starting with 09: are ignored.
+//        if (barcode.getData() == null || !barcode.getData().startsWith("09:")) {
+//            // We temporarily change the brush, used to highlight recognized barcodes, to a
+//            // transparent brush.
+//            overlay.setBrush(Brush.transparent());
+//            return;
+//        }
+
+        // Otherwise, if the barcode is of interest, we want to use a brush to highlight it.
+//        Brush brush = new Brush(Color.TRANSPARENT, Color.WHITE, 3f);
+//        overlay.setBrush(brush);
+
+        // We also want to emit a feedback (vibration and, if enabled, sound).
+        // By default, every time a barcode is scanned, a sound (if not in silent mode) and a vibration are played.
+        // To emit a feedback only when necessary, it is necessary to set a success feedback without sound and vibration
+        // when setting up Barcode Capture (in this case in the `setupRecognition` method).
+//        feedback.emit();
+
         // Stop recognizing barcodes for as long as we are displaying the result. There won't be any
         // new results until the capture mode is enabled again. Note that disabling the capture mode
         // does not stop the camera, the camera continues to stream frames until it is turned off.
         barcodeCapture.setEnabled(false);
 
-        // If you are not disabling barcode capture here and want to continue scanning, consider
-        // setting the codeDuplicateFilter when creating the barcode capture settings to around 500
-        // or even -1 if you do not want codes to be scanned more than once.
+        // If you don't want the codes to be scanned more than once, consider setting the
+        // codeDuplicateFilter when creating the barcode capture settings to -1.
+        // You can set any other value (e.g. 500) to set a fixed timeout and override the smart
+        // behaviour enabled by default.
 
         // Get the human readable name of the symbology and assemble the result to be shown.
         String symbology = SymbologyDescription.create(barcode.getSymbology()).getReadableName();

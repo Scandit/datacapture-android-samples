@@ -153,12 +153,34 @@ public class PreferenceBuilder {
       return preference;
    }
 
-   public static EditTextPreference numericEditText(
+   public static EditTextPreference floatEditText(
            Context context,
            String key,
            String title,
            int maxLength,
            String defaultValue
+   ) {
+      return numericEditText(context, key, title, maxLength, defaultValue, InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL, new FloatEditTextSummaryProvider());
+   }
+
+    public static EditTextPreference integerEditText(
+            Context context,
+            String key,
+            String title,
+            int maxLength,
+            String defaultValue
+    ) {
+        return numericEditText(context, key, title, maxLength, defaultValue, InputType.TYPE_CLASS_NUMBER, new IntegerEditTextSummaryProvider());
+    }
+
+   public static EditTextPreference numericEditText(
+           Context context,
+           String key,
+           String title,
+           int maxLength,
+           String defaultValue,
+           int inputType,
+           Preference.SummaryProvider summaryProvider
    ) {
       EditTextPreference preference = new EditTextPreference(context);
       preference.setIconSpaceReserved(false);
@@ -167,10 +189,10 @@ public class PreferenceBuilder {
       preference.setDefaultValue(defaultValue);
       preference.setOnBindEditTextListener(editText -> {
          editText.setSelectAllOnFocus(true);
-         editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+         editText.setInputType(inputType);
          editText.setFilters(new InputFilter[] { new InputFilter.LengthFilter(maxLength) });
       });
-      preference.setSummaryProvider(new NumericEditTextSummaryProvider());
+      preference.setSummaryProvider(summaryProvider);
       return preference;
    }
 
@@ -264,7 +286,7 @@ public class PreferenceBuilder {
       }
    }
 
-   private static class NumericEditTextSummaryProvider implements Preference.SummaryProvider<EditTextPreference> {
+   private static class FloatEditTextSummaryProvider implements Preference.SummaryProvider<EditTextPreference> {
 
       @Override
       public CharSequence provideSummary(EditTextPreference preference) {
@@ -282,6 +304,21 @@ public class PreferenceBuilder {
                value = preference.getContext().getString(R.string.settings_value_none);
             }
             return value;
+      }
+   }
+
+   private static class IntegerEditTextSummaryProvider implements Preference.SummaryProvider<EditTextPreference> {
+
+      @Override
+      public CharSequence provideSummary(EditTextPreference preference) {
+         String value = preference.getText();
+         try {
+            int number = Integer.parseInt(value);
+            value = String.valueOf(number);
+         } catch (Exception e) {
+            value = preference.getContext().getString(R.string.settings_value_none);
+         }
+         return value;
       }
    }
 

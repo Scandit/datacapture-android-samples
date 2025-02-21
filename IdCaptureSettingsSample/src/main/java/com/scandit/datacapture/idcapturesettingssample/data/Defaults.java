@@ -28,6 +28,8 @@
 
 package com.scandit.datacapture.idcapturesettingssample.data;
 
+import androidx.annotation.Nullable;
+
 import com.scandit.datacapture.core.common.geometry.Anchor;
 import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
 import com.scandit.datacapture.core.common.geometry.MeasureUnit;
@@ -80,9 +82,13 @@ public final class Defaults {
         return false;
     }
 
-    public static boolean shouldRejectVoidedIds() {
-        return false;
-    }
+    public static boolean shouldRejectVoidedIds() { return false;}
+    public static boolean shouldRejectExpiredIds() { return false;}
+    public static @Nullable Integer shouldRejectIdsExpiringInDays() { return null;}
+    public static boolean shouldRejectNotRealIdCompliant() { return false;}
+    public static boolean shouldRejectForgedAamvaBarcodes() { return false;}
+    public static boolean shouldRejectInconsistentData() { return false;}
+    public static @Nullable Integer shouldRejectHolderBelowAge() { return null;}
 
     public static boolean shouldDecodeBackOfEuropeanDrivingLicense() {
         return false;
@@ -252,6 +258,6 @@ public final class Defaults {
     }
 
     public static boolean isSubtypeEnabledByDefault(RegionSpecificSubtype subtype) {
-        return false;
+        return true;
     }
 }

@@ -31,6 +31,7 @@ package com.scandit.datacapture.idcapturesettingssample.ui.settings.idcapture;
 import android.content.Context;
 
 import androidx.preference.DropDownPreference;
+import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceDataStore;
 import androidx.preference.PreferenceGroup;
@@ -151,17 +152,6 @@ public class IdCapturePreferenceBuilder implements SectionPreferenceBuilder {
         parent.addPreference(idRejectedFeedbackSettings);
 
         /*
-         * Switch to enable or disable rejecting voided IDs.
-         */
-        SwitchPreferenceCompat rejectVoidedIdsSwitchPreference = PreferenceBuilder._switch(
-                context,
-                Keys.REJECT_VOIDED_IDS,
-                context.getString(R.string.reject_voided_ids),
-                Defaults.shouldRejectVoidedIds()
-        );
-        parent.addPreference(rejectVoidedIdsSwitchPreference);
-
-        /*
          * Switch to enable or disable the extraction of extra information for the back side of
          * European driver's licenses.
          */
@@ -173,6 +163,87 @@ public class IdCapturePreferenceBuilder implements SectionPreferenceBuilder {
                         Defaults.shouldDecodeBackOfEuropeanDrivingLicense()
                 );
         parent.addPreference(decodeBackOfEuropeanDrivingLicenseSwitchPreference);
+
+        /*
+         * Switch to enable or disable rejecting voided IDs.
+         */
+        SwitchPreferenceCompat rejectVoidedIdsSwitchPreference = PreferenceBuilder._switch(
+                context,
+                Keys.REJECT_VOIDED_IDS,
+                context.getString(R.string.reject_voided_ids),
+                Defaults.shouldRejectVoidedIds()
+        );
+        parent.addPreference(rejectVoidedIdsSwitchPreference);
+
+        /*
+         * Switch to enable or disable rejecting expired IDs.
+         */
+        SwitchPreferenceCompat rejectExpiredIdsSwitchPreference = PreferenceBuilder._switch(
+                context,
+                Keys.REJECT_EXPIRED_IDS,
+                context.getString(R.string.reject_expired_ids),
+                Defaults.shouldRejectExpiredIds()
+        );
+        parent.addPreference(rejectExpiredIdsSwitchPreference);
+
+        /*
+         * Switch to enable or disable rejecting IDs expiring in within the specified number of days.
+         */
+        Integer defaultExpirationDayCount = Defaults.shouldRejectIdsExpiringInDays();
+        EditTextPreference rejectIdsExpiringInDaysEditTextPreference = PreferenceBuilder.integerEditText(
+                context,
+                Keys.REJECT_IDS_EXPIRING_IN_DAYS,
+                context.getString(R.string.reject_ids_expiring_in_days),
+                4,
+                defaultExpirationDayCount != null ? String.valueOf(defaultExpirationDayCount) : ""
+        );
+        parent.addPreference(rejectIdsExpiringInDaysEditTextPreference);
+
+        /*
+         * Switch to enable or disable rejecting not Real ID compliant.
+         */
+        SwitchPreferenceCompat rejectNotRealIdCompliantSwitchPreference = PreferenceBuilder._switch(
+                context,
+                Keys.REJECT_NOT_REAL_ID_COMPLIANT,
+                context.getString(R.string.reject_not_real_id_compliant),
+                Defaults.shouldRejectNotRealIdCompliant()
+        );
+        parent.addPreference(rejectNotRealIdCompliantSwitchPreference);
+
+        /*
+         * Switch to enable or disable rejecting forged AAMVA barcodes.
+         */
+        SwitchPreferenceCompat rejectForgedAamvaBarcodesSwitchPreference = PreferenceBuilder._switch(
+                context,
+                Keys.REJECT_FORGED_AAMVA_BARCODES,
+                context.getString(R.string.reject_forged_aamva_barcodes),
+                Defaults.shouldRejectForgedAamvaBarcodes()
+        );
+        parent.addPreference(rejectForgedAamvaBarcodesSwitchPreference);
+
+        /*
+         * Switch to enable or disable rejecting IDs with inconsistent data.
+         */
+        SwitchPreferenceCompat rejectInconsistentDataSwitchPreference = PreferenceBuilder._switch(
+                context,
+                Keys.REJECT_INCONSISTENT_DATA,
+                context.getString(R.string.reject_inconsistent_data),
+                Defaults.shouldRejectInconsistentData()
+        );
+        parent.addPreference(rejectInconsistentDataSwitchPreference);
+
+        /*
+         * Switch to enable or disable rejecting IDs whose holder is below the specified age.
+         */
+        Integer defaultMinAge = Defaults.shouldRejectHolderBelowAge();
+        EditTextPreference rejectHolderBelowAgeEditTextPreference = PreferenceBuilder.integerEditText(
+                context,
+                Keys.REJECT_HOLDER_BELOW_AGE,
+                context.getString(R.string.reject_holder_below_age),
+                3,
+                defaultMinAge != null ? String.valueOf(defaultMinAge) : ""
+        );
+        parent.addPreference(rejectHolderBelowAgeEditTextPreference);
     }
 
     /**

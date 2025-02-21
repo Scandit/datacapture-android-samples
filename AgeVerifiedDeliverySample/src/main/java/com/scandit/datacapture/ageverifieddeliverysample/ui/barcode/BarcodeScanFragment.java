@@ -183,7 +183,6 @@ public class BarcodeScanFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
 
-        viewModel.removeBarcodeCaptureMode();
         dataCaptureView = null;
         barcodeCaptureOverlay = null;
     }

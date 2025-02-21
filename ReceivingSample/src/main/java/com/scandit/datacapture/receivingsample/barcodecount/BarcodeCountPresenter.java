@@ -102,7 +102,7 @@ public class BarcodeCountPresenter implements BarcodeCountListener, BarcodeCount
         container.removeAllViews();
         barcodeCountView.setUiListener(null);
         barcodeCount.removeListener(this);
-        dataCaptureContext.removeMode(barcodeCount);
+        dataCaptureContext.removeCurrentMode();
 
         release();
     }
@@ -116,7 +116,7 @@ public class BarcodeCountPresenter implements BarcodeCountListener, BarcodeCount
         // Attach BarcodeCount to context. Since both BarcodeCount and SparkScan use
         // barcode scanning and tracking features, they can't be used at the same time,
         // so we only add BarcodeCount to the context when needed.
-        dataCaptureContext.addMode(barcodeCount);
+        dataCaptureContext.setMode(barcodeCount);
 
         // Check for camera permission every time the mode is enabled.
         // This also turns on the camera, which gets disabled while switching modes.

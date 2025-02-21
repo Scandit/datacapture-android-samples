@@ -28,10 +28,12 @@ import com.scandit.datacapture.id.capture.IdCaptureScanner;
 import com.scandit.datacapture.id.capture.IdCaptureSettings;
 import com.scandit.datacapture.id.capture.SingleSideScanner;
 import com.scandit.datacapture.id.data.CapturedId;
+import com.scandit.datacapture.id.data.Duration;
 import com.scandit.datacapture.id.data.IdImageType;
 import com.scandit.datacapture.id.data.RejectionReason;
 import com.scandit.datacapture.id.data.CapturedSides;
 import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
+import com.scandit.datacapture.idcapturesettingssample.ui.scan.RejectedIdEvent;
 import com.scandit.datacapture.idcapturesettingssample.ui.scan.ScanResult;
 import com.scandit.datacapture.idcapturesettingssample.ui.scan.ScanResultEvent;
 
@@ -58,6 +60,11 @@ public class IdCaptureRepository implements IdCaptureListener {
     private final MutableLiveData<ScanResultEvent> scanResults = new MutableLiveData<>();
 
     /**
+     * The stream rejected IDs.
+     */
+    private final MutableLiveData<RejectedIdEvent> rejectedIds = new MutableLiveData<>();
+
+    /**
      * The DataCaptureContext that the current IdCapture is attached to.
      */
     private final DataCaptureContext dataCaptureContext;
@@ -77,6 +84,12 @@ public class IdCaptureRepository implements IdCaptureListener {
         return scanResults;
     }
 
+    /**
+     * The stream rejected IDs.
+     */
+    public LiveData<RejectedIdEvent> rejectedIds() {
+        return rejectedIds;
+    }
 
     /**
      * Resets the internal IdCapture state.
@@ -110,7 +123,7 @@ public class IdCaptureRepository implements IdCaptureListener {
              * Before recreating a new IdCapture, the old one's listener needs to be removed to
              * avoid leaks or undesired callback invocations.
              */
-            dataCaptureContext.removeMode(idCapture);
+            dataCaptureContext.removeCurrentMode();
             idCapture.removeListener(this);
         }
 
@@ -132,10 +145,25 @@ public class IdCaptureRepository implements IdCaptureListener {
 
         // Set the desired anonymization mode from settings.
         idCaptureSettings.setAnonymizationMode(settingsRepository.getAnonymizationMode());
-        // Set whether voided IDs should be rejected
-        idCaptureSettings.setRejectVoidedIds(settingsRepository.shouldRejectVoidedIds());
         // Set whether extra information should be extracted from the back side of European driver's licenses
         idCaptureSettings.setDecodeBackOfEuropeanDrivingLicense(settingsRepository.shouldDecodeBackOfEuropeanDrivingLicense());
+        // Set whether voided IDs should be rejected
+        idCaptureSettings.setRejectVoidedIds(settingsRepository.shouldRejectVoidedIds());
+        // Set whether expired IDs should be rejected
+        idCaptureSettings.setRejectExpiredIds(settingsRepository.shouldRejectExpiredIds());
+        // Set whether IDs expiring within the specified number of days should be rejected
+        Integer rejectIdsExpiringInDays = settingsRepository.shouldRejectIdsExpiringInDays();
+        Duration expirationTimeWindow = rejectIdsExpiringInDays != null ?
+                new Duration(rejectIdsExpiringInDays, 0, 0) : null;
+        idCaptureSettings.setRejectIdsExpiringIn(expirationTimeWindow);
+        // Set whether not Real ID compliant should be rejected
+        idCaptureSettings.setRejectNotRealIdCompliant(settingsRepository.shouldRejectNotRealIdCompliant());
+        // Set whether forged AAMVA barcodes should be rejected
+        idCaptureSettings.setRejectForgedAamvaBarcodes(settingsRepository.shouldRejectForgedAamvaBarcodes());
+        // Set whether IDs with inconsistent data should be rejected
+        idCaptureSettings.setRejectInconsistentData(settingsRepository.shouldRejectInconsistentData());
+        // Set whether IDs whose holder is below the specified age should be rejected
+        idCaptureSettings.setRejectHolderBelowAge(settingsRepository.shouldRejectHolderBelowAge());
         idCapture = IdCapture.forDataCaptureContext(dataCaptureContext, idCaptureSettings);
         idCapture.addListener(this);
         idCapture.setFeedback(settingsRepository.buildFeedbackFromSettings());
@@ -212,9 +240,15 @@ public class IdCaptureRepository implements IdCaptureListener {
          * A document or its part is considered rejected when:
          *   (a) it's a valid personal identification document, but not enabled in the settings,
          *   (b) it's a PDF417 barcode or a Machine Readable Zone (MRZ), but the data is encoded in an unexpected format,
-         *   (c) it's a voided document and rejectVoidedIds is enabled in the settings,
+         *   (c) the document meets the conditions of a rejection rule enabled in the settings,
          *   (d) the document has been localized, but could not be captured within a period of time.
          */
+
+        if (!settingsRepository.isContinuousScanEnabled()) {
+            disableIdCapture();
+        }
+
+        rejectedIds.postValue(new RejectedIdEvent(reason));
     }
 
     private IdCaptureScanner buildIdCaptureScanner() {

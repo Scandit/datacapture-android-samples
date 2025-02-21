@@ -40,6 +40,7 @@ public class ResultBottomSheetFragment extends BottomSheetDialogFragment {
 
     private ResultListAdapter adapter;
     private ImageView userImage;
+    private ImageView frontReviewImage;
 
     private LinearLayout verificationSuccessLayout;
     private LinearLayout verificationErrorLayout;
@@ -86,6 +87,7 @@ public class ResultBottomSheetFragment extends BottomSheetDialogFragment {
 
         RecyclerView recyclerResult = root.findViewById(R.id.scanning_results_recycler_view);
         userImage = root.findViewById(R.id.user_image);
+        frontReviewImage = root.findViewById(R.id.front_review_image);
         verificationSuccessLayout = root.findViewById(R.id.verification_success_layout);
         verificationErrorLayout = root.findViewById(R.id.verification_error_layout);
         ImageView closeButton = root.findViewById(R.id.close_button);
@@ -137,6 +139,7 @@ public class ResultBottomSheetFragment extends BottomSheetDialogFragment {
 
         renderFaceImage(result);
         renderVerificationResult(result);
+        renderFrontReviewImageResult(result);
     }
 
     /**
@@ -147,6 +150,17 @@ public class ResultBottomSheetFragment extends BottomSheetDialogFragment {
             userImage.setImageBitmap(convertBytesToImage(result.getFaceImageBytes()));
         } else {
             userImage.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * Display the front review image extracted from the document.
+     */
+    private void renderFrontReviewImageResult(CaptureResult result) {
+        if (result.getFrontReviewImageImageBytes() != null) {
+            frontReviewImage.setImageBitmap(convertBytesToImage(result.getFrontReviewImageImageBytes()));
+        } else {
+            frontReviewImage.setVisibility(View.GONE);
         }
     }
 
@@ -171,6 +185,18 @@ public class ResultBottomSheetFragment extends BottomSheetDialogFragment {
         } else {
             expirationView.setData(successIcon, R.string.scanning_dl_not_expired);
             verificationSuccessLayout.addView(expirationView);
+        }
+
+        /*
+         * Displays the data consistency state of the document
+         */
+        VerificationResultItemView dataConsistencyView = new VerificationResultItemView(getContext());
+        if (result.hasConsistentData()) {
+            dataConsistencyView.setData(successIcon, R.string.scanning_dl_data_consistency_success);
+            verificationSuccessLayout.addView(dataConsistencyView);
+        } else {
+            dataConsistencyView.setData(errorIcon, R.string.scanning_dl_front_data_consistency_failure);
+            verificationErrorLayout.addView(dataConsistencyView);
         }
 
         /*
