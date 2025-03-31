@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">MatrixScanCountToteMappingSample</string>
+    <string name="app_title">Tote Mapping</string>
+    <string name="tote_mapping">Tote Mapping</string>
+    <string name="editor_view_error">There was an error creating the grid view. Please go back and rescan the totes.</string>
+    <string name="editor_view_success">This map can now be used during MatrixScanCountToteMappingSample.</string>
+
+    <string name="error_dialog_title">Unable to map totes</string>
+    <string name="error_dialog_message">Please start over and try again</string>
+    <string name="error_dialog_button_confirm">Retry</string>
+</resources>

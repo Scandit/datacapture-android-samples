@@ -1,9 +1,12 @@
-import com.android.build.gradle.BaseExtension
+import com.android.build.api.dsl.ApplicationExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.FileInputStream
 import java.util.Properties
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+val secretsPropertiesFile = file("secrets.properties")
+val keystoreFile = file("keystore-scandit.jks")
 
 buildscript {
     val sdk: Map<String, Any> by extra(
@@ -18,7 +21,7 @@ buildscript {
     val versions: Map<String, Any> by extra(
         mapOf(
             // The value of scandit_sdk_version is updated automatically in the bump_sdc_version.py script, please do not edit manually.
-            "scandit_sdk_version" to "7.1.3",
+            "scandit_sdk_version" to "7.2.0",
             "android_gradle" to "8.5.1",
             "android_material" to "1.6.1",
             "androidx_animations" to "1.0.0",
@@ -68,39 +71,40 @@ allprojects {
 
 subprojects {
     afterEvaluate {
-        extensions.configure<BaseExtension> {
-            signingConfigs {
-                create("release") {
-                    storeFile = file("../keystore-scandit.jks")
-                    storePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
-                    keyAlias = "scandit-release-key"
-                    keyPassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
+        if (project.plugins.hasPlugin("com.android.application")) {
+            extensions.configure<ApplicationExtension> {
+                signingConfigs {
+                    create("release") {
+                        storeFile = keystoreFile
+                        storePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
+                        keyAlias = "scandit-release-key"
+                        keyPassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
+                    }
                 }
-            }
 
-            buildTypes {
-                getByName("release") {
-                    signingConfig = signingConfigs.getByName("release")
+                buildTypes {
+                    getByName("release") {
+                        signingConfig = signingConfigs.getByName("release")
+                    }
                 }
-            }
 
-            buildFeatures.buildConfig = true
+                buildFeatures.buildConfig = true
 
-            defaultConfig {
-                val properties = Properties()
-                val secretsPropertiesFile = project.parent!!.file("secrets.properties")
-                val licenseKey = getLicenseKey(secretsPropertiesFile, properties)
+                defaultConfig {
+                    val properties = Properties()
+                    val licenseKey = getLicenseKey(secretsPropertiesFile, properties)
 
-                buildConfigField(
-                    "String", "SCANDIT_LICENSE_KEY",
-                    "\"$licenseKey\""
-                )
-
-                if (licenseKey == "YOUR_SCANDIT_LICENSE_KEY") {
-                    throw GradleException(
-                        "Make sure to set the value of SCANDIT_LICENSE_KEY property to" +
-                                " your license key in 'secrets.properties' file."
+                    buildConfigField(
+                        "String", "SCANDIT_LICENSE_KEY",
+                        "\"$licenseKey\""
                     )
+
+                    if (licenseKey == "YOUR_SCANDIT_LICENSE_KEY") {
+                        throw GradleException(
+                            "Make sure to set the value of SCANDIT_LICENSE_KEY property to" +
+                                " your license key in 'secrets.properties' file."
+                        )
+                    }
                 }
             }
         }

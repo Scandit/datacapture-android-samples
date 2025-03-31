@@ -24,6 +24,8 @@ MatrixScan Count is an out-of-the-box scan and count solution for counting and r
 
 **MatrixScan Count Simple Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/MatrixScanCountSimpleSample))
 
+**MatrixScan Count Tote Mapping Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/MatrixScanCountToteMappingSample))
+
 **Receiving Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/ReceivingSample))
 
 **Expiry Management Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/ExpiryManagementSample))

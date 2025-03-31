@@ -1,0 +1,65 @@
+plugins {
+    id("com.android.application")
+}
+
+android {
+    ndkVersion = sdk.ndk
+    compileSdkVersion = sdk.compile
+    namespace = "com.scandit.datacapture.barcodeselectionsettingssample"
+
+    defaultConfig {
+        applicationId = "com.scandit.datacapture.barcodeselectionsettingsample"
+        minSdkVersion(sdk.min)
+        targetSdkVersion(sdk.target)
+        versionCode = 1
+        versionName = "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = versions.java
+        targetCompatibility = versions.java
+    }
+
+    packagingOptions {
+        jniLibs {
+            pickFirsts += "**/*.so"
+            it.useLegacyPackaging true
+        }
+    }
+
+    splits {
+        abi {
+            enable project.hasProperty('enableSplit')
+            reset()
+            //noinspection ChromeOsAbiSupport
+            include 'arm64-v8a'
+            universalApk false
+        }
+    }
+}
+
+repositories {
+    flatDir {
+        dirs '../../../../library'
+    }
+}
+
+dependencies {
+    api(name:"ScanditCaptureCore", ext:"aar")
+    api(name:"ScanditBarcodeCapture", ext:"aar")
+
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}")
+
+    implementation("androidx.appcompat:appcompat:${versions.androidx_appcompat}")
+    implementation("androidx.preference:preference:${versions.androidx_preference}")
+    implementation("com.google.android.material:material:${versions.material}")
+
+    implementation("androidx.constraintlayout:constraintlayout:${versions.androidx_constraintlayout}")
+}
