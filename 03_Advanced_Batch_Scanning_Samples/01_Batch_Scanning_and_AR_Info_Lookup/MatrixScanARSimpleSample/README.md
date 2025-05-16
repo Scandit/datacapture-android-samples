@@ -1,8 +1,8 @@
-# MatrixScan Check Simple Sample
+# MatrixScan AR Simple Sample
 
-This sample demonstrates the pre-built MatrixScan Check component (BarcodeCheck API). It demonstrates how to highlight barcodes and display additional information over them using augmented reality.
+This sample demonstrates the pre-built MatrixScan AR component (BarcodeAr API). It demonstrates how to highlight barcodes and display additional information over them using augmented reality.
 
-The MatrixScan Check UI incorporates our best practices for usability and has been rigorously tested with target users in real-world scenarios.
+The MatrixScan AR UI incorporates our best practices for usability and has been rigorously tested with target users in real-world scenarios.
 
 ## Installation
 
@@ -13,7 +13,7 @@ The MatrixScan Check UI incorporates our best practices for usability and has be
 
 ## Documentation
 
-MatrixScan Check (BarcodeCheck API) is a pre-built component of the Scandit Data Capture SDK.
+MatrixScan AR (BarcodeAr API) is a pre-built component of the Scandit Data Capture SDK.
 
 Our SDK is supported on most popular frameworks.
 
@@ -25,7 +25,7 @@ Once you get the sample up and running, go find some barcodes to scan. Don’t f
 
 ## Trial Signup
 
-To add MatrixScan Check to your app, sign up for your Scandit Developer Account  and get instant access to your license key: [https://ssl.scandit.com/dashboard/sign-up?p=test](https://ssl.scandit.com/dashboard/sign-up?p=test)
+To add MatrixScan AR to your app, sign up for your Scandit Developer Account  and get instant access to your license key: [https://ssl.scandit.com/dashboard/sign-up?p=test](https://ssl.scandit.com/dashboard/sign-up?p=test)
 
 ## Support
 

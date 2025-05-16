@@ -12,25 +12,25 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.matrixscanchecksimplesample.models
+package com.scandit.datacapture.matrixscanarsimplesample.models
 
 import android.view.ViewGroup
-import com.scandit.datacapture.barcode.check.capture.BarcodeCheck
-import com.scandit.datacapture.barcode.check.capture.BarcodeCheckSettings
-import com.scandit.datacapture.barcode.check.ui.BarcodeCheckView
-import com.scandit.datacapture.barcode.check.ui.BarcodeCheckViewSettings
+import com.scandit.datacapture.barcode.ar.capture.BarcodeAr
+import com.scandit.datacapture.barcode.ar.capture.BarcodeArSettings
+import com.scandit.datacapture.barcode.ar.ui.BarcodeArView
+import com.scandit.datacapture.barcode.ar.ui.BarcodeArViewSettings
 import com.scandit.datacapture.barcode.data.Symbology
 import com.scandit.datacapture.core.capture.DataCaptureContext
-import com.scandit.datacapture.matrixscanchecksimplesample.BuildConfig
+import com.scandit.datacapture.matrixscanarsimplesample.BuildConfig
 
-class BarcodeCheckManager {
+class BarcodeArManager {
     // Create data capture context using your license key.
     private val dataCaptureContext = DataCaptureContext.forLicenseKey(SCANDIT_LICENSE_KEY)
 
-    fun createBarcodeCheck(): BarcodeCheck {
-        // The barcode check process is configured through barcode check settings
-        // which are then applied to the barcode check instance that manages barcode recognition and tracking.
-        val barcodeCheckSettings = BarcodeCheckSettings().apply {
+    fun createBarcodeAr(): BarcodeAr {
+        // The barcode ar process is configured through barcode ar settings
+        // which are then applied to the barcode ar instance that manages barcode recognition and tracking.
+        val barcodeArSettings = BarcodeArSettings().apply {
             // The settings instance initially has all types of barcodes (symbologies) disabled.
             // For the purpose of this sample we enable a generous set of symbologies.
             // In your own app ensure that you only enable the symbologies that your app requires
@@ -44,22 +44,22 @@ class BarcodeCheckManager {
             enableSymbology(Symbology.DATA_MATRIX, true)
         }
 
-        // Create new barcode check mode with the settings from above.
-        return BarcodeCheck(dataCaptureContext, barcodeCheckSettings)
+        // Create new barcode ar mode with the settings from above.
+        return BarcodeAr(dataCaptureContext, barcodeArSettings)
     }
 
-    fun createBarcodeCheckView(parent: ViewGroup, barcodeCheck: BarcodeCheck): BarcodeCheckView {
-        // Create and configure BarcodeCheckView with default view settings.
-        val barcodeCheckViewSettings = BarcodeCheckViewSettings()
+    fun createBarcodeArView(parent: ViewGroup, barcodeAr: BarcodeAr): BarcodeArView {
+        // Create and configure BarcodeArView with default view settings.
+        val barcodeArViewSettings = BarcodeArViewSettings()
 
         // Use the recommended camera settings.
-        val cameraSettings = BarcodeCheck.createRecommendedCameraSettings()
+        val cameraSettings = BarcodeAr.createRecommendedCameraSettings()
 
-        return BarcodeCheckView(
+        return BarcodeArView(
             parent,
-            barcodeCheck,
+            barcodeAr,
             dataCaptureContext,
-            barcodeCheckViewSettings,
+            barcodeArViewSettings,
             cameraSettings
         )
     }

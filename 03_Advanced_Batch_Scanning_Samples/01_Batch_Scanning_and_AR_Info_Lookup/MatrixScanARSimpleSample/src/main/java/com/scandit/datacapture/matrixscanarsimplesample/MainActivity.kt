@@ -12,10 +12,10 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.matrixscanchecksimplesample
+package com.scandit.datacapture.matrixscanarsimplesample
 
 import android.os.Bundle
-import com.scandit.datacapture.matrixscanchecksimplesample.scan.ScanFragment
+import com.scandit.datacapture.matrixscanarsimplesample.scan.ScanFragment
 
 class MainActivity : CameraPermissionActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

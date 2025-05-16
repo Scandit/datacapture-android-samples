@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.matrixscanchecksimplesample.scan.data
+package com.scandit.datacapture.matrixscanarsimplesample.scan.data
 
 import android.graphics.Color
 import java.text.SimpleDateFormat

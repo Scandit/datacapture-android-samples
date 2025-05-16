@@ -57,17 +57,11 @@ android {
     }
 }
 
-repositories {
-    flatDir {
-        dirs '../../../library'
-    }
-}
-
 dependencies {
-    api(name:"ScanditCaptureCore", ext:"aar")
-    api(name:"ScanditIdCapture", ext:"aar")
-    api(name:"ScanditIdCaptureBackend", ext:"aar")
-    api(name:"ScanditBarcodeCapture", ext:"aar")
+    api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:id:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:id-backend:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:barcode:${versions.scandit_sdk_version}"
 
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:${versions.desugar}"
 

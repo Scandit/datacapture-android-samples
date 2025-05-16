@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.matrixscanchecksimplesample.scan
+package com.scandit.datacapture.matrixscanarsimplesample.scan
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,21 +20,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.scandit.datacapture.barcode.check.capture.BarcodeCheck
-import com.scandit.datacapture.barcode.check.ui.BarcodeCheckView
-import com.scandit.datacapture.matrixscanchecksimplesample.R
-import com.scandit.datacapture.matrixscanchecksimplesample.models.BarcodeCheckManager
+import com.scandit.datacapture.barcode.ar.capture.BarcodeAr
+import com.scandit.datacapture.barcode.ar.ui.BarcodeArView
+import com.scandit.datacapture.matrixscanarsimplesample.R
+import com.scandit.datacapture.matrixscanarsimplesample.models.BarcodeArManager
 
 /**
- * Fragment that will display the check UI.
- * The [BarcodeCheckView] will be displayed here.
+ * Fragment that will display the AR UI.
+ * The [BarcodeArView] will be displayed here.
  */
 class ScanFragment : Fragment() {
     private lateinit var viewModel: ScanViewModel
 
-    private var barcodeCheckView: BarcodeCheckView? = null
-    private var barcodeCheck: BarcodeCheck? = null
-    private val barcodeCheckManager = BarcodeCheckManager()
+    private var barcodeArView: BarcodeArView? = null
+    private var barcodeAr: BarcodeAr? = null
+    private val barcodeArManager = BarcodeArManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,34 +50,34 @@ class ScanFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val check = barcodeCheckManager.createBarcodeCheck()
-        barcodeCheck = check
-        barcodeCheckView = barcodeCheckManager.createBarcodeCheckView(view as ViewGroup, check)
+        val ar = barcodeArManager.createBarcodeAr()
+        barcodeAr = ar
+        barcodeArView = barcodeArManager.createBarcodeArView(view as ViewGroup, ar)
 
         // Set view model as the provider for barcode highlight and annotation styling.
-        barcodeCheckView?.annotationProvider = viewModel
-        barcodeCheckView?.highlightProvider = viewModel
+        barcodeArView?.annotationProvider = viewModel
+        barcodeArView?.highlightProvider = viewModel
 
         // Start the scanning flow.
         // This will be automatically paused and restored when onResume and onPause are called.
-        barcodeCheckView?.start()
+        barcodeArView?.start()
     }
 
     override fun onResume() {
         super.onResume()
-        barcodeCheckView?.onResume()
+        barcodeArView?.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        barcodeCheckView?.onPause()
+        barcodeArView?.onPause()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        barcodeCheckView?.onDestroy()
-        barcodeCheckView = null
-        barcodeCheck = null
+        barcodeArView?.onDestroy()
+        barcodeArView = null
+        barcodeAr = null
     }
 
     companion object {

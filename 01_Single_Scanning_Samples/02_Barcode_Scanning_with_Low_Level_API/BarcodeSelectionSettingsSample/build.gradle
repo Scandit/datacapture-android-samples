@@ -8,7 +8,7 @@ android {
     namespace = "com.scandit.datacapture.barcodeselectionsettingssample"
 
     defaultConfig {
-        applicationId = "com.scandit.datacapture.barcodeselectionsettingsample"
+        applicationId = "com.scandit.datacapture.barcodeselectionsettingssample"
         minSdkVersion(sdk.min)
         targetSdkVersion(sdk.target)
         versionCode = 1
@@ -45,15 +45,9 @@ android {
     }
 }
 
-repositories {
-    flatDir {
-        dirs '../../../../library'
-    }
-}
-
 dependencies {
-    api(name:"ScanditCaptureCore", ext:"aar")
-    api(name:"ScanditBarcodeCapture", ext:"aar")
+    api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:barcode:${versions.scandit_sdk_version}"
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}")
 

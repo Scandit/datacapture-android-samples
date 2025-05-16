@@ -57,20 +57,14 @@ android {
     }
 }
 
-repositories {
-    flatDir {
-        dirs '../../../library'
-    }
-}
-
 dependencies {
-    api(name:"ScanditCaptureCore", ext:"aar")
-    api(name:"ScanditIdCapture", ext:"aar")
-    api(name:"ScanditIdCaptureBackend", ext:"aar")
-    api(name:"ScanditIdVoidedDetection", ext:"aar")
-    api(name:"ScanditIdEuropeDrivingLicense", ext:"aar")
-    api(name:"ScanditIdAamvaBarcodeVerification", ext:"aar")
-    api(name:"ScanditLabelCaptureText", ext:"aar")
+    api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:id:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:id-backend:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:id-voided-detection-models:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:id-europe-driving-license-models:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:id-aamva-barcode-verification:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:label-text-models:${versions.scandit_sdk_version}"
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${versions.desugar}")
 

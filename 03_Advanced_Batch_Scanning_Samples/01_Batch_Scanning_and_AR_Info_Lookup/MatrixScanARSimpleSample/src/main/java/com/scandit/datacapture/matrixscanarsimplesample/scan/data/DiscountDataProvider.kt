@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.matrixscanchecksimplesample.scan.data
+package com.scandit.datacapture.matrixscanarsimplesample.scan.data
 
 import com.scandit.datacapture.barcode.data.Barcode
 

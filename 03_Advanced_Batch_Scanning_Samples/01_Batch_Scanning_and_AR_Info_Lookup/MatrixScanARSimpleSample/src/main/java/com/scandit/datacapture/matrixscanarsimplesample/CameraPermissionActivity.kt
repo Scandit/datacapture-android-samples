@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.matrixscanchecksimplesample
+package com.scandit.datacapture.matrixscanarsimplesample
 
 import android.Manifest
 import android.content.pm.PackageManager

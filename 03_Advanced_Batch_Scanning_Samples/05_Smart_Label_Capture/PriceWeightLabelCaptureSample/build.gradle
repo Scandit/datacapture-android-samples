@@ -50,17 +50,11 @@ android {
     }
 }
 
-repositories {
-    flatDir {
-        dirs '../../../../library'
-    }
-}
-
 dependencies {
-    api(name:"ScanditCaptureCore", ext:"aar")
-    api(name:"ScanditBarcodeCapture", ext:"aar")
-    api(name:"ScanditLabelCapture", ext:"aar")
-    api(name:"ScanditLabelCaptureText", ext:"aar")
+    api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:barcode:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:label:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:label-text-models:${versions.scandit_sdk_version}"
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}")
 

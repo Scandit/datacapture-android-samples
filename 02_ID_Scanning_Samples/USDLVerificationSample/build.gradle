@@ -56,17 +56,11 @@ android {
     }
 }
 
-repositories {
-    flatDir {
-        dirs '../../../library'
-    }
-}
-
 dependencies {
-    api(name:"ScanditCaptureCore", ext:"aar")
-    api(name:"ScanditIdCapture", ext:"aar")
-    api(name:"ScanditIdCaptureBackend", ext:"aar")
-    api(name:"ScanditIdAamvaBarcodeVerification", ext:"aar")
+    api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:id:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:id-backend:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:id-aamva-barcode-verification:${versions.scandit_sdk_version}"
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}")
 

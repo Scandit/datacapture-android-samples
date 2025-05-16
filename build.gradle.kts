@@ -21,7 +21,7 @@ buildscript {
     val versions: Map<String, Any> by extra(
         mapOf(
             // The value of scandit_sdk_version is updated automatically in the bump_sdc_version.py script, please do not edit manually.
-            "scandit_sdk_version" to "7.2.2",
+            "scandit_sdk_version" to "7.3.0",
             "android_gradle" to "8.5.1",
             "android_material" to "1.6.1",
             "androidx_animations" to "1.0.0",

@@ -99,7 +99,7 @@ ID Scanning Samples demonstrate the features of the ID Capture API and demonstra
 
 ### MatrixScan Check Samples
 
-**MatrixScan Check Simple Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/MatrixScanCheckSimpleSample))
+**MatrixScan AR Simple Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/MatrixScanARSimpleSample))
 
 ## Samples on Other Frameworks
 

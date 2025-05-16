@@ -90,8 +90,8 @@ public class BarcodeCountPresenter implements BarcodeCountListener, BarcodeCount
         // Enable SingleScan button, which we'll use to switch to SparkScan,
         barcodeCountView.setShouldShowSingleScanButton(true);
 
-        // Enable the status mode button.
-        barcodeCountView.setShouldShowStatusModeButton(true);
+        // Enable status icons on scan.
+        barcodeCountView.setShouldShowStatusIconsOnScan(true);
 
         // Set a status provider for the status mode.
         barcodeCountView.setStatusProvider(new StatusProvider(context));

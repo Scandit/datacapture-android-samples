@@ -20,10 +20,10 @@ plugins {
 android {
     ndkVersion = sdk.ndk
     compileSdkVersion = sdk.compile
-    namespace = "com.scandit.datacapture.matrixscanchecksimplesample"
+    namespace = "com.scandit.datacapture.matrixscanarsimplesample"
 
     defaultConfig {
-        applicationId = "com.scandit.datacapture.matrixscanchecksimplesample"
+        applicationId = "com.scandit.datacapture.matrixscanarsimplesample"
         minSdkVersion(sdk.min)
         targetSdkVersion(sdk.target)
         versionCode = 1
@@ -60,15 +60,9 @@ android {
     }
 }
 
-repositories {
-    flatDir {
-        dirs '../../../../library'
-    }
-}
-
 dependencies {
-    api(name:"ScanditCaptureCore", ext:"aar")
-    api(name:"ScanditBarcodeCapture", ext:"aar")
+    api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:barcode:${versions.scandit_sdk_version}"
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}")
 
