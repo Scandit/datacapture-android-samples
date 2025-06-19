@@ -36,7 +36,7 @@ import com.scandit.datacapture.usdlverificationsample.ui.scan.CapturedIdEvent;
 import com.scandit.datacapture.usdlverificationsample.ui.scan.RejectedId;
 import com.scandit.datacapture.usdlverificationsample.ui.scan.RejectedIdEvent;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -44,7 +44,7 @@ import java.util.List;
  */
 public class IdCaptureRepository implements IdCaptureListener {
 
-    private static final List<IdCaptureDocument> ACCEPTED_DOCUMENTS = Arrays.asList(
+    private static final List<IdCaptureDocument> ACCEPTED_DOCUMENTS = Collections.singletonList(
             new DriverLicense(IdCaptureRegion.US)
     );
 

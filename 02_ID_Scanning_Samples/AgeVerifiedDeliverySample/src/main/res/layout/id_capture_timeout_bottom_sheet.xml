@@ -28,7 +28,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:textAppearance="@style/Scandit.TextAppearance.BottomSheet.BodyText"
-        android:text="@string/id_capture_first_timeout_message"
+        android:text="@string/id_capture_timeout_message"
         android:drawablePadding="8dp"
         app:drawableStartCompat="@drawable/ic_baseline_error_outline_24" />
 

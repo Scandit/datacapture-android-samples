@@ -54,6 +54,6 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:text="@string/id_capture_timeout_action_retry" />
+        android:text="@string/age_verification_failure_retry_button" />
 
 </LinearLayout>

@@ -1,24 +1,19 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
     ndkVersion = sdk.ndk
     compileSdkVersion = sdk.compile
-    namespace = "com.scandit.datacapture.idcapturesimplesample"
+    namespace = "com.scandit.datacapture.labelcapturesimplesample"
 
     defaultConfig {
-        applicationId = "com.scandit.datacapture.idcapturesimplesample"
-        minSdkVersion(sdk.id_min)
+        applicationId = "com.scandit.datacapture.labelcapturesimplesample"
+        minSdkVersion(sdk.min)
         targetSdkVersion(sdk.target)
         versionCode = 1
         versionName = "1.0"
-
-        vectorDrawables.useSupportLibrary = true
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments['useTestStorageService'] = 'true'
-        testInstrumentationRunnerArguments['clearPackageData'] = 'true'
     }
 
     buildTypes {
@@ -50,27 +45,27 @@ android {
         }
     }
 
-    testOptions {
-        animationsDisabled = true
+    buildFeatures {
+        viewBinding true
     }
 }
 
 dependencies {
     api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
-    api "com.scandit.datacapture:id:${versions.scandit_sdk_version}"
-    api "com.scandit.datacapture:id-backend:${versions.scandit_sdk_version}"
-
-    api("androidx.datastore:datastore-preferences:${versions["androidx_datastore_preferences"]}")
-    api("com.squareup.okhttp3:okhttp:${versions["okhttp"]}")
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions["coroutines"]}")
-    api("org.jetbrains.kotlinx:kotlinx-serialization-json:${versions["kotlin_serialization"]}")
-
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${versions.desugar}")
+    api "com.scandit.datacapture:barcode:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:label:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:label-text-models:${versions.scandit_sdk_version}"
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}")
 
     implementation("androidx.appcompat:appcompat:${versions.androidx_appcompat}")
-    implementation("androidx.constraintlayout:constraintlayout:${versions.androidx_constraintlayout}")
     implementation("com.google.android.material:material:${versions.material}")
 
+    implementation("androidx.constraintlayout:constraintlayout:${versions.androidx_constraintlayout}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines}")
+
+    implementation "androidx.fragment:fragment-ktx:1.5.7"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
+    implementation "androidx.preference:preference-ktx:1.2.0"
 }

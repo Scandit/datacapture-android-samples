@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="upc">#2EC1CE</color>
+    <color name="weight">#FBC02C</color>
+    <color name="unitPrice">#0A3390</color>
+    <color name="expiryDate">#FA4446</color>
+    <color name="fullDark">#121619</color>
+    <color name="translucentDark">#cc121619</color>
+    <color name="selectedDark">#80121619</color>
+    <color name="yellow">#CCFBC02C</color>
+</resources>

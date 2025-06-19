@@ -17,5 +17,5 @@ include(":03_Advanced_Batch_Scanning_Samples:02_Counting_and_Receiving:Receiving
 include(":03_Advanced_Batch_Scanning_Samples:02_Counting_and_Receiving:ReorderFromCatalogSample")
 include(":03_Advanced_Batch_Scanning_Samples:03_Search_and_Find:SearchAndFindSample")
 include(":03_Advanced_Batch_Scanning_Samples:04_Picking:RestockingSample")
-include(":03_Advanced_Batch_Scanning_Samples:05_Smart_Label_Capture:PriceWeightLabelCaptureSample")
+include(":03_Advanced_Batch_Scanning_Samples:05_Smart_Label_Capture:LabelCaptureSimpleSample")
 include(":04_Parser_Samples:GS1ParserSample")

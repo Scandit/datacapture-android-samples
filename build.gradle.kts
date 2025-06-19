@@ -13,15 +13,16 @@ buildscript {
         mapOf(
             "ndk" to "27.0.12077973",
             "min" to 23,
-            "target" to 33,
-            "compile" to 33
+            "id_min" to 24,
+            "target" to 35,
+            "compile" to 35
         )
     )
 
     val versions: Map<String, Any> by extra(
         mapOf(
             // The value of scandit_sdk_version is updated automatically in the bump_sdc_version.py script, please do not edit manually.
-            "scandit_sdk_version" to "7.3.1",
+            "scandit_sdk_version" to "7.4.0",
             "android_gradle" to "8.5.1",
             "android_material" to "1.6.1",
             "androidx_animations" to "1.0.0",
@@ -29,6 +30,7 @@ buildscript {
             "androidx_cardview" to "1.0.0",
             "androidx_constraintlayout" to "2.1.4",
             "androidx_coordinatorlayout" to "1.2.0",
+            "androidx_datastore_preferences" to "1.1.7",
             "androidx_lifecycle" to "2.3.1",
             "androidx_preference" to "1.1.1",
             "androidx_test_core" to "1.5.0",
@@ -38,12 +40,15 @@ buildscript {
             "androidx_test_rules" to "1.5.0",
             "androidx_test_runner" to "1.5.2",
             "androidx_test_services" to "1.5.0-alpha01",
+            "coroutines" to "1.8.1",
             "desugar" to "1.1.5",
             "java" to JavaVersion.VERSION_1_8,
-            "kotlin" to "1.8.22",
+            "kotlin" to "1.9.25",
+            "kotlin_serialization" to "1.7.1",
             "material" to "1.3.0",
             "mockito_android" to "3.12.4",
-            "mockito_kotlin_version" to "4.0.0"
+            "mockito_kotlin_version" to "4.0.0",
+            "okhttp" to "4.12.0",
         )
     )
 

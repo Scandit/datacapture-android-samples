@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.scandit.datacapture.idcaptureextendedsample"
-        minSdkVersion(sdk.min)
+        minSdkVersion(sdk.id_min)
         targetSdkVersion(sdk.target)
         versionCode = 1
         versionName = "1.0"
@@ -60,6 +60,11 @@ dependencies {
     api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
     api "com.scandit.datacapture:id:${versions.scandit_sdk_version}"
     api "com.scandit.datacapture:id-backend:${versions.scandit_sdk_version}"
+
+    api("androidx.datastore:datastore-preferences:${versions["androidx_datastore_preferences"]}")
+    api("com.squareup.okhttp3:okhttp:${versions["okhttp"]}")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions["coroutines"]}")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-json:${versions["kotlin_serialization"]}")
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${versions.desugar}")
 

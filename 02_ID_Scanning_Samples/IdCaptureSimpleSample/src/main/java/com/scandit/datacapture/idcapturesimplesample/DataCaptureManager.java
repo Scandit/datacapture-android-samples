@@ -64,7 +64,7 @@ public final class DataCaptureManager {
         /*
          * Create DataCaptureContext using your license key.
          */
-        dataCaptureContext = DataCaptureContext.forLicenseKey(BuildConfig.SCANDIT_LICENSE_KEY);
+        dataCaptureContext = DataCaptureContext.forLicenseKey(SCANDIT_LICENSE_KEY);
 
         initCamera();
         initIdCapture();

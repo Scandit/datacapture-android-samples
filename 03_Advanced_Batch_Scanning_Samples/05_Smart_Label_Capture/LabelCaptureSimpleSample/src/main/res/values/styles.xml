@@ -1,0 +1,54 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="bottomSheetDialogTheme">@style/RoundedDialog</item>
+        <item name="colorPrimary">@color/fullDark</item>
+        <item name="buttonStyle">@style/DefaultButton</item>
+        <item name="editTextStyle">@style/SmallerEditText</item>
+        <item name="android:textViewStyle">@style/BolderTextView</item>
+    </style>
+
+    <style name="RoundedDialog" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/RoundedBottomSheet</item>
+        <item name="buttonStyle">@style/DefaultButton</item>
+    </style>
+
+    <style name="RoundedBottomSheet" parent="Widget.MaterialComponents.BottomSheet">
+        <item name="shapeAppearanceOverlay">@style/RoundedShape</item>
+    </style>
+
+    <style name="RoundedShape" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerSizeTopLeft">16dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+    </style>
+
+    <style name="DefaultButton" parent="Widget.AppCompat.Button">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/bg_default_button</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <style name="AltButton" parent="DefaultButton">
+        <item name="android:background">@drawable/bg_alt_button</item>
+        <item name="android:textColor">@color/button_colors</item>
+    </style>
+
+    <style name="SmallerEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/fullDark</item>
+    </style>
+
+    <style name="BolderTextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textAppearance">@style/BolderTextAppearance</item>
+    </style>
+
+    <style name="BolderTextAppearance" parent="TextAppearance.AppCompat.Small" />
+
+</resources>
