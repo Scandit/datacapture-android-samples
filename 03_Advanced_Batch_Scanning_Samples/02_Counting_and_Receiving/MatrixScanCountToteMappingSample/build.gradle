@@ -50,6 +50,7 @@ dependencies {
     api "com.scandit.datacapture:barcode:${versions.scandit_sdk_version}"
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}")
+    implementation("com.google.android.material:material:${versions.material}")
     implementation("androidx.appcompat:appcompat:${versions.androidx_appcompat}")
     implementation("androidx.constraintlayout:constraintlayout:${versions.androidx_constraintlayout}")
 }

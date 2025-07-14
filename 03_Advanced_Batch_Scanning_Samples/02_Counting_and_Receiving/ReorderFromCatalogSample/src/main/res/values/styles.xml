@@ -2,9 +2,10 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@android:color/black</item>
         <item name="colorPrimaryDark">@android:color/black</item>
-    </style>
 
+        <item name="android:statusBarColor">?android:attr/colorPrimary</item>
+        <item name="statusBarBackground">?android:attr/colorPrimary</item>
+    </style>
 </resources>

@@ -22,7 +22,7 @@
         </activity>
 
         <activity android:name=".settings.SettingsActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:theme="@style/SettingsActivityTheme"
             android:label="@string/settings"
             android:screenOrientation="user"/>
     </application>

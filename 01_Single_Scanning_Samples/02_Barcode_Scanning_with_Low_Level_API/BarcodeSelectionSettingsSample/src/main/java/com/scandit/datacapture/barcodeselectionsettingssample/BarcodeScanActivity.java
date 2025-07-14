@@ -18,6 +18,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -42,6 +44,8 @@ import com.scandit.datacapture.core.ui.DataCaptureView;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public final class BarcodeScanActivity
         extends CameraPermissionActivity implements BarcodeSelectionListener {
@@ -77,6 +81,7 @@ public final class BarcodeScanActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         dataCaptureManager = DataCaptureManager.getInstance(this);
 
         // Initialize DataCaptureContext and BarcodeSelection. This can be done only once, as the
@@ -118,7 +123,12 @@ public final class BarcodeScanActivity
                 barcodeSelection, dataCaptureView
         );
 
-        setContentView(dataCaptureView);
+        // Add the DataCaptureView to the dedicated container from the layout xml.
+        ((ViewGroup) findViewById(R.id.data_capture_view_container)).addView(
+            dataCaptureView,
+            MATCH_PARENT,
+            MATCH_PARENT
+        );
     }
 
     private void initializeAndSetupCamera() {

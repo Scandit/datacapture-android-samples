@@ -8,6 +8,9 @@
         <item name="buttonStyle">@style/DefaultButton</item>
         <item name="editTextStyle">@style/SmallerEditText</item>
         <item name="android:textViewStyle">@style/BolderTextView</item>
+
+        <item name="android:statusBarColor">?android:attr/colorPrimary</item>
+        <item name="statusBarBackground">?android:attr/colorPrimary</item>
     </style>
 
     <style name="RoundedDialog" parent="Theme.MaterialComponents.Light.BottomSheetDialog">

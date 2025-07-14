@@ -3,7 +3,9 @@
     <style name="LightNavigationBarBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
         <item name="android:navigationBarColor">@color/white</item>
-        <item name="android:statusBarColor">@color/black</item>
+
+        <item name="android:statusBarColor">?android:attr/colorPrimary</item>
+        <item name="statusBarBackground">?android:attr/colorPrimary</item>
     </style>
 
     <style name="RoundedCornersBottomSheet" parent="Widget.Design.BottomSheet.Modal">

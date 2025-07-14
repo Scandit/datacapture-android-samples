@@ -20,6 +20,9 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="background">@android:color/white</item>
         <item name="buttonStyle">@style/DefaultButton</item>
+
+        <item name="android:statusBarColor">?android:attr/colorPrimary</item>
+        <item name="statusBarBackground">?android:attr/colorPrimary</item>
     </style>
 
     <style name="DefaultButton" parent="Widget.AppCompat.Button">

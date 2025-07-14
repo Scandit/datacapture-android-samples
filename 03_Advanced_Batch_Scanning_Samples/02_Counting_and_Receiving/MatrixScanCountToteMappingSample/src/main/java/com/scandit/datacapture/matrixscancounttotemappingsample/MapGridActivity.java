@@ -16,6 +16,7 @@ package com.scandit.datacapture.matrixscancounttotemappingsample;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,8 @@ public class MapGridActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_map_grid);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -72,8 +75,12 @@ public class MapGridActivity extends AppCompatActivity {
                 }
             });
 
-            // Set the editorView as content view.
-            setContentView(editorView);
+            // Put the editorView in the Activity hierarchy.
+            ((ViewGroup) findViewById(R.id.grid_container)).addView(
+                editorView,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            );
         }
     }
 
