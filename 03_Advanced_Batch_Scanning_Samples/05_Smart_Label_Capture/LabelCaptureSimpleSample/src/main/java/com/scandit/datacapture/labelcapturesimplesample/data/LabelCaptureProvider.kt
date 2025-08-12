@@ -22,6 +22,9 @@ import com.scandit.datacapture.label.capture.LabelCapture
 import com.scandit.datacapture.label.capture.LabelCaptureSettings
 import com.scandit.datacapture.label.capture.labelCaptureSettings
 import com.scandit.datacapture.label.data.CapturedLabel
+import com.scandit.datacapture.label.data.LabelDateComponentFormat
+import com.scandit.datacapture.label.data.LabelDateFormat
+import com.scandit.datacapture.label.data.LabelDateResult
 import com.scandit.datacapture.label.data.LabelField
 import com.scandit.datacapture.label.ui.overlay.LabelCaptureBasicOverlay
 import com.scandit.datacapture.label.ui.overlay.LabelCaptureBasicOverlayListener
@@ -30,6 +33,9 @@ import com.scandit.datacapture.label.ui.overlay.validation.LabelCaptureValidatio
 import com.scandit.datacapture.label.ui.overlay.validation.LabelCaptureValidationFlowSettings
 import com.scandit.datacapture.labelcapturesimplesample.R
 import com.scandit.datacapture.labelcapturesimplesample.utils.withAlpha
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 object LabelCaptureProvider {
 
@@ -116,8 +122,8 @@ object LabelCaptureProvider {
     }
 
     private fun buildLabelCaptureSettings(): LabelCaptureSettings {
-        // This is an example of labelCaptureSettings. Here we set two labels, one with a simple
-        // barcode, and one label that has price and weight.
+        // This is an example of labelCaptureSettings. Here we set a label
+        // that has a barcode, date, price and weight fields.
         val settings = labelCaptureSettings {
             label(LABEL_WEIGHT_PRICE) {
                 customBarcode(FIELD_BARCODE) {
@@ -129,6 +135,12 @@ object LabelCaptureProvider {
                     isOptional = false
                 }
                 expiryDateText(FIELD_EXPIRY_DATE) {
+                    setLabelDateFormat(
+                        LabelDateFormat(
+                            componentFormat = LabelDateComponentFormat.MDY,
+                            acceptPartialDates = false
+                        )
+                    )
                     isOptional = true
                 }
                 unitPriceText(FIELD_UNIT_PRICE) {
@@ -164,17 +176,29 @@ object LabelCaptureProvider {
     }
 
     private fun List<LabelField>.toScannedResult(): ScannedResult? = ScannedResult(mapNotNull {
-        val data = it.barcode?.data ?: it.text
-        if (!data.isNullOrBlank()) {
-            it.name to data
+        val date = it.asDate()
+        if (date != null) {
+            it.name to formatDateResult(date)
         } else {
-            null
+            val data = it.barcode?.data ?: it.text
+            if (!data.isNullOrBlank()) {
+                it.name to data
+            } else {
+                null
+            }
         }
     }.toMap<String, String>())
+
+    private fun formatDateResult(date: LabelDateResult): String {
+        val calendar = Calendar.getInstance()
+        calendar.set(date.year!!, date.month!! - 1, date.day!!)
+        return SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(calendar.time)
+    }
 
     private const val FIELD_BARCODE = "barcode"
     private const val FIELD_UNIT_PRICE = "unit_price"
     private const val FIELD_WEIGHT = "weight"
     private const val FIELD_EXPIRY_DATE = "expiry_date"
     private const val LABEL_WEIGHT_PRICE = "weighted_item"
+    private const val DATE_FORMAT = "dd - MM - yyyy"
 }

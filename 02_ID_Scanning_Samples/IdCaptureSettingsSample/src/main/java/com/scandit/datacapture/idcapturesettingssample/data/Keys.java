@@ -44,7 +44,8 @@ public final class Keys {
     public final static String ID_CAPTURED_FEEDBACK = "id_captured_feedback";
     public final static String ID_REJECTED_FEEDBACK = "id_rejected_feedback";
     public final static String DECODE_BACK_OF_EUROPEAN_DRIVING_LICENSE = "decode_back_of_european_driving_license";
-    public final static String DECODE_MOBILE_DRIVING_LICENSES = "decode_mobile_driving_licenses";
+    public final static String DECODE_MOBILE_DRIVER_LICENSE_VIZ = "decode_mobile_driver_license_viz";
+    public final static String DECODE_ISO_MOBILE_DRIVING_LICENSES = "decode_iso_mobile_driving_licenses";
     public final static String REJECT_VOIDED_IDS = "reject_voided_ids";
     public final static String REJECT_EXPIRED_IDS = "reject_expired_ids";
     public final static String REJECT_IDS_EXPIRING_IN_DAYS = "reject_ids_expiring_in_days";

@@ -313,11 +313,20 @@ public class SettingsRepository extends PreferenceDataStore {
     }
 
     /*
-     * Retrieves from settings whether mobile driver licenses should be decoded.
+     * Retrieves from settings whether mobile driver license VIZ should be decoded.
      */
-    public boolean shouldDecodeMobileDrivingLicenses() {
-        return getBoolean(Keys.DECODE_MOBILE_DRIVING_LICENSES,
-                Defaults.shouldDecodeMobileDrivingLicenses());
+    public boolean shouldDecodeMobileDrivingLicenseViz() {
+        return getBoolean(Keys.DECODE_MOBILE_DRIVER_LICENSE_VIZ,
+                Defaults.shouldDecodeMobileDrivingLicenseViz());
+    }
+
+    /*
+     * Retrieves from settings whether ISO 18013-5 compliant mobile driver licenses should be
+     *  decoded.
+     */
+    public boolean shouldDecodeIsoMobileDrivingLicenses() {
+        return getBoolean(Keys.DECODE_ISO_MOBILE_DRIVING_LICENSES,
+                Defaults.shouldDecodeIsoMobileDrivingLicenses());
     }
 
     /*

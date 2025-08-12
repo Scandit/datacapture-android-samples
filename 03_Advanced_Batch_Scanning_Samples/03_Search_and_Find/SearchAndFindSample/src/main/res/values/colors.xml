@@ -16,7 +16,6 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="white">@android:color/white</color>
-    <color name="transparent">@android:color/transparent</color>
-    <color name="black900">#121619</color>
+    <color name="light_grey">#F8FAFC</color>
+    <color name="off_white">#F8FAFC</color>
 </resources>

@@ -14,11 +14,12 @@
 
 package com.scandit.datacapture.idcapturesettingssample.ui.scan;
 
-import static android.Manifest.permission.CAMERA;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static androidx.core.content.ContextCompat.checkSelfPermission;
 
+import android.Manifest;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -59,6 +60,20 @@ public class ScanFragment extends Fragment {
     private static final String SETTINGS_TAG = "SETTINGS";
 
     /**
+     * Required permissions to enable physical and mobile document scanning.
+     */
+    private static final String[] REQUIRED_PERMISSIONS =
+            (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) ? new String[] {
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.BLUETOOTH_SCAN,
+                    Manifest.permission.BLUETOOTH_CONNECT,
+                    Manifest.permission.BLUETOOTH_ADVERTISE
+            } : new String[] {
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            };
+
+    /**
      * The view model of this fragment.
      */
     private ScanViewModel viewModel;
@@ -85,11 +100,19 @@ public class ScanFragment extends Fragment {
     private volatile ShowHideViewTimer resultViewTimer;
 
     /**
-     * The launcher to request the user permission to use their device's camera.
+     * The launcher to request the user permissions to use their device's camera and Bluetooth.
      */
-    private final ActivityResultLauncher<String> requestCameraPermission =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (isGranted && isResumed()) {
+    private final ActivityResultLauncher<String[]> permissionRequestLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+                boolean allGranted = true;
+
+                for (Boolean granted : result.values()) {
+                    if (!granted) {
+                        allGranted = false;
+                        break;
+                    }
+                }
+                if (allGranted && isResumed()) {
                     onCameraPermissionGranted();
                 }
             });
@@ -211,15 +234,26 @@ public class ScanFragment extends Fragment {
         super.onResume();
 
         /*
-         * Check for camera permission and request it, if it hasn't yet been granted.
-         * Once we have the permission start the capture process.
+         * Check for camera and bluetooth permissions and request them, if they haven't yet been
+         *  granted. Once we have the permissions, start the capture process.
          */
-        if (checkSelfPermission(requireContext(), CAMERA) == PERMISSION_GRANTED) {
+        if (arePermissionsGranted()) {
             onCameraPermissionGranted();
         } else {
-            requestCameraPermission.launch(CAMERA);
+            permissionRequestLauncher.launch(REQUIRED_PERMISSIONS);
         }
     }
+
+    public boolean arePermissionsGranted() {
+        for (String permission : REQUIRED_PERMISSIONS) {
+            if (checkSelfPermission(requireContext(), permission) != PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 
     public void onCameraPermissionGranted() {
         /*

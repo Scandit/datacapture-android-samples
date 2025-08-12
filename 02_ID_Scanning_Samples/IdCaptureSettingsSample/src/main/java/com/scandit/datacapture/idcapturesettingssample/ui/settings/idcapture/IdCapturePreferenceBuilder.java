@@ -154,15 +154,25 @@ public class IdCapturePreferenceBuilder implements SectionPreferenceBuilder {
                 );
         parent.addPreference(decodeBackOfEuropeanDrivingLicenseSwitchPreference);
 
-        // Switch to enable or disable the decoding of mobile driver licenses.
-        SwitchPreferenceCompat decodeMobileDrivingLicensesSwitchPreference =
+        // Switch to enable or disable the decoding of mobile driver license VIZ.
+        SwitchPreferenceCompat decodeMobileDrivingLicenseVizSwitchPreference =
                 PreferenceBuilder._switch(
                         context,
-                        Keys.DECODE_MOBILE_DRIVING_LICENSES,
-                        context.getString(R.string.decode_mobile_driving_license),
-                        Defaults.shouldDecodeMobileDrivingLicenses()
+                        Keys.DECODE_MOBILE_DRIVER_LICENSE_VIZ,
+                        context.getString(R.string.decode_mobile_driver_license_viz),
+                        Defaults.shouldDecodeMobileDrivingLicenseViz()
                 );
-        parent.addPreference(decodeMobileDrivingLicensesSwitchPreference);
+        parent.addPreference(decodeMobileDrivingLicenseVizSwitchPreference);
+
+        // Switch to enable or disable the decoding of ISO 18013-5 compliant mobile driver licenses.
+        SwitchPreferenceCompat decodeIsoMobileDrivingLicensesSwitchPreference =
+                PreferenceBuilder._switch(
+                        context,
+                        Keys.DECODE_ISO_MOBILE_DRIVING_LICENSES,
+                        context.getString(R.string.decode_iso_mobile_driving_license),
+                        Defaults.shouldDecodeIsoMobileDrivingLicenses()
+                );
+        parent.addPreference(decodeIsoMobileDrivingLicensesSwitchPreference);
     }
 
     /**

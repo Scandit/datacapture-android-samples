@@ -12,26 +12,23 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.searchandfindsample.find;
+package com.scandit.datacapture.searchandfindsample.search;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
+import android.graphics.Bitmap;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
-public final class FindScanViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+public final class ScanResult implements Serializable {
 
-    private final ArrayList<String> datas;
+    public final String barcodeData;
+    public final String barcodeSymbology;
+    public Bitmap image;
 
-    FindScanViewModelFactory(ArrayList<String> datas) {
-        this.datas = datas;
-    }
-
-    @NonNull
-    @Override
-    public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        //noinspection unchecked
-        return (T) new FindScanViewModel(datas);
+    public ScanResult(String barcodeData, String barcodeSymbology, Bitmap image) {
+        this.barcodeData = barcodeData;
+        this.barcodeSymbology = barcodeSymbology;
+        this.image = image;
     }
 }

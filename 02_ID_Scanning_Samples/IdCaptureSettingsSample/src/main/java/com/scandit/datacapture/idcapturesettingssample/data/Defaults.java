@@ -107,7 +107,11 @@ public final class Defaults {
         return false;
     }
 
-    public static boolean shouldDecodeMobileDrivingLicenses() {
+    public static boolean shouldDecodeMobileDrivingLicenseViz() {
+        return false;
+    }
+
+    public static boolean shouldDecodeIsoMobileDrivingLicenses() {
         return false;
     }
 

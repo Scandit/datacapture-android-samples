@@ -16,10 +16,11 @@ package com.scandit.datacapture.searchandfindsample.find;
 
 import androidx.lifecycle.ViewModel;
 
-import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.find.capture.BarcodeFind;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.searchandfindsample.models.FindDataCaptureManager;
+
+import java.util.ArrayList;
 
 public final class FindScanViewModel extends ViewModel {
 
@@ -27,11 +28,9 @@ public final class FindScanViewModel extends ViewModel {
 
     final DataCaptureContext dataCaptureContext = dataCaptureManager.dataCaptureContext;
 
-    FindScanViewModel(Symbology symbology, String data) {
-        // We change the barcode tracking settings to enable only the previously scanned symbology.
-        dataCaptureManager.setupForSymbology(symbology);
+    FindScanViewModel(ArrayList<String> datas) {
         // We setup the list of searched items.
-        dataCaptureManager.setupSearchedItems(data);
+        dataCaptureManager.setupSearchedItems(datas);
     }
 
     BarcodeFind getBarcodeFind() {

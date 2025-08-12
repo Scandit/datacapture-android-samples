@@ -14,7 +14,6 @@
 
 package com.scandit.datacapture.searchandfindsample.find;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -27,7 +26,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.scandit.datacapture.barcode.data.Barcode;
-import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.find.capture.BarcodeFindItem;
 import com.scandit.datacapture.barcode.find.ui.BarcodeFindView;
 import com.scandit.datacapture.barcode.find.ui.BarcodeFindViewSettings;
@@ -36,18 +34,27 @@ import com.scandit.datacapture.searchandfindsample.R;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public final class FindScanFragment extends Fragment {
 
-    private static final String FIELD_SYMBOLOGY = "symbology";
     private static final String FIELD_DATA = "data";
 
-    public static FindScanFragment newInstance(Barcode barcode) {
+    public static FindScanFragment newInstance(List<Barcode> barcodesToFind) {
         FindScanFragment fragment = new FindScanFragment();
         Bundle arguments = new Bundle();
-        arguments.putSerializable(FIELD_SYMBOLOGY, barcode.getSymbology());
-        arguments.putString(FIELD_DATA, barcode.getData());
+
+        ArrayList<String> datas = new ArrayList<>();
+        for (Barcode barcode : barcodesToFind) {
+            if (!datas.contains(barcode.getData())) {
+                // Only add the data if it is not already in the list
+                datas.add(barcode.getData());
+            }
+        }
+
+        arguments.putStringArrayList(FIELD_DATA, datas);
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -64,14 +71,8 @@ public final class FindScanFragment extends Fragment {
 
         Bundle arguments = getArguments();
         if (viewModelFactory == null && arguments != null) {
-            Symbology symbology;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                symbology = arguments.getSerializable(FIELD_SYMBOLOGY, Symbology.class);
-            } else {
-                symbology = (Symbology) arguments.getSerializable(FIELD_SYMBOLOGY);
-            }
-            String data = arguments.getString(FIELD_DATA);
-            viewModelFactory = new FindScanViewModelFactory(symbology, data);
+            ArrayList<String> datas = arguments.getStringArrayList(FIELD_DATA);
+            viewModelFactory = new FindScanViewModelFactory(datas);
         }
         viewModel = new ViewModelProvider(this, viewModelFactory).get(FindScanViewModel.class);
     }
@@ -94,6 +95,9 @@ public final class FindScanFragment extends Fragment {
             // as well as change the visual feedback for found barcodes.
             new BarcodeFindViewSettings()
         );
+
+        // Show progress bar.
+        barcodeFindView.setShouldShowProgressBar(true);
 
         return root;
     }

@@ -15,7 +15,6 @@
 package com.scandit.datacapture.searchandfindsample.models;
 
 import com.scandit.datacapture.core.capture.DataCaptureContext;
-import com.scandit.datacapture.core.source.Camera;
 import com.scandit.datacapture.searchandfindsample.BuildConfig;
 
 public final class DataCaptureManager {
@@ -27,11 +26,9 @@ public final class DataCaptureManager {
     public static final DataCaptureManager CURRENT = new DataCaptureManager();
 
     final DataCaptureContext dataCaptureContext;
-    public final Camera camera = Camera.getDefaultCamera();
 
     private DataCaptureManager() {
         // Create data capture context using your license key and set the camera as the frame source.
         dataCaptureContext = DataCaptureContext.forLicenseKey(SCANDIT_LICENSE_KEY);
-        dataCaptureContext.setFrameSource(camera);
     }
 }

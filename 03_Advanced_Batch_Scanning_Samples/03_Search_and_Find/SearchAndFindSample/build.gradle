@@ -55,6 +55,7 @@ dependencies {
 
     implementation("androidx.appcompat:appcompat:${versions.androidx_appcompat}")
 
-    implementation("androidx.coordinatorlayout:coordinatorlayout:${versions.androidx_coordinatorlayout}")
+    implementation("androidx.constraintlayout:constraintlayout:${versions.androidx_constraintlayout}")
+
     implementation("com.google.android.material:material:${versions.android_material}")
 }

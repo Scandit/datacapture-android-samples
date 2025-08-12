@@ -148,8 +148,10 @@ public class IdCaptureRepository implements IdCaptureListener {
         idCaptureSettings.setAnonymizationMode(settingsRepository.getAnonymizationMode());
         // Set whether extra information should be extracted from the back side of European driver's licenses
         idCaptureSettings.setDecodeBackOfEuropeanDrivingLicense(settingsRepository.shouldDecodeBackOfEuropeanDrivingLicense());
-        // Set whether mobile driver licenses should be decoded
-        idCaptureSettings.setDecodeMobileDriverLicenses(settingsRepository.shouldDecodeMobileDrivingLicenses());
+        // Set whether mobile driver license VIZ should be decoded
+        idCaptureSettings.setDecodeMobileDriverLicenseViz(settingsRepository.shouldDecodeMobileDrivingLicenseViz());
+        // Set whether ISO 18013-5 compliant mobile driver licenses should be decoded
+        idCaptureSettings.setDecodeIsoMobileDriverLicenses(settingsRepository.shouldDecodeIsoMobileDrivingLicenses());
         // Set whether voided IDs should be rejected
         idCaptureSettings.setRejectVoidedIds(settingsRepository.shouldRejectVoidedIds());
         // Set whether expired IDs should be rejected

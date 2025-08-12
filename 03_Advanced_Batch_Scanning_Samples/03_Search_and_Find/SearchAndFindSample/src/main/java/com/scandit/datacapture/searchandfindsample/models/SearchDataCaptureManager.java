@@ -14,28 +14,25 @@
 
 package com.scandit.datacapture.searchandfindsample.models;
 
-import com.scandit.datacapture.barcode.capture.BarcodeCapture;
-import com.scandit.datacapture.barcode.capture.BarcodeCaptureSettings;
+import com.scandit.datacapture.barcode.capture.SymbologySettings;
 import com.scandit.datacapture.barcode.data.Symbology;
-import com.scandit.datacapture.core.area.RadiusLocationSelection;
+import com.scandit.datacapture.barcode.spark.capture.SparkScan;
+import com.scandit.datacapture.barcode.spark.capture.SparkScanSettings;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
-import com.scandit.datacapture.core.common.geometry.FloatWithUnit;
-import com.scandit.datacapture.core.common.geometry.MeasureUnit;
-import com.scandit.datacapture.core.source.Camera;
-import com.scandit.datacapture.core.time.TimeInterval;
 
+import java.util.Arrays;
 import java.util.HashSet;
 
 public final class SearchDataCaptureManager {
 
     private final DataCaptureManager baseDataCaptureManager = DataCaptureManager.CURRENT;
     public final DataCaptureContext dataCaptureContext = baseDataCaptureManager.dataCaptureContext;
-    public final BarcodeCapture barcodeCapture;
+    public final SparkScan sparkScan;
 
     public SearchDataCaptureManager() {
-        // The barcode capturing process is configured through barcode capture settings
-        // which are then applied to the barcode capture instance that manages barcode recognition.
-        BarcodeCaptureSettings settings = new BarcodeCaptureSettings();
+        // The spark scan process is configured through SparkScan settings
+        // which are then applied to the spark scan instance.
+        SparkScanSettings settings = new SparkScanSettings();
         HashSet<Symbology> enabledSymbologies = new HashSet<>();
         enabledSymbologies.add(Symbology.EAN8);
         enabledSymbologies.add(Symbology.EAN13_UPCA);
@@ -45,22 +42,21 @@ public final class SearchDataCaptureManager {
         enabledSymbologies.add(Symbology.DATA_MATRIX);
         settings.enableSymbologies(enabledSymbologies);
 
-        // In order not to pick up barcodes outside of the view finder,
-        // restrict the code location selection to match the aimer's center.
-        settings.setLocationSelection(
-                new RadiusLocationSelection(new FloatWithUnit(0f, MeasureUnit.FRACTION))
-        );
+        // Some linear/1d barcode symbologies allow you to encode variable-length data.
+        // By default, the Scandit Data Capture SDK only scans barcodes in a certain length range.
+        // If your application requires scanning of one of these symbologies, and the length is
+        // falling outside the default range, you may need to adjust the "active symbol counts"
+        // for this symbology. This is shown in the following few lines of code for one of the
+        // variable-length symbologies.
+        SymbologySettings symbologySettings =
+            settings.getSymbologySettings(Symbology.CODE39);
 
-        // Setting the code duplicate filter to one second means that the scanner won't report
-        // the same code as recognized for one second once it's recognized.
-        settings.setCodeDuplicateFilter(TimeInterval.seconds(1f));
+        HashSet<Short> activeSymbolCounts = new HashSet<>(
+            Arrays.asList(new Short[]{7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}));
 
-        // Create new barcode capture mode with the settings from above.
-        barcodeCapture = BarcodeCapture.forDataCaptureContext(dataCaptureContext, settings);
-        dataCaptureContext.removeCurrentMode();
-    }
+        symbologySettings.setActiveSymbolCounts(activeSymbolCounts);
 
-    public Camera camera() {
-        return baseDataCaptureManager.camera;
+        // Create new spark scan mode with the settings from above.
+        sparkScan = new SparkScan(settings);
     }
 }

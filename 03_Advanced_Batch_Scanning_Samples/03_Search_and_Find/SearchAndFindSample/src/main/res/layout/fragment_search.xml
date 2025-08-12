@@ -1,60 +1,61 @@
-<?xml version="1.0" encoding="utf-8"?><!--
- ~ Licensed under the Apache License, Version 2.0 (the "License");
- ~ you may not use this file except in compliance with the License.
- ~ You may obtain a copy of the License at
- ~
- ~ http://www.apache.org/licenses/LICENSE-2.0
- ~
- ~ Unless required by applicable law or agreed to in writing, software
- ~ distributed under the License is distributed on an "AS IS" BASIS,
- ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied
- ~ See the License for the specific language governing permissions and
- ~ limitations under the License.
- -->
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<com.scandit.datacapture.barcode.spark.ui.SparkScanCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/spark_scan_coordinator"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
 
-    <FrameLayout
-        android:id="@+id/scanner_container"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:background="@color/off_white"
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/container_scanned_code"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@drawable/container_background"
-        android:elevation="6dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="32dp"
-        android:paddingEnd="32dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Light"
-        app:behavior_hideable="true"
-        app:layout_behavior="@string/bottom_sheet_behavior">
+        <View
+            android:layout_width="match_parent"
+            android:background="@android:color/white"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/clear_list"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/text_barcode"
+            android:id="@+id/item_count"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textColor="@color/black900"
-            android:textSize="15sp"
+            android:layout_margin="16dp"
+            android:textSize="13sp"
+            android:textColor="#3D4852"
             android:textStyle="bold"
-            tools:text="!23123123123" />
+            app:layout_constraintBottom_toTopOf="@id/result_recycler"
+            app:layout_constraintEnd_toStartOf="@id/clear_list"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="7 items scanned" />
 
-        <ImageButton
-            android:id="@+id/button_search"
+        <Button
+            android:id="@+id/clear_list"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@null"
-            android:contentDescription="@string/cd_search"
-            android:src="@drawable/ic_search" />
-    </LinearLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+            android:text="@string/clear_button"
+            android:textAllCaps="true"
+            android:textSize="13sp"
+            android:textColor="@color/clear_list_text_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/result_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/clear_list"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.scandit.datacapture.barcode.spark.ui.SparkScanCoordinatorLayout>

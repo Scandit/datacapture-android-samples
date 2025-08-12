@@ -224,75 +224,44 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
         // safety check when input bitmap is too small
         if (frame.getWidth() == 1 && frame.getHeight() == 1) return frame;
 
-        List<Point> points = Arrays.asList(
+        Point[] corners = {
             barcode.getLocation().getBottomLeft(),
             barcode.getLocation().getTopLeft(),
             barcode.getLocation().getTopRight(),
             barcode.getLocation().getBottomRight()
-        );
+        };
 
-        float minX = points.get(0).getX();
-        float minY = points.get(0).getY();
-        float maxX = points.get(0).getX();
-        float maxY = points.get(0).getY();
+        float minX = Float.MAX_VALUE, minY = Float.MAX_VALUE;
+        float maxX = Float.MIN_VALUE, maxY = Float.MIN_VALUE;
 
-        for (Point point : points) {
-            if (point.getX() < minX) {
-                minX = point.getX();
-            }
-
-            if (point.getX() > maxX) {
-                maxX = point.getX();
-            }
-
-            if (point.getY() < minY) {
-                minY = point.getY();
-            }
-
-            if (point.getY() > maxY) {
-                maxY = point.getY();
-            }
+        for (Point p : corners) {
+            minX = Math.min(minX, p.getX());
+            maxX = Math.max(maxX, p.getX());
+            minY = Math.min(minY, p.getY());
+            maxY = Math.max(maxY, p.getY());
         }
 
-        PointF center = new PointF(((minX + maxX) * 0.5f), ((minY + maxY) * 0.5f));
-        float largerSize = Math.max((maxY - minY), (maxX - minX));
+        float size = Math.max(maxY - minY, maxX - minX) * CROPPED_IMAGE_PADDING;
+        int x = Math.max((int)((minX + maxX - size) / 2), 0);
+        int y = Math.max((int)((minY + maxY - size) / 2), 0);
+        int width = (int)size;
+        int height = (int)size;
 
-        int height = (int) (largerSize * CROPPED_IMAGE_PADDING);
-        int width = (int) (largerSize * CROPPED_IMAGE_PADDING);
-
-        int x = Math.max((int) (center.x - largerSize * (CROPPED_IMAGE_PADDING / 2)), 0);
-        int y = Math.max((int) (center.y - largerSize * (CROPPED_IMAGE_PADDING / 2)), 0);
-
-        if ((y + height) > frame.getHeight()) {
-            int difference = ((y + height) - frame.getHeight());
-
-            if (y - difference < 0) {
-                height -= difference;
-                width -= difference;
-            } else {
-                y -= difference;
-            }
+        if (x + width > frame.getWidth()) {
+            width = frame.getWidth() - x;
+            height = width;
+        }
+        if (y + height > frame.getHeight()) {
+            height = frame.getHeight() - y;
+            width = height;
         }
 
-        if ((x + width) > frame.getWidth()) {
-            int difference = ((x + width) - frame.getWidth());
-            if (x - difference < 0) {
-                width -= difference;
-                height -= difference;
-            } else {
-                x -= difference;
-            }
-        }
+        if (width <= 0 || height <= 0) return frame;
 
-        if (width <= 0 || height <= 0) { // safety check
-            return frame;
-        }
-
-        float scaleFactor = getScaleFactor(width, height, SCALED_IMAGE_SIZE_IN_PIXELS);
-
+        float scale = getScaleFactor(width, height, SCALED_IMAGE_SIZE_IN_PIXELS);
         Matrix matrix = new Matrix();
         matrix.postRotate(90f);
-        matrix.postScale(scaleFactor, scaleFactor);
+        matrix.postScale(scale, scale);
 
         return Bitmap.createBitmap(frame, x, y, width, height, matrix, true);
     }

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:background="@color/off_white"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/barcode_image"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp" />
+
+    <TextView
+        android:id="@+id/barcode_text"
+        app:layout_constraintStart_toEndOf="@id/barcode_image"
+        app:layout_constraintTop_toTopOf="@id/barcode_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:textColor="@android:color/black"
+        tools:text="BARCODE VALUE" />
+
+    <TextView
+        android:id="@+id/barcode_description"
+        app:layout_constraintStart_toEndOf="@+id/barcode_image"
+        app:layout_constraintBottom_toBottomOf="@id/barcode_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="0dp"
+        android:textColor="@android:color/black"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginStart="8dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_marginEnd="8dp"
+        tools:text="BARCODE DESCRIPTION"
+        tools:layout_editor_absoluteY="0dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

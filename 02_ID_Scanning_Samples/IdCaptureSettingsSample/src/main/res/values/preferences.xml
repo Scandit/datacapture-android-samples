@@ -13,7 +13,8 @@
     <string name="id_captured_feedback">ID Captured Feedback</string>
     <string name="id_rejected_feedback">ID Rejected Feedback</string>
     <string name="decode_back_of_european_driving_license">Decode back of European driver licenses</string>
-    <string name="decode_mobile_driving_license">Decode mobile driver licenses</string>
+    <string name="decode_mobile_driver_license_viz">Decode mobile driver license VIZ</string>
+    <string name="decode_iso_mobile_driving_license">Decode ISO mobile driver licenses</string>
     <string name="reject_voided_ids">Reject voided IDs</string>
     <string name="reject_expired_ids">Reject expired IDs</string>
     <string name="reject_ids_expiring_in_days">Reject IDs expiring in x days</string>
