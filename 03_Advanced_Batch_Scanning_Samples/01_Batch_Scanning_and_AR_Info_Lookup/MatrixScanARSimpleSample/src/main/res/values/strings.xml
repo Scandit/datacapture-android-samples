@@ -14,4 +14,14 @@
 
 <resources>
     <string name="app_name">MatrixScan AR</string>
+    <string name="try_these_features">Try These Features</string>
+    <string name="button_return_title">Return</string>
+    <string name="menu_highlights_title">Highlights</string>
+    <string name="menu_highlights_subtitle">Visualize scanned codes</string>
+    <string name="menu_annotations_title">Info Annotations</string>
+    <string name="menu_annotations_subtitle">Show additional information</string>
+    <string name="menu_popovers_title">Popovers</string>
+    <string name="menu_popovers_subtitle">Take action on scanned codes</string>
+    <string name="menu_status_icons_title">Status Icons</string>
+    <string name="menu_status_icons_subtitle">Provide short information</string>
 </resources>

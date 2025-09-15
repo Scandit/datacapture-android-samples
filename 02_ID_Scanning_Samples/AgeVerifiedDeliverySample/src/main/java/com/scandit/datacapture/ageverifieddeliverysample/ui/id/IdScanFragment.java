@@ -217,6 +217,9 @@ public class IdScanFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
 
+        if (dataCaptureView != null && idCaptureOverlay != null) {
+            dataCaptureView.removeOverlay(idCaptureOverlay);
+        }
         dataCaptureView = null;
         idCaptureOverlay = null;
     }

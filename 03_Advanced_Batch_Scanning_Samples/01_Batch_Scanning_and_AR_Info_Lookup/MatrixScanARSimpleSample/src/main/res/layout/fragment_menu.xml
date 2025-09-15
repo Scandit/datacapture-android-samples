@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".menu.MenuFragment"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@null"
+        android:src="@drawable/banner"
+        android:layout_marginTop="48dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/text_title_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/try_these_features"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo"
+        android:layout_marginTop="48dp" />
+
+    <RelativeLayout
+        android:id="@+id/button_highlights"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/text_title_main"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toStartOf="@+id/space"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        android:background="@drawable/menu_button_background">
+
+        <ImageView
+            android:id="@+id/icon_highlights"
+            android:src="@drawable/ic_highlights"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/title_highlights"
+            android:text="@string/menu_highlights_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:lines="1"
+            android:textColor="@android:color/white"
+            android:layout_below="@+id/icon_highlights" />
+
+        <TextView
+            android:id="@+id/subtitle_highlights"
+            android:text="@string/menu_highlights_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="14sp"
+            android:lines="2"
+            android:textColor="@android:color/white"
+            android:layout_below="@+id/title_highlights" />
+    </RelativeLayout>
+
+    <Space
+        android:layout_width="20dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toEndOf="@+id/button_highlights"
+        app:layout_constraintEnd_toStartOf="@+id/button_annotations"
+        app:layout_constraintTop_toTopOf="@+id/button_highlights"
+        app:layout_constraintBottom_toBottomOf="@+id/button_highlights"
+        android:id="@+id/space"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed" />
+
+    <RelativeLayout
+        android:id="@+id/button_annotations"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/menu_button_background"
+        app:layout_constraintTop_toBottomOf="@+id/text_title_main"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/space"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed">
+
+        <ImageView
+            android:id="@+id/icon_annotations"
+            android:src="@drawable/ic_annotations"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/title_annotations"
+            android:text="@string/menu_annotations_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:lines="1"
+            android:textColor="@android:color/white"
+            android:layout_below="@+id/icon_annotations" />
+
+        <TextView
+            android:id="@+id/subtitle_annotations"
+            android:text="@string/menu_annotations_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="14sp"
+            android:lines="2"
+            android:textColor="@android:color/white"
+            android:layout_below="@+id/title_annotations" />
+    </RelativeLayout>
+
+    <Space
+        android:id="@+id/space_vertical"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/button_highlights"
+        app:layout_constraintStart_toStartOf="@+id/button_highlights"
+        app:layout_constraintEnd_toEndOf="@+id/button_highlights" />
+
+    <RelativeLayout
+        android:id="@+id/button_popovers"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/space_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toStartOf="@+id/space"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        android:background="@drawable/menu_button_background">
+
+        <ImageView
+            android:id="@+id/icon_popovers"
+            android:src="@drawable/ic_popovers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/title_popovers"
+            android:text="@string/menu_popovers_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:lines="1"
+            android:textColor="@android:color/white"
+            android:layout_below="@+id/icon_popovers" />
+
+        <TextView
+            android:id="@+id/subtitle_popovers"
+            android:text="@string/menu_popovers_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="14sp"
+            android:lines="2"
+            android:textColor="@android:color/white"
+            android:layout_below="@+id/title_popovers" />
+    </RelativeLayout>
+
+    <Space
+        android:layout_width="20dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toEndOf="@+id/button_popovers"
+        app:layout_constraintEnd_toStartOf="@+id/button_status_icons"
+        app:layout_constraintTop_toTopOf="@+id/button_popovers"
+        app:layout_constraintBottom_toBottomOf="@+id/button_popovers"
+        android:id="@+id/space2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed" />
+
+    <RelativeLayout
+        android:id="@+id/button_status_icons"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/menu_button_background"
+        app:layout_constraintTop_toBottomOf="@+id/space_vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/space2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed">
+
+        <ImageView
+            android:id="@+id/icon_status_icons"
+            android:src="@drawable/ic_status_icons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/title_status_icons"
+            android:text="@string/menu_status_icons_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:lines="1"
+            android:textColor="@android:color/white"
+            android:layout_below="@+id/icon_status_icons" />
+
+        <TextView
+            android:id="@+id/subtitle_status_icons"
+            android:text="@string/menu_status_icons_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="14sp"
+            android:lines="2"
+            android:textColor="@android:color/white"
+            android:layout_below="@+id/title_status_icons" />
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

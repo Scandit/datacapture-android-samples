@@ -83,9 +83,11 @@ public final class CameraSettingsFragment extends BasePreferenceFragment {
         ListPreference preference = new StyledListPreference(
                 requireContext(), CAMERA_PREFERRED_RESOLUTION_KEY, R.string.preferred_resolution, true
         );
-        String[] resolutions = new String[] {
-                VideoResolution.AUTO.name(), VideoResolution.HD.name(), VideoResolution.FULL_HD.name()
-        };
+        VideoResolution[] allResolutions = VideoResolution.values();
+        String[] resolutions = new String[allResolutions.length];
+        for (int index = 0; index < allResolutions.length; index++) {
+            resolutions[index] = allResolutions[index].name();
+        }
         preference.setEntryValues(resolutions);
         preference.setEntries(getResources().getStringArray(R.array.video_resolutions));
         if (preference.getValue() == null) {

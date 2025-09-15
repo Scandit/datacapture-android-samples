@@ -15,58 +15,53 @@
 package com.scandit.datacapture.matrixscanarsimplesample.scan
 
 import android.content.Context
-import android.graphics.Color
+import android.view.View
 import androidx.lifecycle.ViewModel
+import com.scandit.datacapture.barcode.ar.capture.BarcodeAr
+import com.scandit.datacapture.barcode.ar.ui.BarcodeArViewUiListener
 import com.scandit.datacapture.barcode.ar.ui.annotations.BarcodeArAnnotationProvider
-import com.scandit.datacapture.barcode.ar.ui.annotations.BarcodeArInfoAnnotation
-import com.scandit.datacapture.barcode.ar.ui.annotations.info.BarcodeArInfoAnnotationBodyComponent
-import com.scandit.datacapture.barcode.ar.ui.annotations.info.BarcodeArInfoAnnotationHeader
-import com.scandit.datacapture.barcode.ar.ui.annotations.info.BarcodeArInfoAnnotationListener
-import com.scandit.datacapture.barcode.ar.ui.annotations.info.BarcodeArInfoAnnotationWidthPreset
-import com.scandit.datacapture.barcode.ar.ui.highlight.BarcodeArCircleHighlight
-import com.scandit.datacapture.barcode.ar.ui.highlight.BarcodeArCircleHighlightPreset
+import com.scandit.datacapture.barcode.ar.ui.highlight.BarcodeArHighlight
 import com.scandit.datacapture.barcode.ar.ui.highlight.BarcodeArHighlightProvider
 import com.scandit.datacapture.barcode.data.Barcode
-import com.scandit.datacapture.core.ui.style.Brush
-import com.scandit.datacapture.matrixscanarsimplesample.scan.data.DiscountDataProvider
+import com.scandit.datacapture.matrixscanarsimplesample.models.BarcodeArMode
+import com.scandit.datacapture.matrixscanarsimplesample.scan.behaviours.ScanAnnotationsBehaviour
+import com.scandit.datacapture.matrixscanarsimplesample.scan.behaviours.ScanBehaviour
+import com.scandit.datacapture.matrixscanarsimplesample.scan.behaviours.ScanHighlightsBehaviour
+import com.scandit.datacapture.matrixscanarsimplesample.scan.behaviours.ScanPopoversBehaviour
+import com.scandit.datacapture.matrixscanarsimplesample.scan.behaviours.ScanStatusIconsBehaviour
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 
+// This ViewModel acts as the listener for several Barcode AR events,
+// and propagates them to the selected mode behaviour.
 class ScanViewModel :
     ViewModel(),
-    BarcodeArAnnotationProvider,
     BarcodeArHighlightProvider,
-    BarcodeArInfoAnnotationListener {
+    BarcodeArAnnotationProvider,
+    BarcodeArViewUiListener {
+
+    private val resetViewChannel = Channel<Unit>()
+    val resetView = resetViewChannel.receiveAsFlow()
+
+    private lateinit var behaviour: ScanBehaviour
+
+    var mode: BarcodeArMode = BarcodeArMode.Highlights
+        set(value) {
+            field = value
+            behaviour = when (value) {
+                BarcodeArMode.Highlights -> ScanHighlightsBehaviour()
+                BarcodeArMode.Annotations -> ScanAnnotationsBehaviour()
+                BarcodeArMode.Popovers -> ScanPopoversBehaviour { resetViewChannel.trySend(Unit) }
+                BarcodeArMode.StatusIcons -> ScanStatusIconsBehaviour()
+            }
+        }
 
     override fun annotationForBarcode(
         context: Context,
         barcode: Barcode,
         callback: BarcodeArAnnotationProvider.Callback
     ) {
-        // Get discount data for the barcode
-        val discount = DiscountDataProvider.getDataForBarcode(barcode)
-
-        // Create and configure the header section of the annotation.
-        val header = BarcodeArInfoAnnotationHeader()
-        header.backgroundColor = discount.color
-        header.text = discount.percentage
-
-        // Create and configure the body section of the annotation.
-        val bodyComponent = BarcodeArInfoAnnotationBodyComponent()
-        bodyComponent.text = discount.getDisplayText(true)
-
-        // Create the annotation itself and attach the header and body.
-        val annotation = BarcodeArInfoAnnotation(context, barcode)
-        annotation.header = header
-        annotation.body = listOf(bodyComponent)
-        annotation.width = BarcodeArInfoAnnotationWidthPreset.LARGE
-        annotation.backgroundColor = Color.parseColor("#E6FFFFFF")
-
-        // Set this ViewModel as the delegate for annotation to handle annotation taps.
-        annotation.listener = this
-
-        // Set this property to handle tap in any part of the annotation instead of individual parts.
-        annotation.isEntireAnnotationTappable = true
-
-        callback.onData(annotation)
+        behaviour.annotationForBarcode(context, barcode, callback)
     }
 
     override fun highlightForBarcode(
@@ -74,15 +69,15 @@ class ScanViewModel :
         barcode: Barcode,
         callback: BarcodeArHighlightProvider.Callback
     ) {
-        // Returns a circular dot highlight that will be displayed over each detected barcode.
-        val highlight =
-            BarcodeArCircleHighlight(context, barcode, BarcodeArCircleHighlightPreset.DOT)
-        highlight.brush = Brush(Color.WHITE, Color.WHITE, 1f)
-        callback.onData(highlight)
+        behaviour.highlightForBarcode(context, barcode, callback)
     }
 
-    override fun onInfoAnnotationTapped(annotation: BarcodeArInfoAnnotation) {
-        val discount = DiscountDataProvider.getDataForBarcode(annotation.barcode)
-        annotation.body.first().text = discount.getDisplayText(false)
+    override fun onHighlightForBarcodeTapped(
+        barcodeAr: BarcodeAr,
+        barcode: Barcode,
+        highlight: BarcodeArHighlight,
+        highlightView: View
+    ) {
+        behaviour.onHighlightForBarcodeTapped(barcodeAr, barcode, highlight, highlightView)
     }
 }

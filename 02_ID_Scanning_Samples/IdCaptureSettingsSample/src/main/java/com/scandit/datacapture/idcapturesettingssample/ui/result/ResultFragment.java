@@ -15,7 +15,6 @@
 package com.scandit.datacapture.idcapturesettingssample.ui.result;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,44 +31,32 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.scandit.datacapture.id.data.IdImages;
+import com.scandit.datacapture.id.data.IdSide;
 import com.scandit.datacapture.idcapturesettingssample.R;
 
 public class ResultFragment extends Fragment {
-    private final static String KEY_CAPTURE_RESULT = "CAPTURE_RESULT";
-
     /**
-     * The view model of this fragment.
+     * The result ViewModel shared with the ScanFragment.
      */
     private ResultViewModel viewModel;
 
     private ResultListAdapter adapter;
+    private ImageView faceImageView;
+    private ImageView idFrontImageView;
+    private ImageView idBackImageView;
+    private ImageView frameFrontImageView;
+    private ImageView frameBackImageView;
 
-    private ImageView faceImage;
-    private ImageView idFrontImage;
-    private ImageView idBackImage;
-    private ImageView frameFrontImage;
-    private ImageView frameBackImage;
-
-    /*
-     * Store inside a bundle the result data and, if available, the byteArray extracted from the
-     * Face image.
-     */
-    public static ResultFragment create(CaptureResult result) {
-        ResultFragment fragment = new ResultFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(KEY_CAPTURE_RESULT, result);
-        fragment.setArguments(args);
-
-        return fragment;
+    public static ResultFragment create() {
+        return new ResultFragment();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*
-         * Get a reference to this fragment's view model.
-         */
-        viewModel = new ViewModelProvider(this).get(ResultViewModel.class);
+        
+        viewModel = new ViewModelProvider(requireActivity()).get(ResultViewModel.class);
     }
 
     @Nullable
@@ -86,14 +73,11 @@ public class ResultFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_result, container, false);
 
         RecyclerView recyclerResult = root.findViewById(R.id.results_list);
-        faceImage = root.findViewById(R.id.image_face);
-        idFrontImage = root.findViewById(R.id.image_id_front);
-        idBackImage = root.findViewById(R.id.image_id_back);
-        frameFrontImage = root.findViewById(R.id.image_frame_front);
-        frameBackImage = root.findViewById(R.id.image_frame_back);
-
-        // Retrieve the results map from the intent's bundle.
-        viewModel.onResult(getArguments().getParcelable(KEY_CAPTURE_RESULT));
+        faceImageView = root.findViewById(R.id.image_face);
+        idFrontImageView = root.findViewById(R.id.image_id_front);
+        idBackImageView = root.findViewById(R.id.image_id_back);
+        frameFrontImageView = root.findViewById(R.id.image_frame_front);
+        frameBackImageView = root.findViewById(R.id.image_frame_back);
 
         /*
          * Setup the results list. Check the ResultListAdapter class for more info on displaying
@@ -114,12 +98,10 @@ public class ResultFragment extends Fragment {
          * Make sure the back arrow is shown and the correct title for the fragment is displayed.
          */
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(R.string.captured_id_title);
-    }
-
-    private Bitmap convertBytesToImage(byte[] bytes) {
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(R.string.captured_id_title);
+        }
     }
 
     @Override
@@ -129,50 +111,52 @@ public class ResultFragment extends Fragment {
         LifecycleOwner lifecycleOwner = getViewLifecycleOwner();
 
         /*
-         * Observe the sequence of desired UI states in order to update the UI.
+         * Observe the sequence of capture results in order to update the UI.
          */
-        viewModel.uiStates().observe(lifecycleOwner, this::onNewUiState);
+        viewModel.getCaptureResultStream().observe(lifecycleOwner, this::displayResult);
     }
 
     /**
      * Update the displayed UI.
      */
-    private void onNewUiState(ResultUiState uiState) {
-        adapter.submitList(uiState.getCaptureResult().getEntries());
+    private void displayResult(CaptureResult result) {
+        adapter.submitList(result.getEntries());
 
-        byte[] faceImageBytes = uiState.getCaptureResult().getFaceImageBytes();
-        if (faceImageBytes != null) {
-            faceImage.setImageBitmap(convertBytesToImage(faceImageBytes));
+        IdImages images = result.getImages();
+
+        Bitmap faceImage = images.getFace();
+        if (faceImage != null) {
+            faceImageView.setImageBitmap(faceImage);
         } else {
-            faceImage.setVisibility(View.GONE);
+            faceImageView.setVisibility(View.GONE);
         }
 
-        byte[] idFrontImageBytes = uiState.getCaptureResult().getIdFrontImageBytes();
-        if (idFrontImageBytes != null) {
-            idFrontImage.setImageBitmap(convertBytesToImage(idFrontImageBytes));
+        Bitmap idFrontImage = images.getCroppedDocument(IdSide.FRONT);
+        if (idFrontImage != null) {
+            idFrontImageView.setImageBitmap(idFrontImage);
         } else {
-            idFrontImage.setVisibility(View.GONE);
+            idFrontImageView.setVisibility(View.GONE);
         }
 
-        byte[] idBackImageBytes = uiState.getCaptureResult().getIdBackImageBytes();
-        if (idBackImageBytes != null) {
-            idBackImage.setImageBitmap(convertBytesToImage(idBackImageBytes));
+        Bitmap idBackImage = images.getCroppedDocument(IdSide.BACK);
+        if (idBackImage != null) {
+            idBackImageView.setImageBitmap(idBackImage);
         } else {
-            idBackImage.setVisibility(View.GONE);
+            idBackImageView.setVisibility(View.GONE);
         }
 
-        byte[] frameFrontImageBytes = uiState.getCaptureResult().getFrameFrontImageBytes();
-        if (frameFrontImageBytes != null) {
-            frameFrontImage.setImageBitmap(convertBytesToImage(frameFrontImageBytes));
+        Bitmap frameFrontImage = images.getFrame(IdSide.FRONT);
+        if (frameFrontImage != null) {
+            frameFrontImageView.setImageBitmap(frameFrontImage);
         } else {
-            frameFrontImage.setVisibility(View.GONE);
+            frameFrontImageView.setVisibility(View.GONE);
         }
 
-        byte[] frameBackImageBytes = uiState.getCaptureResult().getFrameBackImageBytes();
-        if (frameBackImageBytes != null) {
-            frameBackImage.setImageBitmap(convertBytesToImage(frameBackImageBytes));
+        Bitmap frameBackImage = images.getFrame(IdSide.BACK);
+        if (frameBackImage != null) {
+            frameBackImageView.setImageBitmap(frameBackImage);
         } else {
-            frameBackImage.setVisibility(View.GONE);
+            frameBackImageView.setVisibility(View.GONE);
         }
     }
 }

@@ -14,17 +14,11 @@
 
 package com.scandit.datacapture.idcapturesettingssample.mappers;
 
-import android.graphics.Bitmap;
-
 import androidx.annotation.NonNull;
 
 import com.scandit.datacapture.id.data.CapturedId;
-import com.scandit.datacapture.id.data.IdImages;
-import com.scandit.datacapture.id.data.IdSide;
 import com.scandit.datacapture.idcapturesettingssample.ui.result.CaptureResult;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,41 +59,6 @@ public abstract class IdCaptureResultFactory {
         }
 
         /*
-         * Extract and convert the desired document images.
-         */
-        IdImages images = capturedId.getImages();
-        byte[] faceImageBytes = null;
-        byte[] idFrontImageBytes = null;
-        byte[] idBackImageBytes = null;
-        byte[] frameFrontImageBytes = null;
-        byte[] frameBackImageBytes = null;
-
-        Bitmap faceImage = images.getFace();
-        if (faceImage != null) {
-            faceImageBytes = convertImageToBytes(faceImage);
-        }
-
-        Bitmap idFrontImage = images.getCroppedDocument(IdSide.FRONT);
-        if (idFrontImage != null) {
-            idFrontImageBytes = convertImageToBytes(idFrontImage);
-        }
-
-        Bitmap idBackImage = images.getCroppedDocument(IdSide.BACK);
-        if (idBackImage != null) {
-            idBackImageBytes = convertImageToBytes(idBackImage);
-        }
-
-        Bitmap frameFrontImage = images.getFrame(IdSide.FRONT);
-        if (frameFrontImage != null) {
-            frameFrontImageBytes = convertImageToBytes(frameFrontImage);
-        }
-
-        Bitmap frameBackImage = images.getFrame(IdSide.BACK);
-        if (frameBackImage != null) {
-            frameBackImageBytes = convertImageToBytes(frameBackImage);
-        }
-
-        /*
          * Extract and format date of birth. This will be shown in continuous mode.
          */
         String dateOfBirth = "";
@@ -108,7 +67,7 @@ public abstract class IdCaptureResultFactory {
         }
 
         /*
-         * Extract the fullname. This will be shown in continuous mode.
+         * Extract the full name. This will be shown in continuous mode.
          */
         String fullName = capturedId.getFullName();
         if (fullName.isEmpty()) {
@@ -119,11 +78,7 @@ public abstract class IdCaptureResultFactory {
                 entries,
                 fullName,
                 dateOfBirth,
-                faceImageBytes,
-                idFrontImageBytes,
-                idBackImageBytes,
-                frameFrontImageBytes,
-                frameBackImageBytes
+                capturedId.getImages()
         );
     }
 
@@ -142,18 +97,5 @@ public abstract class IdCaptureResultFactory {
         }
 
         return extractors;
-    }
-
-    private static byte[] convertImageToBytes(Bitmap image) {
-        try {
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-            byte[] byteArray = byteArrayOutputStream.toByteArray();
-            byteArrayOutputStream.flush();
-            return byteArray;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new byte[]{};
     }
 }

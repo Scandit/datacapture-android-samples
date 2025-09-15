@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
  ~ Licensed under the Apache License, Version 2.0 (the "License");
  ~ you may not use this file except in compliance with the License.
  ~ You may obtain a copy of the License at
@@ -12,8 +11,57 @@
  ~ See the License for the specific language governing permissions and
  ~ limitations under the License.
  -->
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/root"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <TextView
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:background="@android:color/black"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textFontWeight="600"
+        android:textSize="18sp"
+        tools:text="Highlights"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintDimensionRatio="W,4:3" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_return"
+        android:id="@+id/button_return"
+        android:background="@null"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="52dp"
+        app:layout_constraintTop_toBottomOf="@+id/container"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/button_return_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="@string/button_return_title"
+        android:textSize="10sp"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@+id/button_return"
+        app:layout_constraintStart_toStartOf="@+id/button_return"
+        app:layout_constraintEnd_toEndOf="@+id/button_return" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

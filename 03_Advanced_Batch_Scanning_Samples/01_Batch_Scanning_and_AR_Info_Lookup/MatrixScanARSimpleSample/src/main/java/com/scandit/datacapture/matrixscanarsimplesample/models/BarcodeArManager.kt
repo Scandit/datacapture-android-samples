@@ -21,6 +21,7 @@ import com.scandit.datacapture.barcode.ar.ui.BarcodeArView
 import com.scandit.datacapture.barcode.ar.ui.BarcodeArViewSettings
 import com.scandit.datacapture.barcode.data.Symbology
 import com.scandit.datacapture.core.capture.DataCaptureContext
+import com.scandit.datacapture.core.source.VideoResolution
 import com.scandit.datacapture.matrixscanarsimplesample.BuildConfig
 
 class BarcodeArManager {
@@ -48,12 +49,17 @@ class BarcodeArManager {
         return BarcodeAr(dataCaptureContext, barcodeArSettings)
     }
 
-    fun createBarcodeArView(parent: ViewGroup, barcodeAr: BarcodeAr): BarcodeArView {
+    fun createBarcodeArView(
+        parent: ViewGroup,
+        barcodeAr: BarcodeAr,
+    ): BarcodeArView {
         // Create and configure BarcodeArView with default view settings.
         val barcodeArViewSettings = BarcodeArViewSettings()
 
-        // Use the recommended camera settings.
-        val cameraSettings = BarcodeAr.createRecommendedCameraSettings()
+        // Use the recommended camera settings, preferring 4K resolution.
+        val cameraSettings = BarcodeAr.createRecommendedCameraSettings().apply {
+            preferredResolution = VideoResolution.UHD4K
+        }
 
         return BarcodeArView(
             parent,

@@ -14,12 +14,11 @@
 
 package com.scandit.datacapture.idcapturesettingssample.ui.scan;
 
+import static android.Manifest.permission.CAMERA;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static androidx.core.content.ContextCompat.checkSelfPermission;
 
-import android.Manifest;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -47,6 +46,7 @@ import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 import com.scandit.datacapture.idcapturesettingssample.R;
 import com.scandit.datacapture.idcapturesettingssample.ui.result.CaptureResult;
 import com.scandit.datacapture.idcapturesettingssample.ui.result.ResultFragment;
+import com.scandit.datacapture.idcapturesettingssample.ui.result.ResultViewModel;
 import com.scandit.datacapture.idcapturesettingssample.ui.settings.overview.OverviewSettingsFragment;
 import com.scandit.datacapture.idcapturesettingssample.utils.ShowHideViewTimer;
 import com.scandit.datacapture.idcapturesettingssample.utils.StringUtils;
@@ -60,23 +60,14 @@ public class ScanFragment extends Fragment {
     private static final String SETTINGS_TAG = "SETTINGS";
 
     /**
-     * Required permissions to enable physical and mobile document scanning.
-     */
-    private static final String[] REQUIRED_PERMISSIONS =
-            (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) ? new String[] {
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.BLUETOOTH_SCAN,
-                    Manifest.permission.BLUETOOTH_CONNECT,
-                    Manifest.permission.BLUETOOTH_ADVERTISE
-            } : new String[] {
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-            };
-
-    /**
      * The view model of this fragment.
      */
     private ScanViewModel viewModel;
+
+    /**
+     * The result ViewModel shared with the ResultFragment.
+     */
+    private ResultViewModel resultViewModel;
 
     /**
      * DataCaptureView displays the camera preview and the additional UI to guide the user through
@@ -100,19 +91,11 @@ public class ScanFragment extends Fragment {
     private volatile ShowHideViewTimer resultViewTimer;
 
     /**
-     * The launcher to request the user permissions to use their device's camera and Bluetooth.
+     * The launcher to request the user permission to use their device's camera.
      */
-    private final ActivityResultLauncher<String[]> permissionRequestLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
-                boolean allGranted = true;
-
-                for (Boolean granted : result.values()) {
-                    if (!granted) {
-                        allGranted = false;
-                        break;
-                    }
-                }
-                if (allGranted && isResumed()) {
+    private final ActivityResultLauncher<String> requestCameraPermission =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted && isResumed()) {
                     onCameraPermissionGranted();
                 }
             });
@@ -126,10 +109,8 @@ public class ScanFragment extends Fragment {
          */
         setHasOptionsMenu(true);
 
-        /*
-         * Get a reference to this fragment's view model.
-         */
         viewModel = new ViewModelProvider(this).get(ScanViewModel.class);
+        resultViewModel = new ViewModelProvider(requireActivity()).get(ResultViewModel.class);
     }
 
     @Override
@@ -183,8 +164,8 @@ public class ScanFragment extends Fragment {
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setTitle(R.string.app_readable_name);
         }
-        actionBar.setTitle(R.string.app_readable_name);
     }
 
     @Override
@@ -234,26 +215,15 @@ public class ScanFragment extends Fragment {
         super.onResume();
 
         /*
-         * Check for camera and bluetooth permissions and request them, if they haven't yet been
-         *  granted. Once we have the permissions, start the capture process.
+         * Check for camera permission and request it, if it hasn't yet been granted.
+         * Once we have the permission start the capture process.
          */
-        if (arePermissionsGranted()) {
+        if (checkSelfPermission(requireContext(), CAMERA) == PERMISSION_GRANTED) {
             onCameraPermissionGranted();
         } else {
-            permissionRequestLauncher.launch(REQUIRED_PERMISSIONS);
+            requestCameraPermission.launch(CAMERA);
         }
     }
-
-    public boolean arePermissionsGranted() {
-        for (String permission : REQUIRED_PERMISSIONS) {
-            if (checkSelfPermission(requireContext(), permission) != PERMISSION_GRANTED) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
 
     public void onCameraPermissionGranted() {
         /*
@@ -285,13 +255,14 @@ public class ScanFragment extends Fragment {
         CaptureResult result = event.getContentIfNotHandled();
 
         if (result != null && requireActivity().getSupportFragmentManager().findFragmentByTag(CAPTURE_RESULT_TAG) == null) {
+            resultViewModel.setCaptureResult(result);
             /*
              * Show the result fragment only if we are not displaying one at the moment.
              */
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .replace(R.id.scan_fragment_container, ResultFragment.create(result), CAPTURE_RESULT_TAG)
+                    .replace(R.id.scan_fragment_container, ResultFragment.create(), CAPTURE_RESULT_TAG)
                     .addToBackStack(CAPTURE_RESULT_TAG)
                     .commit();
         }

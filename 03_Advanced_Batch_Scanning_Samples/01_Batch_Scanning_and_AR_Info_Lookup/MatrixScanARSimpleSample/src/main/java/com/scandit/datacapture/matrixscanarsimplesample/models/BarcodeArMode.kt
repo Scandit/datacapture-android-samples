@@ -12,20 +12,11 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.idcapturesettingssample.ui.result;
+package com.scandit.datacapture.matrixscanarsimplesample.models
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-
-public class ResultViewModel extends ViewModel {
-    private final MutableLiveData<CaptureResult> captureResultStream = new MutableLiveData<>();
-
-    public void setCaptureResult(CaptureResult result) {
-        captureResultStream.setValue(result);
-    }
-
-    public LiveData<CaptureResult> getCaptureResultStream() {
-        return captureResultStream;
-    }
+enum class BarcodeArMode {
+    Highlights,
+    Annotations,
+    Popovers,
+    StatusIcons,
 }

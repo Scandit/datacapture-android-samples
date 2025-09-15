@@ -15,7 +15,7 @@
 package com.scandit.datacapture.matrixscanarsimplesample
 
 import android.os.Bundle
-import com.scandit.datacapture.matrixscanarsimplesample.scan.ScanFragment
+import com.scandit.datacapture.matrixscanarsimplesample.menu.MenuFragment
 
 class MainActivity : CameraPermissionActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +23,7 @@ class MainActivity : CameraPermissionActivity() {
         setContentView(R.layout.activity_main)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, ScanFragment.newInstance())
+                .replace(R.id.fragment_container, MenuFragment.newInstance())
                 .commit()
         }
     }

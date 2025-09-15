@@ -159,6 +159,9 @@ public class ScanFragment extends Fragment implements AlertDialogFragment.Callba
     public void onDestroyView() {
         super.onDestroyView();
 
+        if (dataCaptureView != null && idCaptureOverlay != null) {
+            dataCaptureView.removeOverlay(idCaptureOverlay);
+        }
         dataCaptureView = null;
         idCaptureOverlay = null;
     }
