@@ -12,8 +12,7 @@ buildscript {
     val sdk: Map<String, Any> by extra(
         mapOf(
             "ndk" to "27.0.12077973",
-            "min" to 23,
-            "id_min" to 24,
+            "min" to 24,
             "target" to 35,
             "compile" to 35
         )
@@ -21,9 +20,8 @@ buildscript {
 
     val versions: Map<String, Any> by extra(
         mapOf(
-            // The value of scandit_sdk_version is updated automatically in the bump_sdc_version.py script, please do not edit manually.
-            "scandit_sdk_version" to "7.6.3",
-            "android_gradle" to "8.5.1",
+            "scandit_sdk_version" to "8.0.0",
+            "android_gradle" to "8.5.2",
             "android_material" to "1.6.1",
             "androidx_animations" to "1.0.0",
             "androidx_appcompat" to "1.3.1",
@@ -40,6 +38,9 @@ buildscript {
             "androidx_test_rules" to "1.5.0",
             "androidx_test_runner" to "1.5.2",
             "androidx_test_services" to "1.5.0-alpha01",
+            "compose_bom" to "2025.07.00",
+            "compose_activity" to "1.10.1",
+            "compose_permissions" to "0.37.3",
             "coroutines" to "1.8.1",
             "desugar" to "1.1.5",
             "java" to JavaVersion.VERSION_1_8,

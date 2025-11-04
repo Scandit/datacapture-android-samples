@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.scandit.datacapture.idcaptureextendedsample"
-        minSdkVersion(sdk.id_min)
+        minSdkVersion(sdk.min)
         targetSdkVersion(sdk.target)
         versionCode = 1
         versionName = "1.0"

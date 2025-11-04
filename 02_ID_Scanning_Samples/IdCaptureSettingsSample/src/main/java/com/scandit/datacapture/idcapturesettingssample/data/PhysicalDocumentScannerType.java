@@ -12,17 +12,23 @@
  * limitations under the License.
  */
 
-package com.scandit.datacapture.usdlverificationsample.ui.scan;
+package com.scandit.datacapture.idcapturesettingssample.data;
 
+import androidx.annotation.Nullable;
 
-import com.scandit.datacapture.usdlverificationsample.ui.Event;
+public enum PhysicalDocumentScannerType {
+    SINGLE_SIDE,
+    FULL;
 
-/**
- * An event for the fragment to display the UI that informs the user that the
- * verification failed.
- */
-class GoToBarcodeVerificationFailure extends Event<Object> {
-    public GoToBarcodeVerificationFailure() {
-        super(new Object());
+    @Nullable
+    public static PhysicalDocumentScannerType fromKey(@Nullable String key) {
+        if (key == null) {
+            return FULL;
+        }
+        try {
+            return valueOf(key);
+        } catch (IllegalArgumentException e) {
+            return FULL;
+        }
     }
 }

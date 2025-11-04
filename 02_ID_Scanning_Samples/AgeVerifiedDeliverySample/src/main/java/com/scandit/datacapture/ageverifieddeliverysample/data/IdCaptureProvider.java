@@ -20,6 +20,7 @@ import com.scandit.datacapture.id.capture.DriverLicense;
 import com.scandit.datacapture.id.capture.IdCapture;
 import com.scandit.datacapture.id.capture.IdCaptureDocument;
 import com.scandit.datacapture.id.capture.IdCaptureFeedback;
+import com.scandit.datacapture.id.capture.IdCaptureScanner;
 import com.scandit.datacapture.id.capture.IdCaptureSettings;
 import com.scandit.datacapture.id.capture.IdCard;
 import com.scandit.datacapture.id.capture.Passport;
@@ -97,7 +98,7 @@ public class IdCaptureProvider {
     private IdCaptureSettings createIdCaptureSettings() {
         IdCaptureSettings settings = new IdCaptureSettings();
         settings.setAcceptedDocuments(ACCEPTED_DOCUMENTS);
-        settings.setScannerType(new SingleSideScanner(true, true, true));
+        settings.setScanner(new IdCaptureScanner(new SingleSideScanner(true, true, true), null));
         settings.setRejectExpiredIds(true);
         settings.setRejectHolderBelowAge(LEGAL_AGE);
 

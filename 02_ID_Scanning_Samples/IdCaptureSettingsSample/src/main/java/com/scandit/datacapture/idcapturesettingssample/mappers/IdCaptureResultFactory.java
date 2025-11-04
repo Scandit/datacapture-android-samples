@@ -70,7 +70,7 @@ public abstract class IdCaptureResultFactory {
          * Extract the full name. This will be shown in continuous mode.
          */
         String fullName = capturedId.getFullName();
-        if (fullName.isEmpty()) {
+        if (fullName == null) {
             fullName = capturedId.getFirstName() + " " + capturedId.getLastName();
         }
 
@@ -88,6 +88,9 @@ public abstract class IdCaptureResultFactory {
 
         if (capturedId.getViz() != null) {
             extractors.add(new VizFieldExtractor(capturedId));
+        }
+        if (capturedId.getMobileDocumentOcr() != null) {
+            extractors.add(new MobileDocumentOcrFieldExtractor(capturedId));
         }
         if (capturedId.getMrz() != null) {
             extractors.add(new MrzFieldExtractor(capturedId));

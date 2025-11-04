@@ -17,7 +17,6 @@ package com.scandit.datacapture.usdlverificationsample.di;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.usdlverificationsample.data.CameraRepository;
 import com.scandit.datacapture.usdlverificationsample.data.DataCaptureContextProvider;
-import com.scandit.datacapture.usdlverificationsample.data.DriverLicenseVerificationRepository;
 import com.scandit.datacapture.usdlverificationsample.data.IdCaptureRepository;
 
 /**
@@ -55,12 +54,6 @@ public class Injector {
     private final IdCaptureRepository idCaptureRepository =
             new IdCaptureRepository(dataCaptureContextProvider.getDataCaptureContext());
 
-    /**
-     * The repository that allows to verify Driver's licenses.
-     */
-    private final DriverLicenseVerificationRepository driverLicenseVerificationRepository =
-            new DriverLicenseVerificationRepository(dataCaptureContextProvider.getDataCaptureContext());
-
     private Injector() {
         // Use `getInstance()`
     }
@@ -84,11 +77,5 @@ public class Injector {
      */
     public IdCaptureRepository getIdCaptureRepository() {
         return idCaptureRepository;
-    }
-    /**
-     * Get the repository that allows to verify Driver's licenses.
-     */
-    public DriverLicenseVerificationRepository getDriverLicenseVerificationRepository() {
-        return driverLicenseVerificationRepository;
     }
 }

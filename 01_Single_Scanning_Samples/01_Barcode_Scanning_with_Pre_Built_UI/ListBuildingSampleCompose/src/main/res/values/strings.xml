@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">ListBuildingSampleCompose</string>
+    <string name="app_title">ListBuildingCompose</string>
+    <string name="item_title">%s</string>
+    <string name="item_description">%s</string>
+    <string name="item_qty">Qty: %d</string>
+    <string name="clear_button">CLEAR LIST</string>
+    <plurals name="results_amount">
+        <item quantity="one">%d item scanned</item>
+        <item quantity="other">%d items scanned</item>
+    </plurals>
+    <string name="wrong_barcode">Wrong barcode</string>
+</resources>

@@ -12,9 +12,9 @@ SparkScan is a camera-based solution for high-speed single scanning and scan-int
 
 ![SparkScan.png](https://github.com/Scandit/.github/blob/main/images/SparkScan.png)
 
-**List Building Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/ListBuildingSample))
+**List Building Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/01_Single_Scanning_Samples/01_Barcode_Scanning_with_Pre_Built_UI/ListBuildingSample))
 
-**ReceivingSample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/ReceivingSample))
+**ReceivingSample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/03_Advanced_Batch_Scanning_Samples/02_Counting_and_Receiving/ReceivingSample))
 
 ### Counting and Receiving in Batches (MatrixScan Count)
 
@@ -22,13 +22,13 @@ MatrixScan Count is an out-of-the-box scan and count solution for counting and r
 
 ![MSCount.png](https://github.com/Scandit/.github/blob/main/images/MSCount.png)
 
-**MatrixScan Count Simple Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/MatrixScanCountSimpleSample))
+**MatrixScan Count Simple Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/03_Advanced_Batch_Scanning_Samples/02_Counting_and_Receiving/MatrixScanCountSimpleSample))
 
-**MatrixScan Count Tote Mapping Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/MatrixScanCountToteMappingSample))
+**MatrixScan Count Tote Mapping Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/03_Advanced_Batch_Scanning_Samples/02_Counting_and_Receiving/MatrixScanCountToteMappingSample))
 
-**Receiving Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/ReceivingSample))
+**Receiving Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/03_Advanced_Batch_Scanning_Samples/02_Counting_and_Receiving/ReceivingSample))
 
-**Expiry Management Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/ExpiryManagementSample))
+**Expiry Management Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/03_Advanced_Batch_Scanning_Samples/02_Counting_and_Receiving/ExpiryManagementSample))
 
 ### Search for Barcodes (**MatrixScan Find)**
 
@@ -36,7 +36,7 @@ MatrixScan Find is a pre-built component that uses AR overlays to highlight item
 
 ![MSFind.png](https://github.com/Scandit/.github/blob/main/images/MSFind.png)
 
-**Seach  & Find Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/SearchAndFindSample))
+**Seach  & Find Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/03_Advanced_Batch_Scanning_Samples/03_Search_and_Find/SearchAndFindSample))
 
 ### Scan One of Many Barcodes (Barcode Selection)
 
@@ -53,9 +53,9 @@ Consider Barcode Selection when **accuracy** is more important than **speed**.
   ![TapToSelect.png](https://github.com/Scandit/.github/blob/main/images/TapToSelect.png)
 
 
-**Barcode Selection Settings Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/BarcodeSelectionSettingsSample))
+**Barcode Selection Settings Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/01_Single_Scanning_Samples/02_Barcode_Scanning_with_Low_Level_API/BarcodeSelectionSettingsSample))
 
-**Reorder from Catalog Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/ReorderFromCatalogSample))
+**Reorder from Catalog Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/03_Advanced_Batch_Scanning_Samples/02_Counting_and_Receiving/ReorderFromCatalogSample))
 
 ## Fully-flexible API
 
@@ -67,39 +67,39 @@ ID Scanning Samples demonstrate the features of the ID Capture API and demonstra
 
 ![IDScanning.png](https://github.com/Scandit/.github/blob/main/images/IDScanning.png)
 
-**ID Capture Simple Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/IdCaptureSimpleSample))
+**ID Capture Simple Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/02_ID_Scanning_Samples/IdCaptureSimpleSample))
 
-**US Drivers’ License Verification Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/USDLVerificationSample))
+**US Drivers’ License Verification Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/02_ID_Scanning_Samples/USDLVerificationSample))
 
-**ID Capture Settings Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/IdCaptureSettingsSample))
+**ID Capture Settings Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/02_ID_Scanning_Samples/IdCaptureSettingsSample))
 
-**ID Capture Extended Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/IdCaptureExtendedSample))
+**ID Capture Extended Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/02_ID_Scanning_Samples/IdCaptureExtendedSample))
 
 ### Barcode Capture Samples
 
-**Barcode Capture Simple Sample (**[Android](https://github.com/Scandit/datacapture-android-samples/tree/master/BarcodeCaptureSimpleSample))
+**Barcode Capture Simple Sample (**[Android](https://github.com/Scandit/datacapture-android-samples/tree/master/01_Single_Scanning_Samples/02_Barcode_Scanning_with_Low_Level_API/BarcodeCaptureSimpleSample))
 
-**Barcode Capture Reject Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/BarcodeCaptureRejectSample))
+**Barcode Capture Reject Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/01_Single_Scanning_Samples/02_Barcode_Scanning_with_Low_Level_API/BarcodeCaptureRejectSample))
 
-**Barcode Capture Settings Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/BarcodeCaptureSettingsSample))
+**Barcode Capture Settings Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/01_Single_Scanning_Samples/02_Barcode_Scanning_with_Low_Level_API/BarcodeCaptureSettingsSample))
 
 ### MatrixScan AR Samples
 
-**MatrixScan Simple Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/MatrixScanSimpleSample))
+**MatrixScan Simple Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/03_Advanced_Batch_Scanning_Samples/01_Batch_Scanning_and_AR_Info_Lookup/MatrixScanSimpleSample))
 
-**MatrixScan Bubbles Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/MatrixScanBubblesSample))
+**MatrixScan Bubbles Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/03_Advanced_Batch_Scanning_Samples/01_Batch_Scanning_and_AR_Info_Lookup/MatrixScanBubblesSample))
 
-**MatrixScan Reject Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/MatrixScanRejectSample))
+**MatrixScan Reject Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/03_Advanced_Batch_Scanning_Samples/01_Batch_Scanning_and_AR_Info_Lookup/MatrixScanRejectSample))
 
-**Inventory Audit Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/InventoryAuditSample))
+**Inventory Audit Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/03_Advanced_Batch_Scanning_Samples/01_Batch_Scanning_and_AR_Info_Lookup/InventoryAuditSample))
 
 ### Label Capture Samples
 
-**LabelCaptureSimpleSample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/PriceWeightLabelCaptureSample))
+**LabelCaptureSimpleSample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/03_Advanced_Batch_Scanning_Samples/05_Smart_Label_Capture/LabelCaptureSimpleSample))
 
 ### MatrixScan Check Samples
 
-**MatrixScan AR Simple Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/MatrixScanARSimpleSample))
+**MatrixScan AR Simple Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/03_Advanced_Batch_Scanning_Samples/01_Batch_Scanning_and_AR_Info_Lookup/MatrixScanARSimpleSample))
 
 ## Samples on Other Frameworks
 

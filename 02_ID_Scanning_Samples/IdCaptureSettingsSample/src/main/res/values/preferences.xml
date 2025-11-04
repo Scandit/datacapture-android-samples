@@ -13,8 +13,7 @@
     <string name="id_captured_feedback">ID Captured Feedback</string>
     <string name="id_rejected_feedback">ID Rejected Feedback</string>
     <string name="decode_back_of_european_driving_license">Decode back of European driver licenses</string>
-    <string name="decode_mobile_driver_license_viz">Decode mobile driver license VIZ</string>
-    <string name="decode_iso_mobile_driving_license">Decode ISO mobile driver licenses</string>
+    <string name="mdoc_elements_to_retain_title">Mobile Document Elements to Retain</string>
     <string name="reject_voided_ids">Reject voided IDs</string>
     <string name="reject_expired_ids">Reject expired IDs</string>
     <string name="reject_ids_expiring_in_days">Reject IDs expiring in x days</string>
@@ -24,7 +23,7 @@
     <string name="reject_holder_below_age">Reject holder below age</string>
     <string name="id_capture_feedback_title">Feedback</string>
     <string name="id_capture_rejection_title">Rejection</string>
-    <string name="id_capture_scanner_title">Scanner Type</string>
+    <string name="id_capture_scanner_title">Scanner</string>
     <string name="id_capture_accepted_documents_title">Accepted documents</string>
     <string name="id_capture_rejected_documents_title">Rejected documents</string>
     <string name="id_capture_regions_title">Regions</string>
@@ -33,11 +32,19 @@
     <string name="id_capture_any_subtype">Any subtype</string>
     <string name="id_capture_subtype_enable_all_title">Enable all</string>
     <string name="id_capture_subtype_disable_all_title">Disable all</string>
-    <string name="full_scanner">Full Scanner</string>
-    <string name="single_side_scanner">Single Side Scanner</string>
+    <string name="physical_document_scanner">Physical Document Scanner</string>
+    <string name="physical_document_scanner_type">Scanner Type</string>
+    <string name="physical_document_scanner_full_type">Full</string>
+    <string name="physical_document_scanner_single_side_type">Single Side</string>
+    <string name="single_side_scanner_features">Single Side Scanner Features</string>
     <string name="single_side_scanner_barcode">Barcode</string>
     <string name="single_side_scanner_mrz">Machine Readable Zone</string>
     <string name="single_side_scanner_viz">Visual Inspection Zone</string>
+    <string name="mobile_document_scanner">Mobile Document Scanner</string>
+    <string name="mobile_scanner_iso_18013_15">ISO 18013–15</string>
+    <string name="mobile_scanner_ocr">OCR</string>
+    <string name="scanner_summary_physical">Physical: %s</string>
+    <string name="scanner_summary_mobile">Mobile: %s</string>
 
     <string name="camera_category_title">Camera</string>
     <string name="camera_position_title">Camera Position</string>

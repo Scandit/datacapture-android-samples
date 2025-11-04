@@ -25,6 +25,7 @@ import com.scandit.datacapture.id.capture.DriverLicense;
 import com.scandit.datacapture.id.capture.IdCapture;
 import com.scandit.datacapture.id.capture.IdCaptureDocument;
 import com.scandit.datacapture.id.capture.IdCaptureListener;
+import com.scandit.datacapture.id.capture.IdCaptureScanner;
 import com.scandit.datacapture.id.capture.IdCaptureSettings;
 import com.scandit.datacapture.id.capture.IdCard;
 import com.scandit.datacapture.id.capture.Passport;
@@ -165,7 +166,7 @@ public class IdCaptureRepository implements IdCaptureListener {
     private IdCaptureSettings getBarcodeSettings() {
         IdCaptureSettings settings = new IdCaptureSettings();
         settings.setAcceptedDocuments(ACCEPTED_DOCUMENTS);
-        settings.setScannerType(new SingleSideScanner(true, false, false));
+        settings.setScanner(new IdCaptureScanner(new SingleSideScanner(true, false, false), null));
 
         return settings;
     }
@@ -176,7 +177,7 @@ public class IdCaptureRepository implements IdCaptureListener {
     private IdCaptureSettings getMrzSettings() {
         IdCaptureSettings settings = new IdCaptureSettings();
         settings.setAcceptedDocuments(ACCEPTED_DOCUMENTS);
-        settings.setScannerType(new SingleSideScanner(false, true, false));
+        settings.setScanner(new IdCaptureScanner(new SingleSideScanner(false, true, false), null));
 
         return settings;
     }
@@ -188,7 +189,7 @@ public class IdCaptureRepository implements IdCaptureListener {
     private IdCaptureSettings getVizSettings() {
         IdCaptureSettings settings = new IdCaptureSettings();
         settings.setAcceptedDocuments(ACCEPTED_DOCUMENTS);
-        settings.setScannerType(new SingleSideScanner(false, false, true));
+        settings.setScanner(new IdCaptureScanner(new SingleSideScanner(false, false, true), null));
         settings.setShouldPassImageTypeToResult(IdImageType.CROPPED_DOCUMENT, true);
 
         return settings;

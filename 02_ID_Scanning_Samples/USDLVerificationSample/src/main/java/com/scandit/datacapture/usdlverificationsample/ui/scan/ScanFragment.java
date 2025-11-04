@@ -49,7 +49,6 @@ import com.scandit.datacapture.usdlverificationsample.ui.util.AlertDialogFragmen
 
 public class ScanFragment extends Fragment implements AlertDialogFragment.Callbacks {
 
-    private static final String BARCODE_VERIFICATION_FAILURE_TAG = "BARCODE_VERIFICATION_FAILURE";
     private static final String REJECTED_DOCUMENT_TAG = "REJECTED_DOCUMENT";
     private static final String RESULT_SCREEN_TAG = "RESULT_SCREEN";
 
@@ -182,10 +181,6 @@ public class ScanFragment extends Fragment implements AlertDialogFragment.Callba
          */
         viewModel.goToResult().observe(lifecycleOwner, this::goToResult);
         viewModel.gotToRejectedDocument().observe(lifecycleOwner, this::gotToRejectedDocument);
-        viewModel.goToBarcodeVerificationFailure().observe(lifecycleOwner,
-                this::goToBarcodeVerificationFailure);
-
-        viewModel.setUpBarcodeVerificationTaskListeners();
     }
 
     @Override
@@ -274,21 +269,6 @@ public class ScanFragment extends Fragment implements AlertDialogFragment.Callba
 
             AlertDialogFragment.newInstance(R.string.error, getString(messageId))
                     .show(getChildFragmentManager(), REJECTED_DOCUMENT_TAG);
-        }
-    }
-
-    /**
-     * Show a dialog that informs the user that the verification failed.
-     */
-    private void goToBarcodeVerificationFailure(GoToBarcodeVerificationFailure event) {
-        if (event.getContentIfNotHandled() == null) {
-            return;
-        }
-
-        if (getChildFragmentManager().findFragmentByTag(BARCODE_VERIFICATION_FAILURE_TAG) == null) {
-            AlertDialogFragment.newInstance(R.string.error,
-                            getString(R.string.scanning_dl_barcode_verification_error))
-                    .show(getChildFragmentManager(), BARCODE_VERIFICATION_FAILURE_TAG);
         }
     }
 

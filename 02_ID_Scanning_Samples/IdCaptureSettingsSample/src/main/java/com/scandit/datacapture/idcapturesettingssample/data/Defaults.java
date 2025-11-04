@@ -107,17 +107,10 @@ public final class Defaults {
         return false;
     }
 
-    public static boolean shouldDecodeMobileDrivingLicenseViz() {
-        return false;
+    public static PhysicalDocumentScannerType getDefaultPhysicalDocumentScannerType() {
+        return PhysicalDocumentScannerType.FULL;
     }
 
-    public static boolean shouldDecodeIsoMobileDrivingLicenses() {
-        return false;
-    }
-
-    public static boolean isFullScannerEnabled() {
-        return false;
-    }
     public static boolean isSingleSideScannerBarcodeEnabled() {
         return false;
     }
@@ -125,6 +118,14 @@ public final class Defaults {
         return false;
     }
     public static boolean isSingleSideScannerVizEnabled() {
+        return false;
+    }
+
+    public static boolean isMobileScannerIso1801315Enabled() {
+        return false;
+    }
+
+    public static boolean isMobileScannerOcrEnabled() {
         return false;
     }
 

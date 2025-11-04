@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.scandit.datacapture.id.data.RejectionReason;
 import com.scandit.datacapture.usdlverificationsample.R;
 import com.scandit.datacapture.usdlverificationsample.ui.scan.ScanViewModel;
 
@@ -165,8 +166,9 @@ public class ResultBottomSheetFragment extends BottomSheetDialogFragment {
     }
 
     /**
-     * Display the results for expiration check, front-back verification and barcode
-     * verification.
+     * Display verification results based on rejection reason:
+     * - If rejection reason exists → show single red tile for that specific failure
+     * - If no rejection reason → show 3 green tiles for all verification checks
      */
     private void renderVerificationResult(CaptureResult result) {
         int successIcon = R.drawable.ic_success;
@@ -175,54 +177,36 @@ public class ResultBottomSheetFragment extends BottomSheetDialogFragment {
         verificationSuccessLayout.removeAllViews();
         verificationErrorLayout.removeAllViews();
 
-        /*
-         * Displays the expiration state of the document
-         */
-        VerificationResultItemView expirationView = new VerificationResultItemView(getContext());
-        if (result.isExpired()) {
-            expirationView.setData(errorIcon, R.string.scanning_dl_expired);
-            verificationErrorLayout.addView(expirationView);
+        RejectionReason rejectionReason = result.getRejectionReason();
+
+        if (rejectionReason != null) {
+            // Show single red tile for the specific rejection reason
+            VerificationResultItemView errorView = new VerificationResultItemView(getContext());
+            switch (rejectionReason) {
+                case DOCUMENT_EXPIRED:
+                    errorView.setData(errorIcon, R.string.scanning_dl_expired);
+                    break;
+                case INCONSISTENT_DATA:
+                    errorView.setData(errorIcon, R.string.scanning_dl_front_data_consistency_failure);
+                    break;
+                case FORGED_AAMVA_BARCODE:
+                    errorView.setData(errorIcon, R.string.scanning_dl_barcode_verification_failure);
+                    break;
+            }
+            verificationErrorLayout.addView(errorView);
         } else {
+            // Show all 3 green tiles for successful verification
+            VerificationResultItemView expirationView = new VerificationResultItemView(getContext());
             expirationView.setData(successIcon, R.string.scanning_dl_not_expired);
             verificationSuccessLayout.addView(expirationView);
-        }
 
-        /*
-         * Displays the data consistency state of the document
-         */
-        VerificationResultItemView dataConsistencyView = new VerificationResultItemView(getContext());
-        if (result.hasConsistentData()) {
+            VerificationResultItemView dataConsistencyView = new VerificationResultItemView(getContext());
             dataConsistencyView.setData(successIcon, R.string.scanning_dl_data_consistency_success);
             verificationSuccessLayout.addView(dataConsistencyView);
-        } else {
-            dataConsistencyView.setData(errorIcon, R.string.scanning_dl_front_data_consistency_failure);
-            verificationErrorLayout.addView(dataConsistencyView);
-        }
 
-        /*
-         * Displays the barcode verification state of the document
-         */
-        if (!result.isExpired()) {
-            VerificationResultItemView barcodeVerificationView =
-                new VerificationResultItemView(getContext());
-            switch (result.getAamvaBarcodeVerificationStatus()) {
-                case AUTHENTIC:
-                    barcodeVerificationView.setData(successIcon,
-                        R.string.scanning_dl_barcode_verification_success);
-                    verificationSuccessLayout.addView(barcodeVerificationView);
-                    break;
-                case LIKELY_FORGED:
-                    barcodeVerificationView.setData(errorIcon,
-                        R.string.scanning_dl_barcode_verification_uncertain);
-                    verificationErrorLayout.addView(barcodeVerificationView);
-                    break;
-                case FORGED:
-                    barcodeVerificationView.setData(errorIcon,
-                        R.string.scanning_dl_barcode_verification_failure);
-                    verificationErrorLayout.addView(barcodeVerificationView);
-                    break;
-
-            }
+            VerificationResultItemView barcodeVerificationView = new VerificationResultItemView(getContext());
+            barcodeVerificationView.setData(successIcon, R.string.scanning_dl_barcode_verification_success);
+            verificationSuccessLayout.addView(barcodeVerificationView);
         }
 
         verificationSuccessLayout.setVisibility(

@@ -19,6 +19,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.Nullable;
 
+import com.scandit.datacapture.id.data.RejectionReason;
 import com.scandit.datacapture.id.verification.aamvabarcode.AamvaBarcodeVerificationStatus;
 
 import java.util.ArrayList;
@@ -41,25 +42,17 @@ public class CaptureResult implements Parcelable {
 
     @Nullable private final byte[] frontReviewImageImageBytes;
 
-    private final boolean isExpired;
-
-    private final boolean hasConsistentData;
-
-    private final AamvaBarcodeVerificationStatus aamvaBarcodeVerificationStatus;
+    @Nullable private final RejectionReason rejectionReason;
 
     public CaptureResult(
             Collection<Entry> entries,
             @Nullable byte[] faceImageBytes,
-            boolean isExpired,
-            boolean hasConsistentData,
-            AamvaBarcodeVerificationStatus aamvaBarcodeVerificationStatus,
+            @Nullable RejectionReason rejectionReason,
             @Nullable byte[] frontReviewImageImageBytes
     ) {
         this.entries = new ArrayList<>(entries);
         this.faceImageBytes = faceImageBytes;
-        this.isExpired = isExpired;
-        this.hasConsistentData = hasConsistentData;
-        this.aamvaBarcodeVerificationStatus = aamvaBarcodeVerificationStatus;
+        this.rejectionReason = rejectionReason;
         this.frontReviewImageImageBytes = frontReviewImageImageBytes;
     }
 
@@ -72,16 +65,9 @@ public class CaptureResult implements Parcelable {
         return faceImageBytes;
     }
 
-    public boolean isExpired() {
-        return isExpired;
-    }
-
-    public boolean hasConsistentData() {
-        return hasConsistentData;
-    }
-
-    public AamvaBarcodeVerificationStatus getAamvaBarcodeVerificationStatus() {
-        return aamvaBarcodeVerificationStatus;
+    @Nullable
+    public RejectionReason getRejectionReason() {
+        return rejectionReason;
     }
 
     @Nullable
@@ -93,13 +79,23 @@ public class CaptureResult implements Parcelable {
         entries = in.readArrayList(getClass().getClassLoader());
 
         int faceImageBytesSize = in.readInt();
-        faceImageBytes = new byte[faceImageBytesSize];
-        in.readByteArray(faceImageBytes);
-        isExpired = in.readInt() == 1;
-        hasConsistentData = in.readInt() == 1;
-        aamvaBarcodeVerificationStatus = AamvaBarcodeVerificationStatus.valueOf(in.readString());
+        if (faceImageBytesSize > 0) {
+            faceImageBytes = new byte[faceImageBytesSize];
+            in.readByteArray(faceImageBytes);
+        } else {
+            faceImageBytes = null;
+        }
+
+        String rejectionReasonString = in.readString();
+        rejectionReason = rejectionReasonString != null ? RejectionReason.valueOf(rejectionReasonString) : null;
+
         int frontReviewImageImageBytesSize = in.readInt();
-        frontReviewImageImageBytes = new byte[frontReviewImageImageBytesSize];
+        if (frontReviewImageImageBytesSize > 0) {
+            frontReviewImageImageBytes = new byte[frontReviewImageImageBytesSize];
+            in.readByteArray(frontReviewImageImageBytes);
+        } else {
+            frontReviewImageImageBytes = null;
+        }
     }
 
     @Override
@@ -109,13 +105,17 @@ public class CaptureResult implements Parcelable {
         if (faceImageBytes != null) {
             dest.writeInt(faceImageBytes.length);
             dest.writeByteArray(faceImageBytes);
+        } else {
+            dest.writeInt(0);
         }
-        dest.writeInt(isExpired ? 1 : 0);
-        dest.writeInt(hasConsistentData ? 1 : 0);
-        dest.writeString(aamvaBarcodeVerificationStatus.toString());
+
+        dest.writeString(rejectionReason != null ? rejectionReason.toString() : null);
+
         if (frontReviewImageImageBytes != null) {
             dest.writeInt(frontReviewImageImageBytes.length);
             dest.writeByteArray(frontReviewImageImageBytes);
+        } else {
+            dest.writeInt(0);
         }
     }
 

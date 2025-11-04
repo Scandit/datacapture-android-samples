@@ -30,6 +30,7 @@ package com.scandit.datacapture.idcapturesettingssample.data;
 
 import com.scandit.datacapture.id.data.IdCaptureDocumentType;
 import com.scandit.datacapture.id.data.IdCaptureRegion;
+import com.scandit.datacapture.id.data.MobileDocumentDataElement;
 import com.scandit.datacapture.id.data.RegionSpecificSubtype;
 import com.scandit.datacapture.idcapturesettingssample.ui.settings.idcapture.documents.DocumentSelectionType;
 
@@ -44,8 +45,6 @@ public final class Keys {
     public final static String ID_CAPTURED_FEEDBACK = "id_captured_feedback";
     public final static String ID_REJECTED_FEEDBACK = "id_rejected_feedback";
     public final static String DECODE_BACK_OF_EUROPEAN_DRIVING_LICENSE = "decode_back_of_european_driving_license";
-    public final static String DECODE_MOBILE_DRIVER_LICENSE_VIZ = "decode_mobile_driver_license_viz";
-    public final static String DECODE_ISO_MOBILE_DRIVING_LICENSES = "decode_iso_mobile_driving_licenses";
     public final static String REJECT_VOIDED_IDS = "reject_voided_ids";
     public final static String REJECT_EXPIRED_IDS = "reject_expired_ids";
     public final static String REJECT_IDS_EXPIRING_IN_DAYS = "reject_ids_expiring_in_days";
@@ -53,10 +52,17 @@ public final class Keys {
     public final static String REJECT_FORGED_AAMVA_BARCODES = "reject_forged_aamva_barcodes";
     public final static String REJECT_INCONSISTENT_DATA = "reject_inconsistent_data";
     public final static String REJECT_HOLDER_BELOW_AGE = "reject_holder_below_age";
-    public final static String FULL_SCANNER = "full_scanner";
+    public final static String PHYSICAL_DOCUMENT_SCANNER_TYPE = "physical_document_scanner_type";
     public final static String SINGLE_SIDE_SCANNER_BARCODE = "single_side_scanner_barcode";
     public final static String SINGLE_SIDE_SCANNER_MRZ = "single_side_scanner_mrz";
     public final static String SINGLE_SIDE_SCANNER_VIZ = "single_side_scanner_viz";
+    public final static String MOBILE_SCANNER_ISO_18013_15 = "mobile_scanner_iso_18013_15";
+    public final static String MOBILE_SCANNER_OCR = "mobile_scanner_ocr";
+    public final static String MDOC_ELEMENTS_TO_RETAIN = "mdoc_elements_to_retain";
+
+    public static String getMdocElementKey(MobileDocumentDataElement element) {
+        return MDOC_ELEMENTS_TO_RETAIN + "-" + element.name();
+    }
 
     public static String getDocumentTypeKey(IdCaptureDocumentType type, DocumentSelectionType documentSelectionType) {
         return type.name() + "-" + documentSelectionType.name();

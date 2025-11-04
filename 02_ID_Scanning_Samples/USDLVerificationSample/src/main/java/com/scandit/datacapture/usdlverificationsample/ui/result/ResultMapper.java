@@ -24,7 +24,7 @@ import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.DateResult;
 import com.scandit.datacapture.id.data.IdCaptureRegion;
 import com.scandit.datacapture.id.data.IdImages;
-import com.scandit.datacapture.id.verification.aamvabarcode.AamvaBarcodeVerificationStatus;
+import com.scandit.datacapture.id.data.RejectionReason;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -53,9 +53,7 @@ public class ResultMapper {
      * We extract all the CapturedId's fields.
      */
     public CaptureResult mapResult(
-        boolean isExpired,
-        boolean hasConsistentData,
-        AamvaBarcodeVerificationStatus aamvaBarcodeVerificationStatus,
+        @Nullable RejectionReason rejectionReason,
         @Nullable Bitmap frontReviewImage
     ) {
         /*
@@ -78,9 +76,7 @@ public class ResultMapper {
         return new CaptureResult(
                 entries,
                 faceImageBytes,
-                isExpired,
-                hasConsistentData,
-                aamvaBarcodeVerificationStatus,
+                rejectionReason,
                 frontReviewImageBytes
         );
     }

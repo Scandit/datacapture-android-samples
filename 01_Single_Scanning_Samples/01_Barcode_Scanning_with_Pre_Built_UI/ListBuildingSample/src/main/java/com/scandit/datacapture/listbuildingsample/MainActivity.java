@@ -16,7 +16,6 @@ package com.scandit.datacapture.listbuildingsample;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.graphics.PointF;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -47,7 +46,6 @@ import com.scandit.datacapture.listbuildingsample.data.ScanResult;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

@@ -24,7 +24,6 @@ import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.data.SymbologyDescription;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
-import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlayStyle;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.common.feedback.Feedback;
 import com.scandit.datacapture.core.data.FrameData;
@@ -133,20 +132,11 @@ public class BarcodeScanActivity
         // Add a barcode capture overlay to the data capture view to render the location of captured
         // barcodes on top of the video preview.
         // This is optional, but recommended for better visual feedback.
-        overlay = BarcodeCaptureOverlay.newInstance(
-                barcodeCapture,
-                dataCaptureView,
-                BarcodeCaptureOverlayStyle.FRAME
-        );
+        overlay = BarcodeCaptureOverlay.newInstance(barcodeCapture, dataCaptureView);
 
         // Add a square viewfinder as we are only scanning square QR codes.
         overlay.setViewfinder(new RectangularViewfinder(RectangularViewfinderStyle.SQUARE));
 
-        // Adjust the overlay's barcode highlighting to match the new viewfinder styles and improve
-        // the visibility of feedback. With 6.10 we will introduce this visual treatment as a new
-        // style for the overlay.
-        Brush brush = new Brush(Color.TRANSPARENT, Color.WHITE, 3f);
-        overlay.setBrush(brush);
 
         setContentView(dataCaptureView);
     }

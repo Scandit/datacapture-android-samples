@@ -1,4 +1,5 @@
 include(":01_Single_Scanning_Samples:01_Barcode_Scanning_with_Pre_Built_UI:ListBuildingSample")
+include(":01_Single_Scanning_Samples:01_Barcode_Scanning_with_Pre_Built_UI:ListBuildingSampleCompose")
 include(":01_Single_Scanning_Samples:02_Barcode_Scanning_with_Low_Level_API:BarcodeCaptureSimpleSample")
 include(":01_Single_Scanning_Samples:02_Barcode_Scanning_with_Low_Level_API:BarcodeSelectionSettingsSample")
 include(":02_ID_Scanning_Samples:AgeVerifiedDeliverySample")

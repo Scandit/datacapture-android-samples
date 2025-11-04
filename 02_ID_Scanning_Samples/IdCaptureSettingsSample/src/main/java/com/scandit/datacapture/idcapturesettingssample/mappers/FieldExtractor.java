@@ -23,6 +23,7 @@ import com.scandit.datacapture.id.capture.IdCaptureDocument;
 import com.scandit.datacapture.id.capture.RegionSpecific;
 import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.DateResult;
+import com.scandit.datacapture.id.data.IdCaptureDocumentType;
 import com.scandit.datacapture.id.data.RegionSpecificSubtype;
 import com.scandit.datacapture.idcapturesettingssample.ui.result.CaptureResult;
 import com.scandit.datacapture.idcapturesettingssample.utils.StringUtils;
@@ -64,7 +65,7 @@ public abstract class FieldExtractor {
         if (TextUtils.isEmpty(value)) {
             return EMPTY_TEXT_VALUE;
         }
-        return value;
+        return value.trim();
     }
 
     @NonNull
@@ -81,6 +82,14 @@ public abstract class FieldExtractor {
             return EMPTY_TEXT_VALUE;
         }
         return StringUtils.toNameCase(value.getDocumentType().toString());
+    }
+
+    @NonNull
+    protected String extractField(@Nullable IdCaptureDocumentType value) {
+        if (value == null) {
+            return EMPTY_TEXT_VALUE;
+        }
+        return StringUtils.toNameCase(value.toString());
     }
 
     @NonNull

@@ -18,30 +18,41 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.scandit.datacapture.idcapturesettingssample.R;
 import com.scandit.datacapture.idcapturesettingssample.data.SettingsRepository;
 import com.scandit.datacapture.idcapturesettingssample.di.Injector;
 import com.scandit.datacapture.idcapturesettingssample.ui.settings.common.SettingsPreferenceBuilder;
+import com.scandit.datacapture.idcapturesettingssample.ui.settings.idcapture.mdocelements.MdocElementsSettingsFragment;
 
-public class IdCaptureScannerSettingsFragment extends PreferenceFragmentCompat {
+public class IdCaptureScannerSettingsFragment extends PreferenceFragmentCompat
+        implements IdCaptureScannerPreferenceBuilder.Listener {
 
     public static IdCaptureScannerSettingsFragment create() {
         return new IdCaptureScannerSettingsFragment();
     }
 
+    private static final String TAG_MDOC_ELEMENTS = "mdoc_elements";
+
     // The settings repository. Used by the preferences to store and retrieve properties.
     private final SettingsRepository settingsRepository = Injector.getInstance().getSettingsRepository();
+
+    private IdCaptureScannerPreferenceBuilder scannerPreferenceBuilder;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         getPreferenceManager().setPreferenceDataStore(settingsRepository);
 
+        scannerPreferenceBuilder = new IdCaptureScannerPreferenceBuilder(requireContext());
+        scannerPreferenceBuilder.setListener(this);
+
         // Build the desired preferences and attach them to the preference fragment.
         setPreferenceScreen(
                 new SettingsPreferenceBuilder(requireContext())
-                        .addSection(new IdCaptureScannerPreferenceBuilder(requireContext()))
+                        .addSection(scannerPreferenceBuilder)
                         .build(getPreferenceManager())
         );
     }
@@ -51,6 +62,9 @@ public class IdCaptureScannerSettingsFragment extends PreferenceFragmentCompat {
         super.onResume();
         // Update the actionBar title and navigation every time we're resuming the fragment.
         setupActionBar();
+        // Refresh preference summaries when returning from child fragments
+        scannerPreferenceBuilder.refreshPreferenceSummaries(settingsRepository);
+
     }
 
     private void setupActionBar() {
@@ -60,5 +74,19 @@ public class IdCaptureScannerSettingsFragment extends PreferenceFragmentCompat {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(R.string.id_capture_scanner_title);
         }
+    }
+
+    @Override
+    public void onMdocElementsClick() {
+        goToFragment(MdocElementsSettingsFragment.create(), TAG_MDOC_ELEMENTS);
+    }
+
+    private void goToFragment(Fragment fragment, String tag) {
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(R.id.scan_fragment_container, fragment, tag)
+                .addToBackStack(tag)
+                .commit();
     }
 }

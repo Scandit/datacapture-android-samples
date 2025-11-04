@@ -22,6 +22,7 @@ import com.scandit.datacapture.id.capture.DriverLicense;
 import com.scandit.datacapture.id.capture.FullDocumentScanner;
 import com.scandit.datacapture.id.capture.IdCapture;
 import com.scandit.datacapture.id.capture.IdCaptureDocument;
+import com.scandit.datacapture.id.capture.IdCaptureScanner;
 import com.scandit.datacapture.id.capture.IdCaptureSettings;
 import com.scandit.datacapture.id.capture.IdCard;
 import com.scandit.datacapture.id.capture.Passport;
@@ -97,7 +98,7 @@ public final class DataCaptureManager {
 
         // Recognize national ID cards, driver's licenses and passports.
         settings.setAcceptedDocuments(ACCEPTED_DOCUMENTS);
-        settings.setScannerType(new FullDocumentScanner());
+        settings.setScanner(new IdCaptureScanner(new FullDocumentScanner(), null));
 
         idCapture = IdCapture.forDataCaptureContext(dataCaptureContext, settings);
     }

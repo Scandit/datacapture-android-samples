@@ -26,6 +26,8 @@ import com.scandit.datacapture.id.capture.IdCapture;
 import com.scandit.datacapture.id.capture.IdCaptureListener;
 import com.scandit.datacapture.id.capture.IdCaptureScanner;
 import com.scandit.datacapture.id.capture.IdCaptureSettings;
+import com.scandit.datacapture.id.capture.MobileDocumentScanner;
+import com.scandit.datacapture.id.capture.PhysicalDocumentScanner;
 import com.scandit.datacapture.id.capture.SingleSideScanner;
 import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.Duration;
@@ -38,6 +40,7 @@ import com.scandit.datacapture.idcapturesettingssample.ui.scan.ScanResult;
 import com.scandit.datacapture.idcapturesettingssample.ui.scan.ScanResultEvent;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -142,16 +145,12 @@ public class IdCaptureRepository implements IdCaptureListener {
         });
 
         // Set the desired scanner type from settings.
-        idCaptureSettings.setScannerType(buildIdCaptureScanner());
+        idCaptureSettings.setScanner(buildIdCaptureScanner());
 
         // Set the desired anonymization mode from settings.
         idCaptureSettings.setAnonymizationMode(settingsRepository.getAnonymizationMode());
         // Set whether extra information should be extracted from the back side of European driver's licenses
         idCaptureSettings.setDecodeBackOfEuropeanDrivingLicense(settingsRepository.shouldDecodeBackOfEuropeanDrivingLicense());
-        // Set whether mobile driver license VIZ should be decoded
-        idCaptureSettings.setDecodeMobileDriverLicenseViz(settingsRepository.shouldDecodeMobileDrivingLicenseViz());
-        // Set whether ISO 18013-5 compliant mobile driver licenses should be decoded
-        idCaptureSettings.setDecodeIsoMobileDriverLicenses(settingsRepository.shouldDecodeIsoMobileDrivingLicenses());
         // Set whether voided IDs should be rejected
         idCaptureSettings.setRejectVoidedIds(settingsRepository.shouldRejectVoidedIds());
         // Set whether expired IDs should be rejected
@@ -257,14 +256,29 @@ public class IdCaptureRepository implements IdCaptureListener {
     }
 
     private IdCaptureScanner buildIdCaptureScanner() {
-        if (settingsRepository.isFullScannerEnabled()) {
-            return new FullDocumentScanner();
-        } else {
-            return new SingleSideScanner(
-                    settingsRepository.isSingleSideScannerBarcodeEnabled(),
-                    settingsRepository.isSingleSideScannerMrzEnabled(),
-                    settingsRepository.isSingleSideScannerVizEnabled()
-            );
+        PhysicalDocumentScannerType scannerType = settingsRepository.getPhysicalDocumentScannerType();
+        PhysicalDocumentScanner physicalDocumentScanner;
+
+        switch (scannerType) {
+            case SINGLE_SIDE:
+                physicalDocumentScanner = new SingleSideScanner(
+                        settingsRepository.isSingleSideScannerBarcodeEnabled(),
+                        settingsRepository.isSingleSideScannerMrzEnabled(),
+                        settingsRepository.isSingleSideScannerVizEnabled()
+                );
+                break;
+            case FULL:
+            default:
+                physicalDocumentScanner = new FullDocumentScanner();
+                break;
         }
+
+        MobileDocumentScanner mobileDocumentScanner = new MobileDocumentScanner(
+                settingsRepository.isMobileScannerIso1801315Enabled(),
+                settingsRepository.isMobileScannerOcrEnabled(),
+                settingsRepository.getMdocElementsToRetain()
+        );
+
+        return new IdCaptureScanner(physicalDocumentScanner, mobileDocumentScanner);
     }
 }

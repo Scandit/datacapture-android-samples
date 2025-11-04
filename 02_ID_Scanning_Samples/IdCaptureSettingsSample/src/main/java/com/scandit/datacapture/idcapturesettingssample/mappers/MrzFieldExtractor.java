@@ -50,7 +50,7 @@ public final class MrzFieldExtractor extends FieldExtractor {
             new CaptureResult.Entry("Names are Truncated", extractField(mrzResult.getNamesAreTruncated())),
             new CaptureResult.Entry("Optional Data In Line 1", extractField(mrzResult.getOptionalDataInLine1())),
             new CaptureResult.Entry("Optional Data In Line 2", extractField(mrzResult.getOptionalDataInLine2())),
-            new CaptureResult.Entry("Captured MRZ", extractField(mrzResult.getCapturedMrz().trim())),
+            new CaptureResult.Entry("Captured MRZ", extractField(mrzResult.getCapturedMrz())),
             new CaptureResult.Entry("Personal ID Number", extractField(mrzResult.getPersonalIdNumber())),
             new CaptureResult.Entry("Passport Number", extractField(mrzResult.getPassportNumber())),
             new CaptureResult.Entry("Passport Issuer ISO", extractField(mrzResult.getPassportIssuerIso())),

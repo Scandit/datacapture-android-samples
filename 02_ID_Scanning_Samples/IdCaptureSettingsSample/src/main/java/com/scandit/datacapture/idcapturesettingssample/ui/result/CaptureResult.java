@@ -15,6 +15,7 @@
 package com.scandit.datacapture.idcapturesettingssample.ui.result;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.scandit.datacapture.id.data.IdImages;
 
@@ -23,13 +24,13 @@ import java.util.Collection;
 
 public class CaptureResult {
     private final ArrayList<Entry> entries;
-    @NonNull private final String fullName;
+    @Nullable private final String fullName;
     @NonNull private final String dateOfBirth;
     @NonNull private final IdImages images;
 
     public CaptureResult(
             Collection<Entry> entries,
-            @NonNull String fullName,
+            @Nullable String fullName,
             @NonNull String dateOfBirth,
             @NonNull IdImages images
     ) {
@@ -43,7 +44,7 @@ public class CaptureResult {
         return entries;
     }
 
-    @NonNull
+    @Nullable
     public String getFullName() {
         return fullName;
     }

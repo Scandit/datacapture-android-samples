@@ -41,6 +41,7 @@ import com.scandit.datacapture.id.data.IdCaptureDocumentType;
 import com.scandit.datacapture.idcapturesettingssample.R;
 import com.scandit.datacapture.idcapturesettingssample.data.Defaults;
 import com.scandit.datacapture.idcapturesettingssample.data.Keys;
+import com.scandit.datacapture.idcapturesettingssample.data.PhysicalDocumentScannerType;
 import com.scandit.datacapture.idcapturesettingssample.ui.settings.common.PreferenceBuilder;
 import com.scandit.datacapture.idcapturesettingssample.ui.settings.common.SectionPreferenceBuilder;
 import com.scandit.datacapture.idcapturesettingssample.ui.settings.idcapture.documents.DocumentSelectionPreferenceUtils;
@@ -153,26 +154,6 @@ public class IdCapturePreferenceBuilder implements SectionPreferenceBuilder {
                         Defaults.shouldDecodeBackOfEuropeanDrivingLicense()
                 );
         parent.addPreference(decodeBackOfEuropeanDrivingLicenseSwitchPreference);
-
-        // Switch to enable or disable the decoding of mobile driver license VIZ.
-        SwitchPreferenceCompat decodeMobileDrivingLicenseVizSwitchPreference =
-                PreferenceBuilder._switch(
-                        context,
-                        Keys.DECODE_MOBILE_DRIVER_LICENSE_VIZ,
-                        context.getString(R.string.decode_mobile_driver_license_viz),
-                        Defaults.shouldDecodeMobileDrivingLicenseViz()
-                );
-        parent.addPreference(decodeMobileDrivingLicenseVizSwitchPreference);
-
-        // Switch to enable or disable the decoding of ISO 18013-5 compliant mobile driver licenses.
-        SwitchPreferenceCompat decodeIsoMobileDrivingLicensesSwitchPreference =
-                PreferenceBuilder._switch(
-                        context,
-                        Keys.DECODE_ISO_MOBILE_DRIVING_LICENSES,
-                        context.getString(R.string.decode_iso_mobile_driving_license),
-                        Defaults.shouldDecodeIsoMobileDrivingLicenses()
-                );
-        parent.addPreference(decodeIsoMobileDrivingLicensesSwitchPreference);
     }
 
     /**
@@ -188,10 +169,82 @@ public class IdCapturePreferenceBuilder implements SectionPreferenceBuilder {
                 getSummaryForDocuments(preferenceDataStore, DocumentSelectionType.REJECTED));
 
         // Scanner
-        boolean isFullScannerEnabled =
-                preferenceDataStore.getBoolean(Keys.FULL_SCANNER, Defaults.isFullScannerEnabled());
-        scannerPreference.setSummary(
-                isFullScannerEnabled ? R.string.full_scanner : R.string.single_side_scanner);
+        scannerPreference.setSummary(getScannerSummary(preferenceDataStore));
+    }
+
+    /**
+     * Returns a human readable string that represents the scanner configuration
+     */
+    private String getScannerSummary(PreferenceDataStore preferenceDataStore) {
+        java.util.List<String> summaryParts = new java.util.ArrayList<>();
+
+        // Physical document scanner
+        String scannerTypeValue = preferenceDataStore.getString(
+                Keys.PHYSICAL_DOCUMENT_SCANNER_TYPE,
+                Defaults.getDefaultPhysicalDocumentScannerType().name()
+        );
+        PhysicalDocumentScannerType scannerType = PhysicalDocumentScannerType.fromKey(scannerTypeValue);
+
+        switch (scannerType) {
+            case SINGLE_SIDE:
+                java.util.List<String> physicalOptions = new java.util.ArrayList<>();
+                if (preferenceDataStore.getBoolean(
+                        Keys.SINGLE_SIDE_SCANNER_BARCODE,
+                        Defaults.isSingleSideScannerBarcodeEnabled())) {
+                    physicalOptions.add(context.getString(R.string.single_side_scanner_barcode));
+                }
+                if (preferenceDataStore.getBoolean(
+                        Keys.SINGLE_SIDE_SCANNER_MRZ,
+                        Defaults.isSingleSideScannerMrzEnabled())) {
+                    physicalOptions.add(context.getString(R.string.single_side_scanner_mrz));
+                }
+                if (preferenceDataStore.getBoolean(
+                        Keys.SINGLE_SIDE_SCANNER_VIZ,
+                        Defaults.isSingleSideScannerVizEnabled())) {
+                    physicalOptions.add(context.getString(R.string.single_side_scanner_viz));
+                }
+
+                if (!physicalOptions.isEmpty()) {
+                    summaryParts.add(context.getString(
+                            R.string.scanner_summary_physical,
+                            String.join(", ", physicalOptions)
+                    ));
+                } else {
+                    summaryParts.add(context.getString(
+                            R.string.scanner_summary_physical,
+                            context.getString(R.string.physical_document_scanner_single_side_type)
+                    ));
+                }
+                break;
+            case FULL:
+                summaryParts.add(context.getString(
+                        R.string.scanner_summary_physical,
+                        context.getString(R.string.physical_document_scanner_full_type)
+                ));
+                break;
+        }
+
+        // Mobile document scanner
+        java.util.List<String> mobileOptions = new java.util.ArrayList<>();
+        if (preferenceDataStore.getBoolean(
+                Keys.MOBILE_SCANNER_ISO_18013_15,
+                Defaults.isMobileScannerIso1801315Enabled())) {
+            mobileOptions.add(context.getString(R.string.mobile_scanner_iso_18013_15));
+        }
+        if (preferenceDataStore.getBoolean(
+                Keys.MOBILE_SCANNER_OCR,
+                Defaults.isMobileScannerOcrEnabled())) {
+            mobileOptions.add(context.getString(R.string.mobile_scanner_ocr));
+        }
+
+        if (!mobileOptions.isEmpty()) {
+            summaryParts.add(context.getString(
+                    R.string.scanner_summary_mobile,
+                    String.join(", ", mobileOptions)
+            ));
+        }
+
+        return String.join(" | ", summaryParts);
     }
 
     /**

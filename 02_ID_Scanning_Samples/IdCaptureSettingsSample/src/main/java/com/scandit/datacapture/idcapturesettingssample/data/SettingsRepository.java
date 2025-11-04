@@ -46,6 +46,7 @@ import com.scandit.datacapture.id.data.IdAnonymizationMode;
 import com.scandit.datacapture.id.data.IdCaptureDocumentType;
 import com.scandit.datacapture.id.data.IdCaptureRegion;
 import com.scandit.datacapture.id.data.IdImageType;
+import com.scandit.datacapture.id.data.MobileDocumentDataElement;
 import com.scandit.datacapture.id.data.RegionSpecificSubtype;
 import com.scandit.datacapture.id.ui.IdLayoutLineStyle;
 import com.scandit.datacapture.id.ui.IdLayoutStyle;
@@ -267,9 +268,16 @@ public class SettingsRepository extends PreferenceDataStore {
                 .collect(Collectors.toSet());
     }
 
-    // Retrieves from settings whether the full scanner is enabled.
-    public boolean isFullScannerEnabled() {
-        return getBoolean(Keys.FULL_SCANNER, Defaults.isFullScannerEnabled());
+    /*
+     * Retrieves from settings the physical document scanner type.
+     */
+    public PhysicalDocumentScannerType getPhysicalDocumentScannerType() {
+        String scannerType = getString(Keys.PHYSICAL_DOCUMENT_SCANNER_TYPE, null);
+        if (scannerType == null) {
+            return Defaults.getDefaultPhysicalDocumentScannerType();
+        } else {
+            return PhysicalDocumentScannerType.fromKey(scannerType);
+        }
     }
 
     // Retrieves from settings whether barcode scanning is enabled in single side scanner.
@@ -313,20 +321,32 @@ public class SettingsRepository extends PreferenceDataStore {
     }
 
     /*
-     * Retrieves from settings whether mobile driver license VIZ should be decoded.
+     * Retrieves from settings whether ISO 18013-15 compliant mobile documents should be decoded.
      */
-    public boolean shouldDecodeMobileDrivingLicenseViz() {
-        return getBoolean(Keys.DECODE_MOBILE_DRIVER_LICENSE_VIZ,
-                Defaults.shouldDecodeMobileDrivingLicenseViz());
+    public boolean isMobileScannerIso1801315Enabled() {
+        return getBoolean(Keys.MOBILE_SCANNER_ISO_18013_15,
+                Defaults.isMobileScannerIso1801315Enabled());
     }
 
     /*
-     * Retrieves from settings whether ISO 18013-5 compliant mobile driver licenses should be
-     *  decoded.
+     * Retrieves from settings whether mobile document OCR should be decoded.
      */
-    public boolean shouldDecodeIsoMobileDrivingLicenses() {
-        return getBoolean(Keys.DECODE_ISO_MOBILE_DRIVING_LICENSES,
-                Defaults.shouldDecodeIsoMobileDrivingLicenses());
+    public boolean isMobileScannerOcrEnabled() {
+        return getBoolean(Keys.MOBILE_SCANNER_OCR,
+                Defaults.isMobileScannerOcrEnabled());
+    }
+
+    /*
+     * Retrieves from settings which MdocDataElements should be retained.
+     */
+    public Set<MobileDocumentDataElement> getMdocElementsToRetain() {
+        Set<MobileDocumentDataElement> elements = new HashSet<>();
+        for (MobileDocumentDataElement element : MobileDocumentDataElement.values()) {
+            if (getBoolean(Keys.getMdocElementKey(element), false)) {
+                elements.add(element);
+            }
+        }
+        return elements;
     }
 
     /*

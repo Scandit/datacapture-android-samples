@@ -57,7 +57,6 @@ public final class VizFieldExtractor extends FieldExtractor {
 
         result.add(new CaptureResult.Entry("VIZ First Name", extractField(vizResult.getFirstName())));
         result.add(new CaptureResult.Entry("VIZ Last Name", extractField(vizResult.getLastName())));
-        result.add(new CaptureResult.Entry("VIZ Secondary Last Name", extractField(vizResult.getSecondaryLastName())));
         result.add(new CaptureResult.Entry("VIZ Full Name", extractField(vizResult.getFullName())));
         result.add(new CaptureResult.Entry("VIZ Sex", extractField(vizResult.getSex())));
         result.add(new CaptureResult.Entry("VIZ Date of Birth", extractField(vizResult.getDateOfBirth())));
@@ -136,4 +135,3 @@ public final class VizFieldExtractor extends FieldExtractor {
         return result;
     }
 }
-

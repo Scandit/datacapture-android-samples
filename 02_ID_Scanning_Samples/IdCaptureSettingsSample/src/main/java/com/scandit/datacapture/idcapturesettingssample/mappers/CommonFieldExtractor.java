@@ -20,6 +20,7 @@ import com.scandit.datacapture.idcapturesettingssample.ui.result.CaptureResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class CommonFieldExtractor extends FieldExtractor {
 
@@ -39,7 +40,6 @@ public final class CommonFieldExtractor extends FieldExtractor {
         result.add(new CaptureResult.Entry("Subtype", extractSubtype(capturedId.getDocument())));
         result.add(new CaptureResult.Entry("First Name", extractField(capturedId.getFirstName())));
         result.add(new CaptureResult.Entry("Last Name", extractField(capturedId.getLastName())));
-        result.add(new CaptureResult.Entry("Secondary Last Name", extractField(capturedId.getSecondaryLastName())));
         result.add(new CaptureResult.Entry("Full Name", extractField(capturedId.getFullName())));
         result.add(new CaptureResult.Entry("Sex", extractField(capturedId.getSexType().toString())));
         result.add(new CaptureResult.Entry("Date of Birth", extractField(capturedId.getDateOfBirth())));
@@ -53,8 +53,19 @@ public final class CommonFieldExtractor extends FieldExtractor {
         result.add(new CaptureResult.Entry("Date of Expiry", extractField(capturedId.getDateOfExpiry())));
         result.add(new CaptureResult.Entry("Is Expired", extractField(capturedId.isExpired())));
         result.add(new CaptureResult.Entry("Date of Issue", extractField(capturedId.getDateOfIssue())));
+        result.add(new CaptureResult.Entry("Is Citizen Passport", extractField(capturedId.isCitizenPassport())));
         result.add(new CaptureResult.Entry("US REAL ID Status", extractField(capturedId.getUsRealIdStatus().toString())));
+        result.add(new CaptureResult.Entry("Anonymized Fields", extractAnonymizedFields(capturedId)));
 
         return result;
+    }
+
+    private String extractAnonymizedFields(CapturedId capturedId) {
+        return capturedId.getAnonymizedFields().isEmpty()
+            ? EMPTY_TEXT_VALUE
+            : capturedId.getAnonymizedFields()
+            .stream()
+            .map(Object::toString)
+            .collect(Collectors.joining(", "));
     }
 }

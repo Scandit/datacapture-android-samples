@@ -1,0 +1,78 @@
+plugins {
+    id("com.android.application")
+    id("kotlin-android")
+}
+
+android {
+    ndkVersion = sdk.ndk
+    compileSdkVersion = sdk.compile
+    namespace = "com.scandit.datacapture.listbuildingsamplecompose"
+
+    defaultConfig {
+        applicationId = "com.scandit.datacapture.listbuildingsamplecompose"
+        minSdkVersion(sdk.min)
+        targetSdkVersion(sdk.target)
+        versionCode = 1
+        versionName = "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+        }
+    }
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.15"
+    }
+
+    kotlinOptions {
+        freeCompilerArgs += [
+                '-opt-in=androidx.compose.material3.ExperimentalMaterial3Api'
+        ]
+    }
+
+    compileOptions {
+        sourceCompatibility = versions.java
+        targetCompatibility = versions.java
+    }
+
+    packagingOptions {
+        jniLibs {
+            pickFirsts += "**/*.so"
+            it.useLegacyPackaging true
+        }
+    }
+
+    splits {
+        abi {
+            enable project.hasProperty('enableSplit')
+            reset()
+            //noinspection ChromeOsAbiSupport
+            include 'arm64-v8a'
+            universalApk false
+        }
+    }
+}
+
+dependencies {
+    api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:barcode:${versions.scandit_sdk_version}"
+
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}")
+    implementation("com.google.android.material:material:${versions.material}")
+    implementation("androidx.appcompat:appcompat:${versions.androidx_appcompat}")
+
+    // Jetpack Compose
+    implementation(platform("androidx.compose:compose-bom:${versions.compose_bom}"))
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("com.google.accompanist:accompanist-permissions:${versions.compose_permissions}")
+    implementation("androidx.activity:activity-compose:${versions.compose_activity}")
+    debugImplementation("androidx.compose.ui:ui-tooling")
+}

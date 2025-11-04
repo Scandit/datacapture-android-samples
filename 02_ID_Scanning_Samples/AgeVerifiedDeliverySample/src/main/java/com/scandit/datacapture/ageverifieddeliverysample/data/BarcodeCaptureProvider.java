@@ -18,7 +18,6 @@ import com.scandit.datacapture.barcode.capture.BarcodeCapture;
 import com.scandit.datacapture.barcode.capture.BarcodeCaptureSettings;
 import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlay;
-import com.scandit.datacapture.barcode.ui.overlay.BarcodeCaptureOverlayStyle;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinder;
 import com.scandit.datacapture.core.ui.viewfinder.RectangularViewfinderStyle;
 
@@ -70,8 +69,7 @@ public class BarcodeCaptureProvider {
      * Create the BarcodeCapture's overlay.
      */
     private BarcodeCaptureOverlay createBarcodeCaptureOverlay() {
-        BarcodeCaptureOverlay overlay = BarcodeCaptureOverlay.newInstance(barcodeCapture, null,
-                BarcodeCaptureOverlayStyle.FRAME);
+        BarcodeCaptureOverlay overlay = BarcodeCaptureOverlay.newInstance(barcodeCapture, null);
         overlay.setViewfinder(new RectangularViewfinder(RectangularViewfinderStyle.SQUARE));
         return overlay;
     }

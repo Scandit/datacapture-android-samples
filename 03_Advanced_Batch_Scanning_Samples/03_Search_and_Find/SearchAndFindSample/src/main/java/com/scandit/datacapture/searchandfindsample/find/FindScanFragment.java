@@ -135,16 +135,16 @@ public final class FindScanFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
+        // Pause finding by calling the BarcodeFindView onPause method.
+        // Under the hood, it will disable the mode and free resources that are not needed in a
+        // paused state.
+        barcodeFindView.onPause();
+
         if (isRemoving()) {
             // If the user is leaving the screen, we'll be discarding the scanning mode,
             // so we perform some cleanup before that.
             viewModel.cleanup();
         }
-
-        // Pause finding by calling the BarcodeFindView onPause method.
-        // Under the hood, it will disable the mode and free resources that are not needed in a
-        // paused state.
-        barcodeFindView.onPause();
     }
 
     @Override
