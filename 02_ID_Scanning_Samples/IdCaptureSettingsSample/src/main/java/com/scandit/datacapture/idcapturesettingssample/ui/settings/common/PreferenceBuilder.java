@@ -233,6 +233,15 @@ public class PreferenceBuilder {
       return preference;
    }
 
+   public static Preference centeredTextPreference(Context context, String title) {
+      Preference preference = new Preference(context);
+      preference.setIconSpaceReserved(false);
+      preference.setTitle(title);
+      preference.setLayoutResource(R.layout.preference_centered_text);
+      preference.setSelectable(false);
+      return preference;
+   }
+
    private static class FloatWithUnitPreviewSummary
            implements Preference.SummaryProvider<Preference> {
 

@@ -23,6 +23,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.id.capture.FullDocumentScanner;
 import com.scandit.datacapture.id.capture.IdCapture;
+import com.scandit.datacapture.id.capture.IdCaptureDocument;
 import com.scandit.datacapture.id.capture.IdCaptureListener;
 import com.scandit.datacapture.id.capture.IdCaptureScanner;
 import com.scandit.datacapture.id.capture.IdCaptureSettings;
@@ -31,6 +32,7 @@ import com.scandit.datacapture.id.capture.PhysicalDocumentScanner;
 import com.scandit.datacapture.id.capture.SingleSideScanner;
 import com.scandit.datacapture.id.data.CapturedId;
 import com.scandit.datacapture.id.data.Duration;
+import com.scandit.datacapture.id.data.IdFieldType;
 import com.scandit.datacapture.id.data.IdImageType;
 import com.scandit.datacapture.id.data.RejectionReason;
 import com.scandit.datacapture.id.data.CapturedSides;
@@ -40,7 +42,6 @@ import com.scandit.datacapture.idcapturesettingssample.ui.scan.ScanResult;
 import com.scandit.datacapture.idcapturesettingssample.ui.scan.ScanResultEvent;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -149,6 +150,19 @@ public class IdCaptureRepository implements IdCaptureListener {
 
         // Set the desired anonymization mode from settings.
         idCaptureSettings.setAnonymizationMode(settingsRepository.getAnonymizationMode());
+        // Apply anonymized fields to all accepted documents
+        Set<IdFieldType> anonymizedFields = settingsRepository.getAnonymizedFields();
+        for (IdCaptureDocument document : settingsRepository.getAcceptedDocuments()) {
+            for (IdFieldType fieldType : anonymizedFields) {
+                idCaptureSettings.addAnonymizedField(document, fieldType);
+            }
+        }
+        // Apply anonymized fields to all rejected documents
+        for (IdCaptureDocument document : settingsRepository.getRejectedDocuments()) {
+            for (IdFieldType fieldType : anonymizedFields) {
+                idCaptureSettings.addAnonymizedField(document, fieldType);
+            }
+        }
         // Set whether extra information should be extracted from the back side of European driver's licenses
         idCaptureSettings.setDecodeBackOfEuropeanDrivingLicense(settingsRepository.shouldDecodeBackOfEuropeanDrivingLicense());
         // Set whether voided IDs should be rejected
@@ -168,6 +182,8 @@ public class IdCaptureRepository implements IdCaptureListener {
         idCaptureSettings.setRejectInconsistentData(settingsRepository.shouldRejectInconsistentData());
         // Set whether IDs whose holder is below the specified age should be rejected
         idCaptureSettings.setRejectHolderBelowAge(settingsRepository.shouldRejectHolderBelowAge());
+        // Set the rejection timeout in seconds
+        idCaptureSettings.setRejectionTimeoutSeconds(settingsRepository.getRejectionTimeoutSeconds());
         idCapture = IdCapture.forDataCaptureContext(dataCaptureContext, idCaptureSettings);
         idCapture.addListener(this);
         idCapture.setFeedback(settingsRepository.buildFeedbackFromSettings());

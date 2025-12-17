@@ -30,7 +30,6 @@ package com.scandit.datacapture.idcapturesettingssample.ui.settings.idcapture;
 
 import android.content.Context;
 
-import androidx.preference.DropDownPreference;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceDataStore;
@@ -38,6 +37,7 @@ import androidx.preference.PreferenceGroup;
 import androidx.preference.SwitchPreferenceCompat;
 
 import com.scandit.datacapture.id.data.IdCaptureDocumentType;
+import com.scandit.datacapture.id.data.IdFieldType;
 import com.scandit.datacapture.idcapturesettingssample.R;
 import com.scandit.datacapture.idcapturesettingssample.data.Defaults;
 import com.scandit.datacapture.idcapturesettingssample.data.Keys;
@@ -57,6 +57,7 @@ public class IdCapturePreferenceBuilder implements SectionPreferenceBuilder {
     private final Context context;
     private Listener listener;
 
+    Preference anonymizationPreference;
     Preference acceptedDocumentsPreference;
     Preference rejectedDocumentsPreference;
     Preference scannerPreference;
@@ -71,16 +72,15 @@ public class IdCapturePreferenceBuilder implements SectionPreferenceBuilder {
 
     @Override
     public void build(PreferenceGroup parent) {
-        // DropDown preference to choose anonymization mode
-        DropDownPreference anonymizationModePreference = PreferenceBuilder.dropDown(
-                context,
-                Keys.ANONYMIZATION_MODE,
-                context.getString(R.string.anonymization_mode_title),
-                Defaults.getAnonymizationModeEntries(),
-                Defaults.getAnonymizationModeValues(),
-                Defaults.getDefaultAnonymizationMode().name()
+        // Preference to navigate to anonymization settings
+        anonymizationPreference = PreferenceBuilder.preference(
+                context, context.getString(R.string.anonymization_title)
         );
-        parent.addPreference(anonymizationModePreference);
+        anonymizationPreference.setOnPreferenceClickListener((pref) -> {
+            if (listener != null) listener.onAnonymizationClick();
+            return true;
+        });
+        parent.addPreference(anonymizationPreference);
 
         // Preference to choose which documents are accepted.
         acceptedDocumentsPreference = PreferenceBuilder.preference(
@@ -160,6 +160,9 @@ public class IdCapturePreferenceBuilder implements SectionPreferenceBuilder {
      * Refreshes the preference summaries to reflect the selected document types and regions
      */
     public void refreshPreferenceSummaries(PreferenceDataStore preferenceDataStore) {
+        // Anonymization
+        anonymizationPreference.setSummary(getAnonymizationSummary(preferenceDataStore));
+
         // Accepted documents
         acceptedDocumentsPreference.setSummary(
                 getSummaryForDocuments(preferenceDataStore, DocumentSelectionType.ACCEPTED));
@@ -170,6 +173,38 @@ public class IdCapturePreferenceBuilder implements SectionPreferenceBuilder {
 
         // Scanner
         scannerPreference.setSummary(getScannerSummary(preferenceDataStore));
+    }
+
+    /**
+     * Returns a human readable string that represents the anonymization configuration
+     */
+    private String getAnonymizationSummary(PreferenceDataStore preferenceDataStore) {
+        // Get the anonymization mode
+        String anonymizationMode = preferenceDataStore.getString(
+                Keys.ANONYMIZATION_MODE,
+                Defaults.getDefaultAnonymizationMode().name()
+        );
+        String modeName = StringUtils.toNameCase(anonymizationMode);
+
+        // Count selected fields
+        int selectedFieldCount = 0;
+        for (IdFieldType fieldType : IdFieldType.values()) {
+            if (preferenceDataStore.getBoolean(Keys.getAnonymizedFieldKey(fieldType), Defaults.isFieldAnonymized(fieldType))) {
+                selectedFieldCount++;
+            }
+        }
+
+        // Format summary
+        String fieldsSummary;
+        if (selectedFieldCount == 0) {
+            fieldsSummary = "No fields";
+        } else if (selectedFieldCount == 1) {
+            fieldsSummary = "1 field";
+        } else {
+            fieldsSummary = selectedFieldCount + " fields";
+        }
+
+        return modeName + " | " + fieldsSummary;
     }
 
     /**
@@ -283,6 +318,7 @@ public class IdCapturePreferenceBuilder implements SectionPreferenceBuilder {
     }
 
     public interface Listener {
+        void onAnonymizationClick();
         void onAcceptedDocumentsClick();
         void onRejectedDocumentsClick();
         void onScannerClick();

@@ -9,7 +9,9 @@
 
     <string name="id_capture_category_title">ID Capture</string>
     <string name="image_types_title">Result with Image Types</string>
+    <string name="anonymization_title">Anonymization</string>
     <string name="anonymization_mode_title">Anonymization Mode</string>
+    <string name="anonymized_fields_category_title">Anonymized Fields</string>
     <string name="id_captured_feedback">ID Captured Feedback</string>
     <string name="id_rejected_feedback">ID Rejected Feedback</string>
     <string name="decode_back_of_european_driving_license">Decode back of European driver licenses</string>
@@ -21,6 +23,7 @@
     <string name="reject_forged_aamva_barcodes">Reject forged AAMVA Barcodes</string>
     <string name="reject_inconsistent_data">Reject inconsistent data</string>
     <string name="reject_holder_below_age">Reject holder below age</string>
+    <string name="rejection_timeout_seconds">Rejection Timeout (s)</string>
     <string name="id_capture_feedback_title">Feedback</string>
     <string name="id_capture_rejection_title">Rejection</string>
     <string name="id_capture_scanner_title">Scanner</string>
@@ -77,4 +80,6 @@
 
     <string name="text_hint_position_title">Text Hint Position</string>
     <string name="show_text_hints_title">Show Text Hints</string>
+
+    <string name="sdk_version">ID Capture Settings Sample\nSDK %1$s</string>
 </resources>

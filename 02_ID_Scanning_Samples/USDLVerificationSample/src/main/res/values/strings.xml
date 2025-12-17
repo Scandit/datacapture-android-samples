@@ -6,9 +6,7 @@
     <string name="scanning_dl_data_consistency_success">Information on front and back matches.</string>
     <string name="scanning_dl_front_data_consistency_failure">Information on front and back does not match.</string>
     <string name="scanning_dl_barcode_verification_success">Document barcode is authentic.</string>
-    <string name="scanning_dl_barcode_verification_uncertain">Document barcode is likely forged.</string>
     <string name="scanning_dl_barcode_verification_failure">Document barcode is forged.</string>
-    <string name="scanning_dl_barcode_verification_error">An error was encountered. Please make sure that your Scandit license key permits barcode verification.</string>
     <string name="scanning_dl_barcode_verification_in_progress">Running verification checks</string>
     <string name="rejected_document_not_supported_message">Document not supported. Try scanning another document</string>
     <string name="rejected_document_timeout_message">Document capture failed. Make sure the document is well lit and free of glare. Alternatively, try scanning another document</string>

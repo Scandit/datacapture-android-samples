@@ -47,6 +47,7 @@ import android.content.Context;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceGroup;
 
+import com.scandit.datacapture.core.capture.DataCaptureVersion;
 import com.scandit.datacapture.idcapturesettingssample.R;
 import com.scandit.datacapture.idcapturesettingssample.ui.settings.common.PreferenceBuilder;
 import com.scandit.datacapture.idcapturesettingssample.ui.settings.common.SectionPreferenceBuilder;
@@ -114,6 +115,11 @@ public class OverviewPreferenceBuilder implements SectionPreferenceBuilder {
             return true;
         });
         parent.addPreference(resultPreference);
+
+        Preference version = PreferenceBuilder.centeredTextPreference(
+                context, context.getString(R.string.sdk_version, DataCaptureVersion.VERSION_STRING)
+        );
+        parent.addPreference(version);
     }
 
     public interface Listener {

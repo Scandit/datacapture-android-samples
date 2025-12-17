@@ -27,6 +27,7 @@ import com.scandit.datacapture.idcapturesettingssample.data.SettingsRepository;
 import com.scandit.datacapture.idcapturesettingssample.di.Injector;
 import com.scandit.datacapture.idcapturesettingssample.ui.settings.common.SettingsPreferenceBuilder;
 import com.scandit.datacapture.idcapturesettingssample.ui.settings.idcapture.documents.DocumentSelectionType;
+import com.scandit.datacapture.idcapturesettingssample.ui.settings.idcapture.anonymization.IdCaptureAnonymizationSettingsFragment;
 import com.scandit.datacapture.idcapturesettingssample.ui.settings.idcapture.documents.IdCaptureDocumentsSettingsFragment;
 import com.scandit.datacapture.idcapturesettingssample.ui.settings.idcapture.feedback.IdCaptureFeedbackSettingsFragment;
 import com.scandit.datacapture.idcapturesettingssample.ui.settings.idcapture.rejection.IdCaptureRejectionSettingsFragment;
@@ -35,6 +36,7 @@ import com.scandit.datacapture.idcapturesettingssample.ui.settings.idcapture.sca
 public class IdCaptureSettingsFragment extends PreferenceFragmentCompat
         implements IdCapturePreferenceBuilder.Listener {
 
+    private static final String TAG_ANONYMIZATION = "ANONYMIZATION";
     private static final String TAG_SCANNERS = "SCANNERS";
     private static final String TAG_DOCUMENTS = "DOCUMENTS";
     private static final String TAG_FEEDBACK= "FEEDBACK";
@@ -92,6 +94,11 @@ public class IdCaptureSettingsFragment extends PreferenceFragmentCompat
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(R.string.id_capture_category_title);
         }
+    }
+
+    @Override
+    public void onAnonymizationClick() {
+        goToFragment(IdCaptureAnonymizationSettingsFragment.create(), TAG_ANONYMIZATION);
     }
 
     @Override

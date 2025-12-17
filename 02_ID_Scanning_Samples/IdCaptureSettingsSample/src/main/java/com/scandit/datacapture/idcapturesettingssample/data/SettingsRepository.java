@@ -45,6 +45,7 @@ import com.scandit.datacapture.id.capture.VisaIcao;
 import com.scandit.datacapture.id.data.IdAnonymizationMode;
 import com.scandit.datacapture.id.data.IdCaptureDocumentType;
 import com.scandit.datacapture.id.data.IdCaptureRegion;
+import com.scandit.datacapture.id.data.IdFieldType;
 import com.scandit.datacapture.id.data.IdImageType;
 import com.scandit.datacapture.id.data.MobileDocumentDataElement;
 import com.scandit.datacapture.id.data.RegionSpecificSubtype;
@@ -260,6 +261,19 @@ public class SettingsRepository extends PreferenceDataStore {
     }
 
     /*
+     * Retrieves from settings which fields should be anonymized.
+     */
+    public Set<IdFieldType> getAnonymizedFields() {
+        Set<IdFieldType> fields = new HashSet<>();
+        for (IdFieldType fieldType : IdFieldType.values()) {
+            if (getBoolean(Keys.getAnonymizedFieldKey(fieldType), Defaults.isFieldAnonymized(fieldType))) {
+                fields.add(fieldType);
+            }
+        }
+        return fields;
+    }
+
+    /*
      * Retrieves from settings the image types that should be passed to the IdCapture result.
      */
     public Set<IdImageType> getImageTypes() {
@@ -400,6 +414,18 @@ public class SettingsRepository extends PreferenceDataStore {
      */
     public @Nullable Integer shouldRejectHolderBelowAge() {
         return getNullableInteger(Keys.REJECT_HOLDER_BELOW_AGE, Defaults.shouldRejectHolderBelowAge());
+    }
+
+    /*
+     * Retrieves the rejection timeout in seconds.
+     */
+    public Integer getRejectionTimeoutSeconds() {
+        String value = getString(Keys.REJECTION_TIMEOUT_SECONDS, String.valueOf(Defaults.getRejectionTimeoutSeconds()));
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return Defaults.getRejectionTimeoutSeconds();
+        }
     }
 
     private Feedback buildFeedbackFromChoice(@Nullable String selected, Vibration vibration,

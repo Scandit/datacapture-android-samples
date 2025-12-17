@@ -52,6 +52,7 @@ public final class Keys {
     public final static String REJECT_FORGED_AAMVA_BARCODES = "reject_forged_aamva_barcodes";
     public final static String REJECT_INCONSISTENT_DATA = "reject_inconsistent_data";
     public final static String REJECT_HOLDER_BELOW_AGE = "reject_holder_below_age";
+    public final static String REJECTION_TIMEOUT_SECONDS = "rejection_timeout_seconds";
     public final static String PHYSICAL_DOCUMENT_SCANNER_TYPE = "physical_document_scanner_type";
     public final static String SINGLE_SIDE_SCANNER_BARCODE = "single_side_scanner_barcode";
     public final static String SINGLE_SIDE_SCANNER_MRZ = "single_side_scanner_mrz";
@@ -59,9 +60,14 @@ public final class Keys {
     public final static String MOBILE_SCANNER_ISO_18013_15 = "mobile_scanner_iso_18013_15";
     public final static String MOBILE_SCANNER_OCR = "mobile_scanner_ocr";
     public final static String MDOC_ELEMENTS_TO_RETAIN = "mdoc_elements_to_retain";
+    public final static String ANONYMIZED_FIELD_PREFIX = "anonymized_field_";
 
     public static String getMdocElementKey(MobileDocumentDataElement element) {
         return MDOC_ELEMENTS_TO_RETAIN + "-" + element.name();
+    }
+
+    public static String getAnonymizedFieldKey(com.scandit.datacapture.id.data.IdFieldType fieldType) {
+        return ANONYMIZED_FIELD_PREFIX + fieldType.name();
     }
 
     public static String getDocumentTypeKey(IdCaptureDocumentType type, DocumentSelectionType documentSelectionType) {

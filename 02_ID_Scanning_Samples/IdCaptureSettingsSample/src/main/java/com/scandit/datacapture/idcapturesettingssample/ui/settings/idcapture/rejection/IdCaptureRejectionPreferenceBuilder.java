@@ -102,5 +102,16 @@ public class IdCaptureRejectionPreferenceBuilder implements SectionPreferenceBui
                 Defaults.shouldRejectVoidedIds()
         );
         parent.addPreference(rejectVoidedIdsSwitchPreference);
+
+        // EditText for rejection timeout in seconds.
+        Integer defaultRejectionTimeout = Defaults.getRejectionTimeoutSeconds();
+        EditTextPreference rejectionTimeoutEditTextPreference = PreferenceBuilder.integerEditText(
+                context,
+                Keys.REJECTION_TIMEOUT_SECONDS,
+                context.getString(R.string.rejection_timeout_seconds),
+                5,
+                String.valueOf(defaultRejectionTimeout)
+        );
+        parent.addPreference(rejectionTimeoutEditTextPreference);
     }
 }

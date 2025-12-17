@@ -39,6 +39,7 @@ import com.scandit.datacapture.core.ui.style.Brush;
 import com.scandit.datacapture.id.data.IdAnonymizationMode;
 import com.scandit.datacapture.id.data.IdCaptureDocumentType;
 import com.scandit.datacapture.id.data.IdCaptureRegion;
+import com.scandit.datacapture.id.data.IdFieldType;
 import com.scandit.datacapture.id.data.IdImageType;
 import com.scandit.datacapture.id.data.RegionSpecificSubtype;
 import com.scandit.datacapture.id.ui.IdLayoutLineStyle;
@@ -48,6 +49,9 @@ import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 import com.scandit.datacapture.idcapturesettingssample.ui.BrushStyle;
 import com.scandit.datacapture.idcapturesettingssample.ui.settings.idcapture.documents.DocumentSelectionType;
 import com.scandit.datacapture.idcapturesettingssample.utils.EnumUtils;
+
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * Class containing the allowed and default preference values needed to programmatically setup the
@@ -79,6 +83,10 @@ public final class Defaults {
         return EnumUtils.getEntryNames(ANONYMIZATION_MODES);
     }
 
+    public static boolean isFieldAnonymized(IdFieldType field) {
+        return false;
+    }
+
     public static String[] getSupportedFeedbackEntries() {
         return EnumUtils.getEntryNamesNameCase(FEEDBACK_TYPES);
     }
@@ -102,6 +110,7 @@ public final class Defaults {
     public static boolean shouldRejectForgedAamvaBarcodes() { return false;}
     public static boolean shouldRejectInconsistentData() { return false;}
     public static @Nullable Integer shouldRejectHolderBelowAge() { return null;}
+    public static Integer getRejectionTimeoutSeconds() { return 6;}
 
     public static boolean shouldDecodeBackOfEuropeanDrivingLicense() {
         return false;

@@ -45,6 +45,7 @@ public final class CommonFieldExtractor extends FieldExtractor {
         result.add(new CaptureResult.Entry("Date of Birth", extractField(capturedId.getDateOfBirth())));
         result.add(new CaptureResult.Entry("Age", extractField(capturedId.getAge())));
         result.add(new CaptureResult.Entry("Nationality", extractField(capturedId.getNationality())));
+        result.add(new CaptureResult.Entry("Nationality ISO", extractField(capturedId.getNationalityISO())));
         result.add(new CaptureResult.Entry("Address", extractField(capturedId.getAddress())));
         result.add(new CaptureResult.Entry("Issuing Country ISO", extractField(capturedId.getIssuingCountryIso())));
         result.add(new CaptureResult.Entry("Issuing Country", IdCaptureRegions.getDescription(capturedId.getIssuingCountry())));

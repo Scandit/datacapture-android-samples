@@ -13,7 +13,6 @@ include(":03_Advanced_Batch_Scanning_Samples:01_Batch_Scanning_and_AR_Info_Looku
 include(":03_Advanced_Batch_Scanning_Samples:01_Batch_Scanning_and_AR_Info_Lookup:MatrixScanBubblesSample")
 include(":03_Advanced_Batch_Scanning_Samples:02_Counting_and_Receiving:ExpiryManagementSample")
 include(":03_Advanced_Batch_Scanning_Samples:02_Counting_and_Receiving:MatrixScanCountSimpleSample")
-include(":03_Advanced_Batch_Scanning_Samples:02_Counting_and_Receiving:MatrixScanCountToteMappingSample")
 include(":03_Advanced_Batch_Scanning_Samples:02_Counting_and_Receiving:ReceivingSample")
 include(":03_Advanced_Batch_Scanning_Samples:02_Counting_and_Receiving:ReorderFromCatalogSample")
 include(":03_Advanced_Batch_Scanning_Samples:03_Search_and_Find:SearchAndFindSample")
