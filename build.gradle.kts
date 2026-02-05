@@ -20,7 +20,7 @@ buildscript {
 
     val versions: Map<String, Any> by extra(
         mapOf(
-            "scandit_sdk_version" to "8.1.0",
+            "scandit_sdk_version" to "8.1.1",
             "android_gradle" to "8.5.2",
             "android_material" to "1.6.1",
             "androidx_animations" to "1.0.0",
