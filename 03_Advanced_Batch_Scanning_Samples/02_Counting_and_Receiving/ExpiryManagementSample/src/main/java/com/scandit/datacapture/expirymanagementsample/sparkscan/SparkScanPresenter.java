@@ -45,7 +45,6 @@ import com.scandit.datacapture.expirymanagementsample.results.ExtraButtonStyle;
 import com.scandit.datacapture.expirymanagementsample.results.ResultsListPresenter;
 
 import java.util.HashSet;
-import java.util.List;
 
 public class SparkScanPresenter implements
     SparkScanListener,

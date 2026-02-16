@@ -20,8 +20,8 @@ buildscript {
 
     val versions: Map<String, Any> by extra(
         mapOf(
-            "scandit_sdk_version" to "8.1.1",
-            "android_gradle" to "8.5.2",
+            "scandit_sdk_version" to "8.2.0",
+            "android_gradle" to "8.7.3",
             "android_material" to "1.6.1",
             "androidx_animations" to "1.0.0",
             "androidx_appcompat" to "1.3.1",
@@ -29,26 +29,28 @@ buildscript {
             "androidx_constraintlayout" to "2.1.4",
             "androidx_coordinatorlayout" to "1.2.0",
             "androidx_datastore_preferences" to "1.1.7",
+            "androidx_fragment" to "1.4.1",
             "androidx_lifecycle" to "2.7.0",
             "androidx_preference" to "1.1.1",
-            "androidx_test_core" to "1.5.0",
-            "androidx_test_espresso" to "3.5.1",
-            "androidx_test_ext_junit" to "1.1.5",
-            "androidx_test_orchestrator" to "1.4.2",
-            "androidx_test_rules" to "1.5.0",
-            "androidx_test_runner" to "1.5.2",
-            "androidx_test_services" to "1.5.0-alpha01",
+            "androidx_test_core" to "1.6.1",
+            "androidx_test_espresso" to "3.6.1",
+            "androidx_test_ext_junit" to "1.2.1",
+            "androidx_test_orchestrator" to "1.5.1",
+            "androidx_test_rules" to "1.6.1",
+            "androidx_test_runner" to "1.6.2",
+            "androidx_test_services" to "1.5.0",
             "compose_bom" to "2025.07.00",
             "compose_activity" to "1.10.1",
             "compose_permissions" to "0.37.3",
             "coroutines" to "1.8.1",
             "desugar" to "1.1.5",
-            "java" to JavaVersion.VERSION_1_8,
+            "java" to JavaVersion.VERSION_17,
             "kotlin" to "1.9.25",
             "kotlin_serialization" to "1.7.3",
             "material" to "1.3.0",
             "mockito_android" to "3.12.4",
             "mockito_kotlin_version" to "4.0.0",
+            "navigation" to "2.8.9",
             "okhttp" to "4.12.0",
         )
     )
@@ -70,7 +72,7 @@ allprojects {
     }
     tasks.withType<KotlinCompile>().configureEach {
         kotlinOptions {
-            jvmTarget = "1.8"
+            jvmTarget = "17"
         }
     }
 }

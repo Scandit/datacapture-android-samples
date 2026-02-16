@@ -25,6 +25,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +49,10 @@ public class BarcodeManager {
     private Parser parser;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+    // Since parsing the barcode data is expensive, we cache the expired result for each
+    // scanned barcode.
+    private final HashMap<String, Boolean> parsedExpiredStatusCache = new HashMap<>();
+
     private BarcodeManager() {
     }
 
@@ -57,6 +62,9 @@ public class BarcodeManager {
 
     // Use the G1 parser to check if the barcode is expired.
     public boolean isBarcodeDataExpired(String data) {
+        if (parsedExpiredStatusCache.containsKey(data)) return parsedExpiredStatusCache.get(data);
+
+        boolean result = false;
         try {
             ParsedData parsedData = parser.parseString(data);
             Map<String, Integer> expiryDate =
@@ -66,10 +74,12 @@ public class BarcodeManager {
             int day = expiryDate.get("day");
             Date expirationDate = dateFormat.parse(String.format("%d-%d-%d", year, month, day));
             Date today = new Date();
-            return today.compareTo(expirationDate) > 0;
-        } catch (RuntimeException | ParseException e) {
-            return false;
+            result = today.compareTo(expirationDate) > 0;
+        } catch (RuntimeException | ParseException ignored) {
         }
+
+        parsedExpiredStatusCache.put(data, result);
+        return result;
     }
 
     // Adds a single scanned barcode to the list.

@@ -34,6 +34,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.pluralStringResource
@@ -55,6 +56,7 @@ private const val SCALED_IMAGE_SIZE_IN_PIXELS = 100
 
 @Composable
 fun MainScreen(padding: PaddingValues) {
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val listData = remember { mutableStateListOf<ScanResult>() }
     val lazyListState = rememberLazyListState()
@@ -132,7 +134,10 @@ fun MainScreen(padding: PaddingValues) {
                 }
 
                 val image = src.cropAroundBarcode(
-                    barcode, SCALED_IMAGE_SIZE_IN_PIXELS, CROPPED_IMAGE_PADDING
+                    barcode,
+                    SCALED_IMAGE_SIZE_IN_PIXELS,
+                    CROPPED_IMAGE_PADDING,
+                    context
                 )
 
                 val result = ScanResult(barcode.data, barcode.symbology.name, image)

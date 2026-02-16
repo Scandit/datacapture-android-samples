@@ -258,7 +258,8 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
 
         float scale = getScaleFactor(width, height, SCALED_IMAGE_SIZE_IN_PIXELS);
         Matrix matrix = new Matrix();
-        matrix.postRotate(90f);
+        int rotation = getDisplayRotation();
+        matrix.postRotate((float) rotation);
         matrix.postScale(scale, scale);
 
         return Bitmap.createBitmap(frame, x, y, width, height, matrix, true);
@@ -267,6 +268,18 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
     private float getScaleFactor(int bitmapWidth, int bitmapHeight, int targetDimension) {
         float smallestDimension = (float) Math.min(bitmapWidth, bitmapHeight);
         return targetDimension / smallestDimension;
+    }
+
+    private int getDisplayRotation() {
+        int displayRotation = getWindowManager().getDefaultDisplay().getRotation();
+
+        return switch (displayRotation) {
+            case android.view.Surface.ROTATION_0 -> 90; // Portrait normal
+            case android.view.Surface.ROTATION_90 -> 0; // Landscape left (counterclockwise)
+            case android.view.Surface.ROTATION_180 -> 270; // Portrait upside down
+            case android.view.Surface.ROTATION_270 -> 180; // Landscape right (clockwise)
+            default -> 90;
+        };
     }
 
     private void setItemCount(int count) {

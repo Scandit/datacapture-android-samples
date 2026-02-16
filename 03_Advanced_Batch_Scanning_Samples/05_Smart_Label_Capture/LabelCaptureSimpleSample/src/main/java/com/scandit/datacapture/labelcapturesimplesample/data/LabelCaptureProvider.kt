@@ -31,8 +31,6 @@ import com.scandit.datacapture.label.ui.overlay.LabelCaptureBasicOverlayListener
 import com.scandit.datacapture.label.ui.overlay.validation.LabelCaptureValidationFlowListener
 import com.scandit.datacapture.label.ui.overlay.validation.LabelCaptureValidationFlowOverlay
 import com.scandit.datacapture.label.ui.overlay.validation.LabelCaptureValidationFlowSettings
-import com.scandit.datacapture.labelcapturesimplesample.R
-import com.scandit.datacapture.labelcapturesimplesample.utils.withAlpha
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -51,41 +49,27 @@ object LabelCaptureProvider {
      * Building a LabelCaptureBasicOverlay with different brushes for different fields.
      */
     fun buildOverlay(context: Context, labelCapture: LabelCapture): LabelCaptureBasicOverlay {
-        val upcBrush = Brush(
-            context.getColor(R.color.upc).withAlpha(128),
-            context.getColor(R.color.upc),
-            1f
-        )
-        val expiryDateBrush = Brush(
-            context.getColor(R.color.expiryDate).withAlpha(128),
-            context.getColor(R.color.expiryDate),
-            1f
-        )
-        val weightBrush = Brush(
-            context.getColor(R.color.weight).withAlpha(128),
-            context.getColor(R.color.weight),
-            1f
-        )
-        val unitPriceBrush = Brush(
-            context.getColor(R.color.unitPrice).withAlpha(128),
-            context.getColor(R.color.unitPrice),
-            1f
-        )
-        val transparentBrush = Brush(Color.TRANSPARENT, Color.TRANSPARENT, 0f)
-
         val labelCaptureBrushListener = object : LabelCaptureBasicOverlayListener {
-            override fun brushForField(
-                overlay: LabelCaptureBasicOverlay,
-                field: LabelField,
-                label: CapturedLabel
-            ): Brush? = when (field.name) {
-                FIELD_BARCODE -> upcBrush
-                FIELD_EXPIRY_DATE -> expiryDateBrush
-                FIELD_WEIGHT -> weightBrush
-                FIELD_UNIT_PRICE -> unitPriceBrush
-                else -> null
-            }
 
+            val transparentBrush = Brush(Color.TRANSPARENT, Color.TRANSPARENT, 0f)
+
+            // val upcBrush = Brush(
+            //     Color.parseColor("#CCFF0000"),
+            //     Color.parseColor("#FF0000"),
+            //     1f
+            // )
+
+            // Brushes can be customized by field...
+            // override fun brushForField(
+            //     overlay: LabelCaptureBasicOverlay,
+            //     field: LabelField,
+            //     label: CapturedLabel
+            // ): Brush? = when (field.name) {
+            //     FIELD_BARCODE -> upcBrush
+            //     else -> null // Return null to use default brush
+            // }
+
+            // ... or by label.
             override fun brushForLabel(
                 overlay: LabelCaptureBasicOverlay,
                 label: CapturedLabel
@@ -125,28 +109,23 @@ object LabelCaptureProvider {
         // This is an example of labelCaptureSettings. Here we set a label
         // that has a barcode, date, price and weight fields.
         val settings = labelCaptureSettings {
-            label(LABEL_WEIGHT_PRICE) {
+            label(LABEL_TITLE) {
                 customBarcode(FIELD_BARCODE) {
                     setSymbologies(
                         Symbology.EAN13_UPCA,
                         Symbology.GS1_DATABAR_EXPANDED,
                         Symbology.CODE128
                     )
-                    isOptional = false
                 }
                 expiryDateText(FIELD_EXPIRY_DATE) {
                     setLabelDateFormat(
                         LabelDateFormat(
                             componentFormat = LabelDateComponentFormat.MDY,
-                            acceptPartialDates = false
+                            acceptPartialDates = false,
                         )
                     )
-                    isOptional = true
                 }
-                unitPriceText(FIELD_UNIT_PRICE) {
-                    isOptional = true
-                }
-                weightText(FIELD_WEIGHT) {
+                totalPriceText(FIELD_TOTAL_PRICE) {
                     isOptional = true
                 }
             }
@@ -195,10 +174,9 @@ object LabelCaptureProvider {
         return SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(calendar.time)
     }
 
+    private const val LABEL_TITLE = "Retail Item"
     private const val FIELD_BARCODE = "barcode"
-    private const val FIELD_UNIT_PRICE = "unit_price"
-    private const val FIELD_WEIGHT = "weight"
-    private const val FIELD_EXPIRY_DATE = "expiry_date"
-    private const val LABEL_WEIGHT_PRICE = "weighted_item"
+    private const val FIELD_EXPIRY_DATE = "expiry date"
+    private const val FIELD_TOTAL_PRICE = "Total Price"
     private const val DATE_FORMAT = "dd - MM - yyyy"
 }

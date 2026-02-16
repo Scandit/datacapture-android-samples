@@ -13,17 +13,21 @@
  */
 package com.scandit.datacapture.listbuildingsamplecompose.ui
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.graphics.PointF
+import android.view.Surface
 import com.scandit.datacapture.barcode.data.Barcode
+import com.scandit.datacapture.core.internal.sdk.extensions.rotation
 import kotlin.math.max
 import kotlin.math.min
 
 fun Bitmap.cropAroundBarcode(
     barcode: Barcode,
     scaledImageSizeInPx: Int,
-    padding: Float
+    padding: Float,
+    context: Context
 ): Bitmap {
     // safety check when input bitmap is too small
     if (width == 1 && height == 1) return this
@@ -82,7 +86,8 @@ fun Bitmap.cropAroundBarcode(
     )
 
     val matrix = Matrix()
-    matrix.postRotate(90f)
+    val rotation = getDisplayRotation(context)
+    matrix.postRotate(rotation.toFloat())
     matrix.postScale(scaleFactor, scaleFactor)
 
     return Bitmap.createBitmap(this, x, y, width, height, matrix, true)
@@ -90,3 +95,13 @@ fun Bitmap.cropAroundBarcode(
 
 private fun getScaleFactor(bitmapWidth: Int, bitmapHeight: Int, targetDimension: Int): Float =
     targetDimension / min(bitmapWidth, bitmapHeight).toFloat()
+
+private fun getDisplayRotation(context: Context): Int {
+    return when (context.rotation) {
+        Surface.ROTATION_0 -> 90 // Portrait normal
+        Surface.ROTATION_90 -> 0 // Landscape left (counterclockwise)
+        Surface.ROTATION_180 -> 270 // Portrait upside down
+        Surface.ROTATION_270 -> 180 // Landscape right (clockwise)
+        else -> 90
+    }
+}

@@ -25,7 +25,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.scandit.datacapture.core.ui.DataCaptureView
-import com.scandit.datacapture.core.ui.control.TorchSwitchControl
 import com.scandit.datacapture.label.ui.overlay.validation.LabelCaptureValidationFlowOverlay
 import com.scandit.datacapture.labelcapturesimplesample.data.ScanViewModel
 import com.scandit.datacapture.labelcapturesimplesample.databinding.FragmentScanBinding
@@ -55,7 +54,6 @@ class ScanFragment : Fragment() {
 
         // Creating dataCaptureView and adding it to the container
         dataCaptureView = DataCaptureView.newInstance(view.context, viewModel.dataCaptureContext)
-        dataCaptureView.addControl(TorchSwitchControl(requireContext()))
         dataCaptureView.addOverlay(labelCaptureOverlay)
         dataCaptureView.addOverlay(validationFlowOverlay)
         binding.dataCaptureViewContainer.addView(

@@ -163,6 +163,7 @@ public class BarcodeCountPresenter implements BarcodeCountListener, BarcodeCount
     public void onResume() {
         // Load already scanned barcodes into the session as additional barcodes.
         if (!navigatingInternally) {
+            barcodeCount.reset();
             loadAllBarcodesAsAdditionalBarcodes();
         }
         navigatingInternally = false;

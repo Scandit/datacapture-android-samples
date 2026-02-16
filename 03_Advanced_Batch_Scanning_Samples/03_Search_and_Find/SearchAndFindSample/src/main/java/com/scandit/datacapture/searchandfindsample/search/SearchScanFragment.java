@@ -16,7 +16,6 @@ package com.scandit.datacapture.searchandfindsample.search;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +46,6 @@ import com.scandit.datacapture.searchandfindsample.find.FindScanFragment;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -246,7 +244,8 @@ public final class SearchScanFragment extends CameraPermissionFragment
 
         float scale = getScaleFactor(width, height, SCALED_IMAGE_SIZE_IN_PIXELS);
         Matrix matrix = new Matrix();
-        matrix.postRotate(90f);
+        int rotation = getDisplayRotation();
+        matrix.postRotate((float) rotation);
         matrix.postScale(scale, scale);
 
         return Bitmap.createBitmap(frame, x, y, width, height, matrix, true);
@@ -255,6 +254,18 @@ public final class SearchScanFragment extends CameraPermissionFragment
     private float getScaleFactor(int bitmapWidth, int bitmapHeight, int targetDimension) {
         float smallestDimension = (float) Math.min(bitmapWidth, bitmapHeight);
         return targetDimension / smallestDimension;
+    }
+
+    private int getDisplayRotation() {
+        int displayRotation = requireActivity().getWindowManager().getDefaultDisplay().getRotation();
+
+        return switch (displayRotation) {
+            case android.view.Surface.ROTATION_0 -> 90; // Portrait normal
+            case android.view.Surface.ROTATION_90 -> 0; // Landscape left (counterclockwise)
+            case android.view.Surface.ROTATION_180 -> 270; // Portrait upside down
+            case android.view.Surface.ROTATION_270 -> 180; // Landscape right (clockwise)
+            default -> 90;
+        };
     }
 
     private void setItemCount(int count) {

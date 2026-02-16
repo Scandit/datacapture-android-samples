@@ -64,7 +64,7 @@ public class ResultsListPresenter {
     ) {
         this.context = context;
 
-        //Setup RecyclerView for results
+        // Setup RecyclerView for results
         View resultsList = LayoutInflater.from(context)
             .inflate(R.layout.view_results_list, container, false);
         container.addView(resultsList);
