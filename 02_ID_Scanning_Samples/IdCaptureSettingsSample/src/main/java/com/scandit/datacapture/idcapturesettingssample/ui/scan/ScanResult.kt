@@ -19,5 +19,4 @@ import com.scandit.datacapture.id.data.CapturedId
 data class ScanResult(
     val capturedId: CapturedId,
     val continuousMode: Boolean,
-    val needsBackScan: Boolean
 )

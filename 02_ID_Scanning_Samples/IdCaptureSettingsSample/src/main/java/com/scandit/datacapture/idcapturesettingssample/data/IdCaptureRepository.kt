@@ -28,7 +28,6 @@ import com.scandit.datacapture.id.capture.IdCaptureSettings
 import com.scandit.datacapture.id.capture.MobileDocumentScanner
 import com.scandit.datacapture.id.capture.SingleSideScanner
 import com.scandit.datacapture.id.data.CapturedId
-import com.scandit.datacapture.id.data.CapturedSides
 import com.scandit.datacapture.id.data.Duration
 import com.scandit.datacapture.id.data.IdImageType
 import com.scandit.datacapture.id.data.RejectionReason
@@ -210,20 +209,12 @@ class IdCaptureRepository(
          * This callback is executed on the background thread. We emit to the SharedFlow
          * which will handle thread dispatching.
          */
-        val viz = id.viz
-        val needsBackScan = viz != null &&
-                viz.isBackSideCaptureSupported &&
-                viz.capturedSides == CapturedSides.FRONT_ONLY
-
         val continuousScanEnabled = isContinuousMode()
 
         /*
-         * Scan of the back of the document is enabled, the mode needs to be disabled while the
-         * user decides if they want to continue scanning or just display the partial result.
-         *
          * Don't capture unnecessarily when the result is displayed without continuous mode.
          */
-        if (needsBackScan || !continuousScanEnabled) {
+        if (!continuousScanEnabled) {
             disableIdCapture()
         }
 
@@ -232,7 +223,6 @@ class IdCaptureRepository(
                 ScanResult(
                     capturedId = id,
                     continuousMode = continuousScanEnabled,
-                    needsBackScan = needsBackScan
                 )
             )
         }

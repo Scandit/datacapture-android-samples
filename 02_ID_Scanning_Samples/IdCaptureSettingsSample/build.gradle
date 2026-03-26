@@ -20,6 +20,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments['useTestStorageService'] = 'true'
         testInstrumentationRunnerArguments['clearPackageData'] = 'true'
+        testInstrumentationRunnerArguments["timeout_msec"] = "180000"
     }
 
     buildTypes {
@@ -38,7 +39,7 @@ android {
     packagingOptions {
         jniLibs {
             pickFirsts += "**/*.so"
-            it.useLegacyPackaging true
+            it.useLegacyPackaging project.hasProperty('extractNativeLibs')
         }
     }
 

@@ -34,7 +34,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,7 +50,6 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.scandit.datacapture.id.data.RejectionReason
 import com.scandit.datacapture.idcapturesettingssample.R
-import com.scandit.datacapture.idcapturesettingssample.di.Injector
 import com.scandit.datacapture.idcapturesettingssample.ui.result.CaptureResult
 import com.scandit.datacapture.idcapturesettingssample.ui.result.ResultViewModel
 import com.scandit.datacapture.idcapturesettingssample.utils.toNameCase
@@ -167,34 +165,19 @@ private fun DataCaptureViewHolder(
         viewModel.buildDataCaptureView(context)
     }
 
-    val overlay = remember {
-        viewModel.buildIdCaptureOverlay()
-    }
-
-    DisposableEffect(dataCaptureView, overlay) {
-        dataCaptureView.addOverlay(overlay)
-        onDispose {
-            dataCaptureView.removeOverlay(overlay)
-        }
-    }
-
     LifecycleResumeEffect(dataCaptureView) {
-        // Apply settings before enabling camera to ensure current configuration
+        // Apply settings first, then build a fresh overlay with the updated configuration.
+        // Rebuilding the overlay on each resume ensures the viewfinder reflects the current
+        // scanner type without a visible glitch when returning from the settings screen.
         viewModel.applySettings()
+        val overlay = viewModel.buildIdCaptureOverlay()
+        dataCaptureView.addOverlay(overlay)
         viewModel.enableIdCaptureAndTurnOnCamera()
 
         onPauseOrDispose {
             viewModel.disableIdCaptureAndTurnOffCamera()
+            dataCaptureView.removeOverlay(overlay)
         }
-    }
-
-    val settingsRepository = remember { Injector.settingsRepository }
-    LaunchedEffect(Unit) {
-        settingsRepository.settingsStream
-            .collect { _ ->
-                // Apply settings immediately when changed while screen is visible
-                viewModel.applySettings()
-            }
     }
 
     AndroidView(
