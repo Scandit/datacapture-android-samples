@@ -98,7 +98,7 @@ public class IdCaptureProvider {
     private IdCaptureSettings createIdCaptureSettings() {
         IdCaptureSettings settings = new IdCaptureSettings();
         settings.setAcceptedDocuments(ACCEPTED_DOCUMENTS);
-        settings.setScanner(new IdCaptureScanner(new SingleSideScanner(true, true, true), null));
+        settings.setScanner(new IdCaptureScanner(new SingleSideScanner(true, true, true, false), null));
         settings.setRejectExpiredIds(true);
         settings.setRejectHolderBelowAge(LEGAL_AGE);
 

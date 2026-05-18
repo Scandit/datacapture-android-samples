@@ -15,6 +15,7 @@
 package com.scandit.datacapture.idcapturesettingssample.ui.scan
 
 import android.Manifest.permission.CAMERA
+import android.app.Activity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -160,23 +161,25 @@ private fun DataCaptureViewHolder(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
+    val activity = context as Activity
 
     val dataCaptureView = remember(context) {
         viewModel.buildDataCaptureView(context)
     }
 
     LifecycleResumeEffect(dataCaptureView) {
-        // Apply settings first, then build a fresh overlay with the updated configuration.
-        // Rebuilding the overlay on each resume ensures the viewfinder reflects the current
-        // scanner type without a visible glitch when returning from the settings screen.
-        viewModel.applySettings()
-        val overlay = viewModel.buildIdCaptureOverlay()
+        val overlay = viewModel.getOverlay()
         dataCaptureView.addOverlay(overlay)
         viewModel.enableIdCaptureAndTurnOnCamera()
 
         onPauseOrDispose {
             viewModel.disableIdCaptureAndTurnOffCamera()
             dataCaptureView.removeOverlay(overlay)
+            // Reset scanning state on real navigation. isChangingConfigurations is true on
+            // orientation change, skip reset in that case to preserve the scanning state.
+            if (!activity.isChangingConfigurations) {
+                viewModel.resetIdCapture()
+            }
         }
     }
 

@@ -126,8 +126,7 @@ fun MainScreen(padding: PaddingValues) {
                 // into memory as needed, maybe via an external library, to prevent filling
                 // all available memory.
                 val src: Bitmap = try {
-                    val tmp = data?.getImageBuffer()?.toBitmap()
-                    tmp?.copy(tmp.config ?: Bitmap.Config.ARGB_8888, false)
+                    data?.getImageBuffer()?.toBitmap()
                         ?: Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
                 } finally {
                     data?.release()

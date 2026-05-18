@@ -26,9 +26,12 @@ import com.scandit.datacapture.idcapturesettingssample.data.IdCaptureRepository
 import com.scandit.datacapture.idcapturesettingssample.di.Injector
 import com.scandit.datacapture.idcapturesettingssample.mappers.IdCaptureResultFactory
 import com.scandit.datacapture.idcapturesettingssample.ui.result.CaptureResult
+import com.scandit.datacapture.idcapturesettingssample.data.SettingsRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 /**
@@ -61,6 +64,8 @@ class ScanViewModel : ViewModel() {
      */
     private val dataCaptureViewRepository: DataCaptureViewRepository = Injector.dataCaptureViewRepository
 
+    private val settingsRepository: SettingsRepository = Injector.settingsRepository
+
     /**
      * The UI events flow for one-shot events that should be handled by the UI.
      * Using SharedFlow instead of StateFlow ensures events are not missed and don't require manual reset.
@@ -78,6 +83,24 @@ class ScanViewModel : ViewModel() {
         viewModelScope.launch {
             idCaptureRepository.rejectedIds.collect { reason ->
                 displayRejectedId(reason)
+            }
+        }
+
+        viewModelScope.launch {
+            settingsRepository.settingsStream.map { it.idCapture }.distinctUntilChanged().collect {
+                idCaptureRepository.applyIdCaptureSettings()
+            }
+        }
+
+        viewModelScope.launch {
+            settingsRepository.settingsStream.map { it.camera }.distinctUntilChanged().collect {
+                cameraRepository.applyCameraSettings()
+            }
+        }
+
+        viewModelScope.launch {
+            settingsRepository.settingsStream.map { it.view }.distinctUntilChanged().collect {
+                idCaptureRepository.updateOverlaySettings(it)
             }
         }
     }
@@ -99,12 +122,10 @@ class ScanViewModel : ViewModel() {
     }
 
     /**
-     * Apply current settings to IdCapture and Camera.
-     * Called when screen resumes or settings change while screen is visible.
+     * Reset the IdCapture scanning state.
      */
-    fun applySettings() {
+    fun resetIdCapture() {
         idCaptureRepository.applyIdCaptureSettings()
-        cameraRepository.applyCameraSettings()
     }
 
     /**
@@ -143,10 +164,9 @@ class ScanViewModel : ViewModel() {
     }
 
     /**
-     * Requests an IdCaptureOverlay to be built.
+     * Returns the ID Capture Overlay.
      */
-    fun buildIdCaptureOverlay(): IdCaptureOverlay =
-        idCaptureRepository.buildIdCaptureOverlay()
+    fun getOverlay(): IdCaptureOverlay = idCaptureRepository.overlay
 
     /**
      * Request a DataCaptureView to be built

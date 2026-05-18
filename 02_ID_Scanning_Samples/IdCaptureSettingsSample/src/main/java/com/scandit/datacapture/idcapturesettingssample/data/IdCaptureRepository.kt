@@ -67,6 +67,11 @@ class IdCaptureRepository(
     )
 
     /**
+     * The ID Capture overlay associated with the ID Capture mode instance.
+     */
+    val overlay: IdCaptureOverlay = IdCaptureOverlay.newInstance(idCapture, null)
+
+    /**
      * The stream of Captured IDs.
      */
     private val _scanResults = MutableSharedFlow<ScanResult>()
@@ -143,21 +148,18 @@ class IdCaptureRepository(
             rejectionTimeoutSeconds = settings.rejectionTimeoutSeconds
         }
 
-    fun buildIdCaptureOverlay(): IdCaptureOverlay {
-        val settings = settingsRepository.settings
-        return IdCaptureOverlay.newInstance(idCapture, null).apply {
-            idLayoutStyle = settings.view.overlayStyle
-            textHintPosition = settings.view.textHintPosition
-            showTextHints = settings.view.showTextHints
-            idLayoutLineStyle = settings.view.overlayLineStyle
-            capturedBrush = settingsRepository.buildBrush(settings.view.capturedBrushStyle)
+    fun updateOverlaySettings(viewSettings: Settings.ViewSettings) {
+        overlay.idLayoutStyle = viewSettings.overlayStyle
+        overlay.textHintPosition = viewSettings.textHintPosition
+        overlay.showTextHints = viewSettings.showTextHints
+        overlay.idLayoutLineStyle = viewSettings.overlayLineStyle
+        overlay.capturedBrush = settingsRepository.buildBrush(viewSettings.capturedBrushStyle)
 
-            if (settings.view.viewfinderFrontText.isNotEmpty()) {
-                setFrontSideTextHint(settings.view.viewfinderFrontText)
-            }
-            if (settings.view.viewfinderBackText.isNotEmpty()) {
-                setBackSideTextHint(settings.view.viewfinderBackText)
-            }
+        if (viewSettings.viewfinderFrontText.isNotEmpty()) {
+            overlay.setFrontSideTextHint(viewSettings.viewfinderFrontText)
+        }
+        if (viewSettings.viewfinderBackText.isNotEmpty()) {
+            overlay.setBackSideTextHint(viewSettings.viewfinderBackText)
         }
     }
 
@@ -167,7 +169,8 @@ class IdCaptureRepository(
                 PhysicalDocumentScannerType.SINGLE_SIDE -> SingleSideScanner(
                     settings.singleSideScannerBarcodeEnabled,
                     settings.singleSideScannerMrzEnabled,
-                    settings.singleSideScannerVizEnabled
+                    settings.singleSideScannerVizEnabled,
+                    false
                 )
 
                 PhysicalDocumentScannerType.FULL -> FullDocumentScanner()

@@ -79,7 +79,7 @@ public class IdCaptureActivity extends CameraPermissionActivity
                 new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
         );
 
-        overlay = IdCaptureOverlay.newInstance(dataCaptureManager.getIdCapture(), null);
+        overlay = dataCaptureManager.getOverlay();
     }
 
     @Override

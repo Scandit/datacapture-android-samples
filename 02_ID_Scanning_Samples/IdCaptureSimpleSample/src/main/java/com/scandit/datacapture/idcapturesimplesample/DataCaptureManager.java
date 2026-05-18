@@ -27,6 +27,7 @@ import com.scandit.datacapture.id.capture.IdCaptureSettings;
 import com.scandit.datacapture.id.capture.IdCard;
 import com.scandit.datacapture.id.capture.Passport;
 import com.scandit.datacapture.id.data.IdCaptureRegion;
+import com.scandit.datacapture.id.ui.overlay.IdCaptureOverlay;
 
 import java.util.Arrays;
 import java.util.List;
@@ -52,6 +53,7 @@ public final class DataCaptureManager {
     private final DataCaptureContext dataCaptureContext;
     private Camera camera;
     private IdCapture idCapture;
+    private IdCaptureOverlay overlay;
 
     public static DataCaptureManager getInstance() {
         if (INSTANCE == null) {
@@ -69,6 +71,7 @@ public final class DataCaptureManager {
 
         initCamera();
         initIdCapture();
+        overlay = IdCaptureOverlay.newInstance(idCapture, null);
     }
 
     private void initCamera() {
@@ -113,5 +116,9 @@ public final class DataCaptureManager {
 
     public IdCapture getIdCapture() {
         return idCapture;
+    }
+
+    public IdCaptureOverlay getOverlay() {
+        return overlay;
     }
 }

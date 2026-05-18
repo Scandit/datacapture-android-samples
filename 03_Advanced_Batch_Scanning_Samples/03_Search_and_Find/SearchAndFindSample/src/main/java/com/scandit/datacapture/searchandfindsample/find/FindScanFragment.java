@@ -91,7 +91,7 @@ public final class FindScanFragment extends Fragment {
             root,
             viewModel.dataCaptureContext,
             viewModel.getBarcodeFind(),
-            // With the BarcodeFindViewSettings, we can defined haptic and sound feedback,
+            // With the BarcodeFindViewSettings, we can define haptic and sound feedback,
             // as well as change the visual feedback for found barcodes.
             new BarcodeFindViewSettings()
         );

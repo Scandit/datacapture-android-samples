@@ -129,8 +129,9 @@ public class BarcodeScanActivity
         // that renders the camera preview. The view must be connected to the data capture context.
         dataCaptureView = DataCaptureView.newInstance(this, dataCaptureContext);
 
-        // Add a barcode capture overlay to the data capture view to render the location of captured
-        // barcodes on top of the video preview.
+        // Add a Barcode Capture overlay to the data capture view to render the location of captured
+        // barcodes on top of the video preview. Viewfinders are visual components only, and as
+        // such will not restrict the scan area.
         // This is optional, but recommended for better visual feedback.
         overlay = BarcodeCaptureOverlay.newInstance(barcodeCapture, dataCaptureView);
 

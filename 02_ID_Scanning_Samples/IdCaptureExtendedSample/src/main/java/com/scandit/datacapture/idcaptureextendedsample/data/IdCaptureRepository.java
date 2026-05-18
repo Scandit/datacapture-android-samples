@@ -166,7 +166,7 @@ public class IdCaptureRepository implements IdCaptureListener {
     private IdCaptureSettings getBarcodeSettings() {
         IdCaptureSettings settings = new IdCaptureSettings();
         settings.setAcceptedDocuments(ACCEPTED_DOCUMENTS);
-        settings.setScanner(new IdCaptureScanner(new SingleSideScanner(true, false, false), null));
+        settings.setScanner(new IdCaptureScanner(new SingleSideScanner(true, false, false, false), null));
 
         return settings;
     }
@@ -177,7 +177,7 @@ public class IdCaptureRepository implements IdCaptureListener {
     private IdCaptureSettings getMrzSettings() {
         IdCaptureSettings settings = new IdCaptureSettings();
         settings.setAcceptedDocuments(ACCEPTED_DOCUMENTS);
-        settings.setScanner(new IdCaptureScanner(new SingleSideScanner(false, true, false), null));
+        settings.setScanner(new IdCaptureScanner(new SingleSideScanner(false, true, false, false), null));
 
         return settings;
     }
@@ -189,7 +189,7 @@ public class IdCaptureRepository implements IdCaptureListener {
     private IdCaptureSettings getVizSettings() {
         IdCaptureSettings settings = new IdCaptureSettings();
         settings.setAcceptedDocuments(ACCEPTED_DOCUMENTS);
-        settings.setScanner(new IdCaptureScanner(new SingleSideScanner(false, false, true), null));
+        settings.setScanner(new IdCaptureScanner(new SingleSideScanner(false, false, true, false), null));
         settings.setShouldPassImageTypeToResult(IdImageType.CROPPED_DOCUMENT, true);
 
         return settings;

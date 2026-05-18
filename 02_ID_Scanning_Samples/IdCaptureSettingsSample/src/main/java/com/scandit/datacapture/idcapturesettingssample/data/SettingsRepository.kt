@@ -24,6 +24,7 @@ import com.scandit.datacapture.id.capture.Passport
 import com.scandit.datacapture.id.capture.RegionSpecific
 import com.scandit.datacapture.id.capture.ResidencePermit
 import com.scandit.datacapture.id.capture.VisaIcao
+import com.scandit.datacapture.id.capture.VisaLetter
 import com.scandit.datacapture.id.data.IdCaptureDocumentType
 import com.scandit.datacapture.id.data.IdCaptureRegion
 import com.scandit.datacapture.id.data.RegionSpecificSubtype
@@ -80,7 +81,7 @@ class SettingsRepository {
                     val newDocuments = if (documentType == IdCaptureDocumentType.REGION_SPECIFIC) {
                         RegionSpecificSubtype.entries.map { RegionSpecific(it) }
                     } else {
-                        listOfNotNull(createDocument(documentType, IdCaptureRegion.ANY))
+                        listOf(createDocument(documentType, IdCaptureRegion.ANY))
                     }
 
                     currentDocuments + newDocuments
@@ -107,7 +108,7 @@ class SettingsRepository {
             if (enabled) {
                 // Add this specific document if not already present
                 val newDocument = createDocument(documentType, region)
-                if (newDocument != null && currentDocuments.none { it.documentType == documentType && it.region == region }) {
+                if (currentDocuments.none { it.documentType == documentType && it.region == region }) {
                     currentDocuments + newDocument
                 } else {
                     currentDocuments
@@ -187,14 +188,15 @@ class SettingsRepository {
     private fun createDocument(
         documentType: IdCaptureDocumentType,
         region: IdCaptureRegion,
-    ): IdCaptureDocument? = when (documentType) {
+    ): IdCaptureDocument = when (documentType) {
         IdCaptureDocumentType.ID_CARD -> IdCard(region)
         IdCaptureDocumentType.DRIVER_LICENSE -> DriverLicense(region)
         IdCaptureDocumentType.PASSPORT -> Passport(region)
         IdCaptureDocumentType.VISA_ICAO -> VisaIcao(region)
         IdCaptureDocumentType.RESIDENCE_PERMIT -> ResidencePermit(region)
         IdCaptureDocumentType.HEALTH_INSURANCE_CARD -> HealthInsuranceCard(region)
-        else -> null
+        IdCaptureDocumentType.VISA_LETTER -> VisaLetter(region)
+        IdCaptureDocumentType.REGION_SPECIFIC -> error("RegionSpecific is not supported here.")
     }
 
     fun buildBrush(brushStyle: BrushStyle): Brush = when (brushStyle) {
