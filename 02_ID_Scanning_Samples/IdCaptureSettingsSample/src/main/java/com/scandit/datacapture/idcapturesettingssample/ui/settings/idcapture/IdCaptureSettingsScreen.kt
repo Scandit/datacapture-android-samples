@@ -21,10 +21,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.scandit.datacapture.id.data.IdImageType
 import com.scandit.datacapture.idcapturesettingssample.R
 import com.scandit.datacapture.idcapturesettingssample.model.Settings
-import com.scandit.datacapture.idcapturesettingssample.data.SettingsRepository
 import com.scandit.datacapture.idcapturesettingssample.ui.component.BackButton
 import com.scandit.datacapture.idcapturesettingssample.ui.component.SettingsScaffold
 import com.scandit.datacapture.idcapturesettingssample.ui.component.enumMultiSelectDropdownSetting
@@ -34,16 +34,16 @@ import com.scandit.datacapture.idcapturesettingssample.ui.component.switchSettin
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IdCaptureSettingsScreen(
-    settingsRepository: SettingsRepository,
     onBackClick: () -> Unit,
     onNavigateToAnonymization: () -> Unit,
     onNavigateToAcceptedDocuments: () -> Unit,
     onNavigateToRejectedDocuments: () -> Unit,
     onNavigateToScanner: () -> Unit,
     onNavigateToFeedback: () -> Unit,
-    onNavigateToRejection: () -> Unit
+    onNavigateToRejection: () -> Unit,
+    viewModel: IdCaptureSettingsViewModel = viewModel(),
 ) {
-    val settings by settingsRepository.settingsStream.collectAsStateWithLifecycle()
+    val settings by viewModel.settings.collectAsStateWithLifecycle()
 
     IdCaptureSettingsScreen(
         settings = settings,
@@ -54,16 +54,8 @@ fun IdCaptureSettingsScreen(
         onNavigateToScanner = onNavigateToScanner,
         onNavigateToFeedback = onNavigateToFeedback,
         onNavigateToRejection = onNavigateToRejection,
-        onImageTypesChanged = { imageTypes ->
-            settingsRepository.updateIdCapture {
-                it.copy(imageTypes = imageTypes)
-            }
-        },
-        onDecodeBackOfEuropeanDrivingLicenseChanged = { enabled ->
-            settingsRepository.updateIdCapture {
-                it.copy(decodeBackOfEuropeanDrivingLicense = enabled)
-            }
-        }
+        onImageTypesChanged = viewModel::onImageTypesChanged,
+        onDecodeBackOfEuropeanDrivingLicenseChanged = viewModel::onDecodeBackOfEuropeanDrivingLicenseChanged,
     )
 }
 

@@ -21,11 +21,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.scandit.datacapture.id.data.MobileDocumentDataElement
 import com.scandit.datacapture.idcapturesettingssample.R
 import com.scandit.datacapture.idcapturesettingssample.model.PhysicalDocumentScannerType
 import com.scandit.datacapture.idcapturesettingssample.model.Settings
-import com.scandit.datacapture.idcapturesettingssample.data.SettingsRepository
 import com.scandit.datacapture.idcapturesettingssample.ui.component.BackButton
 import com.scandit.datacapture.idcapturesettingssample.ui.component.SettingsScaffold
 import com.scandit.datacapture.idcapturesettingssample.ui.component.enumDropdownSetting
@@ -36,55 +36,27 @@ import com.scandit.datacapture.idcapturesettingssample.ui.component.switchSettin
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IdCaptureScannerSettingsScreen(
-    settingsRepository: SettingsRepository,
     onBackClick: () -> Unit,
+    viewModel: IdCaptureScannerSettingsViewModel = viewModel(),
 ) {
-    val settings by settingsRepository.settingsStream.collectAsStateWithLifecycle()
+    val settings by viewModel.settings.collectAsStateWithLifecycle()
 
     IdCaptureScannerSettingsScreen(
         settings = settings,
         onBackClick = onBackClick,
-        onPhysicalDocumentScannerTypeChanged = { type ->
-            settingsRepository.updateIdCapture {
-                it.copy(physicalDocumentScannerType = type)
-            }
-        },
-        onSingleSideScannerBarcodeChanged = { enabled ->
-            settingsRepository.updateIdCapture {
-                it.copy(singleSideScannerBarcodeEnabled = enabled)
-            }
-        },
-        onSingleSideScannerMrzChanged = { enabled ->
-            settingsRepository.updateIdCapture {
-                it.copy(singleSideScannerMrzEnabled = enabled)
-            }
-        },
-        onSingleSideScannerVizChanged = { enabled ->
-            settingsRepository.updateIdCapture {
-                it.copy(singleSideScannerVizEnabled = enabled)
-            }
-        },
-        onMobileScannerIso1801315Changed = { enabled ->
-            settingsRepository.updateIdCapture {
-                it.copy(mobileScannerIso1801315Enabled = enabled)
-            }
-        },
-        onMobileScannerOcrChanged = { enabled ->
-            settingsRepository.updateIdCapture {
-                it.copy(mobileScannerOcrEnabled = enabled)
-            }
-        },
-        onMdocElementsToRetainChanged = { elements ->
-            settingsRepository.updateIdCapture {
-                it.copy(mdocElementsToRetain = elements)
-            }
-        }
+        onPhysicalDocumentScannerTypeChanged = viewModel::onPhysicalDocumentScannerTypeChanged,
+        onSingleSideScannerBarcodeChanged = viewModel::onSingleSideScannerBarcodeChanged,
+        onSingleSideScannerMrzChanged = viewModel::onSingleSideScannerMrzChanged,
+        onSingleSideScannerVizChanged = viewModel::onSingleSideScannerVizChanged,
+        onMobileScannerIso1801315Changed = viewModel::onMobileScannerIso1801315Changed,
+        onMobileScannerOcrChanged = viewModel::onMobileScannerOcrChanged,
+        onMdocElementsToRetainChanged = viewModel::onMdocElementsToRetainChanged,
     )
 }
 
 @Composable
 private fun IdCaptureScannerSettingsScreen(
-    settings: Settings,
+    settings: Settings.IdCaptureSettings,
     onBackClick: () -> Unit,
     onPhysicalDocumentScannerTypeChanged: (PhysicalDocumentScannerType) -> Unit,
     onSingleSideScannerBarcodeChanged: (Boolean) -> Unit,
@@ -120,7 +92,7 @@ private fun IdCaptureScannerSettingsScreen(
 }
 
 private fun LazyListScope.physicalDocumentScannerSettings(
-    settings: Settings,
+    settings: Settings.IdCaptureSettings,
     onPhysicalDocumentScannerTypeChanged: (PhysicalDocumentScannerType) -> Unit
 ) {
     sectionHeader(
@@ -131,18 +103,18 @@ private fun LazyListScope.physicalDocumentScannerSettings(
     enumDropdownSetting(
         key = "physical_document_scanner_type",
         labelRes = R.string.physical_document_scanner_type,
-        value = settings.idCapture.physicalDocumentScannerType,
+        value = settings.physicalDocumentScannerType,
         onValueChange = onPhysicalDocumentScannerTypeChanged
     )
 }
 
 private fun LazyListScope.singleSideScannerFeatures(
-    settings: Settings,
+    settings: Settings.IdCaptureSettings,
     onBarcodeChanged: (Boolean) -> Unit,
     onMrzChanged: (Boolean) -> Unit,
     onVizChanged: (Boolean) -> Unit
 ) {
-    val isSingleSideMode = settings.idCapture.physicalDocumentScannerType == PhysicalDocumentScannerType.SINGLE_SIDE
+    val isSingleSideMode = settings.physicalDocumentScannerType == PhysicalDocumentScannerType.SINGLE_SIDE
 
     if (isSingleSideMode) {
         sectionHeader(
@@ -153,28 +125,28 @@ private fun LazyListScope.singleSideScannerFeatures(
         switchSetting(
             key = "single_side_scanner_barcode",
             labelRes = R.string.single_side_scanner_barcode,
-            checked = settings.idCapture.singleSideScannerBarcodeEnabled,
+            checked = settings.singleSideScannerBarcodeEnabled,
             onCheckedChange = onBarcodeChanged
         )
 
         switchSetting(
             key = "single_side_scanner_mrz",
             labelRes = R.string.single_side_scanner_mrz,
-            checked = settings.idCapture.singleSideScannerMrzEnabled,
+            checked = settings.singleSideScannerMrzEnabled,
             onCheckedChange = onMrzChanged
         )
 
         switchSetting(
             key = "single_side_scanner_viz",
             labelRes = R.string.single_side_scanner_viz,
-            checked = settings.idCapture.singleSideScannerVizEnabled,
+            checked = settings.singleSideScannerVizEnabled,
             onCheckedChange = onVizChanged
         )
     }
 }
 
 private fun LazyListScope.mobileDocumentScannerSettings(
-    settings: Settings,
+    settings: Settings.IdCaptureSettings,
     onIso1801315Changed: (Boolean) -> Unit,
     onOcrChanged: (Boolean) -> Unit,
     onMdocElementsToRetainChanged: (Set<MobileDocumentDataElement>) -> Unit
@@ -187,21 +159,21 @@ private fun LazyListScope.mobileDocumentScannerSettings(
     switchSetting(
         key = "mobile_scanner_iso_18013_15",
         labelRes = R.string.mobile_scanner_iso_18013_15,
-        checked = settings.idCapture.mobileScannerIso1801315Enabled,
+        checked = settings.mobileScannerIso1801315Enabled,
         onCheckedChange = onIso1801315Changed
     )
 
     switchSetting(
         key = "mobile_scanner_ocr",
         labelRes = R.string.mobile_scanner_ocr,
-        checked = settings.idCapture.mobileScannerOcrEnabled,
+        checked = settings.mobileScannerOcrEnabled,
         onCheckedChange = onOcrChanged
     )
 
     enumMultiSelectDropdownSetting(
         key = "mdoc_elements_to_retain",
         labelRes = R.string.mdoc_elements_to_retain_title,
-        selectedValues = settings.idCapture.mdocElementsToRetain,
+        selectedValues = settings.mdocElementsToRetain,
         onValuesChange = onMdocElementsToRetainChanged
     )
 }
@@ -210,7 +182,7 @@ private fun LazyListScope.mobileDocumentScannerSettings(
 @Composable
 private fun IdCaptureScannerSettingsScreenPreview() {
     IdCaptureScannerSettingsScreen(
-        settings = Settings(),
+        settings = Settings.IdCaptureSettings(),
         onBackClick = {},
         onPhysicalDocumentScannerTypeChanged = {},
         onSingleSideScannerBarcodeChanged = {},

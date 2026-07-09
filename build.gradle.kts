@@ -20,7 +20,7 @@ buildscript {
 
     val versions: Map<String, Any> by extra(
         mapOf(
-            "scandit_sdk_version" to "8.4.1",
+            "scandit_sdk_version" to "8.5.0",
             "android_gradle" to "8.7.3",
             "android_material" to "1.6.1",
             "androidx_animations" to "1.0.0",
@@ -56,19 +56,6 @@ buildscript {
     )
 
     repositories {
-        maven {
-            url = uri("https://gitlab.scandit.com/api/v4/virtual_registries/packages/maven/1")
-            credentials(HttpHeaderCredentials::class) {
-                if (System.getenv("CI_JOB_TOKEN") != null) {
-                    name = "Job-Token"
-                    value = System.getenv("CI_JOB_TOKEN")
-                } else {
-                    name = "Private-Token"
-                    value = System.getenv("GITLAB_PRIVATE_TOKEN")
-                }
-            }
-            authentication { create<HttpHeaderAuthentication>("header") }
-        }
         google()
         mavenCentral()
     }
@@ -80,19 +67,6 @@ buildscript {
 
 allprojects {
     repositories {
-        maven {
-            url = uri("https://gitlab.scandit.com/api/v4/virtual_registries/packages/maven/1")
-            credentials(HttpHeaderCredentials::class) {
-                if (System.getenv("CI_JOB_TOKEN") != null) {
-                    name = "Job-Token"
-                    value = System.getenv("CI_JOB_TOKEN")
-                } else {
-                    name = "Private-Token"
-                    value = System.getenv("GITLAB_PRIVATE_TOKEN")
-                }
-            }
-            authentication { create<HttpHeaderAuthentication>("header") }
-        }
         google()
         mavenCentral()
     }

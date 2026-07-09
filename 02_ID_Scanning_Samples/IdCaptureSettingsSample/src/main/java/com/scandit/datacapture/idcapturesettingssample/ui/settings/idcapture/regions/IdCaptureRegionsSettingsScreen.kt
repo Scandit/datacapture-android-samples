@@ -26,27 +26,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.scandit.datacapture.id.capture.description
 import com.scandit.datacapture.id.data.IdCaptureDocumentType
 import com.scandit.datacapture.id.data.IdCaptureRegion
 import com.scandit.datacapture.idcapturesettingssample.R
+import com.scandit.datacapture.idcapturesettingssample.model.DocumentSelectionType
 import com.scandit.datacapture.idcapturesettingssample.model.Settings
-import com.scandit.datacapture.idcapturesettingssample.data.SettingsRepository
 import com.scandit.datacapture.idcapturesettingssample.ui.component.BackButton
 import com.scandit.datacapture.idcapturesettingssample.ui.component.SettingsScaffold
 import com.scandit.datacapture.idcapturesettingssample.ui.component.checkboxSetting
 import com.scandit.datacapture.idcapturesettingssample.ui.component.searchBar
-import com.scandit.datacapture.idcapturesettingssample.model.DocumentSelectionType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IdCaptureRegionsSettingsScreen(
-    settingsRepository: SettingsRepository,
     documentType: IdCaptureDocumentType,
     documentSelectionType: DocumentSelectionType,
     onBackClick: () -> Unit,
+    viewModel: IdCaptureRegionsSettingsViewModel = viewModel(),
 ) {
-    val settings by settingsRepository.settingsStream.collectAsStateWithLifecycle()
+    val settings by viewModel.settings.collectAsStateWithLifecycle()
 
     IdCaptureRegionsSettingsScreen(
         settings = settings,
@@ -54,7 +54,7 @@ fun IdCaptureRegionsSettingsScreen(
         documentSelectionType = documentSelectionType,
         onBackClick = onBackClick,
         onRegionChanged = { region, enabled ->
-            settingsRepository.toggleDocumentRegion(documentType, region, enabled, documentSelectionType)
+            viewModel.onRegionToggled(region, enabled, documentType, documentSelectionType)
         },
     )
 }
@@ -62,7 +62,7 @@ fun IdCaptureRegionsSettingsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun IdCaptureRegionsSettingsScreen(
-    settings: Settings,
+    settings: Settings.IdCaptureSettings,
     documentType: IdCaptureDocumentType,
     documentSelectionType: DocumentSelectionType,
     onBackClick: () -> Unit,
@@ -70,8 +70,8 @@ private fun IdCaptureRegionsSettingsScreen(
 ) {
     val selectedRegions = remember(settings, documentType, documentSelectionType) {
         val documents = when (documentSelectionType) {
-            DocumentSelectionType.ACCEPTED -> settings.idCapture.acceptedDocuments
-            DocumentSelectionType.REJECTED -> settings.idCapture.rejectedDocuments
+            DocumentSelectionType.ACCEPTED -> settings.acceptedDocuments
+            DocumentSelectionType.REJECTED -> settings.rejectedDocuments
         }
 
         documents
@@ -114,20 +114,7 @@ private fun IdCaptureRegionsSettingsScreen(
                 key = "region_${region.name}",
                 label = region.description,
                 checked = selectedRegions.contains(region),
-                onCheckedChange = { enabled ->
-                    // Ensure that at least one region is selected to prevent misconfigurations
-                    if (!enabled && selectedRegions.size <= 1) {
-                        // Trying to uncheck the last selected region
-                        if (region != IdCaptureRegion.ANY) {
-                            // If it's not ANY, uncheck it and enable ANY instead
-                            onRegionChanged(region, false)
-                            onRegionChanged(IdCaptureRegion.ANY, true)
-                        }
-                        // If it's ANY, don't allow unchecking (do nothing)
-                    } else {
-                        onRegionChanged(region, enabled)
-                    }
-                },
+                onCheckedChange = { enabled -> onRegionChanged(region, enabled) },
             )
         }
     }
@@ -137,7 +124,7 @@ private fun IdCaptureRegionsSettingsScreen(
 @Composable
 private fun IdCaptureRegionsSettingsScreenPreview() {
     IdCaptureRegionsSettingsScreen(
-        settings = Settings(),
+        settings = Settings.IdCaptureSettings(),
         documentType = IdCaptureDocumentType.ID_CARD,
         documentSelectionType = DocumentSelectionType.ACCEPTED,
         onBackClick = {},

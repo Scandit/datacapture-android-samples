@@ -15,17 +15,21 @@
 package com.scandit.datacapture.expirymanagementsample.barcodecount;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 
 import androidx.annotation.NonNull;
 
+import com.scandit.datacapture.barcode.batch.data.TrackedBarcode;
 import com.scandit.datacapture.barcode.count.ui.view.BarcodeCountStatus;
 import com.scandit.datacapture.barcode.count.ui.view.status.BarcodeCountStatusItem;
 import com.scandit.datacapture.barcode.count.ui.view.status.BarcodeCountStatusProvider;
 import com.scandit.datacapture.barcode.count.ui.view.status.BarcodeCountStatusProviderCallback;
 import com.scandit.datacapture.barcode.count.ui.view.status.BarcodeCountStatusResult;
 import com.scandit.datacapture.barcode.count.ui.view.status.BarcodeCountStatusResultSuccess;
-import com.scandit.datacapture.barcode.batch.data.TrackedBarcode;
+import com.scandit.datacapture.core.ui.icon.ScanditIcon;
+import com.scandit.datacapture.core.ui.icon.ScanditIconShape;
+import com.scandit.datacapture.core.ui.icon.ScanditIconType;
 import com.scandit.datacapture.expirymanagementsample.R;
 import com.scandit.datacapture.expirymanagementsample.managers.BarcodeManager;
 
@@ -35,15 +39,19 @@ import java.util.List;
 public class StatusProvider implements BarcodeCountStatusProvider {
 
     private static final long STATUS_DELAY = 500L;
+    private static final int EXPIRED_ICON_BORDER_WIDTH_DP = 1;
 
     private final Handler handler = new Handler();
 
     private final String modeEnableMessage;
     private final String modeDisableMessage;
 
+    private final float expiredIconBorderWidth;
+
     public StatusProvider(Context context) {
         this.modeEnableMessage = context.getString(R.string.status_mode_enable_message);
         this.modeDisableMessage = context.getString(R.string.status_mode_disable_message);
+        this.expiredIconBorderWidth = dpToPx(context, EXPIRED_ICON_BORDER_WIDTH_DP);
     }
 
     @Override
@@ -62,14 +70,15 @@ public class StatusProvider implements BarcodeCountStatusProvider {
                         @Override
                         public void run() {
                             // If we have information that the item is expired
-                            // add a BarcodeCountStatusItem with status EXPIRED to the result.
+                            // add a BarcodeCountStatusItem with a custom icon to the result.
                             List<BarcodeCountStatusItem> statusList = new ArrayList<>();
                             for (TrackedBarcode barcode : barcodes) {
                                 boolean isExpired = BarcodeManager.getInstance()
                                     .isBarcodeDataExpired(barcode.getBarcode().getData());
-                                statusList.add(BarcodeCountStatusItem.create(
+
+                                statusList.add(BarcodeCountStatusItem.createWithIcon(
                                     barcode,
-                                    isExpired ? BarcodeCountStatus.EXPIRED : BarcodeCountStatus.NONE
+                                    isExpired ? createExpiredIcon() : null
                                 ));
                             }
 
@@ -86,5 +95,20 @@ public class StatusProvider implements BarcodeCountStatusProvider {
                 }
             }
         }).start();
+    }
+
+    private ScanditIcon createExpiredIcon() {
+        return ScanditIcon.builder()
+            .withIcon(ScanditIconType.EXPIRED_ITEM)
+            .withIconColor(Color.BLACK)
+            .withBackgroundColor(0xFFD32F2F)
+            .withBackgroundShape(ScanditIconShape.CIRCLE)
+            .withBackgroundStrokeColor(Color.WHITE)
+            .withBackgroundStrokeWidth(expiredIconBorderWidth)
+            .build();
+    }
+
+    private static int dpToPx(Context context, int dp) {
+        return (int) (dp * context.getResources().getDisplayMetrics().density);
     }
 }

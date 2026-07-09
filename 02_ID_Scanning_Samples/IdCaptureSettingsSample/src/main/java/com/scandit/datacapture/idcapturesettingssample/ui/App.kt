@@ -16,18 +16,14 @@ package com.scandit.datacapture.idcapturesettingssample.ui
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
-import com.scandit.datacapture.idcapturesettingssample.data.SettingsRepository
 import com.scandit.datacapture.idcapturesettingssample.ui.navigation.NavGraph
 import com.scandit.datacapture.idcapturesettingssample.ui.theme.AppTheme
 
 @Composable
-fun App(settingsRepository: SettingsRepository) {
+fun App() {
     AppTheme {
         val navController = rememberNavController()
 
-        NavGraph(
-            navController = navController,
-            settingsRepository = settingsRepository,
-        )
+        NavGraph(navController = navController)
     }
 }

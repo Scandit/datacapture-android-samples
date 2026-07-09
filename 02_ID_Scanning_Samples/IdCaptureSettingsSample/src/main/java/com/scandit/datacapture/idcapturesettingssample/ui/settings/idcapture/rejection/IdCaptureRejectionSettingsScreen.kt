@@ -20,9 +20,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.scandit.datacapture.idcapturesettingssample.R
 import com.scandit.datacapture.idcapturesettingssample.model.Settings
-import com.scandit.datacapture.idcapturesettingssample.data.SettingsRepository
 import com.scandit.datacapture.idcapturesettingssample.ui.component.BackButton
 import com.scandit.datacapture.idcapturesettingssample.ui.component.SettingsScaffold
 import com.scandit.datacapture.idcapturesettingssample.ui.component.integerInputSetting
@@ -31,62 +31,28 @@ import com.scandit.datacapture.idcapturesettingssample.ui.component.switchSettin
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IdCaptureRejectionSettingsScreen(
-    settingsRepository: SettingsRepository,
     onBackClick: () -> Unit,
+    viewModel: IdCaptureRejectionSettingsViewModel = viewModel(),
 ) {
-    val settings by settingsRepository.settingsStream.collectAsStateWithLifecycle()
+    val settings by viewModel.settings.collectAsStateWithLifecycle()
 
     IdCaptureRejectionSettingsScreen(
         settings = settings,
         onBackClick = onBackClick,
-        onRejectExpiredIdsChanged = { enabled ->
-            settingsRepository.updateIdCapture {
-                it.copy(rejectExpiredIds = enabled)
-            }
-        },
-        onRejectNotRealIdCompliantChanged = { enabled ->
-            settingsRepository.updateIdCapture {
-                it.copy(rejectNotRealIdCompliant = enabled)
-            }
-        },
-        onRejectForgedAamvaBarcodesChanged = { enabled ->
-            settingsRepository.updateIdCapture {
-                it.copy(rejectForgedAamvaBarcodes = enabled)
-            }
-        },
-        onRejectInconsistentDataChanged = { enabled ->
-            settingsRepository.updateIdCapture {
-                it.copy(rejectInconsistentData = enabled)
-            }
-        },
-        onRejectHolderBelowAgeChanged = { value ->
-            settingsRepository.updateIdCapture {
-                it.copy(rejectHolderBelowAge = value)
-            }
-        },
-        onRejectIdsExpiringInDaysChanged = { value ->
-            settingsRepository.updateIdCapture {
-                it.copy(rejectIdsExpiringInDays = value)
-            }
-        },
-        onRejectVoidedIdsChanged = { enabled ->
-            settingsRepository.updateIdCapture {
-                it.copy(rejectVoidedIds = enabled)
-            }
-        },
-        onRejectionTimeoutSecondsChanged = { value ->
-            value?.let {
-                settingsRepository.updateIdCapture { settings ->
-                    settings.copy(rejectionTimeoutSeconds = it)
-                }
-            }
-        },
+        onRejectExpiredIdsChanged = viewModel::onRejectExpiredIdsChanged,
+        onRejectNotRealIdCompliantChanged = viewModel::onRejectNotRealIdCompliantChanged,
+        onRejectForgedAamvaBarcodesChanged = viewModel::onRejectForgedAamvaBarcodesChanged,
+        onRejectInconsistentDataChanged = viewModel::onRejectInconsistentDataChanged,
+        onRejectHolderBelowAgeChanged = viewModel::onRejectHolderBelowAgeChanged,
+        onRejectIdsExpiringInDaysChanged = viewModel::onRejectIdsExpiringInDaysChanged,
+        onRejectVoidedIdsChanged = viewModel::onRejectVoidedIdsChanged,
+        onRejectionTimeoutSecondsChanged = viewModel::onRejectionTimeoutSecondsChanged,
     )
 }
 
 @Composable
 private fun IdCaptureRejectionSettingsScreen(
-    settings: Settings,
+    settings: Settings.IdCaptureSettings,
     onBackClick: () -> Unit,
     onRejectExpiredIdsChanged: (Boolean) -> Unit,
     onRejectNotRealIdCompliantChanged: (Boolean) -> Unit,
@@ -104,35 +70,35 @@ private fun IdCaptureRejectionSettingsScreen(
         switchSetting(
             key = "reject_expired_ids",
             labelRes = R.string.reject_expired_ids,
-            checked = settings.idCapture.rejectExpiredIds,
+            checked = settings.rejectExpiredIds,
             onCheckedChange = onRejectExpiredIdsChanged,
         )
 
         switchSetting(
             key = "reject_not_real_id_compliant",
             labelRes = R.string.reject_not_real_id_compliant,
-            checked = settings.idCapture.rejectNotRealIdCompliant,
+            checked = settings.rejectNotRealIdCompliant,
             onCheckedChange = onRejectNotRealIdCompliantChanged,
         )
 
         switchSetting(
             key = "reject_forged_aamva_barcodes",
             labelRes = R.string.reject_forged_aamva_barcodes,
-            checked = settings.idCapture.rejectForgedAamvaBarcodes,
+            checked = settings.rejectForgedAamvaBarcodes,
             onCheckedChange = onRejectForgedAamvaBarcodesChanged,
         )
 
         switchSetting(
             key = "reject_inconsistent_data",
             labelRes = R.string.reject_inconsistent_data,
-            checked = settings.idCapture.rejectInconsistentData,
+            checked = settings.rejectInconsistentData,
             onCheckedChange = onRejectInconsistentDataChanged,
         )
 
         integerInputSetting(
             key = "reject_holder_below_age",
             labelRes = R.string.reject_holder_below_age,
-            value = settings.idCapture.rejectHolderBelowAge,
+            value = settings.rejectHolderBelowAge,
             maxLength = 3,
             onValueChange = onRejectHolderBelowAgeChanged,
         )
@@ -140,7 +106,7 @@ private fun IdCaptureRejectionSettingsScreen(
         integerInputSetting(
             key = "reject_ids_expiring_in_days",
             labelRes = R.string.reject_ids_expiring_in_days,
-            value = settings.idCapture.rejectIdsExpiringInDays,
+            value = settings.rejectIdsExpiringInDays,
             maxLength = 4,
             onValueChange = onRejectIdsExpiringInDaysChanged,
         )
@@ -148,14 +114,14 @@ private fun IdCaptureRejectionSettingsScreen(
         switchSetting(
             key = "reject_voided_ids",
             labelRes = R.string.reject_voided_ids,
-            checked = settings.idCapture.rejectVoidedIds,
+            checked = settings.rejectVoidedIds,
             onCheckedChange = onRejectVoidedIdsChanged,
         )
 
         integerInputSetting(
             key = "rejection_timeout_seconds",
             labelRes = R.string.rejection_timeout_seconds,
-            value = settings.idCapture.rejectionTimeoutSeconds,
+            value = settings.rejectionTimeoutSeconds,
             maxLength = 5,
             onValueChange = onRejectionTimeoutSecondsChanged,
         )
@@ -166,7 +132,7 @@ private fun IdCaptureRejectionSettingsScreen(
 @Composable
 private fun IdCaptureRejectionSettingsScreenPreview() {
     IdCaptureRejectionSettingsScreen(
-        settings = Settings(),
+        settings = Settings.IdCaptureSettings(),
         onBackClick = {},
         onRejectExpiredIdsChanged = {},
         onRejectNotRealIdCompliantChanged = {},

@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 import com.scandit.datacapture.barcode.count.capture.BarcodeCount;
 import com.scandit.datacapture.barcode.count.capture.BarcodeCountListener;
 import com.scandit.datacapture.barcode.count.capture.BarcodeCountSession;
+import com.scandit.datacapture.barcode.count.capture.BarcodeCountSessionSnapshot;
 import com.scandit.datacapture.barcode.count.capture.BarcodeCountSettings;
 import com.scandit.datacapture.barcode.count.ui.view.BarcodeCountView;
 import com.scandit.datacapture.barcode.count.ui.view.BarcodeCountViewStyle;
@@ -32,6 +33,9 @@ import com.scandit.datacapture.barcode.count.ui.view.BarcodeCountViewUiListener;
 import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.data.FrameData;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 
@@ -203,6 +207,14 @@ public class MainActivity extends CameraPermissionActivity
     @Override
     public void onExitButtonTapped(
         @NonNull BarcodeCountView view
+    ) {
+        // Not used
+    }
+
+    @Override
+    public void onExitButtonTapped(
+        @NotNull BarcodeCountView view,
+        @Nullable BarcodeCountSessionSnapshot snapshot
     ) {
         navigatingInternally = true;
         exitLauncher.launch(

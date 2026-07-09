@@ -40,6 +40,7 @@ class MrzFieldExtractor(capturedId: CapturedId) : FieldExtractor(capturedId) {
             "Optional Data In Line 2" to zone.optionalDataInLine2.toDisplayValue(),
             "Captured MRZ" to zone.capturedMrz.toDisplayValue(),
             "Personal ID Number" to zone.personalIdNumber.toDisplayValue(),
+            "Passport Type" to zone.passportType?.name.toDisplayValue(),
             "Passport Number" to zone.passportNumber.toDisplayValue(),
             "Passport Issuer ISO" to zone.passportIssuerIso.toDisplayValue(),
             "Passport Date of Expiry" to zone.passportDateOfExpiry.toDisplayValue(),

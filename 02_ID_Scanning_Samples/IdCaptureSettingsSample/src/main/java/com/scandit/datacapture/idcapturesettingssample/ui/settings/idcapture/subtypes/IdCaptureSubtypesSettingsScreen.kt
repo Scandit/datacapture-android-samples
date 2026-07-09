@@ -26,47 +26,43 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.scandit.datacapture.id.capture.RegionSpecific
 import com.scandit.datacapture.id.data.RegionSpecificSubtype
 import com.scandit.datacapture.idcapturesettingssample.R
+import com.scandit.datacapture.idcapturesettingssample.model.DocumentSelectionType
 import com.scandit.datacapture.idcapturesettingssample.model.Settings
-import com.scandit.datacapture.idcapturesettingssample.data.SettingsRepository
 import com.scandit.datacapture.idcapturesettingssample.ui.component.BackButton
 import com.scandit.datacapture.idcapturesettingssample.ui.component.SettingsScaffold
 import com.scandit.datacapture.idcapturesettingssample.ui.component.checkboxSetting
 import com.scandit.datacapture.idcapturesettingssample.ui.component.searchBar
 import com.scandit.datacapture.idcapturesettingssample.ui.component.setting
-import com.scandit.datacapture.idcapturesettingssample.model.DocumentSelectionType
 import com.scandit.datacapture.idcapturesettingssample.utils.toNameCase
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IdCaptureSubtypesSettingsScreen(
-    settingsRepository: SettingsRepository,
     documentSelectionType: DocumentSelectionType,
     onBackClick: () -> Unit,
+    viewModel: IdCaptureSubtypesSettingsViewModel = viewModel(),
 ) {
-    val settings by settingsRepository.settingsStream.collectAsStateWithLifecycle()
+    val settings by viewModel.settings.collectAsStateWithLifecycle()
 
     IdCaptureSubtypesSettingsScreen(
         settings = settings,
         documentSelectionType = documentSelectionType,
         onBackClick = onBackClick,
         onSubtypeChanged = { subtype, enabled ->
-            settingsRepository.toggleRegionSpecificSubtype(subtype, enabled, documentSelectionType)
+            viewModel.onSubtypeChanged(subtype, enabled, documentSelectionType)
         },
-        onEnableAll = {
-            settingsRepository.enableAllRegionSpecificSubtypes(documentSelectionType)
-        },
-        onDisableAll = {
-            settingsRepository.disableAllRegionSpecificSubtypes(documentSelectionType)
-        }
+        onEnableAll = { viewModel.onEnableAll(documentSelectionType) },
+        onDisableAll = { viewModel.onDisableAll(documentSelectionType) },
     )
 }
 
 @Composable
 private fun IdCaptureSubtypesSettingsScreen(
-    settings: Settings,
+    settings: Settings.IdCaptureSettings,
     documentSelectionType: DocumentSelectionType,
     onBackClick: () -> Unit,
     onSubtypeChanged: (RegionSpecificSubtype, Boolean) -> Unit,
@@ -75,8 +71,8 @@ private fun IdCaptureSubtypesSettingsScreen(
 ) {
     val selectedSubtypes = remember(settings, documentSelectionType) {
         val documents = when (documentSelectionType) {
-            DocumentSelectionType.ACCEPTED -> settings.idCapture.acceptedDocuments
-            DocumentSelectionType.REJECTED -> settings.idCapture.rejectedDocuments
+            DocumentSelectionType.ACCEPTED -> settings.acceptedDocuments
+            DocumentSelectionType.REJECTED -> settings.rejectedDocuments
         }
 
         documents
@@ -140,7 +136,7 @@ private fun IdCaptureSubtypesSettingsScreen(
 @Composable
 private fun IdCaptureSubtypesSettingsScreenPreview() {
     IdCaptureSubtypesSettingsScreen(
-        settings = Settings(),
+        settings = Settings.IdCaptureSettings(),
         documentSelectionType = DocumentSelectionType.ACCEPTED,
         onBackClick = {},
         onSubtypeChanged = { _, _ -> },

@@ -22,6 +22,7 @@ import androidx.annotation.NonNull;
 import com.scandit.datacapture.barcode.count.capture.BarcodeCount;
 import com.scandit.datacapture.barcode.count.capture.BarcodeCountListener;
 import com.scandit.datacapture.barcode.count.capture.BarcodeCountSession;
+import com.scandit.datacapture.barcode.count.capture.BarcodeCountSessionSnapshot;
 import com.scandit.datacapture.barcode.count.capture.BarcodeCountSettings;
 import com.scandit.datacapture.barcode.count.ui.view.BarcodeCountView;
 import com.scandit.datacapture.barcode.count.ui.view.BarcodeCountViewStyle;
@@ -32,6 +33,9 @@ import com.scandit.datacapture.core.capture.DataCaptureContext;
 import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.expirymanagementsample.managers.BarcodeCountCameraManager;
 import com.scandit.datacapture.expirymanagementsample.managers.BarcodeManager;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -230,14 +234,15 @@ public class BarcodeCountPresenter implements BarcodeCountListener, BarcodeCount
 
     @Override
     public void onExitButtonTapped(
-        @NonNull BarcodeCountView view
-    ) {
+        @NotNull BarcodeCountView view,
+        @Nullable BarcodeCountSessionSnapshot snapshot
+        ) {
         navigatingInternally = true;
         barcodeCountPresenterView.navigateToFinishScreen();
     }
 
     @Override
-    public void onSingleScanButtonTapped(@NonNull BarcodeCountView view) {
+    public void onSingleScanButtonTapped(@NotNull BarcodeCountView view) {
         barcodeCountPresenterView.switchToSparkScan();
     }
 }

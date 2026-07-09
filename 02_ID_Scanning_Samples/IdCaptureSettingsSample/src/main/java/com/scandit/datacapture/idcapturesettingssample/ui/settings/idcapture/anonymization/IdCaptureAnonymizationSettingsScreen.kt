@@ -20,11 +20,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.scandit.datacapture.id.data.IdAnonymizationMode
 import com.scandit.datacapture.id.data.IdFieldType
 import com.scandit.datacapture.idcapturesettingssample.R
 import com.scandit.datacapture.idcapturesettingssample.model.Settings
-import com.scandit.datacapture.idcapturesettingssample.data.SettingsRepository
 import com.scandit.datacapture.idcapturesettingssample.ui.component.BackButton
 import com.scandit.datacapture.idcapturesettingssample.ui.component.SettingsScaffold
 import com.scandit.datacapture.idcapturesettingssample.ui.component.checkboxSetting
@@ -36,40 +36,23 @@ import com.scandit.datacapture.idcapturesettingssample.utils.toNameCase
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IdCaptureAnonymizationSettingsScreen(
-    settingsRepository: SettingsRepository,
     onBackClick: () -> Unit,
+    viewModel: IdCaptureAnonymizationSettingsViewModel = viewModel(),
 ) {
-    val settings by settingsRepository.settingsStream.collectAsStateWithLifecycle()
+    val settings by viewModel.settings.collectAsStateWithLifecycle()
 
     IdCaptureAnonymizationSettingsScreen(
         settings = settings,
         onBackClick = onBackClick,
-        onAnonymizationModeChanged = { mode ->
-            settingsRepository.updateIdCapture {
-                it.copy(anonymizationMode = mode)
-            }
-        },
-        onAnonymizedFieldChanged = { fieldType, enabled ->
-            settingsRepository.updateIdCapture {
-                val updatedFields = if (enabled) {
-                    it.anonymizedFields + fieldType
-                } else {
-                    it.anonymizedFields - fieldType
-                }
-                it.copy(anonymizedFields = updatedFields)
-            }
-        },
-        onAnonymizeDefaultFieldsChanged = { enabled ->
-            settingsRepository.updateIdCapture {
-                it.copy(anonymizeDefaultFields = enabled)
-            }
-        }
+        onAnonymizationModeChanged = viewModel::onAnonymizationModeChanged,
+        onAnonymizedFieldChanged = viewModel::onAnonymizedFieldChanged,
+        onAnonymizeDefaultFieldsChanged = viewModel::onAnonymizeDefaultFieldsChanged,
     )
 }
 
 @Composable
 private fun IdCaptureAnonymizationSettingsScreen(
-    settings: Settings,
+    settings: Settings.IdCaptureSettings,
     onBackClick: () -> Unit,
     onAnonymizationModeChanged: (IdAnonymizationMode) -> Unit,
     onAnonymizedFieldChanged: (IdFieldType, Boolean) -> Unit,
@@ -82,14 +65,14 @@ private fun IdCaptureAnonymizationSettingsScreen(
         enumDropdownSetting(
             key = "anonymization_mode",
             labelRes = R.string.anonymization_mode_title,
-            value = settings.idCapture.anonymizationMode,
+            value = settings.anonymizationMode,
             onValueChange = onAnonymizationModeChanged,
         )
 
         switchSetting(
             key = "anonymize_default_fields",
             labelRes = R.string.anonymize_default_fields_title,
-            checked = settings.idCapture.anonymizeDefaultFields,
+            checked = settings.anonymizeDefaultFields,
             onCheckedChange = onAnonymizeDefaultFieldsChanged,
         )
 
@@ -102,7 +85,7 @@ private fun IdCaptureAnonymizationSettingsScreen(
             checkboxSetting(
                 key = "anonymized_field_${fieldType.name}",
                 label = fieldType.name.toNameCase(),
-                checked = settings.idCapture.anonymizedFields.contains(fieldType),
+                checked = settings.anonymizedFields.contains(fieldType),
                 onCheckedChange = { enabled ->
                     onAnonymizedFieldChanged(fieldType, enabled)
                 },
@@ -115,7 +98,7 @@ private fun IdCaptureAnonymizationSettingsScreen(
 @Composable
 private fun IdCaptureAnonymizationSettingsScreenPreview() {
     IdCaptureAnonymizationSettingsScreen(
-        settings = Settings(),
+        settings = Settings.IdCaptureSettings(),
         onBackClick = {},
         onAnonymizationModeChanged = {},
         onAnonymizedFieldChanged = { _, _ -> },

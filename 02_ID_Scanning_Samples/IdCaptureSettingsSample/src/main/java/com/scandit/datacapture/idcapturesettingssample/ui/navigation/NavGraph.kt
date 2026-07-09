@@ -26,7 +26,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.scandit.datacapture.id.data.IdCaptureDocumentType
-import com.scandit.datacapture.idcapturesettingssample.data.SettingsRepository
 import com.scandit.datacapture.idcapturesettingssample.ui.result.ResultScreen
 import com.scandit.datacapture.idcapturesettingssample.ui.result.ResultViewModel
 import com.scandit.datacapture.idcapturesettingssample.ui.scan.ScanScreen
@@ -49,7 +48,6 @@ fun NavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: String = Destinations.SCAN_ROUTE,
-    settingsRepository: SettingsRepository,
 ) {
     NavHost(
         navController = navController,
@@ -85,7 +83,6 @@ fun NavGraph(
         composable(Destinations.ID_CAPTURE_SETTINGS_ROUTE) {
             IdCaptureSettingsScreen(
                 onBackClick = navController::navigateUp,
-                settingsRepository = settingsRepository,
                 onNavigateToAnonymization = navController::navigateToIdCaptureAnonymization,
                 onNavigateToAcceptedDocuments = navController::navigateToIdCaptureAcceptedDocuments,
                 onNavigateToRejectedDocuments = navController::navigateToIdCaptureRejectedDocuments,
@@ -97,7 +94,6 @@ fun NavGraph(
         composable(Destinations.ID_CAPTURE_ANONYMIZATION_ROUTE) {
             IdCaptureAnonymizationSettingsScreen(
                 onBackClick = navController::navigateUp,
-                settingsRepository = settingsRepository,
             )
         }
         composable(
@@ -113,7 +109,6 @@ fun NavGraph(
 
             IdCaptureDocumentsSettingsScreen(
                 onBackClick = navController::navigateUp,
-                settingsRepository = settingsRepository,
                 documentSelectionType = documentSelectionType,
                 onDocumentClick = { documentType ->
                     when (documentType) {
@@ -130,19 +125,16 @@ fun NavGraph(
         composable(Destinations.ID_CAPTURE_SCANNER_ROUTE) {
             IdCaptureScannerSettingsScreen(
                 onBackClick = navController::navigateUp,
-                settingsRepository = settingsRepository,
             )
         }
         composable(Destinations.ID_CAPTURE_FEEDBACK_ROUTE) {
             IdCaptureFeedbackSettingsScreen(
                 onBackClick = navController::navigateUp,
-                settingsRepository = settingsRepository,
             )
         }
         composable(Destinations.ID_CAPTURE_REJECTION_ROUTE) {
             IdCaptureRejectionSettingsScreen(
                 onBackClick = navController::navigateUp,
-                settingsRepository = settingsRepository,
             )
         }
         composable(
@@ -162,7 +154,6 @@ fun NavGraph(
 
             IdCaptureRegionsSettingsScreen(
                 onBackClick = navController::navigateUp,
-                settingsRepository = settingsRepository,
                 documentType = documentType,
                 documentSelectionType = documentSelectionType,
             )
@@ -184,26 +175,22 @@ fun NavGraph(
 
             IdCaptureSubtypesSettingsScreen(
                 onBackClick = navController::navigateUp,
-                settingsRepository = settingsRepository,
                 documentSelectionType = documentSelectionType,
             )
         }
         composable(Destinations.CAMERA_SETTINGS_ROUTE) {
             CameraSettingsScreen(
                 onBackClick = navController::navigateUp,
-                settingsRepository = settingsRepository,
             )
         }
         composable(Destinations.VIEW_SETTINGS_ROUTE) {
             ViewSettingsScreen(
                 onBackClick = navController::navigateUp,
-                settingsRepository = settingsRepository,
             )
         }
         composable(Destinations.RESULT_SETTINGS_ROUTE) {
             ResultSettingsScreen(
                 onBackClick = navController::navigateUp,
-                settingsRepository = settingsRepository,
             )
         }
         composable(Destinations.RESULT_ROUTE) { backStackEntry ->

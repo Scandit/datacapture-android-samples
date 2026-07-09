@@ -20,10 +20,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.scandit.datacapture.idcapturesettingssample.R
 import com.scandit.datacapture.idcapturesettingssample.model.FeedbackType
 import com.scandit.datacapture.idcapturesettingssample.model.Settings
-import com.scandit.datacapture.idcapturesettingssample.data.SettingsRepository
 import com.scandit.datacapture.idcapturesettingssample.ui.component.BackButton
 import com.scandit.datacapture.idcapturesettingssample.ui.component.SettingsScaffold
 import com.scandit.datacapture.idcapturesettingssample.ui.component.enumDropdownSetting
@@ -31,30 +31,22 @@ import com.scandit.datacapture.idcapturesettingssample.ui.component.enumDropdown
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IdCaptureFeedbackSettingsScreen(
-    settingsRepository: SettingsRepository,
     onBackClick: () -> Unit,
+    viewModel: IdCaptureFeedbackSettingsViewModel = viewModel(),
 ) {
-    val settings by settingsRepository.settingsStream.collectAsStateWithLifecycle()
+    val settings by viewModel.settings.collectAsStateWithLifecycle()
 
     IdCaptureFeedbackSettingsScreen(
         settings = settings,
         onBackClick = onBackClick,
-        onCapturedFeedbackChanged = { feedback ->
-            settingsRepository.updateIdCapture {
-                it.copy(capturedFeedback = feedback)
-            }
-        },
-        onRejectedFeedbackChanged = { feedback ->
-            settingsRepository.updateIdCapture {
-                it.copy(rejectedFeedback = feedback)
-            }
-        },
+        onCapturedFeedbackChanged = viewModel::onCapturedFeedbackChanged,
+        onRejectedFeedbackChanged = viewModel::onRejectedFeedbackChanged,
     )
 }
 
 @Composable
 private fun IdCaptureFeedbackSettingsScreen(
-    settings: Settings,
+    settings: Settings.IdCaptureSettings,
     onBackClick: () -> Unit,
     onCapturedFeedbackChanged: (FeedbackType) -> Unit,
     onRejectedFeedbackChanged: (FeedbackType) -> Unit,
@@ -66,14 +58,14 @@ private fun IdCaptureFeedbackSettingsScreen(
         enumDropdownSetting(
             key = "id_captured_feedback",
             labelRes = R.string.id_captured_feedback,
-            value = settings.idCapture.capturedFeedback,
+            value = settings.capturedFeedback,
             onValueChange = onCapturedFeedbackChanged,
         )
 
         enumDropdownSetting(
             key = "id_rejected_feedback",
             labelRes = R.string.id_rejected_feedback,
-            value = settings.idCapture.rejectedFeedback,
+            value = settings.rejectedFeedback,
             onValueChange = onRejectedFeedbackChanged,
         )
     }
@@ -83,7 +75,7 @@ private fun IdCaptureFeedbackSettingsScreen(
 @Composable
 private fun IdCaptureFeedbackSettingsScreenPreview() {
     IdCaptureFeedbackSettingsScreen(
-        settings = Settings(),
+        settings = Settings.IdCaptureSettings(),
         onBackClick = {},
         onCapturedFeedbackChanged = {},
         onRejectedFeedbackChanged = {},

@@ -21,16 +21,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.scandit.datacapture.core.common.geometry.Anchor
-import com.scandit.datacapture.core.common.geometry.FloatWithUnit
 import com.scandit.datacapture.core.common.geometry.MeasureUnit
 import com.scandit.datacapture.id.ui.IdLayoutLineStyle
 import com.scandit.datacapture.id.ui.IdLayoutStyle
 import com.scandit.datacapture.id.ui.TextHintPosition
 import com.scandit.datacapture.idcapturesettingssample.R
-import com.scandit.datacapture.idcapturesettingssample.model.Settings
-import com.scandit.datacapture.idcapturesettingssample.data.SettingsRepository
 import com.scandit.datacapture.idcapturesettingssample.model.BrushStyle
+import com.scandit.datacapture.idcapturesettingssample.model.Settings
 import com.scandit.datacapture.idcapturesettingssample.ui.component.BackButton
 import com.scandit.datacapture.idcapturesettingssample.ui.component.SettingsScaffold
 import com.scandit.datacapture.idcapturesettingssample.ui.component.enumDropdownSetting
@@ -42,90 +41,34 @@ import com.scandit.datacapture.idcapturesettingssample.ui.component.textInputSet
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ViewSettingsScreen(
-    settingsRepository: SettingsRepository,
     onBackClick: () -> Unit,
+    viewModel: ViewSettingsViewModel = viewModel(),
 ) {
-    val settings by settingsRepository.settingsStream.collectAsStateWithLifecycle()
+    val settings by viewModel.settings.collectAsStateWithLifecycle()
 
     ViewSettingsScreen(
         settings = settings,
         onBackClick = onBackClick,
-        onOverlayStyleChanged = { value ->
-            settingsRepository.updateView {
-                it.copy(overlayStyle = value)
-            }
-        },
-        onOverlayLineStyleChanged = { value ->
-            settingsRepository.updateView {
-                it.copy(overlayLineStyle = value)
-            }
-        },
-        onCapturedBrushChanged = { value ->
-            settingsRepository.updateView {
-                it.copy(capturedBrushStyle = value)
-            }
-        },
-        onTextHintPositionChanged = { value ->
-            settingsRepository.updateView {
-                it.copy(textHintPosition = value)
-            }
-        },
-        onShowTextHintsChanged = { value ->
-            settingsRepository.updateView {
-                it.copy(showTextHints = value)
-            }
-        },
-        onViewfinderFrontTextChanged = { value ->
-            settingsRepository.updateView {
-                it.copy(viewfinderFrontText = value)
-            }
-        },
-        onViewfinderBackTextChanged = { value ->
-            settingsRepository.updateView {
-                it.copy(viewfinderBackText = value)
-            }
-        },
-        onLogoAnchorChanged = { value ->
-            settingsRepository.updateView {
-                it.copy(logoAnchor = value)
-            }
-        },
-        onLogoAnchorOffsetXValueChanged = { value ->
-            settingsRepository.updateView {
-                it.copy(logoAnchorOffsetX = FloatWithUnit(value, it.logoAnchorOffsetX.unit))
-            }
-        },
-        onLogoAnchorOffsetXUnitChanged = { value ->
-            settingsRepository.updateView {
-                it.copy(logoAnchorOffsetX = FloatWithUnit(it.logoAnchorOffsetX.value, value))
-            }
-        },
-        onLogoAnchorOffsetYValueChanged = { value ->
-            settingsRepository.updateView {
-                it.copy(logoAnchorOffsetY = FloatWithUnit(value, it.logoAnchorOffsetY.unit))
-            }
-        },
-        onLogoAnchorOffsetYUnitChanged = { value ->
-            settingsRepository.updateView {
-                it.copy(logoAnchorOffsetY = FloatWithUnit(it.logoAnchorOffsetY.value, value))
-            }
-        },
-        onTapToFocusChanged = { value ->
-            settingsRepository.updateView {
-                it.copy(isTapToFocusEnabled = value)
-            }
-        },
-        onTorchControlChanged = { value ->
-            settingsRepository.updateView {
-                it.copy(isTorchControlEnabled = value)
-            }
-        },
+        onOverlayStyleChanged = viewModel::onOverlayStyleChanged,
+        onOverlayLineStyleChanged = viewModel::onOverlayLineStyleChanged,
+        onCapturedBrushChanged = viewModel::onCapturedBrushChanged,
+        onTextHintPositionChanged = viewModel::onTextHintPositionChanged,
+        onShowTextHintsChanged = viewModel::onShowTextHintsChanged,
+        onViewfinderFrontTextChanged = viewModel::onViewfinderFrontTextChanged,
+        onViewfinderBackTextChanged = viewModel::onViewfinderBackTextChanged,
+        onLogoAnchorChanged = viewModel::onLogoAnchorChanged,
+        onLogoAnchorOffsetXValueChanged = viewModel::onLogoAnchorOffsetXValueChanged,
+        onLogoAnchorOffsetXUnitChanged = viewModel::onLogoAnchorOffsetXUnitChanged,
+        onLogoAnchorOffsetYValueChanged = viewModel::onLogoAnchorOffsetYValueChanged,
+        onLogoAnchorOffsetYUnitChanged = viewModel::onLogoAnchorOffsetYUnitChanged,
+        onTapToFocusChanged = viewModel::onTapToFocusChanged,
+        onTorchControlChanged = viewModel::onTorchControlChanged,
     )
 }
 
 @Composable
 private fun ViewSettingsScreen(
-    settings: Settings,
+    settings: Settings.ViewSettings,
     onBackClick: () -> Unit,
     onOverlayStyleChanged: (IdLayoutStyle) -> Unit,
     onOverlayLineStyleChanged: (IdLayoutLineStyle) -> Unit,
@@ -178,7 +121,7 @@ private fun ViewSettingsScreen(
 }
 
 private fun LazyListScope.overlaySettings(
-    settings: Settings,
+    settings: Settings.ViewSettings,
     onOverlayStyleChanged: (IdLayoutStyle) -> Unit,
     onOverlayLineStyleChanged: (IdLayoutLineStyle) -> Unit,
     onCapturedBrushChanged: (BrushStyle) -> Unit,
@@ -195,55 +138,55 @@ private fun LazyListScope.overlaySettings(
     enumDropdownSetting(
         key = "overlay_style",
         labelRes = R.string.overlay_style_title,
-        value = settings.view.overlayStyle,
+        value = settings.overlayStyle,
         onValueChange = onOverlayStyleChanged,
     )
 
     enumDropdownSetting(
         key = "overlay_line_style",
         labelRes = R.string.overlay_line_style_title,
-        value = settings.view.overlayLineStyle,
+        value = settings.overlayLineStyle,
         onValueChange = onOverlayLineStyleChanged,
     )
 
     enumDropdownSetting(
         key = "captured_brush",
         labelRes = R.string.captured_brush_title,
-        value = settings.view.capturedBrushStyle,
+        value = settings.capturedBrushStyle,
         onValueChange = onCapturedBrushChanged,
     )
 
     enumDropdownSetting(
         key = "text_hint_position",
         labelRes = R.string.text_hint_position_title,
-        value = settings.view.textHintPosition,
+        value = settings.textHintPosition,
         onValueChange = onTextHintPositionChanged,
     )
 
     switchSetting(
         key = "show_text_hints",
         labelRes = R.string.show_text_hints_title,
-        checked = settings.view.showTextHints,
+        checked = settings.showTextHints,
         onCheckedChange = onShowTextHintsChanged,
     )
 
     textInputSetting(
         key = "viewfinder_front_text",
         labelRes = R.string.viewfinder_front_text_title,
-        value = settings.view.viewfinderFrontText,
+        value = settings.viewfinderFrontText,
         onValueChange = onViewfinderFrontTextChanged,
     )
 
     textInputSetting(
         key = "viewfinder_back_text",
         labelRes = R.string.viewfinder_back_text_title,
-        value = settings.view.viewfinderBackText,
+        value = settings.viewfinderBackText,
         onValueChange = onViewfinderBackTextChanged,
     )
 }
 
 private fun LazyListScope.logoSettings(
-    settings: Settings,
+    settings: Settings.ViewSettings,
     onLogoAnchorChanged: (Anchor) -> Unit,
     onLogoAnchorOffsetXValueChanged: (Float) -> Unit,
     onLogoAnchorOffsetXUnitChanged: (MeasureUnit) -> Unit,
@@ -258,15 +201,15 @@ private fun LazyListScope.logoSettings(
     enumDropdownSetting(
         key = "logo_anchor",
         labelRes = R.string.logo_anchor_title,
-        value = settings.view.logoAnchor,
+        value = settings.logoAnchor,
         onValueChange = onLogoAnchorChanged,
     )
 
     floatWithUnitSetting(
         key = "logo_anchor_offset_x",
         labelRes = R.string.logo_anchor_offset_x_title,
-        floatValue = settings.view.logoAnchorOffsetX.value,
-        measureUnit = settings.view.logoAnchorOffsetX.unit,
+        floatValue = settings.logoAnchorOffsetX.value,
+        measureUnit = settings.logoAnchorOffsetX.unit,
         supportedUnits = MeasureUnit.entries,
         onFloatValueChange = onLogoAnchorOffsetXValueChanged,
         onMeasureUnitChange = onLogoAnchorOffsetXUnitChanged,
@@ -275,8 +218,8 @@ private fun LazyListScope.logoSettings(
     floatWithUnitSetting(
         key = "logo_anchor_offset_y",
         labelRes = R.string.logo_anchor_offset_y_title,
-        floatValue = settings.view.logoAnchorOffsetY.value,
-        measureUnit = settings.view.logoAnchorOffsetY.unit,
+        floatValue = settings.logoAnchorOffsetY.value,
+        measureUnit = settings.logoAnchorOffsetY.unit,
         supportedUnits = MeasureUnit.entries,
         onFloatValueChange = onLogoAnchorOffsetYValueChanged,
         onMeasureUnitChange = onLogoAnchorOffsetYUnitChanged,
@@ -284,7 +227,7 @@ private fun LazyListScope.logoSettings(
 }
 
 private fun LazyListScope.gesturesSettings(
-    settings: Settings,
+    settings: Settings.ViewSettings,
     onTapToFocusChanged: (Boolean) -> Unit,
 ) {
     sectionHeader(
@@ -295,13 +238,13 @@ private fun LazyListScope.gesturesSettings(
     switchSetting(
         key = "tap_to_focus",
         labelRes = R.string.tap_to_focus_title,
-        checked = settings.view.isTapToFocusEnabled,
+        checked = settings.isTapToFocusEnabled,
         onCheckedChange = onTapToFocusChanged,
     )
 }
 
 private fun LazyListScope.controlsSettings(
-    settings: Settings,
+    settings: Settings.ViewSettings,
     onTorchControlChanged: (Boolean) -> Unit,
 ) {
     sectionHeader(
@@ -312,7 +255,7 @@ private fun LazyListScope.controlsSettings(
     switchSetting(
         key = "torch_control",
         labelRes = R.string.torch_control_title,
-        checked = settings.view.isTorchControlEnabled,
+        checked = settings.isTorchControlEnabled,
         onCheckedChange = onTorchControlChanged,
     )
 }
@@ -321,7 +264,7 @@ private fun LazyListScope.controlsSettings(
 @Composable
 private fun ViewSettingsScreenPreview() {
     ViewSettingsScreen(
-        settings = Settings(),
+        settings = Settings.ViewSettings(),
         onBackClick = {},
         onOverlayStyleChanged = {},
         onOverlayLineStyleChanged = {},

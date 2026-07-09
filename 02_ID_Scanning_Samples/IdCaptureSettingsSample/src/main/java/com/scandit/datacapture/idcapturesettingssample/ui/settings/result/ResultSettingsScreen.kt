@@ -20,9 +20,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.scandit.datacapture.idcapturesettingssample.R
 import com.scandit.datacapture.idcapturesettingssample.model.Settings
-import com.scandit.datacapture.idcapturesettingssample.data.SettingsRepository
 import com.scandit.datacapture.idcapturesettingssample.ui.component.BackButton
 import com.scandit.datacapture.idcapturesettingssample.ui.component.SettingsScaffold
 import com.scandit.datacapture.idcapturesettingssample.ui.component.switchSetting
@@ -30,26 +30,22 @@ import com.scandit.datacapture.idcapturesettingssample.ui.component.switchSettin
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResultSettingsScreen(
-    settingsRepository: SettingsRepository,
-    onBackClick : () -> Unit,
+    onBackClick: () -> Unit,
+    viewModel: ResultSettingsViewModel = viewModel(),
 ) {
-    val settings by settingsRepository.settingsStream.collectAsStateWithLifecycle()
+    val settings by viewModel.settings.collectAsStateWithLifecycle()
 
     ResultSettingsScreen(
         settings = settings,
         onBackClick = onBackClick,
-        onContinuousScanChanged = { enabled ->
-            settingsRepository.updateResult {
-                it.copy(continuousScanEnabled = enabled)
-            }
-        },
+        onContinuousScanChanged = viewModel::onContinuousScanChanged,
     )
 }
 
 @Composable
 private fun ResultSettingsScreen(
-    settings: Settings,
-    onBackClick : () -> Unit,
+    settings: Settings.ResultSettings,
+    onBackClick: () -> Unit,
     onContinuousScanChanged: (Boolean) -> Unit,
 ) {
     SettingsScaffold(
@@ -59,7 +55,7 @@ private fun ResultSettingsScreen(
         switchSetting(
             key = "continuous_scan",
             labelRes = R.string.continuous_scan_title,
-            checked = settings.result.continuousScanEnabled,
+            checked = settings.continuousScanEnabled,
             onCheckedChange = onContinuousScanChanged,
         )
     }
@@ -69,7 +65,7 @@ private fun ResultSettingsScreen(
 @Composable
 private fun ResultSettingsScreenPreview() {
     ResultSettingsScreen(
-        settings = Settings(),
+        settings = Settings.ResultSettings(),
         onBackClick = {},
         onContinuousScanChanged = {},
     )

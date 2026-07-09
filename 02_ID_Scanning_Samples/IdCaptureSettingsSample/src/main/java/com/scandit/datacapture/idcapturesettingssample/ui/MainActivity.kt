@@ -20,14 +20,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.scandit.datacapture.idcapturesettingssample.di.Injector
 
 /**
  * The singleton Activity that displays the UI of this sample.
  */
 class MainActivity : ComponentActivity() {
-
-    private val settingsRepository by lazy { Injector.settingsRepository }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge(
@@ -39,7 +36,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            App(settingsRepository)
+            App()
         }
     }
 }

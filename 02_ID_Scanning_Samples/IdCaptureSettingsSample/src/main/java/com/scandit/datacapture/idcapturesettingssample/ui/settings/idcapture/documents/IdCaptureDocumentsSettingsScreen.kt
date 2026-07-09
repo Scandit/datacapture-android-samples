@@ -22,11 +22,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.scandit.datacapture.id.data.IdCaptureDocumentType
 import com.scandit.datacapture.idcapturesettingssample.R
-import com.scandit.datacapture.idcapturesettingssample.model.Settings
-import com.scandit.datacapture.idcapturesettingssample.data.SettingsRepository
 import com.scandit.datacapture.idcapturesettingssample.model.DocumentSelectionType
+import com.scandit.datacapture.idcapturesettingssample.model.Settings
 import com.scandit.datacapture.idcapturesettingssample.ui.component.BackButton
 import com.scandit.datacapture.idcapturesettingssample.ui.component.SettingsScaffold
 import com.scandit.datacapture.idcapturesettingssample.ui.component.switchSetting
@@ -36,19 +36,19 @@ import com.scandit.datacapture.idcapturesettingssample.utils.toNameCase
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IdCaptureDocumentsSettingsScreen(
-    settingsRepository: SettingsRepository,
     documentSelectionType: DocumentSelectionType,
     onBackClick: () -> Unit,
     onDocumentClick: (IdCaptureDocumentType) -> Unit,
+    viewModel: IdCaptureDocumentsSettingsViewModel = viewModel(),
 ) {
-    val settings by settingsRepository.settingsStream.collectAsStateWithLifecycle()
+    val settings by viewModel.settings.collectAsStateWithLifecycle()
 
     IdCaptureDocumentsSettingsScreen(
         settings = settings,
         documentSelectionType = documentSelectionType,
         onBackClick = onBackClick,
         onDocumentTypeChecked = { documentType, enabled ->
-            settingsRepository.toggleDocumentType(documentType, enabled, documentSelectionType)
+            viewModel.onDocumentTypeChecked(documentType, enabled, documentSelectionType)
         },
         onDocumentClick = onDocumentClick,
     )
@@ -56,19 +56,23 @@ fun IdCaptureDocumentsSettingsScreen(
 
 @Composable
 private fun IdCaptureDocumentsSettingsScreen(
-    settings: Settings,
+    settings: Settings.IdCaptureSettings,
     documentSelectionType: DocumentSelectionType,
     onBackClick: () -> Unit,
     onDocumentTypeChecked: (IdCaptureDocumentType, Boolean) -> Unit,
     onDocumentClick: (IdCaptureDocumentType) -> Unit,
 ) {
     val context = LocalContext.current
-    val sortedTypes = remember { IdCaptureDocumentType.entries.sortedBy { it.name } }
+    val sortedTypes = remember {
+        IdCaptureDocumentType.entries
+            .filterNot { it == IdCaptureDocumentType.VISA_LETTER }
+            .sortedBy { it.name }
+    }
 
     val selectedDocuments = remember(settings, documentSelectionType) {
         when (documentSelectionType) {
-            DocumentSelectionType.ACCEPTED -> settings.idCapture.acceptedDocuments
-            DocumentSelectionType.REJECTED -> settings.idCapture.rejectedDocuments
+            DocumentSelectionType.ACCEPTED -> settings.acceptedDocuments
+            DocumentSelectionType.REJECTED -> settings.rejectedDocuments
         }
     }
 
@@ -112,7 +116,7 @@ private fun IdCaptureDocumentsSettingsScreen(
 @Composable
 private fun IdCaptureDocumentsSettingsScreenPreview() {
     IdCaptureDocumentsSettingsScreen(
-        settings = Settings(),
+        settings = Settings.IdCaptureSettings(),
         documentSelectionType = DocumentSelectionType.ACCEPTED,
         onBackClick = {},
         onDocumentTypeChecked = { _, _ -> },
