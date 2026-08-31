@@ -34,4 +34,8 @@ class IdCaptureSettingsViewModel : ViewModel() {
     fun onDecodeBackOfEuropeanDrivingLicenseChanged(enabled: Boolean) {
         settingsRepository.updateIdCapture { it.copy(decodeBackOfEuropeanDrivingLicense = enabled) }
     }
+
+    fun onNotifyOnSideCaptureChanged(enabled: Boolean) {
+        settingsRepository.updateIdCapture { it.copy(notifyOnSideCapture = enabled) }
+    }
 }

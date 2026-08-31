@@ -20,7 +20,7 @@ buildscript {
 
     val versions: Map<String, Any> by extra(
         mapOf(
-            "scandit_sdk_version" to "8.5.3",
+            "scandit_sdk_version" to "8.6.0",
             "android_gradle" to "8.7.3",
             "android_material" to "1.6.1",
             "androidx_animations" to "1.0.0",
@@ -56,6 +56,18 @@ buildscript {
     )
 
     repositories {
+        // The GitLab Maven Virtual Registry is internal and needs a token; it is only
+        // declared when one is present (CI, or a token-holding dev). Tokenless builds
+        // (public customers, off-VPN devs) skip it and resolve from google()/mavenCentral()
+        // — declaring it unauthenticated hard-fails resolution (401, or connect-timeout
+        // off-VPN which Gradle treats as critical and does not fall through). See DEVOPS-7339.
+        run {
+            val vrCred = System.getenv("CI_JOB_TOKEN")?.let { "Job-Token" to it }
+                ?: System.getenv("GITLAB_PRIVATE_TOKEN")?.let { "Private-Token" to it }
+                ?: System.getenv("GITLAB_TOKEN")?.let { "Private-Token" to it }
+            if (vrCred != null) {
+            }
+        }
         google()
         mavenCentral()
     }
@@ -67,6 +79,14 @@ buildscript {
 
 allprojects {
     repositories {
+        // Token-guarded VR declaration — see the buildscript block above for rationale.
+        run {
+            val vrCred = System.getenv("CI_JOB_TOKEN")?.let { "Job-Token" to it }
+                ?: System.getenv("GITLAB_PRIVATE_TOKEN")?.let { "Private-Token" to it }
+                ?: System.getenv("GITLAB_TOKEN")?.let { "Private-Token" to it }
+            if (vrCred != null) {
+            }
+        }
         google()
         mavenCentral()
     }

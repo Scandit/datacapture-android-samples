@@ -73,6 +73,8 @@ ID Scanning Samples demonstrate the features of the ID Capture API and demonstra
 
 **ID Capture Extended Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/02_ID_Scanning_Samples/IdCaptureExtendedSample))
 
+**ID Capture Image Upload Sample** ([Android](https://github.com/Scandit/datacapture-android-samples/tree/master/02_ID_Scanning_Samples/IdCaptureImageUploadSample))
+
 ### Barcode Capture Samples
 
 **Barcode Capture Simple Sample (**[Android](https://github.com/Scandit/datacapture-android-samples/tree/master/01_Single_Scanning_Samples/02_Barcode_Scanning_with_Low_Level_API/BarcodeCaptureSimpleSample))

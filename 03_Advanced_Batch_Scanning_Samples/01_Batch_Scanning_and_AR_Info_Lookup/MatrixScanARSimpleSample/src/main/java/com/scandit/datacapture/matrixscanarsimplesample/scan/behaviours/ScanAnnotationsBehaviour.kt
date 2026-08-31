@@ -133,8 +133,13 @@ class ScanAnnotationsBehaviour : ScanBehaviour {
         // Update the closeup annotation.
         barcode.data?.let { data -> updateAnnotation(closeup, data) }
 
-        // Build the annotation and send it in the callback.
-        val annotation = BarcodeArResponsiveAnnotation(context, barcode, closeup, faraway)
+        // Each key is the area-ratio upper bound at or below which its annotation is shown, so the
+        // far-away one covers barcodes up to 5% of the view and the close-up one the rest.
+        val annotation = BarcodeArResponsiveAnnotation(
+            context,
+            barcode,
+            mapOf(0.05f to faraway, 1.0f to closeup),
+        )
         callback.onData(annotation)
     }
 

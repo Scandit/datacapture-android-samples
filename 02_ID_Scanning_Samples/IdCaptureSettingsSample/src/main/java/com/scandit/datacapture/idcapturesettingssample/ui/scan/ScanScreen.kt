@@ -174,12 +174,12 @@ private fun DataCaptureViewHolder(
 
         onPauseOrDispose {
             viewModel.disableIdCaptureAndTurnOffCamera()
-            dataCaptureView.removeOverlay(overlay)
             // Reset scanning state on real navigation. isChangingConfigurations is true on
             // orientation change, skip reset in that case to preserve the scanning state.
             if (!activity.isChangingConfigurations) {
                 viewModel.resetIdCapture()
             }
+            dataCaptureView.removeOverlay(overlay)
         }
     }
 

@@ -56,6 +56,7 @@ fun IdCaptureSettingsScreen(
         onNavigateToRejection = onNavigateToRejection,
         onImageTypesChanged = viewModel::onImageTypesChanged,
         onDecodeBackOfEuropeanDrivingLicenseChanged = viewModel::onDecodeBackOfEuropeanDrivingLicenseChanged,
+        onNotifyOnSideCaptureChanged = viewModel::onNotifyOnSideCaptureChanged,
     )
 }
 
@@ -70,7 +71,8 @@ private fun IdCaptureSettingsScreen(
     onNavigateToFeedback: () -> Unit,
     onNavigateToRejection: () -> Unit,
     onImageTypesChanged: (Set<IdImageType>) -> Unit,
-    onDecodeBackOfEuropeanDrivingLicenseChanged: (Boolean) -> Unit
+    onDecodeBackOfEuropeanDrivingLicenseChanged: (Boolean) -> Unit,
+    onNotifyOnSideCaptureChanged: (Boolean) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -131,6 +133,13 @@ private fun IdCaptureSettingsScreen(
             checked = settings.idCapture.decodeBackOfEuropeanDrivingLicense,
             onCheckedChange = onDecodeBackOfEuropeanDrivingLicenseChanged
         )
+
+        switchSetting(
+            key = "notify_on_side_capture",
+            labelRes = R.string.notify_on_side_capture,
+            checked = settings.idCapture.notifyOnSideCapture,
+            onCheckedChange = onNotifyOnSideCaptureChanged
+        )
     }
 }
 
@@ -147,6 +156,7 @@ private fun IdCaptureSettingsScreenPreview() {
         onNavigateToFeedback = {},
         onNavigateToRejection = {},
         onImageTypesChanged = {},
-        onDecodeBackOfEuropeanDrivingLicenseChanged = {}
+        onDecodeBackOfEuropeanDrivingLicenseChanged = {},
+        onNotifyOnSideCaptureChanged = {}
     )
 }

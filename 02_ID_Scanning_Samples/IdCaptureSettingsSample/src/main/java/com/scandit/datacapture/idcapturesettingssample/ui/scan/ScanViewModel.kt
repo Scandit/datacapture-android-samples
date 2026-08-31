@@ -122,10 +122,19 @@ class ScanViewModel : ViewModel() {
     }
 
     /**
+     * True while a partial result (the front of a double-sided document, delivered when
+     * notifyOnSideCapture is enabled) is shown and the remaining side is still to be captured.
+     * Resetting the session while this holds would discard the already-captured side, so we skip
+     * the reset. Cleared once a complete result is delivered.
+     */
+    private var awaitingRemainingSide = false
+
+    /**
      * Reset the IdCapture scanning state.
      */
     fun resetIdCapture() {
-        idCaptureRepository.applyIdCaptureSettings()
+        if (awaitingRemainingSide) return
+        idCaptureRepository.resetIdCapture()
     }
 
     /**
@@ -179,6 +188,7 @@ class ScanViewModel : ViewModel() {
      * identification document data.
      */
     private fun displayCapturedResult(scanResult: ScanResult) {
+        awaitingRemainingSide = !scanResult.capturedId.isCapturingComplete
         val result = IdCaptureResultFactory.extract(scanResult.capturedId)
         showCapturedResultInSelectedMode(result)
     }

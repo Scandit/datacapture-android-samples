@@ -103,6 +103,14 @@ class IdCaptureRepository(
     }
 
     /**
+     * Discard the current scanning state, for example the front side of a double-sided document
+     * captured before the user left the camera preview.
+     */
+    fun resetIdCapture() {
+        idCapture.reset()
+    }
+
+    /**
      * Apply settings changes to the existing IdCapture instance without recreation.
      */
     fun applyIdCaptureSettings() {
@@ -134,6 +142,7 @@ class IdCaptureRepository(
             }
             anonymizeDefaultFields = settings.anonymizeDefaultFields
             decodeBackOfEuropeanDrivingLicense = settings.decodeBackOfEuropeanDrivingLicense
+            notifyOnSideCapture = settings.notifyOnSideCapture
             rejectVoidedIds = settings.rejectVoidedIds
             rejectExpiredIds = settings.rejectExpiredIds
 

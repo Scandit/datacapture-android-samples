@@ -48,6 +48,7 @@ android {
 
 dependencies {
     api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:design:${versions.scandit_sdk_version}"
     api "com.scandit.datacapture:barcode:${versions.scandit_sdk_version}"
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}")

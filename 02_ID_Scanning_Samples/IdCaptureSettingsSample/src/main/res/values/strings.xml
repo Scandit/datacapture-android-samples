@@ -30,6 +30,7 @@
     <string name="id_captured_feedback">ID Captured Feedback</string>
     <string name="id_rejected_feedback">ID Rejected Feedback</string>
     <string name="decode_back_of_european_driving_license">Decode back of European driver licenses</string>
+    <string name="notify_on_side_capture">Notify On Side Capture</string>
     <string name="mdoc_elements_to_retain_title">Mobile Document Elements to Retain</string>
     <string name="reject_voided_ids">Reject voided IDs</string>
     <string name="reject_expired_ids">Reject expired IDs</string>

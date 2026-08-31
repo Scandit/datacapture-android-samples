@@ -5,6 +5,7 @@ include(":01_Single_Scanning_Samples:02_Barcode_Scanning_with_Low_Level_API:Barc
 include(":02_ID_Scanning_Samples:AgeVerifiedDeliverySample")
 include(":02_ID_Scanning_Samples:IdCaptureSimpleSample")
 include(":02_ID_Scanning_Samples:IdCaptureExtendedSample")
+include(":02_ID_Scanning_Samples:IdCaptureImageUploadSample")
 include(":02_ID_Scanning_Samples:IdCaptureSettingsSample")
 include(":02_ID_Scanning_Samples:USDLVerificationSample")
 include(":03_Advanced_Batch_Scanning_Samples:01_Batch_Scanning_and_AR_Info_Lookup:MatrixScanARSimpleSample")
@@ -18,4 +19,5 @@ include(":03_Advanced_Batch_Scanning_Samples:02_Counting_and_Receiving:ReorderFr
 include(":03_Advanced_Batch_Scanning_Samples:03_Search_and_Find:SearchAndFindSample")
 include(":03_Advanced_Batch_Scanning_Samples:04_Picking:RestockingSample")
 include(":03_Advanced_Batch_Scanning_Samples:05_Smart_Label_Capture:LabelCaptureSimpleSample")
+include(":03_Advanced_Batch_Scanning_Samples:05_Smart_Label_Capture:PriceCaptureSample")
 include(":04_Parser_Samples:GS1ParserSample")

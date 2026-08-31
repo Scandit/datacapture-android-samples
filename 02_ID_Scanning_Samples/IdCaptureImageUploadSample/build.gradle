@@ -1,0 +1,97 @@
+plugins {
+    id("com.android.application")
+    id("kotlin-android")
+    id("kotlin-parcelize")
+}
+
+android {
+    ndkVersion = sdk.ndk
+    compileSdkVersion = sdk.compile
+    namespace = "com.scandit.datacapture.idcaptureimageuploadsample"
+
+    defaultConfig {
+        applicationId = "com.scandit.datacapture.idcaptureimageuploadsample"
+        minSdkVersion(sdk.min)
+        targetSdkVersion(sdk.target)
+        versionCode = 1
+        versionName = "1.0"
+
+        vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments['useTestStorageService'] = 'true'
+        testInstrumentationRunnerArguments['clearPackageData'] = 'true'
+        testInstrumentationRunnerArguments["timeout_msec"] = "180000"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+        }
+    }
+
+    compileOptions {
+        coreLibraryDesugaringEnabled = true
+        sourceCompatibility = versions.java
+        targetCompatibility = versions.java
+    }
+
+    packagingOptions {
+        jniLibs {
+            pickFirsts += "**/*.so"
+            it.useLegacyPackaging project.hasProperty('extractNativeLibs')
+        }
+    }
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.15"
+    }
+
+    splits {
+        abi {
+            enable project.hasProperty('enableSplit')
+            reset()
+            //noinspection ChromeOsAbiSupport
+            include 'arm64-v8a'
+            universalApk false
+        }
+    }
+
+    testOptions {
+        animationsDisabled = true
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+    }
+}
+
+dependencies {
+    api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:design:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:id:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:id-backend:${versions.scandit_sdk_version}"
+
+    api("androidx.datastore:datastore-preferences:${versions["androidx_datastore_preferences"]}")
+    api("androidx.lifecycle:lifecycle-process:${versions["androidx_lifecycle"]}")
+    api("com.squareup.okhttp3:okhttp:${versions["okhttp"]}")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions["coroutines"]}")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-json:${versions["kotlin_serialization"]}")
+
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${versions.desugar}")
+
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}")
+    implementation("androidx.appcompat:appcompat:${versions.androidx_appcompat}")
+
+    implementation(platform("androidx.compose:compose-bom:${versions.compose_bom}"))
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material:material-icons-core")
+    implementation("androidx.activity:activity-compose:${versions.compose_activity}")
+    implementation("androidx.navigation:navigation-compose:${versions.navigation}")
+    debugImplementation("androidx.compose.ui:ui-tooling")
+
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+}

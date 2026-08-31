@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_launcher_name">ID Capture Image Upload</string>
+
+    <!-- Scan screen -->
+    <string name="scan_title">ID Image Upload sample</string>
+    <string name="scan_front_side">Front side</string>
+    <string name="scan_back_side_optional">Back side (optional)</string>
+    <string name="scan_upload_hint">Tap to select an image or PDF</string>
+    <string name="scan_button">Scan</string>
+    <string name="scan_in_progress">Scanning…</string>
+
+    <!-- Result screen -->
+    <string name="result_title">Recognized Document</string>
+    <string name="result_back">Back</string>
+    <string name="result_field_full_name">Full Name</string>
+    <string name="result_field_date_of_birth">Date of Birth</string>
+    <string name="result_field_date_of_expiry">Date of Expiry</string>
+    <string name="result_field_document_number">Document Number</string>
+    <string name="result_field_nationality">Nationality</string>
+    <string name="result_field_document_type">Document Type</string>
+    <string name="result_value_empty">&lt;empty&gt;</string>
+
+    <!-- Errors -->
+    <string name="error_read_file">Could not read the selected file.</string>
+    <string name="error_pdf_no_pages">The selected PDF has no pages.</string>
+    <string name="error_no_document">No document was detected in the selected file. Please try another image.</string>
+    <string name="error_capture_failed">The document could not be captured. Please try a clearer image.</string>
+    <string name="error_document_rejected">The document was rejected (%1$s). Please try another image.</string>
+    <string name="error_context_title">License error</string>
+    <string name="dialog_ok">OK</string>
+</resources>

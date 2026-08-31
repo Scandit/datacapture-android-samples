@@ -58,6 +58,7 @@ data class Settings(
         val singleSideScannerMrzEnabled: Boolean = false,
         val singleSideScannerVizEnabled: Boolean = false,
         val decodeBackOfEuropeanDrivingLicense: Boolean = false,
+        val notifyOnSideCapture: Boolean = false,
 
         // Mobile document scanner
         val mobileScannerIso1801315Enabled: Boolean = false,

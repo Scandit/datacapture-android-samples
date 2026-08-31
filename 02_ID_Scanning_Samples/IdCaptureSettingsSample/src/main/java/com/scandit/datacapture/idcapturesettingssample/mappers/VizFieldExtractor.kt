@@ -58,8 +58,8 @@ class VizFieldExtractor(capturedId: CapturedId) : FieldExtractor(capturedId) {
             put("Father's name", zone.fathersName.toDisplayValue())
             put("Captured Sides", zone.capturedSides.toString().toDisplayValue())
             put("Backside Supported", zone.isBackSideCaptureSupported.toDisplayValue())
-            put("Visa Number", zone.visaNumber.toDisplayValue())
-            put("Passport Number", zone.passportNumber.toDisplayValue())
+            put("VIZ Visa Number", zone.visaNumber.toDisplayValue())
+            put("VIZ Passport Number", zone.passportNumber.toDisplayValue())
             put("Vehicle Owner", zone.vehicleOwner.toDisplayValue())
 
             val document = capturedId.document
