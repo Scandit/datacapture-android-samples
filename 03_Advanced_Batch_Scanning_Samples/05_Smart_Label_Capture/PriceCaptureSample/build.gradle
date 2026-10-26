@@ -56,7 +56,7 @@ dependencies {
     api "com.scandit.datacapture:barcode:${versions.scandit_sdk_version}"
     api "com.scandit.datacapture:label:${versions.scandit_sdk_version}"
     api "com.scandit.datacapture:label-text-models:${versions.scandit_sdk_version}"
-    api "com.scandit.datacapture:label-plv-models:${versions.scandit_sdk_version}"
+    api "com.scandit.datacapture:price-label:${versions.scandit_sdk_version}"
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}")
     implementation("androidx.appcompat:appcompat:${versions.androidx_appcompat}")
