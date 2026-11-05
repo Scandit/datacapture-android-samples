@@ -29,4 +29,5 @@ enum class ResultField {
     DOCUMENT_NUMBER,
     NATIONALITY,
     DOCUMENT_TYPE,
+    MRZ,
 }

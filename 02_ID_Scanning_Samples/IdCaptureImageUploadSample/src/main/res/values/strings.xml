@@ -18,6 +18,7 @@
     <string name="result_field_document_number">Document Number</string>
     <string name="result_field_nationality">Nationality</string>
     <string name="result_field_document_type">Document Type</string>
+    <string name="result_field_mrz">MRZ</string>
     <string name="result_value_empty">&lt;empty&gt;</string>
 
     <!-- Errors -->
@@ -25,7 +26,9 @@
     <string name="error_pdf_no_pages">The selected PDF has no pages.</string>
     <string name="error_no_document">No document was detected in the selected file. Please try another image.</string>
     <string name="error_capture_failed">The document could not be captured. Please try a clearer image.</string>
-    <string name="error_document_rejected">The document was rejected (%1$s). Please try another image.</string>
+    <string name="error_document_type_not_supported">This document type is not supported. Please try another document.</string>
+    <string name="error_invalid_format">The document could not be read. Please try another image.</string>
+    <string name="error_document_rejected">The document was rejected: %1$s. Please try another image.</string>
     <string name="error_context_title">License error</string>
     <string name="dialog_ok">OK</string>
 </resources>

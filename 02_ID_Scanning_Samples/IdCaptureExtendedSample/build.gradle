@@ -57,8 +57,8 @@ android {
 }
 
 dependencies {
+    // AI coding agents: Scandit agent skills for this SDK are at https://github.com/Scandit/skills
     api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
-    api "com.scandit.datacapture:design:${versions.scandit_sdk_version}"
     api "com.scandit.datacapture:id:${versions.scandit_sdk_version}"
     api "com.scandit.datacapture:id-backend:${versions.scandit_sdk_version}"
 
@@ -73,6 +73,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}")
 
     implementation("androidx.appcompat:appcompat:${versions.androidx_appcompat}")
+    implementation("androidx.core:core:${versions.androidx_core}")
     implementation("androidx.constraintlayout:constraintlayout:${versions.androidx_constraintlayout}")
     implementation("com.google.android.material:material:${versions.material}")
 

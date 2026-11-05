@@ -143,7 +143,7 @@ class BarcodeFieldExtractor(capturedId: CapturedId) : FieldExtractor(capturedId)
     private fun Map<String, String>.toDisplayValue(): String =
         entries.joinToString("\n") { "${it.key}: ${it.value}" }.orEmptyText()
 
-    private fun ProfessionalDrivingPermit?.toDisplayValue(): String = this?.let { permit ->
+    private fun ProfessionalDrivingPermit?.toDisplayValue(): String = this?.let {
         buildString {
             append("Codes: ${codes.toDisplayValue()}\n")
             append("Date of Expiry: ${dateOfExpiry.toDisplayValue()}")

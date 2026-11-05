@@ -59,7 +59,7 @@ fun ListItem(data: ScanResult) {
                 maxLines = 2,
             )
             Text(
-                text = stringResource(R.string.item_description, data.barcodeSymbology ?: ""),
+                text = stringResource(R.string.item_description, data.barcodeSymbology),
                 color = Grey,
                 fontSize = 12.sp
             )

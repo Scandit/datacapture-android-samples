@@ -38,6 +38,7 @@
     <string name="reject_not_real_id_compliant">Reject not Real ID Compliant</string>
     <string name="reject_forged_aamva_barcodes">Reject forged AAMVA Barcodes</string>
     <string name="reject_inconsistent_data">Reject inconsistent data</string>
+    <string name="reject_passport_types">Reject passport types</string>
     <string name="reject_holder_below_age">Reject holder below age</string>
     <string name="rejection_timeout_seconds">Rejection Timeout (s)</string>
     <string name="id_capture_feedback_title">Feedback</string>

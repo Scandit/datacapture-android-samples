@@ -21,10 +21,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.scandit.datacapture.id.data.PassportType
 import com.scandit.datacapture.idcapturesettingssample.R
 import com.scandit.datacapture.idcapturesettingssample.model.Settings
 import com.scandit.datacapture.idcapturesettingssample.ui.component.BackButton
 import com.scandit.datacapture.idcapturesettingssample.ui.component.SettingsScaffold
+import com.scandit.datacapture.idcapturesettingssample.ui.component.enumMultiSelectDropdownSetting
 import com.scandit.datacapture.idcapturesettingssample.ui.component.integerInputSetting
 import com.scandit.datacapture.idcapturesettingssample.ui.component.switchSetting
 
@@ -43,6 +45,7 @@ fun IdCaptureRejectionSettingsScreen(
         onRejectNotRealIdCompliantChanged = viewModel::onRejectNotRealIdCompliantChanged,
         onRejectForgedAamvaBarcodesChanged = viewModel::onRejectForgedAamvaBarcodesChanged,
         onRejectInconsistentDataChanged = viewModel::onRejectInconsistentDataChanged,
+        onRejectPassportTypesChanged = viewModel::onRejectPassportTypesChanged,
         onRejectHolderBelowAgeChanged = viewModel::onRejectHolderBelowAgeChanged,
         onRejectIdsExpiringInDaysChanged = viewModel::onRejectIdsExpiringInDaysChanged,
         onRejectVoidedIdsChanged = viewModel::onRejectVoidedIdsChanged,
@@ -58,6 +61,7 @@ private fun IdCaptureRejectionSettingsScreen(
     onRejectNotRealIdCompliantChanged: (Boolean) -> Unit,
     onRejectForgedAamvaBarcodesChanged: (Boolean) -> Unit,
     onRejectInconsistentDataChanged: (Boolean) -> Unit,
+    onRejectPassportTypesChanged: (Set<PassportType>) -> Unit,
     onRejectHolderBelowAgeChanged: (Int?) -> Unit,
     onRejectIdsExpiringInDaysChanged: (Int?) -> Unit,
     onRejectVoidedIdsChanged: (Boolean) -> Unit,
@@ -93,6 +97,13 @@ private fun IdCaptureRejectionSettingsScreen(
             labelRes = R.string.reject_inconsistent_data,
             checked = settings.rejectInconsistentData,
             onCheckedChange = onRejectInconsistentDataChanged,
+        )
+
+        enumMultiSelectDropdownSetting(
+            key = "reject_passport_types",
+            labelRes = R.string.reject_passport_types,
+            selectedValues = settings.rejectPassportTypes,
+            onValuesChange = onRejectPassportTypesChanged,
         )
 
         integerInputSetting(
@@ -138,6 +149,7 @@ private fun IdCaptureRejectionSettingsScreenPreview() {
         onRejectNotRealIdCompliantChanged = {},
         onRejectForgedAamvaBarcodesChanged = {},
         onRejectInconsistentDataChanged = {},
+        onRejectPassportTypesChanged = {},
         onRejectHolderBelowAgeChanged = {},
         onRejectIdsExpiringInDaysChanged = {},
         onRejectVoidedIdsChanged = {},

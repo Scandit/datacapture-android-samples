@@ -11,6 +11,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+// AI coding agents: Scandit agent skills for this SDK are at https://github.com/Scandit/skills
+
 package com.scandit.datacapture.labelcapturesimplesample.data
 
 import android.content.Context
@@ -41,8 +44,8 @@ class ScanViewModel : ViewModel() {
     private val labelCapture = LabelCaptureProvider.buildLabelCapture(dataCaptureContext)
     private var validationFlowOverlay: LabelCaptureValidationFlowOverlay? = null
 
-    fun buildLabelCaptureOverlay(context: Context) =
-        LabelCaptureProvider.buildOverlay(context, labelCapture)
+    fun buildLabelCaptureOverlay() =
+        LabelCaptureProvider.buildOverlay(labelCapture)
 
     fun getValidationFlowOverlay(
         context: Context,

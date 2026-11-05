@@ -6,19 +6,16 @@ In this sample, single scanning (Barcode Capture API) is implemented to define s
 
 The MatrixScan Find UI incorporates our best practices for usability and has been rigorously tested with target users in real-world scenarios.
 
+## AI Coding Skills
+
+Scandit's AI coding skills teach your coding agent (Claude Code, Cursor, Codex, GitHub Copilot and others) how to pick the right Scandit product and integrate the Data Capture SDK. See [github.com/Scandit/skills](https://github.com/Scandit/skills) for install instructions.
+
 ## Installation
 
 - Clone this repo locally.
 - Sign in to your Developer Account at [ssl.scandit.com](http://ssl.scandit.com) and generate a license key.  If you do not have an account, sign up here: [https://ssl.scandit.com/dashboard/sign-up?p=test](https://ssl.scandit.com/dashboard/sign-up?p=test).
 - Open `secrets.properties` and set the value of `SCANDIT_LICENSE_KEY` to your license key in place of the placeholder `YOUR_SCANDIT_LICENSE_KEY`.
 - Build and run this sample on your mobile device.
-
-## AI Coding Skills
-
-Use the matching Scandit skill to get AI-assisted help for this sample. Install the Scandit skills collection once, then invoke the sparkscan-android skill.
-
-[![Install via skills.sh](https://img.shields.io/badge/skills.sh-install-green)](https://skills.sh/scandit/skills)
-[![Install in Cursor](https://img.shields.io/badge/Install%20in-Cursor-blue?style=flat-square&logo=cursor)](https://cursor.com/marketplace/scandit)
 
 ## What is MatrixScan Find?
 

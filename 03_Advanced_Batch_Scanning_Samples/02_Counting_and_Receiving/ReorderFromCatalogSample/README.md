@@ -2,6 +2,10 @@
 
 This sample demonstrates a reorder workflow combining BarcodeCapture and BarcodeSelection to efficiently search through a product catalog and select items for reordering.
 
+## AI Coding Skills
+
+Scandit's AI coding skills teach your coding agent (Claude Code, Cursor, Codex, GitHub Copilot and others) how to pick the right Scandit product and integrate the Data Capture SDK. See [github.com/Scandit/skills](https://github.com/Scandit/skills) for install instructions.
+
 ## Installation
 
 - Clone this repo locally.

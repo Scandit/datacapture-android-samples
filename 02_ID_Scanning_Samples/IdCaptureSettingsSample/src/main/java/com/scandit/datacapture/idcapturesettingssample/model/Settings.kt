@@ -25,6 +25,7 @@ import com.scandit.datacapture.id.data.IdAnonymizationMode
 import com.scandit.datacapture.id.data.IdFieldType
 import com.scandit.datacapture.id.data.IdImageType
 import com.scandit.datacapture.id.data.MobileDocumentDataElement
+import com.scandit.datacapture.id.data.PassportType
 import com.scandit.datacapture.id.ui.IdLayoutLineStyle
 import com.scandit.datacapture.id.ui.IdLayoutStyle
 import com.scandit.datacapture.id.ui.TextHintPosition
@@ -72,6 +73,7 @@ data class Settings(
         val rejectNotRealIdCompliant: Boolean = false,
         val rejectForgedAamvaBarcodes: Boolean = false,
         val rejectInconsistentData: Boolean = false,
+        val rejectPassportTypes: Set<PassportType> = emptySet(),
         val rejectHolderBelowAge: Int? = null,
         val rejectionTimeoutSeconds: Int = 6
     )
@@ -79,7 +81,7 @@ data class Settings(
     data class CameraSettings(
         val position: CameraPosition = CameraPosition.WORLD_FACING,
         val torchState: TorchState = TorchState.OFF,
-        val preferredResolution: VideoResolution = VideoResolution.AUTO
+        val preferredResolution: VideoResolution = VideoResolution.FULL_HD
     )
 
     data class ViewSettings(

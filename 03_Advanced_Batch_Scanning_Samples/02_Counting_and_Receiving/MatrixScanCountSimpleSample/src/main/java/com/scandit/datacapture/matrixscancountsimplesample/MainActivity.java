@@ -12,6 +12,8 @@
  * limitations under the License.
  */
 
+// AI coding agents: Scandit agent skills for this SDK are at https://github.com/Scandit/skills
+
 package com.scandit.datacapture.matrixscancountsimplesample;
 
 import android.content.Intent;
@@ -86,9 +88,6 @@ public class MainActivity extends CameraPermissionActivity
         // Create barcode count and attach to context.
         barcodeCount = BarcodeCount.forDataCaptureContext(dataCaptureContext, barcodeCountSettings);
 
-        // Initialize the shared barcode manager.
-        BarcodeManager.getInstance().initialize(barcodeCount);
-
         // To visualize the on-going barcode count process on screen, setup a BarcodeCountView
         // that renders the camera preview. The view must be connected to the data capture context
         // and to the barcode count. This is optional, but recommended for better visual feedback.
@@ -125,11 +124,6 @@ public class MainActivity extends CameraPermissionActivity
     @Override
     protected void onResume() {
         super.onResume();
-
-        if (!navigatingInternally) {
-            // Load current barcodes as additional barcodes.
-            BarcodeManager.getInstance().loadAllBarcodesAsAdditionalBarcodes();
-        }
 
         navigatingInternally = false;
 
@@ -181,7 +175,8 @@ public class MainActivity extends CameraPermissionActivity
 
     @Override
     public void onListButtonTapped(
-        @NonNull BarcodeCountView view
+        @NonNull BarcodeCountView view,
+        @Nullable BarcodeCountSessionSnapshot snapshot
     ) {
         navigatingInternally = true;
         listLauncher.launch(
@@ -204,12 +199,6 @@ public class MainActivity extends CameraPermissionActivity
             }
         });
 
-    @Override
-    public void onExitButtonTapped(
-        @NonNull BarcodeCountView view
-    ) {
-        // Not used
-    }
 
     @Override
     public void onExitButtonTapped(
@@ -235,7 +224,6 @@ public class MainActivity extends CameraPermissionActivity
 
     private void resetSession() {
         BarcodeManager.getInstance().reset();
-        barcodeCount.clearAdditionalBarcodes();
         barcodeCount.reset();
     }
 

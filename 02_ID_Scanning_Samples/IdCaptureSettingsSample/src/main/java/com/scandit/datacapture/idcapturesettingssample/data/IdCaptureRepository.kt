@@ -153,6 +153,7 @@ class IdCaptureRepository(
             rejectNotRealIdCompliant = settings.rejectNotRealIdCompliant
             rejectForgedAamvaBarcodes = settings.rejectForgedAamvaBarcodes
             rejectInconsistentData = settings.rejectInconsistentData
+            rejectPassportTypes = settings.rejectPassportTypes
             rejectHolderBelowAge = settings.rejectHolderBelowAge
             rejectionTimeoutSeconds = settings.rejectionTimeoutSeconds
         }

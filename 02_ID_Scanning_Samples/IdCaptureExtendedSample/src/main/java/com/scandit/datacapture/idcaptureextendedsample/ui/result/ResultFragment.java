@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.os.BundleCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
@@ -111,7 +112,8 @@ public class ResultFragment extends Fragment {
         recyclerResult.setAdapter(resultAdapter);
 
         // Retrieve the results map from the intent's bundle.
-        viewModel.onResult(getArguments().getParcelable(KEY_CAPTURE_RESULT));
+        viewModel.onResult(
+                BundleCompat.getParcelable(getArguments(), KEY_CAPTURE_RESULT, CaptureResult.class));
 
         return root;
     }

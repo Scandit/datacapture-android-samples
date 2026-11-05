@@ -38,7 +38,7 @@ class DataCaptureViewRepository(
             focusGesture = if (settings.isTapToFocusEnabled) TapToFocus() else null
 
             // Disable the swipe to zoom.
-            zoomGesture = null
+            zoomGestures = emptyList()
 
             if (settings.isTorchControlEnabled) {
                 addControl(TorchSwitchControl(context))

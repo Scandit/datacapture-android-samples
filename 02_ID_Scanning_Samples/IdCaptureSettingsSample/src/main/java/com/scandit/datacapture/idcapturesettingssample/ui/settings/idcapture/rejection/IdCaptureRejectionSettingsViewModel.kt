@@ -16,6 +16,7 @@ package com.scandit.datacapture.idcapturesettingssample.ui.settings.idcapture.re
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.scandit.datacapture.id.data.PassportType
 import com.scandit.datacapture.idcapturesettingssample.data.SettingsRepository
 import com.scandit.datacapture.idcapturesettingssample.di.Injector
 import com.scandit.datacapture.idcapturesettingssample.model.Settings
@@ -50,6 +51,10 @@ class IdCaptureRejectionSettingsViewModel : ViewModel() {
 
     fun onRejectInconsistentDataChanged(enabled: Boolean) {
         settingsRepository.updateIdCapture { it.copy(rejectInconsistentData = enabled) }
+    }
+
+    fun onRejectPassportTypesChanged(passportTypes: Set<PassportType>) {
+        settingsRepository.updateIdCapture { it.copy(rejectPassportTypes = passportTypes) }
     }
 
     fun onRejectHolderBelowAgeChanged(value: Int?) {

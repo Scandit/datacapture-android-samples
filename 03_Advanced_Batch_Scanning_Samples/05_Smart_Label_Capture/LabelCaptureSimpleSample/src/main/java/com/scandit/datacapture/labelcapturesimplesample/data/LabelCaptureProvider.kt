@@ -48,7 +48,7 @@ object LabelCaptureProvider {
     /**
      * Building a LabelCaptureBasicOverlay with different brushes for different fields.
      */
-    fun buildOverlay(context: Context, labelCapture: LabelCapture): LabelCaptureBasicOverlay {
+    fun buildOverlay(labelCapture: LabelCapture): LabelCaptureBasicOverlay {
         val labelCaptureBrushListener = object : LabelCaptureBasicOverlayListener {
 
             val transparentBrush = Brush(Color.TRANSPARENT, Color.TRANSPARENT, 0f)

@@ -55,6 +55,7 @@ import com.scandit.datacapture.core.ui.DataCaptureView;
 import com.scandit.datacapture.core.ui.style.Brush;
 import com.scandit.datacapture.core.ui.viewfinder.AimerViewfinder;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -126,7 +127,7 @@ class DataCaptureManager {
     private void retrieveAndApplyVideoResolution(CameraSettings settings) {
         // Retrieve the video resolution from the desired settings.
         VideoResolution resolution = settingsManager.retrieveEnum(
-                VideoResolution.class, CAMERA_PREFERRED_RESOLUTION_KEY, VideoResolution.AUTO
+                VideoResolution.class, CAMERA_PREFERRED_RESOLUTION_KEY, VideoResolution.FULL_HD
         );
         // Apply it to the camera settings.
         settings.setPreferredResolution(resolution);
@@ -339,7 +340,7 @@ class DataCaptureManager {
         setupPointOfInterest(view);
 
         // Zoom gesture is disabled, since zoom will be controlled only by the Camera - Zoom Factor setting.
-        view.setZoomGesture(null);
+        view.setZoomGestures(Collections.emptyList());
     }
 
     private void setupScanAreaMargins(DataCaptureView view) {

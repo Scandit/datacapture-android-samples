@@ -70,6 +70,7 @@ import com.scandit.datacapture.idcaptureimageuploadsample.ui.result.CaptureResul
 import com.scandit.datacapture.idcaptureimageuploadsample.ui.theme.AppTheme
 import com.scandit.datacapture.idcaptureimageuploadsample.utils.ImageLoader
 import com.scandit.datacapture.idcaptureimageuploadsample.utils.PdfConverter
+import com.scandit.datacapture.idcaptureimageuploadsample.utils.toNameCase
 import kotlin.math.roundToInt
 import androidx.core.graphics.scale
 
@@ -299,7 +300,13 @@ private fun Bitmap.scaledForThumbnail(): Bitmap {
 
 private fun rejectionMessage(context: Context, reason: RejectionReason): String = when (reason) {
     RejectionReason.TIMEOUT -> context.getString(R.string.error_capture_failed)
-    else -> context.getString(R.string.error_document_rejected, reason)
+    RejectionReason.SINGLE_IMAGE_NOT_RECOGNIZED -> context.getString(R.string.error_no_document)
+    RejectionReason.NOT_ACCEPTED_DOCUMENT_TYPE ->
+        context.getString(R.string.error_document_type_not_supported)
+    RejectionReason.INVALID_FORMAT -> context.getString(R.string.error_invalid_format)
+    // The remaining reasons need reject-if settings this sample does not enable. Name the reason
+    // rather than dropping it, so a sample that adds those settings still reports it.
+    else -> context.getString(R.string.error_document_rejected, reason.name.toNameCase())
 }
 
 private fun errorMessage(context: Context, error: ScanError): String = context.getString(

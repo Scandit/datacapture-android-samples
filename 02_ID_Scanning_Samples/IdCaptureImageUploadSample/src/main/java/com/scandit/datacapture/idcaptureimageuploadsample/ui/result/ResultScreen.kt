@@ -116,6 +116,7 @@ private fun ResultField.labelRes(): Int = when (this) {
     ResultField.DOCUMENT_NUMBER -> R.string.result_field_document_number
     ResultField.NATIONALITY -> R.string.result_field_nationality
     ResultField.DOCUMENT_TYPE -> R.string.result_field_document_type
+    ResultField.MRZ -> R.string.result_field_mrz
 }
 
 private fun ResultField.tagName(): String = when (this) {
@@ -125,6 +126,7 @@ private fun ResultField.tagName(): String = when (this) {
     ResultField.DOCUMENT_NUMBER -> "documentNumber"
     ResultField.NATIONALITY -> "nationality"
     ResultField.DOCUMENT_TYPE -> "documentType"
+    ResultField.MRZ -> "mrz"
 }
 
 @Preview(name = "Result", showBackground = true)

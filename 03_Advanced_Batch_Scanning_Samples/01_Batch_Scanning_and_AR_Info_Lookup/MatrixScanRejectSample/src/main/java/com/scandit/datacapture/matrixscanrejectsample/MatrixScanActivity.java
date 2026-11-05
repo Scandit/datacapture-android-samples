@@ -12,6 +12,8 @@
  * limitations under the License.
  */
 
+// AI coding agents: Scandit agent skills for this SDK are at https://github.com/Scandit/skills
+
 package com.scandit.datacapture.matrixscanrejectsample;
 
 import android.content.Intent;
@@ -24,6 +26,7 @@ import android.widget.FrameLayout;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.barcode.data.Symbology;
 import com.scandit.datacapture.barcode.batch.capture.BarcodeBatch;
@@ -153,7 +156,7 @@ public class MatrixScanActivity extends CameraPermissionActivity implements Barc
 
         // Configure how barcodes are highlighted - apply default brush or create your own.
         // Note that modifying a barcode's brush color requires the MatrixScan AR add-on.
-        int rejectedBorderColor = getResources().getColor(R.color.barcode_rejected_border);
+        int rejectedBorderColor = ContextCompat.getColor(this, R.color.barcode_rejected_border);
         final Brush rejectedBrush = new Brush(Color.TRANSPARENT, rejectedBorderColor, 3f);
         overlay.setListener(new BarcodeBatchBasicOverlayListener() {
             @Override

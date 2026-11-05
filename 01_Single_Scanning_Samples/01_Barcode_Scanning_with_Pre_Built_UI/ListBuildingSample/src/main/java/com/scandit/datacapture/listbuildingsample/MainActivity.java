@@ -12,6 +12,8 @@
  * limitations under the License.
  */
 
+// AI coding agents: Scandit agent skills for this SDK are at https://github.com/Scandit/skills
+
 package com.scandit.datacapture.listbuildingsample;
 
 import android.graphics.Bitmap;
@@ -22,6 +24,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,6 +47,7 @@ import com.scandit.datacapture.core.common.geometry.Point;
 import com.scandit.datacapture.core.data.FrameData;
 import com.scandit.datacapture.core.time.TimeInterval;
 import com.scandit.datacapture.listbuildingsample.data.ScanResult;
+import com.scandit.datacapture.listbuildingsample.data.ScannedItemsViewModel;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -65,7 +70,7 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
 
     private SparkScanView sparkScanView;
 
-    private final ResultListAdapter resultListAdapter = new ResultListAdapter();
+    private ResultListAdapter resultListAdapter;
 
     private TextView resultCountTextView;
 
@@ -78,6 +83,10 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ScannedItemsViewModel scannedItemsViewModel =
+            new ViewModelProvider(this).get(ScannedItemsViewModel.class);
+        resultListAdapter = new ResultListAdapter(scannedItemsViewModel.getItems());
 
         // Initialize spark scan and start the barcode recognition.
         initialize();
@@ -97,7 +106,7 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
         resultRecycler.setAdapter(resultListAdapter);
 
         resultCountTextView = findViewById(R.id.item_count);
-        setItemCount(0);
+        setItemCount(resultListAdapter.getItemsScannedCount());
     }
 
     private void initialize() {
@@ -212,6 +221,8 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
 
     private void postResult(ScanResult result) {
         runOnUiThread(() -> {
+            if (isFinishing() || isDestroyed()) return;
+
             resultListAdapter.addResult(result);
             setItemCount(resultListAdapter.getItemsScannedCount());
             resultRecycler.scrollToPosition(0);
@@ -271,7 +282,7 @@ public class MainActivity extends CameraPermissionActivity implements SparkScanL
     }
 
     private int getDisplayRotation() {
-        int displayRotation = getWindowManager().getDefaultDisplay().getRotation();
+        int displayRotation = ContextCompat.getDisplayOrDefault(this).getRotation();
 
         return switch (displayRotation) {
             case android.view.Surface.ROTATION_0 -> 90; // Portrait normal

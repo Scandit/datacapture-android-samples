@@ -18,6 +18,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
 
+import android.os.Looper;
 import androidx.annotation.NonNull;
 
 import com.scandit.datacapture.barcode.batch.data.TrackedBarcode;
@@ -41,7 +42,7 @@ public class StatusProvider implements BarcodeCountStatusProvider {
     private static final long STATUS_DELAY = 500L;
     private static final int EXPIRED_ICON_BORDER_WIDTH_DP = 1;
 
-    private final Handler handler = new Handler();
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
     private final String modeEnableMessage;
     private final String modeDisableMessage;

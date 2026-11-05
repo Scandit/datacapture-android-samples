@@ -29,6 +29,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.IntentCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -74,11 +75,8 @@ public class ResultsActivity extends AppCompatActivity {
 
         // Receive results from previous screen and set recycler view items.
         ScanDetails[] scanResults;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            scanResults = getIntent().getSerializableExtra(ARG_SCAN_RESULTS, ScanDetails[].class);
-        } else {
-            scanResults = (ScanDetails[]) getIntent().getSerializableExtra(ARG_SCAN_RESULTS);
-        }
+        scanResults =
+                IntentCompat.getSerializableExtra(getIntent(), ARG_SCAN_RESULTS, ScanDetails[].class);
 
         recyclerView.setAdapter(new ScanResultsAdapter(this, scanResults));
 

@@ -17,6 +17,7 @@ import android.Manifest.permission.CAMERA
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,8 +30,11 @@ import androidx.compose.ui.res.stringResource
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.scandit.datacapture.listbuildingsamplecompose.data.ScannedItemsViewModel
 
 class MainActivity : ComponentActivity() {
+
+    private val scannedItemsViewModel: ScannedItemsViewModel by viewModels()
 
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +62,7 @@ class MainActivity : ComponentActivity() {
                         )
                     },
                 ) { innerPadding ->
-                    MainScreen(innerPadding)
+                    MainScreen(padding = innerPadding, viewModel = scannedItemsViewModel)
                 }
             }
         }

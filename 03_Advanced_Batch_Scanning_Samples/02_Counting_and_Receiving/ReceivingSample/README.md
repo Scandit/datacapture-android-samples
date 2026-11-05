@@ -4,6 +4,9 @@ This samples demonstrates the receiving use case with a combined application of 
 
 The pre-built SparkScan and MatrixScan Count components incorporate our best practices for usability and have been rigorously tested with target users in the receiving scenario.
 
+## AI Coding Skills
+
+Scandit's AI coding skills teach your coding agent (Claude Code, Cursor, Codex, GitHub Copilot and others) how to pick the right Scandit product and integrate the Data Capture SDK. See [github.com/Scandit/skills](https://github.com/Scandit/skills) for install instructions.
 
 ## Installation
 
@@ -23,13 +26,6 @@ MatrixScan Count is an out-of-the-box scan and count solution for counting and r
 SparkScan is a camera-based solution for high-speed single scanning and scan-intensive workflows. It includes an out-of-the-box UI optimized for an efficient and frictionless worker experience.
 
 ![SparkScan.png](https://github.com/Scandit/.github/blob/main/images/SparkScan%20-%20iOS.png)
-
-## AI Coding Skills
-
-Use the matching Scandit skill to get AI-assisted help for this sample. Install the Scandit skills collection once, then invoke the sparkscan-android and matrixscan-count-android skills.
-
-[![Install via skills.sh](https://img.shields.io/badge/skills.sh-install-green)](https://skills.sh/scandit/skills)
-[![Install in Cursor](https://img.shields.io/badge/Install%20in-Cursor-blue?style=flat-square&logo=cursor)](https://cursor.com/marketplace/scandit)
 
 ## Documentation
 

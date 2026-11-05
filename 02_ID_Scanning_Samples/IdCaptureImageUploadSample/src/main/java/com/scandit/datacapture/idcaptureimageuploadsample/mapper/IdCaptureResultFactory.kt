@@ -30,14 +30,17 @@ object IdCaptureResultFactory {
      * (empty when absent); labels and the empty-value placeholder are resolved in the UI layer.
      */
     fun extract(capturedId: CapturedId): CaptureResult = CaptureResult(
-        fields = listOf(
-            CaptureResult.Entry(ResultField.FULL_NAME, capturedId.fullName.toDisplayValue()),
-            CaptureResult.Entry(ResultField.DATE_OF_BIRTH, capturedId.dateOfBirth.toDisplayValue()),
-            CaptureResult.Entry(ResultField.DATE_OF_EXPIRY, capturedId.dateOfExpiry.toDisplayValue()),
-            CaptureResult.Entry(ResultField.DOCUMENT_NUMBER, capturedId.documentNumber.toDisplayValue()),
-            CaptureResult.Entry(ResultField.NATIONALITY, capturedId.nationality.toDisplayValue()),
-            CaptureResult.Entry(ResultField.DOCUMENT_TYPE, capturedId.document.toDisplayValue()),
-        ),
+        fields = buildList {
+            add(CaptureResult.Entry(ResultField.FULL_NAME, capturedId.fullName.toDisplayValue()))
+            add(CaptureResult.Entry(ResultField.DATE_OF_BIRTH, capturedId.dateOfBirth.toDisplayValue()))
+            add(CaptureResult.Entry(ResultField.DATE_OF_EXPIRY, capturedId.dateOfExpiry.toDisplayValue()))
+            add(CaptureResult.Entry(ResultField.DOCUMENT_NUMBER, capturedId.documentNumber.toDisplayValue()))
+            add(CaptureResult.Entry(ResultField.NATIONALITY, capturedId.nationality.toDisplayValue()))
+            add(CaptureResult.Entry(ResultField.DOCUMENT_TYPE, capturedId.document.toDisplayValue()))
+            // The raw machine-readable zone, shown only when present.
+            val mrz = capturedId.mrz?.capturedMrz.toDisplayValue()
+            if (mrz.isNotEmpty()) add(CaptureResult.Entry(ResultField.MRZ, mrz))
+        },
     )
 
     private fun String?.toDisplayValue(): String = this?.trim().orEmpty()

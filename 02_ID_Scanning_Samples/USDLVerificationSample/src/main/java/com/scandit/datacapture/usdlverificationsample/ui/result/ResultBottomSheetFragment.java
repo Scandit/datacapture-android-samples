@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.os.BundleCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
@@ -84,7 +85,8 @@ public class ResultBottomSheetFragment extends BottomSheetDialogFragment {
         View root = inflater.inflate(R.layout.result_screen, container, false);
 
         // Retrieve the results map from the intent's bundle.
-        viewModel.onResult(getArguments().getParcelable(KEY_CAPTURE_RESULT));
+        viewModel.onResult(
+                BundleCompat.getParcelable(getArguments(), KEY_CAPTURE_RESULT, CaptureResult.class));
 
         RecyclerView recyclerResult = root.findViewById(R.id.scanning_results_recycler_view);
         userImage = root.findViewById(R.id.user_image);

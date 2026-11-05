@@ -19,6 +19,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.Nullable;
 
+import androidx.core.os.ParcelCompat;
 import com.scandit.datacapture.id.data.RejectionReason;
 import com.scandit.datacapture.id.verification.aamvabarcode.AamvaBarcodeVerificationStatus;
 
@@ -76,7 +77,7 @@ public class CaptureResult implements Parcelable {
     }
 
     private CaptureResult(Parcel in) {
-        entries = in.readArrayList(getClass().getClassLoader());
+        entries = ParcelCompat.readArrayList(in, getClass().getClassLoader(), Entry.class);
 
         int faceImageBytesSize = in.readInt();
         if (faceImageBytesSize > 0) {

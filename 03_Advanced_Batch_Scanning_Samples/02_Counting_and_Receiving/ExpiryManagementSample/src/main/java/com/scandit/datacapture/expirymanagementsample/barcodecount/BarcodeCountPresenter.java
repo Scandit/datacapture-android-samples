@@ -165,11 +165,6 @@ public class BarcodeCountPresenter implements BarcodeCountListener, BarcodeCount
     }
 
     public void onResume() {
-        // Load already scanned barcodes into the session as additional barcodes.
-        if (!navigatingInternally) {
-            barcodeCount.reset();
-            loadAllBarcodesAsAdditionalBarcodes();
-        }
         navigatingInternally = false;
 
         // Register self as a listener to get informed of tracked barcodes.
@@ -226,7 +221,8 @@ public class BarcodeCountPresenter implements BarcodeCountListener, BarcodeCount
 
     @Override
     public void onListButtonTapped(
-        @NonNull BarcodeCountView view
+        @NonNull BarcodeCountView view,
+        @Nullable BarcodeCountSessionSnapshot snapshot
     ) {
         navigatingInternally = true;
         barcodeCountPresenterView.navigateToListScreen();

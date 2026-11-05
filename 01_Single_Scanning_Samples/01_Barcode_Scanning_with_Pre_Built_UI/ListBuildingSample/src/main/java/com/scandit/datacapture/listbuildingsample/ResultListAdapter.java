@@ -24,12 +24,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.scandit.datacapture.listbuildingsample.data.ScanResult;
 import com.scandit.datacapture.listbuildingsample.ui.StackedImageView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 class ResultListAdapter extends RecyclerView.Adapter<ResultListAdapter.ViewHolder> {
 
-    private final List<ScanResult> results = new ArrayList<>();
+    private final List<ScanResult> results;
+
+    ResultListAdapter(List<ScanResult> results) {
+        this.results = results;
+    }
 
     @NonNull
     @Override

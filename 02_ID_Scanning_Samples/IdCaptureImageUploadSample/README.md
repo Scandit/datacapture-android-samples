@@ -11,6 +11,10 @@ The sample covers:
 - **Double-sided documents** (e.g. a driver's license front + back), chaining two images through the SDK.
 - **PDF upload** (single- and multipage), rasterising the selected page(s) before feeding them to the SDK.
 
+## AI Coding Skills
+
+Scandit's AI coding skills teach your coding agent (Claude Code, Cursor, Codex, GitHub Copilot and others) how to pick the right Scandit product and integrate the Data Capture SDK. See [github.com/Scandit/skills](https://github.com/Scandit/skills) for install instructions.
+
 ## Installation
 
 - Clone this repo locally.
@@ -62,13 +66,6 @@ The SDK intentionally does not bundle a PDF-to-image converter, to keep its size
 - It covers the common case of rasterising a page to a bitmap.
 
 Pages are rendered at 200 DPI for legible text (longest side capped at 4096 px) onto a white background, since PDF pages can be transparent and document detection expects an opaque image. For a multi-page PDF, the sample treats the second page as the back side of a double-sided document. See `utils/PdfConverter.kt`.
-
-## AI Coding Skills
-
-Use the matching Scandit skill to get AI-assisted help for this sample. Install the Scandit skills collection once, then invoke the id-capture-android skill.
-
-[![Install via skills.sh](https://img.shields.io/badge/skills.sh-install-green)](https://skills.sh/scandit/skills)
-[![Install in Cursor](https://img.shields.io/badge/Install%20in-Cursor-blue?style=flat-square&logo=cursor)](https://cursor.com/marketplace/scandit)
 
 ## Documentation
 

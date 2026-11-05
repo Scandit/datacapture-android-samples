@@ -102,11 +102,12 @@ class IdCaptureRepository(
                     )
                 }
             )
-            // Report each captured side separately (`onIdCaptured` per side) instead of only once
-            // the whole document is complete. This drives the front-then-back feeding flow: the
-            // front-side result tells us to feed the back image. Without it, a double-sided document
-            // would never complete, because the back side is only fed after the front is captured.
-            _impl().setNotifyOnSideCapture(true)
+            // For a double-sided document, report each captured side separately (`onIdCaptured` per
+            // side) instead of only once the whole document is complete. This drives the
+            // front-then-back feeding flow: the front-side result tells us to feed the back image.
+            // Without it, a double-sided document would never complete, because the back side is
+            // only fed after the front is captured.
+            notifyOnSideCapture = doubleSided
         }
 
     /**

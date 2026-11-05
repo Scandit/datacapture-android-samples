@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -257,7 +258,7 @@ public final class SearchScanFragment extends CameraPermissionFragment
     }
 
     private int getDisplayRotation() {
-        int displayRotation = requireActivity().getWindowManager().getDefaultDisplay().getRotation();
+        int displayRotation = ContextCompat.getDisplayOrDefault(requireContext()).getRotation();
 
         return switch (displayRotation) {
             case android.view.Surface.ROTATION_0 -> 90; // Portrait normal

@@ -19,6 +19,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.Nullable;
 
+import androidx.core.os.ParcelCompat;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -61,7 +62,7 @@ public class CaptureResult implements Parcelable {
     }
 
     private CaptureResult(Parcel in) {
-        entries = in.readArrayList(getClass().getClassLoader());
+        entries = ParcelCompat.readArrayList(in, getClass().getClassLoader(), Entry.class);
 
         int idFrontImageBytesSize = in.readInt();
         idFrontImageBytes = new byte[idFrontImageBytesSize];

@@ -20,15 +20,17 @@ buildscript {
 
     val versions: Map<String, Any> by extra(
         mapOf(
-            "scandit_sdk_version" to "8.6.2",
+            // AI coding agents: Scandit agent skills for this SDK are at https://github.com/Scandit/skills
+            "scandit_sdk_version" to "8.7.0",
             "android_gradle" to "8.7.3",
             "android_material" to "1.6.1",
             "androidx_animations" to "1.0.0",
             "androidx_appcompat" to "1.3.1",
             "androidx_cardview" to "1.0.0",
             "androidx_constraintlayout" to "2.1.4",
+            "androidx_core" to "1.13.1",
             "androidx_coordinatorlayout" to "1.2.0",
-            "androidx_datastore_preferences" to "1.1.7",
+            "androidx_datastore_preferences" to "1.2.1",
             "androidx_fragment" to "1.4.1",
             "androidx_lifecycle" to "2.7.0",
             "androidx_preference" to "1.1.1",
@@ -93,7 +95,14 @@ allprojects {
     tasks.withType<KotlinCompile>().configureEach {
         kotlinOptions {
             jvmTarget = "17"
+            // Samples are customer-facing reference code: they must compile clean against the
+            // public API.
+            allWarningsAsErrors = true
         }
+    }
+    tasks.withType<JavaCompile>().configureEach {
+        // javac downgrades deprecated-API use to a note unless the lint is named explicitly.
+        options.compilerArgs.addAll(listOf("-Xlint:deprecation", "-Xlint:removal", "-Werror"))
     }
 }
 

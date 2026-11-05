@@ -6,6 +6,10 @@ The SparkScan UI incorporates our best practices for usability and has been rigo
 
 ![Screenshot 2023-06-14 at 16.28.23.png](https://github.com/Scandit/.github/blob/main/images/ListBuilding_with_SparkScan.png)
 
+## AI Coding Skills
+
+Scandit's AI coding skills teach your coding agent (Claude Code, Cursor, Codex, GitHub Copilot and others) how to pick the right Scandit product and integrate the Data Capture SDK. See [github.com/Scandit/skills](https://github.com/Scandit/skills) for install instructions.
+
 ## Installation
 
 - Clone this repo locally.
@@ -18,13 +22,6 @@ The SparkScan UI incorporates our best practices for usability and has been rigo
 SparkScan is a camera-based solution for high-speed single scanning and scan-intensive workflows. It includes an out-of-the-box UI optimized for an efficient and frictionless worker experience.
 
 ![SparkScan.png](https://github.com/Scandit/.github/blob/main/images/SparkScan%20-%20iOS.png)
-
-## AI Coding Skills
-
-Use the matching Scandit skill to get AI-assisted help for this sample. Install the Scandit skills collection once, then invoke the sparkscan-android skill.
-
-[![Install via skills.sh](https://img.shields.io/badge/skills.sh-install-green)](https://skills.sh/scandit/skills)
-[![Install in Cursor](https://img.shields.io/badge/Install%20in-Cursor-blue?style=flat-square&logo=cursor)](https://cursor.com/marketplace/scandit)
 
 ## Documentation
 

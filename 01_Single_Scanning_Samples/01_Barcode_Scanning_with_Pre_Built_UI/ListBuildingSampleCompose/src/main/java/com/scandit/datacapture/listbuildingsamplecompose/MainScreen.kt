@@ -30,8 +30,6 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
@@ -43,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.scandit.datacapture.listbuildingsamplecompose.data.ScanResult
+import com.scandit.datacapture.listbuildingsamplecompose.data.ScannedItemsViewModel
 import com.scandit.datacapture.listbuildingsamplecompose.ui.ListItem
 import com.scandit.datacapture.listbuildingsamplecompose.ui.cropAroundBarcode
 import com.scandit.datacapture.listbuildingsamplecompose.ui.DarkGrey
@@ -55,10 +54,10 @@ private const val CROPPED_IMAGE_PADDING = 1.2f
 private const val SCALED_IMAGE_SIZE_IN_PIXELS = 100
 
 @Composable
-fun MainScreen(padding: PaddingValues) {
+fun MainScreen(padding: PaddingValues, viewModel: ScannedItemsViewModel) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val listData = remember { mutableStateListOf<ScanResult>() }
+    val listData = viewModel.items
     val lazyListState = rememberLazyListState()
 
     Column(

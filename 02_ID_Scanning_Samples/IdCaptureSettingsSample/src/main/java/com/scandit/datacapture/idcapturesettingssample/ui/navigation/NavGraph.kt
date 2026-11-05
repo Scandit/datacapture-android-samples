@@ -63,7 +63,7 @@ fun NavGraph(
 
             ScanScreen(
                 resultViewModel = resultViewModel,
-                onNavigateToResult = { result ->
+                onNavigateToResult = {
                     navController.navigate(Destinations.RESULT_ROUTE)
                 },
                 onNavigateToSettings = {

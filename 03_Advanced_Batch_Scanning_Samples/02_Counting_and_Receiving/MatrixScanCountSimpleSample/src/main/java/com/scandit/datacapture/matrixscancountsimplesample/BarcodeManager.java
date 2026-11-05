@@ -14,16 +14,13 @@
 
 package com.scandit.datacapture.matrixscancountsimplesample;
 
-import com.scandit.datacapture.barcode.count.capture.BarcodeCount;
 import com.scandit.datacapture.barcode.count.capture.BarcodeCountSession;
 import com.scandit.datacapture.barcode.data.Barcode;
 import com.scandit.datacapture.matrixscancountsimplesample.data.ScanDetails;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 
 // Singleton object that centralises barcode management.
 public class BarcodeManager {
@@ -40,30 +37,12 @@ public class BarcodeManager {
     }
 
     private Collection<Barcode> scannedBarcodes = new ArrayList<>();
-    private Collection<Barcode> additionalBarcodes = new ArrayList<>();
 
-    private WeakReference<BarcodeCount> barcodeCount;
-
-    public void initialize(BarcodeCount barcodeCount) {
-        this.barcodeCount = new WeakReference<>(barcodeCount);
-    }
-
-    // Update lists of barcodes with the contents of the current session.
+    // Update the list of barcodes with the contents of the current session.
+    // getRecognizedBarcodes() carries every barcode counted so far, including the ones counted
+    // before a short interruption such as the app being sent to the background.
     public void updateWithSession(BarcodeCountSession session) {
-        scannedBarcodes = session.getRecognizedBarcodes();
-        additionalBarcodes = session.getAdditionalBarcodes();
-    }
-
-    // Load all scanned barcodes as additional barcodes, so they're still scanned
-    // after a configuration change or coming back from background.
-    public void loadAllBarcodesAsAdditionalBarcodes() {
-        List<Barcode> barcodesToLoad = new ArrayList<>();
-
-        barcodesToLoad.addAll(scannedBarcodes);
-        barcodesToLoad.addAll(additionalBarcodes);
-        if (barcodeCount.get() != null) {
-            barcodeCount.get().setAdditionalBarcodes(barcodesToLoad);
-        }
+        scannedBarcodes = new ArrayList<>(session.getRecognizedBarcodes());
     }
 
     // Create a map of barcodes to be passed to the scan results screen.
@@ -72,11 +51,6 @@ public class BarcodeManager {
 
         // Add the scanned Barcode objects to the results map.
         for (Barcode barcode : scannedBarcodes) {
-            addBarcodeToResultsMap(barcode, scanResults);
-        }
-
-        // Add the previously saved Barcode objects to the results map.
-        for (Barcode barcode : additionalBarcodes) {
             addBarcodeToResultsMap(barcode, scanResults);
         }
 
@@ -97,9 +71,8 @@ public class BarcodeManager {
         }
     }
 
-    // Reset the barcodes lists.
+    // Reset the barcodes list.
     public void reset() {
         scannedBarcodes.clear();
-        additionalBarcodes.clear();
     }
 }

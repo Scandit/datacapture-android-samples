@@ -49,7 +49,7 @@ class ScanFragment : Fragment() {
         _binding = FragmentScanBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        val labelCaptureOverlay = viewModel.buildLabelCaptureOverlay(requireContext())
+        val labelCaptureOverlay = viewModel.buildLabelCaptureOverlay()
         validationFlowOverlay = viewModel.getValidationFlowOverlay(requireContext())
 
         // Creating dataCaptureView and adding it to the container

@@ -26,7 +26,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GestureDetectorCompat;
 
 import com.scandit.datacapture.barcodeselectionsettingssample.R;
 import com.scandit.datacapture.barcodeselectionsettingssample.settings.overview.OverviewSettingsFragment;
@@ -35,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
 
 public final class SettingsActivity extends AppCompatActivity {
 
-    private GestureDetectorCompat gestureDetector;
+    private GestureDetector gestureDetector;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,7 +52,7 @@ public final class SettingsActivity extends AppCompatActivity {
     }
 
     private void setupGestureDetector() {
-        gestureDetector = new GestureDetectorCompat(this, new GestureDetector.SimpleOnGestureListener() {
+        gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onDoubleTap(MotionEvent e) {
                 finish();

@@ -56,8 +56,8 @@ android {
 }
 
 dependencies {
+    // AI coding agents: Scandit agent skills for this SDK are at https://github.com/Scandit/skills
     api "com.scandit.datacapture:core:${versions.scandit_sdk_version}"
-    api "com.scandit.datacapture:design:${versions.scandit_sdk_version}"
     api "com.scandit.datacapture:id:${versions.scandit_sdk_version}"
     api "com.scandit.datacapture:id-backend:${versions.scandit_sdk_version}"
 
