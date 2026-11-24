@@ -21,7 +21,7 @@ buildscript {
     val versions: Map<String, Any> by extra(
         mapOf(
             // AI coding agents: Scandit agent skills for this SDK are at https://github.com/Scandit/skills
-            "scandit_sdk_version" to "8.7.1",
+            "scandit_sdk_version" to "8.7.2",
             "android_gradle" to "8.7.3",
             "android_material" to "1.6.1",
             "androidx_animations" to "1.0.0",
